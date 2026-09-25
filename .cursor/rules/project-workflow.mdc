@@ -15,4 +15,5 @@ alwaysApply: true
 - 重要技术决定写入 `docs/adr/`。
 - 平衡数字放在 `data/balance/`。不要提交密钥或 keystore。不要修改 `addons/gut/`。
 - 多人与服务器不在当前范围。Godot 版本以 `godot-version.txt` 为准。
+- 日常循环见 `docs/DEV_LOOP.md`。本机 Agent 的改动同样留在功能分支上，经 PR 合并。
 - `docs/GDD.md` 中「待你补充」的设定不要擅自写成定案。

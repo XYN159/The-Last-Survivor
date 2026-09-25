@@ -19,6 +19,7 @@
 - 不要手改 `addons/gut/`。
 - 不要把多人、服务器或账号系统提前加进来。那是路线图后段，而且要先有新的 ADR。
 - Godot 版本以 `godot-version.txt` 为准。要升级就同时改文档、CI 和一篇 ADR。
+- 所有者的日常循环在 `docs/DEV_LOOP.md`：Cursor 在左、游戏在右。本机 Agent 改完也要留在功能分支上，经 PR 合并，不能推 `main`。
 
 ## 玩法边界
 

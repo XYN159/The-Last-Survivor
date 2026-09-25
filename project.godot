@@ -22,6 +22,7 @@ GameState="*res://scripts/autoload/game_state.gd"
 
 window/size/viewport_width=1080
 window/size/viewport_height=1920
+; 桌面预览窗口。逻辑视口仍是 1080×1920，窗口缩到 540×960，方便和 Cursor 并排。
 window/size/window_width_override=540
 window/size/window_height_override=960
 window/stretch/mode="canvas_items"

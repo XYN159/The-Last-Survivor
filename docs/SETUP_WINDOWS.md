@@ -42,7 +42,7 @@ Godot 不需要安装到系统里，这个 exe 就是编辑器。
 
 1. 打开 <https://cursor.com/download>，下载 Windows 版并安装。
 2. 用你的账号登录。
-3. 以后看 AI 改界面时：一边开着 Godot，一边开着 Cursor。Godot 发现脚本或场景被改了，会提示重新加载，选重新加载即可。
+3. 以后看 AI 改界面时：左边 Cursor，右边游戏。把 Cursor 设成外部编辑器、打开运行时同步、以及在手机上部署，都写在 [`docs/DEV_LOOP.md`](DEV_LOOP.md)。
 
 ## 5. 克隆仓库
 

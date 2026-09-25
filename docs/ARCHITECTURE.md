@@ -47,7 +47,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 - 拉伸模式 `canvas_items`，比例 `expand`
 - 手持方向为纵向
 - 渲染器为 Mobile
-- 桌面窗口用 540×960 显示，避免编辑器里窗口铺满屏幕；逻辑分辨率仍然是 1080×1920
+- 桌面窗口用 540×960 显示，避免编辑器里窗口铺满屏幕；逻辑分辨率仍然是 1080×1920。和 Cursor 并排的用法见 `docs/DEV_LOOP.md`
 
 界面中文走 `AppTheme` 自动加载：它复制 Godot 默认主题，只换上 `assets/fonts/NotoSansSC-Regular.ttf`，按钮样式保持引擎自带的样子。字体子集覆盖基本拉丁字符和中日韩统一表意文字（U+4E00–U+9FFF）。日常简体中文够用。如果某个很生僻的字显示成方框，需要扩大子集后重新放进 `assets/fonts/`，并保留 `OFL.txt`。
 

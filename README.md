@@ -15,6 +15,8 @@
 3. 用 Godot 打开 `project.godot`。
 4. 按 `F5`。标题画面出现后，点「开始」进入占位战斗车道，再点「返回」。
 
+想左边放 Cursor、右边放正在跑的游戏，并让 AI 的改动直接进到画面里，按 [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) 做。桌面窗口是 540×960，逻辑分辨率仍是 1080×1920。
+
 ## 从 CI 下载 APK
 
 每次向 `main` 推送、以及每个拉取请求，GitHub Actions 都会检查代码、跑测试，并打出一个调试版 APK。
@@ -33,6 +35,7 @@
 | 文档 | 内容 |
 | --- | --- |
 | [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md) | Windows 上安装 Git、Godot、Cursor，以及怎么跑起来 |
+| [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) | 左边 Cursor、右边游戏：外部编辑器、运行时同步、真机部署、scrcpy、Agent |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 分支、提交、审查、合并、发版 |
 | [`docs/GDD.md`](docs/GDD.md) | 玩法草案，以及需要你亲自补上的部分 |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | 目录、场景、数值、存档，以及以后服务器怎么接 |
