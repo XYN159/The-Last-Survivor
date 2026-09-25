@@ -1,0 +1,30 @@
+name: 功能请求
+description: 提议一块新玩法或一个工程上的改进
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: want
+    attributes:
+      label: 想要什么
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么对游戏有用
+    validations:
+      required: true
+  - type: textarea
+    id: player
+    attributes:
+      label: 玩家会怎么操作
+      description: 从玩家的眼睛看一遍流程。
+    validations:
+      required: true
+  - type: textarea
+    id: not-now
+    attributes:
+      label: 这次可以先不做的部分
+      description: 帮助把范围收小。
