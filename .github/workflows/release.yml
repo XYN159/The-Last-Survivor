@@ -8,10 +8,12 @@ on:
 permissions:
   contents: write
 
+# 与 CI 使用同一套 Ubuntu 24.04，避免标签构建和 PR 构建环境不一致。
+
 jobs:
   export-android:
     name: export-android
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Checkout
