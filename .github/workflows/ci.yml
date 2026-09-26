@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 固定 Ubuntu 24.04。ubuntu-latest 将在 2026 年 10 月切到 26.04，先钉住已经验证过的镜像。
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install gdtoolkit
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Check GDScript format and lint
+        run: ./ci/lint.sh
+
+  test:
+    name: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: true
+
+      - name: Cache Godot
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.local/share/godot-ci
+          key: godot-${{ runner.os }}-${{ hashFiles('godot-version.txt') }}
+
+      - name: Install Godot
+        run: ./ci/install_godot.sh
+
+      - name: Run tests
+        run: ./ci/run_tests.sh
+
+  export-android:
+    name: export-android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: true
+
+      - name: Setup Java
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: platform-tools
+
+      - name: Install Android build-tools
+        run: ./ci/install_android_build_tools.sh
+
+      - name: Cache Godot and export templates
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/godot-ci
+            ~/.local/share/godot/export_templates
+          key: godot-android-${{ runner.os }}-${{ hashFiles('godot-version.txt') }}
+
+      - name: Export debug APK
+        run: ./ci/export_android_debug.sh "${GITHUB_WORKSPACE}/build/android/the-last-survivor-debug.apk"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: the-last-survivor-android-debug
+          path: build/android/*.apk
+          if-no-files-found: error

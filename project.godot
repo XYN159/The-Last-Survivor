@@ -1,0 +1,44 @@
+; Engine configuration file.
+; Godot 版本以仓库根目录的 godot-version.txt 为准。
+
+config_version=5
+
+[application]
+
+config/name="The Last Survivor"
+config/description="竖屏安卓生存策略游戏。"
+config/version="0.1.0"
+run/main_scene="res://scenes/main/main_menu.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+config/icon="res://icon.svg"
+run/flush_stdout_on_print=true
+
+[autoload]
+
+AppTheme="*res://scripts/autoload/app_theme.gd"
+GameState="*res://scripts/autoload/game_state.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+; 桌面预览窗口。逻辑视口仍是 1080×1920，窗口缩到 540×960，方便和 Cursor 并排。
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/vram_compression/import_etc2_astc=true

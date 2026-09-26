@@ -1,0 +1,19 @@
+---
+description: The Last Survivor 仓库的协作和实现约定
+alwaysApply: true
+---
+
+# 协作约定
+
+与根目录 `AGENTS.md` 保持一致。所有者不是职业程序员，PR 必须让他能独立看懂。
+
+- 不要直接推送到 `main`。用 `feature/`、`fix/`、`chore/` 或 `docs/` 分支，并开 PR。
+- PR 要小。标题用英文 Conventional Commits，正文用简体中文，说明改了什么、为什么、怎么验证。
+- 文档、PR 描述和代码注释用简体中文。标识符、文件名和提交说明用英文。
+- 同一 PR 内更新相关文档、受影响的 `docs/GDD.md` 和 `CHANGELOG.md`。
+- 补测试。界面改动附截图。遵循 `docs/CODING_STYLE.md`。
+- 重要技术决定写入 `docs/adr/`。
+- 平衡数字放在 `data/balance/`。不要提交密钥或 keystore。不要修改 `addons/gut/`。
+- 多人与服务器不在当前范围。Godot 版本以 `godot-version.txt` 为准。
+- 日常循环见 `docs/DEV_LOOP.md`。本机 Agent 的改动同样留在功能分支上，经 PR 合并。
+- `docs/GDD.md` 中「待你补充」的设定不要擅自写成定案。

@@ -1,0 +1,111 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/battle/battle_lane.gd" id="1_script"]
+
+[node name="BattleLane" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.07, 0.09, 1)
+
+[node name="Lane" type="ColorRect" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.18
+anchor_right = 0.5
+anchor_bottom = 0.72
+offset_left = -180.0
+offset_right = 180.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(0.16, 0.22, 0.24, 1)
+
+[node name="GateFar" type="ColorRect" parent="Lane"]
+layout_mode = 1
+anchor_right = 1.0
+offset_top = 80.0
+offset_bottom = 128.0
+mouse_filter = 2
+color = Color(0.86, 0.62, 0.24, 1)
+
+[node name="GateNear" type="ColorRect" parent="Lane"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -220.0
+offset_bottom = -172.0
+mouse_filter = 2
+color = Color(0.36, 0.7, 0.62, 1)
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+offset_top = 48.0
+offset_bottom = 140.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 52
+text = "战斗车道"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 0.42
+anchor_right = 1.0
+anchor_bottom = 0.42
+offset_top = -40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 40
+text = "小队人数：1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_top = 0.74
+anchor_right = 1.0
+anchor_bottom = 0.74
+offset_left = 80.0
+offset_top = 16.0
+offset_right = -80.0
+offset_bottom = 160.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
+theme_override_font_sizes/font_size = 28
+text = "占位场景。之后会在这条车道上收集增益、扩大小队。"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BackButton" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 110)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -210.0
+offset_top = -180.0
+offset_right = 210.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 40
+text = "返回"

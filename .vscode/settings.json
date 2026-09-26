@@ -1,0 +1,14 @@
+{
+  // 本机已确认的 Godot 4.7.2 标准版。外层文件夹和 exe 同名。
+  // 如果你的 Godot 不在这个位置，只需改下面这一行。
+  "godotTools.editorPath.godot4": "D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe",
+
+  // Godot 4 的语言服务器默认端口是 6005。
+  // 扩展自带的 6008 是 Godot 3 的端口，连 Godot 4.7 会失败。
+  "godotTools.lsp.serverHost": "127.0.0.1",
+  "godotTools.lsp.serverPort": 6005,
+
+  // 日常开着 Godot 编辑器，扩展去连它的语言服务器。
+  // 打开这项会再启动一个无窗口 Godot，和编辑器一起开容易抢端口。
+  "godotTools.lsp.headless": false
+}

@@ -1,0 +1,48 @@
+name: 缺陷报告
+description: 游戏或工程里有不对的地方
+title: "fix: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么
+      description: 你看到的结果。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 你期望发生什么
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么重现
+      description: 按顺序列出点击和操作。
+      placeholder: |
+        1. 打开游戏
+        2. 点击「开始」
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图或录屏
+      description: 有画面问题时请附上。
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 编辑器版本、手机型号，或 APK 来自哪一次 CI。
+      placeholder: Godot 4.7.2 / Android 14
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: Godot 输出面板或手机上的报错。没有就写「无」。
