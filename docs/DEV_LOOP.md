@@ -145,7 +145,7 @@ Godot 4.7 也可以在一键部署时自己启动 scrcpy：
 
 1. 用 Cursor 打开仓库文件夹（里面直接能看到 `project.godot` 的那一层）。
 2. 右下角如果提示安装推荐扩展，安装 **godot-tools**（发布者 geequlim）。也可以自己在扩展市场搜 `geequlim.godot-tools`。
-3. 如果 Godot 不在 `C:\Tools\Godot\Godot_v4.7.2-stable_win64.exe`，打开 `.vscode/settings.json`，只改 `godotTools.editorPath.godot4` 那一行。
+3. 本机 Godot 在 `D:\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64.exe`。`.vscode/settings.json` 里写成正斜杠：`D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe`。用没有 `console` 字样的那个 exe。如果你的 Godot 不在这个位置，只需改 `settings.json` 这一行。
 4. Godot 编辑器开着这个工程时，Cursor 底部状态栏的 GDScript 语言服务器应连上。端口是 **6005**。连不上时，看本文最后的端口表，不要把扩展改回 6008。
 5. 在聊天里切到 **Agent**，用中文说明要改什么。
 6. 它改完后先看差别，再决定留不留：

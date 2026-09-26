@@ -22,11 +22,11 @@ git lfs version
 
 1. 打开 <https://godotengine.org/download/archive/4.7.2-stable/>。
 2. 下载 **Windows x86_64** 的标准版。不要下载带 .NET 或 C# 字样的版本。
-3. 解压 zip。里面是一个 `Godot_v4.7.2-stable_win64.exe`。把它放进一个不会被清理的文件夹，例如 `C:\Tools\Godot\`。
-4. 双击运行。第一次会问要不要导入旧设置，没有旧版本就选不导入。
-5. 窗口标题或关于对话框里应能看到 **4.7.2**。
+3. 解压 zip。本机的位置是 `D:\Godot_v4.7.2-stable_win64.exe\`。外层文件夹的名字也是 `Godot_v4.7.2-stable_win64.exe`，里面才是编辑器 `Godot_v4.7.2-stable_win64.exe`。旁边的 `Godot_v4.7.2-stable_win64_console.exe` 是带控制台的版本，日常双击和 Cursor 都用没有 `console` 字样的那一个。
+4. 双击里面的 `Godot_v4.7.2-stable_win64.exe`。第一次会问要不要导入旧设置，没有旧版本就选不导入。
+5. 窗口标题或关于对话框里应能看到 **4.7.2**。命令行执行 `Godot_v4.7.2-stable_win64.exe --version` 应输出 `4.7.2.stable.official.ed1daf0bf`。
 
-Godot 不需要安装到系统里，这个 exe 就是编辑器。
+Godot 不需要安装到系统里，这个 exe 就是编辑器。Cursor 里写的是同一条路径，用正斜杠：`D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe`。如果你的 Godot 不在这个位置，只需改 `.vscode/settings.json` 这一行。
 
 ## 3. 安装 Android 导出模板
 
