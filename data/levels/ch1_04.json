@@ -738,7 +738,7 @@
       "ends_when": "boss_defeated",
       "is_boss": false,
       "pressure": "boss_phase",
-      "note": "加压波。快残影更多。符卡仍按血量。本波结束后弹出三选一，三张里选一张。这一波要等冰之残影被击败才结束。",
+      "note": "加压波。快残影更多。符卡仍按血量。这一波要等冰之残影被击败才结束。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

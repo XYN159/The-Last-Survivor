@@ -414,7 +414,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "最后三波才出现少量快残影。现有角色勉强应付，让玩家感到需要减速。本波结束后弹出三选一，三张里选一张。",
+      "note": "最后三波才出现少量快残影。现有角色勉强应付，让玩家感到需要减速。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

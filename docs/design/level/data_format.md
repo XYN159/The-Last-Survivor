@@ -172,7 +172,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 画完的关：每一波的 `count × threat_points` 必须等于 `(10 + 4 × 波次) × threat_budget_coef`。系数种子是 1.0，所以现在就是整数。首领不占预算。
 
-序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。其余关卡是 10 到 20 波，每 5 波一次三选一。序章第 3 关和第一章是 10、11、12，首领 15。后面各章草案是 10、12、14、16，终章 20。
+序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。其余关卡是 10 到 20 波，每 5 波一次三选一，但最后一波不弹。10 波只有第 5 波后一次。11 到 15 波是第 5、10 波后。16 波和 20 波是第 5、10、15 波后。
 
 ## 难度表 `data/balance/level_tables/level_difficulty.csv`
 
@@ -193,7 +193,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `hp_multiplier` | `1 + 0.15 × (level_index − 1)`，只升不降 |
 | `reward_spirit_start` | 开局灵力 150 |
 | `reward_spirit_per_wave` | 每活过一波加 20 |
-| `reward_buff_after_waves` | 三选一的波次，用分号隔开，例如 `5;10;15`。少于 5 波则空着 |
+| `reward_buff_after_waves` | 三选一的波次，用分号隔开，例如 20 波关是 `5;10;15`。最后一波不写进去。少于 5 波则空着 |
 | `reward_buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
 | `expected_first_clear_lives` | `11-13` 或首领的 `10-11` |
 | `reward_meta_first_clear` | 局外首通奖励。现在是 `pending_numbers`，不要发明数字 |
@@ -318,6 +318,6 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 python3 tools/validate_levels.py
 ```
 
-它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，少于 5 波没有三选一、其余每 5 波一次，可放置名单跟着 `unlock_character_ids` 走，星级区间是上面那三档。图鉴里不能再出现生命和移速。
+它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，少于 5 波没有三选一、其余每 5 波一次但最后一波不弹，可放置名单跟着 `unlock_character_ids` 走，星级区间是上面那三档。图鉴里不能再出现生命和移速。
 
 Godot 测试 `tests/unit/test_level_data.gd` 再查一遍地图、路径、威胁和星级，不查 schema 文本。CI 的 lint 跑 Python 校验，test 跑 Godot 测试。

@@ -531,10 +531,10 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
             expected_offers: list[int] = []
             expected_picks = 0
         else:
-            expected_offers = [wave for wave in (5, 10, 15, 20) if wave <= wave_count]
+            expected_offers = [wave for wave in (5, 10, 15, 20) if wave < wave_count]
             expected_picks = 3
         if row.get("buff_after_waves") != expected_offers or row.get("buff_pick_count") != expected_picks:
-            problems.append(f"{level['id']} 的三选一不是每 5 波一次；少于 5 波则应该没有")
+            problems.append(f"{level['id']} 的三选一应该在每 5 波后出现，但最后一波不弹")
         if row.get("reward_spirit_start") != "150" or row.get("reward_spirit_per_wave") != "20":
             problems.append(f"{level['id']} 的灵力奖励不是 150 / 20")
         if row.get("reward_meta_first_clear") != "pending_numbers" or row.get("reward_meta_replay") != "pending_numbers":

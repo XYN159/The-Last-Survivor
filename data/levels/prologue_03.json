@@ -403,7 +403,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "两组同时出场，在同一条弯路上叠在一起。本波结束后弹出三选一，三张里选一张。",
+      "note": "两组同时出场，在同一条弯路上叠在一起。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
