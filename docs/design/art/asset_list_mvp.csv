@@ -1,0 +1,66 @@
+asset_id,类别,用途,规格（显示尺寸@1080 / 源稿2倍）,文件路径,MVP优先级,负责人/来源,状态,备注
+ph_all_placeholders,占位,全部资源的色块占位，让程序先做,同正式资源,同正式资源（同名覆盖）,P0,程序/美术（自制）,未开始,规则见 asset_specs.md 第6节
+tiles_shrine_atlas,地图,序章博丽神社格子：路线16块自动拼接+空地2-4种+障碍,每块128×128 / 256×256；图集2048×1024,assets/textures/tiles/shrine/tiles_shrine_atlas.png,P0,待定（自绘或CC0）,未开始,序章3关（PR #5 prologue_01-03）
+tiles_lake_atlas,地图,第一章雾之湖格子：路线16块+空地+障碍（湖水/岩石/芦苇）,每块128×128 / 256×256；图集2048×1024,assets/textures/tiles/lake/tiles_lake_atlas.png,P0,待定（自绘或CC0）,未开始,第一章4关（PR #5 ch1_01-04）
+guard_hakurei_offering_box,地图,序章守护点：赛钱箱；随生命降低饱和度,最大256×192 / 512×384,assets/textures/tiles/shrine/guard_hakurei_offering_box.png,P0,自绘,未开始,PR #5 guard.hakurei_offering_box
+guard_misty_lake_frogs,地图,第一章守护点：冰雕青蛙和湖边花丛,最大256×192 / 512×384,assets/textures/tiles/lake/guard_misty_lake_frogs.png,P0,自绘,未开始,PR #5 guard.misty_lake_frogs
+rift_crack,地图,入口的结界裂缝（残影出生处）,128×128 / 256×256（可超出上沿）,assets/textures/vfx/rift_crack.png,P0,自绘,未开始,PR #2 术语：裂缝，不写传送门
+route_markers,地图,路线可读性：方向箭头「〉」+入口形状标记（圆/三角/菱形+①②③）+出口终点线,箭头48×48、入口96×96、终点线128×32 / 2倍,assets/textures/tiles/common/,P0,自绘,未开始,多条固定路线；色弱友好，不只靠颜色（风格指南7.2）
+reimu_parts,角色,灵梦棋盘小人拆件（头/身体/前后手/御币/袖子）+ idle/attack/place 动画,整体160×192 / 320×384；图集≤1024×1024,assets/textures/characters/reimu/,P0,自绘,未开始,PR #4 sprite_variant reimu_lv1
+marisa_parts,角色,魔理沙棋盘小人拆件（头帽/身体/手/扫帚/八卦炉）+ 动画,整体160×192 / 320×384,assets/textures/characters/marisa/,P0,自绘,未开始,PR #4 sprite_variant marisa_lv1
+cirno_parts,角色,琪露诺棋盘小人拆件（头/身体/手/冰晶翅膀）+ 动画；首领版共用,整体160×192 / 320×384,assets/textures/characters/cirno/,P0,自绘,未开始,琪露诺 MVP 可玩（系统策划）；关卡里何时可放见风格指南待确认4；首领不另画，见待确认19
+yukari_parts,角色,八云紫棋盘小人拆件（头帽/身体/手/洋伞/扇子）+ 动画；待机身边飘小隙间gap_small_eyes,整体160×200 / 320×400（比其他人略高）,assets/textures/characters/yukari/,P0,自绘,未开始,第一章首领战后加入（系统策划）；PR #4 characters.json chr_yukari
+shade_small,残影,小残影：圆形旧物团，灰白半透明+噪点,80×80 / 160×160,assets/textures/enemies/shade_small.png,P0,自绘,未开始,PR #4 enm_shade_basic（贴图名 shade_basic）
+shade_fast,残影,快残影：细长的褪色玩具,64×100 / 128×200,assets/textures/enemies/shade_fast.png,P0,自绘,未开始,PR #4 enm_shade_fast（贴图名 shade_toy）
+portrait_reimu,立绘,灵梦半身立绘（符卡演出+对话）,640×960 / 1280×1920,assets/textures/portraits/portrait_reimu.png,P0,自绘或同人画师合作,未开始,朝右，透明底
+portrait_marisa,立绘,魔理沙半身立绘,640×960 / 1280×1920,assets/textures/portraits/portrait_marisa.png,P0,自绘或同人画师合作,未开始,朝右，透明底
+portrait_cirno,立绘,琪露诺半身立绘（首领演出时翻转）,640×960 / 1280×1920,assets/textures/portraits/portrait_cirno.png,P0,自绘或同人画师合作,未开始,PR #4 bosses.json portrait_cirno；可玩角色立绘，保持 P0。首领演出翻转这张，不另画
+portrait_yukari,立绘,八云紫半身立绘（符卡演出+剧情）,640×960 / 1280×1920,assets/textures/portraits/portrait_yukari.png,P0,自绘或同人画师合作,未开始,MVP 立绘第4张（系统策划）；构图见风格指南4.1
+projectiles_lv1,特效,1级攻击：ofuda_white、star_laser_thin、ice_shard_small、gap_slit（紫，无弹道）,16-64 / 32-128；射线条可平铺,assets/textures/vfx/,P0,自绘或CC0,未开始,PR #4 characters.json projectile_vfx
+sukima_gap,特效,八云紫的隙间：普通攻击gap_slit、隙间换位、剧情探头,256×128 / 512×256；开合各0.3秒,assets/textures/vfx/sukima_gap.png,P0,自绘,未开始,紫要突出；PR #4 characters.md 4.4；PR #2 隙间探头；眼睛图案只给紫用
+vfx_hit_flash_shader,特效,命中闪白（着色器，不画图）0.08秒 85%,—,（着色器，程序做）,P0,程序,未开始,PR #4 feedback.md hit_flash
+vfx_damage_number,特效,伤害数字（字体+描边）白34/黄48,—,（字体）,P0,程序,未开始,PR #4 feel.json damage_numbers
+kill_orb,特效,击倒光点，飞向灵力栏0.5秒,24×24 / 48×48,assets/textures/vfx/kill_orb.png,P0,自绘,未开始,PR #4 kill_burst
+vfx_spell_cutin,特效,符卡立绘演出：遮罩+斜色带+结界纹,色带1080×480 / 2160×960,assets/textures/vfx/spell_cutin_band.png,P0,自绘,未开始,1.2秒首次/0.6秒之后，可跳过
+ice_block,特效,冻结冰块罩（敌人）,112×112 / 224×224,assets/textures/vfx/ice_block.png,P0,自绘,未开始,PR #4 freeze_apply
+ice_shatter_shards,特效,冰碎碎冰粒子,每片16-32 / 32-64,assets/textures/vfx/ice_shatter_shards.png,P0,自绘,未开始,PR #4 ice_shatter 0.3秒
+fog_soft,地形,浓雾叠加层（第一章1-3关）,可平铺512×512 / 1024×1024,assets/textures/terrain/fog_soft.png,P0,自绘或CC0,未开始,PR #5 浓雾；PR #4 ter_fog
+ice_floor,地形,冰面（首领关路线结冰）,128×128 / 256×256,assets/textures/terrain/ice_floor.png,P0,自绘,未开始,PR #5 ch1_04 地图变化；PR #4 ter_ice
+ui_hud_bars,界面,顶部栏和底部栏底板+朱红线,1080×140、1080×244 / 2倍,assets/textures/ui/ui_hud_top.png、ui_hud_bottom.png,P0,自绘,未开始,ui_visual_spec.md 第1节
+ui_icons_core,界面,灵力/生命/波次/暂停图标,64×64 / 128×128,assets/textures/ui/ui_icon_*.png,P0,自绘或CC0,未开始,
+ui_btn_spell,界面,符卡按钮（圆形+能量环+发光）,200×200 / 400×400,assets/textures/ui/ui_btn_spell.png,P0,自绘,未开始,PR #4 底部正中最大
+ui_toggle_auto_speed_wave,界面,自动开关、倍速、叫波按钮,96×52、240×100 / 2倍,assets/textures/ui/,P0,自绘,未开始,PR #4 core_rules 6.3
+ui_char_slot,界面,角色栏头像格（亮/暗，2×2排列）+四名角色头像+紫加入前的隙间剪影,格188×110、头像96×96 / 2倍,assets/textures/ui/ui_char_slot.png、ui_head_*.png,P0,自绘,未开始,头像可从小人头部拆件导出
+ui_frame_ofuda,界面,符纸九宫格面板（对话框、三选一卡片、结算）,九宫格 / 边距≥48（2倍）,assets/textures/ui/ui_frame_ofuda.png,P0,自绘或CC0,未开始,和风装饰
+ui_buff_card,界面,三选一强化卡片（每5波）：符纸卡底+稀有度边框（普通/稀有/珍贵）+1-3个印章,280×420 / 560×840；印章32×32 / 64×64,assets/textures/ui/ui_buff_card.png、ui_buff_frame_*.png、ui_buff_seal.png,P0,自绘,未开始,稀有度档数待系统策划确认（ui_visual_spec.md 待确认17）
+ui_icon_star,界面,星级图标（满/空）,64×64 / 128×128,assets/textures/ui/ui_icon_star_full.png、ui_icon_star_empty.png,P0,自绘,未开始,字体没有★，必须用图
+ui_title,界面,标题画面：标题字+背景+「东方 Project 二次创作」,1080×1920,assets/textures/ui/ui_title_bg.png,P0,自绘,未开始,PR #2 game.fanwork_notice
+ui_level_select,界面,选关：章节标签、关卡按钮、锁,按钮240×240 / 2倍,assets/textures/ui/,P0,自绘,未开始,PR #5 按顺序解锁
+reimu_marisa_cirno_yukari_lv2,角色,第1次升级：光环 yin_yang_orb_small、hakkero_glow、snowflake_drift、gap_parasol_eyes + 2级弹幕,光环≤96×96 / 192×192,assets/textures/vfx/,P1,自绘,未开始,PR #4 characters.json levels[1]
+reimu_marisa_cirno_yukari_lv3,角色,第2次升级：换色（着色器）+ yin_yang_orb_pair、hakkero_stars_orbit、ice_wings_sparkle、gap_many_eyes_ring + 3级弹幕,同上,assets/textures/vfx/,P1,自绘,未开始,PR #4 characters.json levels[2]
+boss_cirno,首领,首领琪露诺：共用 cirno 拆件放大1.5倍 + 宣言姿势,192×224 / 384×448,assets/textures/bosses/boss_cirno/,P1,自绘,未开始,首领人选待制作人确认；先用琪露诺拆件放大 1.5 倍占位，不单独绘制
+boss_cirno_phase_fx,首领,首领阶段外观：阶段2翅膀发光+光圈；阶段3雪暴（若保留）,≤256×256 / 512×512,assets/textures/bosses/boss_cirno/,P1,自绘,未开始,阶段数见待确认7。首领人选待制作人确认；先用琪露诺拆件放大 1.5 倍占位，不单独绘制
+boss_telegraphs,特效,首领预警：落点阴影、冰蓝圆形、冰面蔓延,128-640 / 2倍,assets/textures/vfx/,P1,自绘,未开始,PR #4 enemies_and_bosses 第6节。首领人选待制作人确认；先用琪露诺拆件放大 1.5 倍占位，不单独绘制
+ice_shatter_big,特效,首领击败大型碎冰,512×512 / 1024×1024,assets/textures/vfx/ice_shatter_big.png,P1,自绘,未开始,PR #4 bosses.json defeat_vfx。首领人选待制作人确认；先用琪露诺拆件放大 1.5 倍占位，不单独绘制
+barrier_red_white,地形,灵梦结界3×3,384×384 / 768×768,assets/textures/terrain/barrier_red_white.png,P1,自绘,未开始,PR #4 ter_barrier
+frost_mist,特效,减速寒气,64×32 / 128×64,assets/textures/vfx/frost_mist.png,P1,自绘或CC0,未开始,PR #4 statuses.json st_slow
+level_up_flash,特效,升级闪光,160×160 / 320×320,assets/textures/vfx/level_up_flash.png,P1,自绘,未开始,PR #4 level_up 0.3秒
+ice_block_unit,特效,角色被冻冰块+3级裂纹,160×192 / 320×384,assets/textures/vfx/ice_block_unit.png,P1,自绘,未开始,PR #4 unit_frozen
+spell_fx_mvp,特效,MVP符卡特效：梦想封印光弹、极限火花光束、完美冻结冲击波、八云紫的神隐（全屏隙间）,按效果,assets/textures/vfx/,P1,自绘,未开始,哪几张要做取决于可玩角色和符卡使方案
+ui_banners,界面,波次横幅、首领登场横幅、发现联动横幅（符纸+御币）,1080×200 / 2倍,assets/textures/ui/ui_banner.png,P1,自绘,未开始,PR #4 wave_banner/boss_entry/synergy_found
+ui_result_screens,界面,胜利结算、失败（从当前波重来/整关重打）、暂停菜单,面板九宫格复用,assets/textures/ui/,P1,自绘,未开始,PR #3 失败规则
+ui_dialogue,界面,剧情对话框+名字牌,1080×420 / 2倍,assets/textures/ui/ui_dialogue_box.png,P1,自绘,未开始,PR #2 dialogue_samples
+ui_tutorial,界面,教学高亮框、手指提示,按控件,assets/textures/ui/,P1,自绘或CC0,未开始,PR #2 tut.*
+bg_shrine,地图,序章背景和左右装饰（神社院子）,1440×2340（导出1倍）,assets/textures/tiles/shrine/bg_shrine.png,P1,自绘或CC0,未开始,
+bg_lake,地图,第一章背景和左右装饰（湖面和雾）,1440×2340（导出1倍）,assets/textures/tiles/lake/bg_lake.png,P1,自绘或CC0,未开始,
+ui_meta_upgrade,界面,局外养成（角色1-20级）框架,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #3 资源名未定
+ui_settings,界面,设置：符卡演出长短、震屏开关,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #4 spell_cards 2.3
+star_palette_swap,外观（星星解锁）,角色换色：换色着色器+每名角色1套调色板；攻击特效换色同一套,调色板16×1 / 着色器,assets/textures/characters/<id>/<id>_palette_alt1.png,P1,自绘/程序,未开始,星星只解锁外观和故事，不影响强度（PR #3/PR #5）；具体清单见风格指南待确认18
+icicle_pillar,地形,冰柱（若采用PR #4冰瀑规则）,128×192 / 256×384,assets/textures/terrain/icicle_pillar.png,P2,自绘,未开始,待确认7
+ui_good_spot_marker,界面,好位置角标（若决定显示）,32×32 / 64×64,assets/textures/ui/ui_good_spot.png,P2,自绘,未开始,待确认8
+portrait_expressions,立绘,立绘表情差分（普通/得意/慌张）,脸部拆件,assets/textures/portraits/,P2,自绘,未开始,
+vfx_batch2,特效,第二批：震屏（程序）、慢动作暗角、连击×N、联动小字、强化质变外观,按效果,assets/textures/vfx/,P2,自绘/程序,未开始,PR #4 第二批
+app_icon,界面,新的应用图标（替换 icon.svg）,512×512,icon.svg,P2,自绘,未开始,改名要另开程序PR
+star_cosmetics_later,外观（星星解锁）,小配件替换、立绘边框、界面主题、剧情插图,按类型,待定,P2,自绘,未开始,非MVP；成本排序见风格指南第8节
+shade_hard,残影,硬残影：方块厚重的旧电器,112×104 / 224×208,assets/textures/enemies/shade_hard.png,预留,自绘,未开始,非MVP/预留（系统策划：MVP只有小残影、快残影）；PR #4 enm_shade_armored（贴图名 shade_appliance）；PR #5 ch1_03 数据里有3只，见待确认5
+armor_spark,特效,硬残影护甲火花,64×64 / 128×128,assets/textures/vfx/armor_spark.png,预留,自绘或CC0,未开始,PR #4 armor_spark；随硬残影预留
