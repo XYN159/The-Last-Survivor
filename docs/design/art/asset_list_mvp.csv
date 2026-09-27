@@ -9,7 +9,7 @@ route_markers,地图,路线可读性：方向箭头「〉」+入口形状标记�
 reimu_parts,角色,灵梦棋盘小人拆件（头/身体/前后手/御币/袖子）+ idle/attack/place 动画,整体160×192 / 320×384；图集≤1024×1024,assets/textures/characters/reimu/,P0,自绘,未开始,PR #4 sprite_variant reimu_lv1
 marisa_parts,角色,魔理沙棋盘小人拆件（头帽/身体/手/扫帚/八卦炉）+ 动画,整体160×192 / 320×384,assets/textures/characters/marisa/,P0,自绘,未开始,PR #4 sprite_variant marisa_lv1
 cirno_parts,角色,琪露诺棋盘小人拆件（头/身体/手/冰晶翅膀）+ 动画；首领版共用,整体160×192 / 320×384,assets/textures/characters/cirno/,P0,自绘,未开始,打完 ch1_01 后加入（PR #4 unlock=ch1_01_clear）。首领冰之残影复用这套拆件，scale 1.5，再叠着色器 shade_ice_boss，不另画本体
-yukari_parts,角色,八云紫棋盘小人拆件（头帽/身体/手/洋伞/扇子）+ 动画；待机身边飘小隙间gap_small_eyes,整体160×200 / 320×400（比其他人略高）,assets/textures/characters/yukari/,P0,自绘,未开始,打完 ch1_04 后以弱化状态加入（PR #4 unlock=chapter1_boss_clear）。首通用不上，重打才能放，拆件仍是 P0。弱化表现见 yukari_weakened_fx
+yukari_parts,角色,八云紫棋盘小人拆件（头帽/身体/手/洋伞/扇子）+ 动画；待机身边飘小隙间gap_small_eyes,整体160×200 / 320×400（比其他人略高）,assets/textures/characters/yukari/,P0,自绘,未开始,打完 ch1_04 后以弱化状态加入（PR #4 unlock=chapter1_boss_clear）。首通用不上，重打才能放，拆件仍是 P0。弱化表现见 yukari_faded（名称待文案术语表，文件名是占位）
 shade_basic,残影,小残影：圆形旧物团，灰白半透明+噪点,80×80 / 160×160,assets/textures/enemies/shade_basic.png,P0,自绘,未开始,ID enm_shade_basic。文件名去掉 enm_ 前缀。不沿用旧贴图字段名
 shade_fast,残影,快残影：细长的褪色玩具,64×100 / 128×200,assets/textures/enemies/shade_fast.png,P0,自绘,未开始,ID enm_shade_fast。文件名 shade_fast.png（去掉 enm_）。enemies.json 的 sprite 仍写 shade_toy，美术不跟那个名字
 shade_armored,残影,硬残影：方块厚重的旧电器,112×104 / 224×208,assets/textures/enemies/shade_armored.png,P0,自绘,未开始,ID enm_shade_armored。文件名去掉 enm_。系统策划定为 MVP 三种之一，待制作人最终确认；第二章第 1 关登场，保持 P0。ch1_03 只有小残影和快残影
@@ -58,12 +58,16 @@ bg_shrine,地图,序章背景和左右装饰（神社院子）,1440×2340（导�
 bg_lake,地图,第一章背景和左右装饰（湖面和雾）,1440×2340（导出1倍）,assets/textures/tiles/lake/bg_lake.png,P1,自绘或CC0,未开始,
 ui_meta_upgrade,界面,局外养成（角色1-20级）框架,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #3 资源名未定
 ui_settings,界面,设置：符卡演出长短、震屏开关,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #4 spell_cards 2.3
-yukari_weakened_fx,特效,八云紫弱化：袖口褪成灰色；提案再加局部降饱和和少量褪色噪点,叠在 yukari 拆件上,assets/textures/vfx/yukari_weakened_fx.png 或着色器,P1,自绘/程序,未开始,原文无状态 ID。PR #2：力量褪色、弱化状态、袖口褪成灰色。全身方案见风格指南待确认20
-star_palette_swap,外观（星星解锁）,角色换色：换色着色器+每名角色1套调色板；攻击特效换色同一套,调色板16×1 / 着色器,assets/textures/characters/<id>/<id>_palette_alt1.png,P1,自绘/程序,未开始,文案失物簿：一章全部3星解锁该章角色外观和番外对话。序章给灵梦、魔理沙；第一章给琪露诺、紫。外观类型仍待制作人（风格指南待确认18）。MVP建议每名角色1套换色，加攻击特效换色
+yukari_faded,特效,八云紫弱化（名称待文案术语表）：袖口等边缘褪成灰，局部降低饱和度。主体保持鲜艳，不整体灰白，不半透明,叠在 yukari 拆件上,assets/textures/vfx/yukari_faded.png 或着色器,P1,自绘/程序,未开始,文件名 yukari_faded 是占位。正式名字和状态 ID 等文案术语表。PR #2：ch1_04 救场被冰之残影碰到，力量褪色，弱化跟队，第五章恢复全力。不能看起来像残影
+pal_reimu_alt,外观（星星解锁）,博丽灵梦满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/reimu/pal_reimu_alt.png,P1,自绘,未开始,序章全部3星解锁。衣服造型不变，只换配色，小人和头像都不重画。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
+pal_marisa_alt,外观（星星解锁）,雾雨魔理沙满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/marisa/pal_marisa_alt.png,P1,自绘,未开始,序章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
+pal_cirno_alt,外观（星星解锁）,琪露诺满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/cirno/pal_cirno_alt.png,P1,自绘,未开始,第一章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
+pal_yukari_alt,外观（星星解锁）,八云紫满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/yukari/pal_yukari_alt.png,P1,自绘,未开始,第一章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。和弱化状态 yukari_faded 不是同一张
+palette_swap,着色器,调色板替换：按原色行找到颜色，换成替换色行。套在拆件、头像和立绘上,—,（着色器，程序做）,P1,程序,未开始,首选做法，零重画。若实机色块对不齐、边缘发脏，再退回导出换色后的 PNG 副本。见风格指南第8节
 icicle_pillar,地形,一阶段冰柱：落在放置格上，挡直线12秒，灰白冰蓝+褪色噪点,128×192 / 256×384,assets/textures/terrain/icicle_pillar.png,P1,自绘,未开始,ter_icicle。格上有角色就冻住角色。不是右列冰面
 ui_slot_bubble,界面,长按放置格的符纸气泡：显示 label 和 why,最大宽420，高约120-160 / 2倍九宫格,assets/textures/ui/ui_slot_bubble.png,P1,自绘,未开始,例：分叉之前 / 只贴左路。不画常驻角标。待确认8，待制作人定
 ui_guide_highlight,界面,序章引导高亮框：一格大的符纸金框，四角符纸角饰,128×128 / 256×256,assets/textures/ui/ui_guide_highlight.png,P1,自绘,未开始,只罩序章正在讲的推荐格。第一章起不画。待确认8
 portrait_expressions,立绘,立绘表情差分（普通/得意/慌张）,脸部拆件,assets/textures/portraits/,P2,自绘,未开始,
 vfx_batch2,特效,第二批：震屏（程序）、慢动作暗角、连击×N、联动小字、强化质变外观,按效果,assets/textures/vfx/,P2,自绘/程序,未开始,PR #4 第二批
 app_icon,界面,新的应用图标（替换 icon.svg）,512×512,icon.svg,P2,自绘,未开始,改名要另开程序PR
-star_cosmetics_later,外观（星星解锁）,小配件替换、立绘边框、界面主题、剧情插图,按类型,待定,P2,自绘,未开始,非MVP；成本排序见风格指南第8节
+star_cosmetics_later,外观（星星解锁）,全新服装、小配件替换、立绘边框、界面主题、剧情插图,按类型,待定,P2,自绘,未开始,非MVP。全新服装以后再做，见风格指南第8节
