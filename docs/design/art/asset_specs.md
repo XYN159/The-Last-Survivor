@@ -48,6 +48,8 @@ y=1920 └───────────────────────�
 | 左右装饰边 | 0–92、988–1080 | 140–1676 | 各 92×1536 | 本章风景，不放可点的东西 |
 | 底部栏 | 0–1080 | 1676–1920 | 1080×244 | 角色栏、符卡按钮（含自动开关）、叫波、倍速。详见 [ui_visual_spec.md](ui_visual_spec.md) |
 
+关卡数据只存格子坐标，不存像素：0 起，`[列, 行]`，第 0 行在最上方（PR #5 `origin: row_0_is_north`）。像素由程序按棋盘那一行的公式换算。格子字符是 `P` 路线、`.` 放置格、`B` 障碍、`S` 裂缝、`G` 守护点。
+
 - 棋盘占屏宽 83%，7 格仍然是一眼看完的宽度；两边 92 像素画成风景，画面不会显得空。
 - **更长的手机**（已定，系统策划 2026-09-27，例如 1080×2340）：`expand` 模式下画面变高。先扣掉顶部刘海安全区（顶栏整块下移这段高度），剩下的高度全部给底栏，方便拇指。棋盘仍是 896×1536，不跟着变高，也不把多出来的高度画成风景。
 - **底栏背景图**：1080×1920 上底栏高 244，长屏会更高，所以这张图必须能纵向拉伸。做法是九宫格（Godot `NinePatchRect`）：上下各留一条可延展区（纯色 `#1E1A24`，或很淡、可纵向平铺的纹理），左右边和四个角画固定装饰（朱红线、符纸角）。上下 `patch_margin` 盖住装饰，中间随高度拉伸。被拉高的是棋盘底边和按钮之间的那一段；按钮本身贴着屏幕底边，离底边的距离和 1920 高时一样。可延展区里不要画会拉变形的花纹，四角不要平铺。角色头像和按钮是叠上去的控件，不画进底图。顶栏高固定 140，再加上刘海安全区，不必再拉高。
@@ -74,7 +76,7 @@ y=1920 └───────────────────────�
 | 出口终点线 | 128×32 | 256×64 | 中心 | 御札串成的绳，横放在守护点前一格 |
 | 小残影 | 约 80×80 | 160×160 | 底边中点 | |
 | 快残影 | 约 64×100 | 128×200 | 底边中点 | |
-| 硬残影 | 约 112×104 | 224×208 | 底边中点 | MVP。战斗 id `enm_shade_armored`，贴图名 `shade_appliance` |
+| 硬残影 | 约 112×104 | 224×208 | 底边中点 | 文件 `shade_armored.png`。ID `enm_shade_armored` |
 | 冰之残影 | 约 192×224 | 不另画；沿用琪露诺拆件 320×384，显示时 ×1.5 | 脚底中点 | id `boss_cirno`。`bosses.json` 的 `scale` 是 1.5。再叠着色器 `shade_ice_boss` |
 | 半身立绘 | 640×960 | 1280×1920 | 左下角 | 符卡演出时约占屏幕高度一半 |
 | 界面图标 | 64×64 | 128×128 | 中心 | 灵力、生命、波次、星星等 |
@@ -126,7 +128,16 @@ Godot 4 的图片导入选项在「导入」面板里。按下表设，改完点
    - 升级光环、弹幕特效、地形叠加用 PR #4 `characters.json` / `terrain.json` 里的名字，例如 `yin_yang_orb_small.png`、`ofuda_red.png`、`ice_floor.png`。
    - 立绘用 `portrait_<角色短名>.png`，例如 `portrait_cirno.png`（与 PR #4 `bosses.json` → `portrait: portrait_cirno` 一致）。
    - 角色短名用 PR #2 文本 key 的角色 id：`reimu`、`marisa`、`cirno`、`yukari`……
-   - 残影的美术文件用短名 `shade_small`、`shade_fast`、`shade_hard`。战斗和关卡的 ID 是 `enm_shade_basic`、`enm_shade_fast`、`enm_shade_armored`（战斗贴图名 `shade_basic` / `shade_toy` / `shade_appliance`）。首领文件用 `boss_cirno`。对照见风格指南第 5 节，待确认 6。
+   - 残影和首领的文件名 = PR #4 的 ID 去掉 `enm_` 前缀（已定，关卡策划 2026-09-27）：
+
+     | ID | 显示名 | 文件 |
+     | --- | --- | --- |
+     | `enm_shade_basic` | 小残影 | `shade_basic.png` |
+     | `enm_shade_fast` | 快残影 | `shade_fast.png` |
+     | `enm_shade_armored` | 硬残影 | `shade_armored.png` |
+     | `boss_cirno` | 冰之残影 | 目录 `bosses/boss_cirno/`（ID 本身没有 `enm_`，不改名） |
+
+     `enemies.json` 的 `visual.sprite` 仍写着 `shade_basic` / `shade_toy` / `shade_appliance`。美术文件不跟 `shade_toy`、`shade_appliance`。程序按上表的文件名加载。
    - 冰色残影着色器的美术侧名字是 `shade_ice_boss`。`bosses.json` 的 `visual` 里还没有 shader 字段。
    - 守护点用 PR #5 的 `guard_point.id` 去掉点号：`guard_hakurei_offering_box.png`、`guard_misty_lake_frogs.png`。
 4. 同一个东西的占位图和正式图**用同一个文件名**，换图就是覆盖文件，不改代码。
@@ -137,7 +148,9 @@ Godot 4 的图片导入选项在「导入」面板里。按下表设，改完点
 | --- | --- |
 | `assets/textures/characters/reimu/reimu_head.png` | 灵梦的头部拆件 |
 | `assets/textures/characters/reimu/reimu_head_lv3.png` | 3 级换色不够用时，单独画的头部（没有就不建） |
+| `assets/textures/enemies/shade_basic.png` | 小残影（ID `enm_shade_basic`，去掉 `enm_`） |
 | `assets/textures/enemies/shade_fast.png` | 快残影 |
+| `assets/textures/enemies/shade_armored.png` | 硬残影（ID `enm_shade_armored`） |
 | `assets/textures/tiles/shrine/tiles_shrine_atlas.png` | 神社格子图集 |
 | `assets/textures/vfx/kill_orb.png` | 击倒光点 |
 | `assets/textures/ui/ui_btn_spell.png` | 符卡按钮 |
