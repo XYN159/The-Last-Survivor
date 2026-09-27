@@ -19,10 +19,13 @@
   "teaches": [
     "分叉前的格子能打到所有残影",
     "分叉中间有障碍时，一座角色打不到两边",
-    "汇合后可以补漏，但不能代替两边的人"
+    "汇合后可以补漏，但不能代替两边的人",
+    "硬的东西要交给火力高的角色"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "enm_shade_armored"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -369,7 +372,35 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影从第 6 波才出现。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.left",
+          "count": 4,
+          "interval_sec": 6.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.right",
+          "count": 7,
+          "interval_sec": 3.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "wave_id": "w02",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影从第 6 波才出现。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -390,14 +421,14 @@
       ]
     },
     {
-      "id": "w02",
-      "wave_id": "w02",
+      "id": "w03",
+      "wave_id": "w03",
       "delay_sec": 4.0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影从第 6 波才出现。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -410,36 +441,8 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 11,
-          "interval_sec": 2.0,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ]
-    },
-    {
-      "id": "w03",
-      "wave_id": "w03",
-      "delay_sec": 4.0,
-      "next_wave_delay_sec": 4.0,
-      "duration_sec": 20,
-      "ends_when": "spawn_window",
-      "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.left",
-          "count": 9,
-          "interval_sec": 2.5,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.right",
-          "count": 13,
-          "interval_sec": 1.7,
+          "count": 10,
+          "interval_sec": 2.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -453,21 +456,21 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影从第 6 波才出现。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 10,
-          "interval_sec": 2.2,
+          "count": 8,
+          "interval_sec": 2.9,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 16,
-          "interval_sec": 1.3,
+          "count": 12,
+          "interval_sec": 1.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -481,21 +484,21 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影从第 6 波才出现。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 12,
-          "interval_sec": 1.8,
+          "count": 9,
+          "interval_sec": 2.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 18,
-          "interval_sec": 1.2,
+          "count": 14,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -509,22 +512,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 14,
-          "interval_sec": 1.5,
+          "count": 6,
+          "interval_sec": 4.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 20,
-          "interval_sec": 1.1,
+          "count": 16,
+          "interval_sec": 1.3,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.left",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -537,22 +548,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 15,
-          "interval_sec": 1.4,
+          "count": 12,
+          "interval_sec": 1.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 23,
-          "interval_sec": 0.9,
+          "count": 13,
+          "interval_sec": 1.7,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.right",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -565,22 +584,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 17,
-          "interval_sec": 1.2,
+          "count": 9,
+          "interval_sec": 2.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 25,
-          "interval_sec": 0.8,
+          "count": 19,
+          "interval_sec": 1.1,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.left",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -593,22 +620,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 18,
-          "interval_sec": 1.2,
+          "count": 14,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 28,
-          "interval_sec": 0.7,
+          "count": 17,
+          "interval_sec": 1.3,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.right",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -621,22 +656,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 18,
-          "interval_sec": 1.2,
+          "count": 11,
+          "interval_sec": 2.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 32,
-          "interval_sec": 0.6,
+          "count": 23,
+          "interval_sec": 0.9,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.left",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -649,22 +692,30 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。硬残影在这一波偏后出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 20,
-          "interval_sec": 1.1,
+          "count": 16,
+          "interval_sec": 1.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 34,
-          "interval_sec": 0.6,
+          "count": 21,
+          "interval_sec": 1.0,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.right",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -677,22 +728,38 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有小残影和快残影。",
+      "note": "左右路同时出场。小残影走左路，快残影走右路。这一波偏后左右各有一只硬残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
-          "count": 22,
-          "interval_sec": 1.0,
+          "count": 14,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 36,
-          "interval_sec": 0.6,
+          "count": 22,
+          "interval_sec": 1.0,
           "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.left",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_armored",
+          "path_id": "path.right",
+          "count": 1,
+          "interval_sec": 1.0,
+          "delay_sec": 10.0,
           "entrance_id": "entrance.north"
         }
       ]
@@ -704,7 +771,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。序章三关和第一章第 1 关已按校准系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 1.0,

@@ -27,10 +27,10 @@
     {
       "id": "enm_shade_armored",
       "display_name": "硬残影",
-      "introduced_in": "ch2_01",
+      "introduced_in": "ch1_03",
       "threat_points": 4,
       "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点是 4。战斗稿亦称旧电器。MVP 的七关不用它。从第二章第 1 关起才用这个 id，不要另造一条护甲。"
+      "note": "预算用的威胁点是 4。MVP 里只在第一章第 3 关少量出现，其他 MVP 关不出。从第二章第 1 关起成为常见敌人。不要另造一条护甲。属性见 stat_source，不在这里抄。"
     },
     {
       "id": "enm_shade_phantom",

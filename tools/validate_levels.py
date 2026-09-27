@@ -19,10 +19,23 @@ ROOT = Path(__file__).resolve().parents[1]
 LEVEL_DIR = ROOT / "data" / "levels"
 BALANCE_PATH = ROOT / "data" / "balance" / "level_difficulty.json"
 CALIBRATED_COEFS = {
-    "prologue_01": Decimal("0.55"),
-    "prologue_02": Decimal("0.50"),
-    "prologue_03": Decimal("0.70"),
-    "ch1_01": Decimal("0.60"),
+    "prologue_01": Decimal("0.68"),
+    "prologue_02": Decimal("0.69"),
+    "prologue_03": Decimal("0.68"),
+    "ch1_01": Decimal("0.67"),
+    "ch1_02": Decimal("0.62"),
+    "ch1_03": Decimal("0.75"),
+    "ch1_04": Decimal("0.70"),
+}
+# 第 6–11 波各 1 只，第 12 波左右各 1 只。左、右、左、右、左、右，再左右各一只。
+CH1_03_ARMOR = {
+    6: [("path.left", 1)],
+    7: [("path.right", 1)],
+    8: [("path.left", 1)],
+    9: [("path.right", 1)],
+    10: [("path.left", 1)],
+    11: [("path.right", 1)],
+    12: [("path.left", 1), ("path.right", 1)],
 }
 SCHEMA_PATH = LEVEL_DIR / "level.schema.json"
 BUDGET_THREATS = {
@@ -343,10 +356,11 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
             total_threat += threat
             if enemy_id == fast:
                 swift_threat += threat
-            if enemy_id == armored:
-                problems.append(f"{level_id} 是 MVP，不该出现硬残影")
-            if level["chapter_id"] in ("prologue", "ch1") and enemy_id not in (basic, fast):
-                problems.append(f"{level_id} 的 MVP 敌人只有小残影和快残影")
+            if enemy_id == armored and level_id != "ch1_03":
+                problems.append(f"{level_id} 不该出现硬残影。MVP 里只有第一章第 3 关可以出")
+            allowed = (basic, fast, armored) if level_id == "ch1_03" else (basic, fast)
+            if level["chapter_id"] in ("prologue", "ch1") and enemy_id not in allowed:
+                problems.append(f"{level_id} 的 MVP 敌人不对")
     if level["chapter_id"] == "prologue" and swift_threat:
         problems.append(f"{level_id} 只该有小残影")
     if level_id == "ch1_01":
@@ -366,14 +380,31 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
         if total_threat and not 0.45 <= swift_threat / total_threat <= 0.55:
             problems.append(f"练习关快残影占比 {swift_threat / total_threat:.3f} 不在一半附近")
     if level_id == "ch1_03":
-        for wave in level["waves"]:
-            delays = [spawn["delay_sec"] for spawn in wave["spawns"]]
-            paths = {spawn["path_id"] for spawn in wave["spawns"]}
-            kinds = {spawn["enemy_id"] for spawn in wave["spawns"]}
-            if len(wave["spawns"]) < 2 or any(delay != 0 for delay in delays) or len(paths) < 2:
+        if "enm_shade_armored" not in level.get("new_enemy_ids", []):
+            problems.append("第一章第 3 关的新敌人应该包含硬残影")
+        basic_points = 0
+        swift_points = 0
+        for index, wave in enumerate(level["waves"], start=1):
+            starters = [spawn for spawn in wave["spawns"] if spawn["enemy_id"] in (basic, fast)]
+            delays = [spawn["delay_sec"] for spawn in starters]
+            paths = {spawn["path_id"] for spawn in starters}
+            if len(starters) < 2 or any(delay != 0 for delay in delays) or paths != {"path.left", "path.right"}:
                 problems.append(f"{wave['id']} 没有左右同时出场")
-            if kinds - {basic, fast}:
-                problems.append(f"{wave['id']} 只能有小残影和快残影")
+            armored_spawns = [spawn for spawn in wave["spawns"] if spawn["enemy_id"] == armored]
+            got = [(spawn["path_id"], spawn["count"]) for spawn in armored_spawns]
+            if got != CH1_03_ARMOR.get(index, []):
+                problems.append(f"{wave['id']} 的硬残影数量或路线不对")
+            for spawn in armored_spawns:
+                if not 8 <= spawn["delay_sec"] <= 12:
+                    problems.append(f"{wave['id']} 的硬残影应该在第 8 到 12 秒出场")
+            for spawn in starters:
+                if spawn["enemy_id"] == basic:
+                    basic_points += spawn["count"]
+                else:
+                    swift_points += spawn["count"]
+        shade_points = basic_points + swift_points
+        if shade_points and not 0.35 <= basic_points / shade_points <= 0.45:
+            problems.append(f"分叉关小残影占比 {basic_points / shade_points:.3f} 不在四成附近")
     if level_id == "prologue_03":
         for index, wave in enumerate(level["waves"], start=1):
             if index < 6:
@@ -384,12 +415,22 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
                 problems.append(f"{wave['id']} 后半应该两组同时走同一条路")
     if level_id == "ch1_04":
         boss = level["bosses"][0]
-        if boss["enters_at_wave_id"] != "w05":
-            problems.append("冰之残影应该在第 5 波入场")
-        if boss["prelude_wave_ids"] != ["w01", "w02", "w03", "w04"]:
-            problems.append("冰之残影的前奏应该是前 4 波")
+        enter = boss.get("enter_wave")
+        if enter != 5:
+            problems.append("冰之残影的 enter_wave 现在仍是 5，等制作人拍板后再改")
+        if not isinstance(enter, int):
+            problems.append("冰之残影要有整数 enter_wave")
+            enter = 5
+        expected_wave = f"w{enter:02d}"
+        if boss["enters_at_wave_id"] != expected_wave:
+            problems.append("enters_at_wave_id 要和 enter_wave 是同一波")
+        expected_prelude = [f"w{index:02d}" for index in range(1, enter)]
+        if boss["prelude_wave_ids"] != expected_prelude:
+            problems.append("冰之残影的前奏应该是入场前的每一波")
         for index, wave in enumerate(level["waves"], start=1):
-            expected_pressure = "minion" if index <= 4 or index % 2 == 0 else "boss_phase"
+            if wave.get("is_boss") != (index == enter):
+                problems.append(f"{wave['id']} 的 is_boss 要和 enter_wave 一致")
+            expected_pressure = "minion" if index < enter or index % 2 == 0 else "boss_phase"
             if wave.get("pressure") != expected_pressure:
                 problems.append(f"{wave['id']} 的压力应该是 {expected_pressure}")
         spell_ids = [phase["spell_card_id"] for phase in boss["phases"]]

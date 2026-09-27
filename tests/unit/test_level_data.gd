@@ -90,11 +90,14 @@ func test_difficulty_seed_records_the_open_points() -> void:
 	assert_true(text.contains("10-11"))
 	assert_true(text.contains("制作人"))
 	var rows := _read_difficulty()
-	assert_eq(str(rows["prologue_01"]["threat_budget_coef"]), "0.55")
-	assert_eq(str(rows["prologue_02"]["threat_budget_coef"]), "0.50")
-	assert_eq(str(rows["prologue_03"]["threat_budget_coef"]), "0.70")
-	assert_eq(str(rows["ch1_01"]["threat_budget_coef"]), "0.60")
-	assert_eq(str(rows["ch1_02"]["threat_budget_coef"]), "1.0")
+	assert_eq(str(rows["prologue_01"]["threat_budget_coef"]), "0.68")
+	assert_eq(str(rows["prologue_02"]["threat_budget_coef"]), "0.69")
+	assert_eq(str(rows["prologue_03"]["threat_budget_coef"]), "0.68")
+	assert_eq(str(rows["ch1_01"]["threat_budget_coef"]), "0.67")
+	assert_eq(str(rows["ch1_02"]["threat_budget_coef"]), "0.62")
+	assert_eq(str(rows["ch1_03"]["threat_budget_coef"]), "0.75")
+	assert_eq(str(rows["ch1_04"]["threat_budget_coef"]), "0.70")
+	assert_eq(str(rows["ch2_01"]["threat_budget_coef"]), "1.0")
 	assert_eq(str(rows["ch1_04"]["expected_first_clear_lives"]), "10-11")
 	assert_eq(str(rows["ch1_01"]["expected_first_clear_lives"]), "11-13")
 	assert_eq(str(rows["prologue_01"]["reward_spirit_start"]), "150")
@@ -268,8 +271,8 @@ func test_ch1_01_fast_shades_start_at_wave_six() -> void:
 		else:
 			assert_gt(fast_here, 0, str(wave["id"]))
 		fast_total += fast_here
-	assert_eq(fast_total, 58)
-	assert_eq(threat_total, 192)
+	assert_eq(fast_total, 63)
+	assert_eq(threat_total, 214)
 
 
 func test_mvp_levels_only_spawn_basic_and_fast_shades() -> void:
@@ -282,7 +285,47 @@ func test_mvp_levels_only_spawn_basic_and_fast_shades() -> void:
 			for spawn in wave["spawns"]:
 				var enemy_id := str(spawn["enemy_id"])
 				var allowed := enemy_id == "enm_shade_basic" or enemy_id == "enm_shade_fast"
+				if str(level["id"]) == "ch1_03" and enemy_id == "enm_shade_armored":
+					allowed = true
 				assert_true(allowed, "%s %s" % [str(level["id"]), enemy_id])
+
+
+func test_ch1_03_armored_shades_follow_the_schedule() -> void:
+	var level := _read_dictionary(_LEVEL_DIR + "ch1_03.json")
+	var armored_total := 0
+	var wave_index := 0
+	for wave in level["waves"]:
+		wave_index += 1
+		var left := 0
+		var right := 0
+		for spawn in wave["spawns"]:
+			if str(spawn["enemy_id"]) != "enm_shade_armored":
+				continue
+			var count := int(spawn["count"])
+			armored_total += count
+			var delay := float(spawn["delay_sec"])
+			assert_true(delay >= 8.0 and delay <= 12.0, str(wave["id"]))
+			if str(spawn["path_id"]) == "path.left":
+				left += count
+			elif str(spawn["path_id"]) == "path.right":
+				right += count
+		if wave_index < 6:
+			assert_eq(left + right, 0, str(wave["id"]))
+		elif wave_index == 12:
+			assert_eq(left, 1, str(wave["id"]))
+			assert_eq(right, 1, str(wave["id"]))
+		elif wave_index % 2 == 0:
+			assert_eq(left, 1, str(wave["id"]))
+			assert_eq(right, 0, str(wave["id"]))
+		else:
+			assert_eq(left, 0, str(wave["id"]))
+			assert_eq(right, 1, str(wave["id"]))
+	assert_eq(armored_total, 8)
+	var boss_level := _read_dictionary(_LEVEL_DIR + "ch1_04.json")
+	var bosses: Array = boss_level["bosses"]
+	var boss: Dictionary = bosses[0]
+	assert_eq(int(boss["enter_wave"]), 5)
+	assert_eq(str(boss["enters_at_wave_id"]), "w05")
 
 
 func _read_dictionary(path: String) -> Dictionary:
@@ -417,6 +460,9 @@ func _threat_problems(level: Dictionary, threats: Dictionary, row: Dictionary) -
 			"prologue_02",
 			"prologue_03",
 			"ch1_01",
+			"ch1_02",
+			"ch1_03",
+			"ch1_04",
 		]
 	)
 	if not calibrated and str(row["threat_budget_coef"]) != "1.0":

@@ -414,6 +414,7 @@
         "character_id",
         "blocks_character_id",
         "enters_at_wave_id",
+        "enter_wave",
         "entrance_id",
         "path_id",
         "prelude_wave_ids",
@@ -433,6 +434,11 @@
           ]
         },
         "enters_at_wave_id": {"type": "string", "minLength": 1},
+        "enter_wave": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "入场是第几波，和 enters_at_wave_id 是同一个数。制作人拍板后改这个整数。"
+        },
         "entrance_id": {"type": "string", "minLength": 1},
         "path_id": {"type": "string", "minLength": 1},
         "prelude_wave_ids": {

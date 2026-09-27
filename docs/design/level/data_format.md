@@ -170,15 +170,15 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `delay_sec` | 相对这一波开始再等多少秒 |
 | `entrance_id` | 关卡多留的入口 id，必须是这张图上有的 |
 
-画完的关：每一波的敌人威胁要等于难度表里该波的 `wave_threat_budgets`。预算是 `round((10 + 4 × 波次) × threat_budget_coef)`。序章三关和第一章第 1 关用数值策划校准后的系数，允许和预算差 1 点。其余关系数仍是 1.0，必须刚好相等。首领不占预算。
+画完的关：每一波的敌人威胁要等于难度表里该波的 `wave_threat_budgets`。预算是 `round((10 + 4 × 波次) × threat_budget_coef)`。MVP 七关用数值策划第二轮系数，允许和预算差 1 点。其余关系数仍是 1.0，必须刚好相等。首领不占预算。硬残影只允许出现在第一章第 3 关。
 
 序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。制作人已定：非序章关卡每关 1 到 3 次，最后一波不弹。10 波只有第 5 波后一次。15 波是第 5、10 波后。20 波是第 5、10、15 波后。11 到 14 波同 15 波，16 波同 20 波。波数不改。
 
 ## 难度表 `data/balance/level_difficulty.json`
 
-这张表归数值策划。权威文件在分支 `numeric/touhou-td-framework` 的同名路径。合并时先合数值 PR；本仓库这份若冲突，保留他们的版本。本副本里，序章三关和第一章第 1 关的系数与每波预算已按他们的校准写入，其余关仍是系数 1.0 的种子。校验器和测试读这份 JSON。`comments` 里写归属和公式。
+这张表归数值策划。权威文件在分支 `numeric/touhou-td-framework` 的同名路径。该分支还没有 `tools/numeric/output/level_tables_level_difficulty.csv`，已推送的表仍是上一轮系数，不能覆盖这一轮。等他们推出含这一轮系数的表之后，合并时先合数值 PR；本仓库这份若冲突，再保留他们的版本。本副本里，MVP 七关的系数与每波预算已按第二轮写入，第一章第 3 关是 0.75。其余关仍是系数 1.0 的种子。校验器和测试读这份 JSON。`comments` 里写归属和公式。
 
-约定的每一波预算是 `round((10 + 4 × wave_index) × threat_budget_coef)`，`wave_index` 从 1 起。序章系数是 0.55、0.50、0.70，第一章第 1 关是 0.60。其余关仍是 1.0。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。
+约定的每一波预算是 `round((10 + 4 × wave_index) × threat_budget_coef)`，`wave_index` 从 1 起。MVP 系数是序章 0.68、0.69、0.68，第一章 0.67、0.62、0.75、0.70。其余关仍是 1.0。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。
 
 首通剩余生命：普通关 11 到 13，首领关大约 10 到 11。这是手感目标，还等制作人确认。它不是星级分档。2 星的占位是剩余至少 50%（10/20）。
 
@@ -189,11 +189,11 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `level_index` | 解锁顺序，1 到 24 |
 | `level_role` | `teaching`、`practice`、`test`、`boss` |
 | `wave_count` | 几波 |
-| `threat_budget_coef` | 序章 0.55、0.50、0.70，第一章第 1 关 0.60。其余关仍是 `1.0` |
+| `threat_budget_coef` | MVP 七关是 0.68、0.69、0.68、0.67、0.62、0.75、0.70。其余关仍是 `1.0` |
 | `hp_multiplier` | `1 + 0.15 × (level_index − 1)`，只升不降 |
 | `reward_spirit_start` | 开局灵力 150 |
 | `reward_spirit_per_wave` | 每活过一波加 20 |
-| `wave_threat_budgets` | 每一波的威胁预算。序章和第一章第 1 关用校准后的整数 |
+| `wave_threat_budgets` | 每一波的威胁预算。MVP 七关用第二轮系数取整后的整数 |
 | `buff_after_waves` | 三选一的波次数组，例如 20 波关是 `[5, 10, 15]`。最后一波不写进去。少于 5 波则是空数组 |
 | `buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
 | `expected_first_clear_lives` | `11-13` 或首领的 `10-11` |
@@ -212,7 +212,8 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `display_name` | 给人看的名字 |
 | `character_id` | 例如 `chr_cirno` |
 | `blocks_character_id` | 决斗期间不能放置的角色。不能出现在可放置名单里。冰之残影不锁琪露诺，写 `null` |
-| `enters_at_wave_id` | 从哪一波走进来 |
+| `enters_at_wave_id` | 从哪一波走进来，例如 `w05` |
+| `enter_wave` | 同一个入场波的整数。冰之残影现在是 5。制作人拍板后改这一个数，并让波次 id、前奏和 `is_boss` 跟它一致 |
 | `entrance_id`、`path_id` | 从哪进、走哪条路 |
 | `prelude_wave_ids` | 入场前的波。琪露诺是前 4 波。这些波不必再被阶段瓜分 |
 | `phases` | 2 到 3 个血量阶段，每个阶段一张符卡 |
