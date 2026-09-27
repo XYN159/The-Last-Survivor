@@ -23,7 +23,7 @@
 ### 2.1 冰碎（框架）
 
 - 只认 `st_freeze`，不认美铃的拦截（`st_hold`）和咲夜的时停（`st_time_stop`），因为那不是冰。
-- MVP 里的冻结来源有三个（已拍板，2026-09-27）：强化「寒气」`buff_frost_frog`，Boss 琪露诺二阶段 `sc_boss_cirno_perfect_freeze`，以及击败琪露诺后解锁的琪露诺本人 `chr_cirno`（技能「冰结」和她的玩家符卡）。见 characters.md 第 2.1 节。配置写在 `syn_ice_shatter.mvp_freeze_sources`。
+- MVP 里的冻结来源有三个（已拍板，2026-09-27）：强化「寒气」`buff_frost_frog`，Boss 琪露诺二阶段 `sc_boss_cirno_perfect_freeze`，以及解锁后的琪露诺本人 `chr_cirno`（技能「冰结」和她的玩家符卡）。琪露诺的解锁时机待定（`mvp_freeze_source_unlock.chr_cirno` = `pending_producer`）。见 characters.md 第 2.1 节。
 - 冰碎是第一批 MVP 必做的反馈：碎冰特效 + 碎冰音效 + 黄色放大数字。
 
 ### 2.2 符札引爆

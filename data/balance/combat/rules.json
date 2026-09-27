@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 3,
+    "schema_version": 4,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/core_rules.md"
@@ -156,7 +156,8 @@
     "scope": "per_level",
     "clear_on_level_end": true,
     "allow_repeat_stacks": true,
-    "disabled_in_tutorial": true,
+    "prologue_levels_without_offer": 2,
+    "prologue_offer_starts_at_level": 3,
     "pity_owned_below_threshold": true,
     "skip_offer_on_final_wave": true
   },

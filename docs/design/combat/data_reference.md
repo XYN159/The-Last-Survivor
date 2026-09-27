@@ -89,7 +89,8 @@
 | `buff_offers.scope` | 字符串 | — | 强化只管当局，`per_level`。过关清空。已拍板 | 制作人/系统 |
 | `buff_offers.clear_on_level_end` | 布尔 | — | 过关清空强化。已定为 true | 战斗/系统 |
 | `buff_offers.allow_repeat_stacks` | 布尔 | — | 同一强化可以重复叠加。已定为 true | 战斗 |
-| `buff_offers.disabled_in_tutorial` | 布尔 | — | 序章教学关没有三选一。已定为 true | 战斗 |
+| `buff_offers.prologue_levels_without_offer` | 整数 | 关 | 序章前几关没有三选一。已定为 2 | 战斗 |
+| `buff_offers.prologue_offer_starts_at_level` | 整数 | 关 | 序章从第几关开始教三选一。已定为 3 | 战斗 |
 | `buff_offers.pity_owned_below_threshold` | 布尔 | — | 已拥有但未到质变层数的强化，下次三选一保底出现其中一个。已定为 true | 战斗 |
 | `buff_offers.skip_offer_on_final_wave` | 布尔 | — | 最后一波打完不再给三选一。已定为 true | 战斗 |
 | `placement.allowed_cell_mark` | 字符串 | — | 只能放在地图里标成 `P` 的格子。已拍板 | 战斗/关卡 |
@@ -142,9 +143,10 @@
 | `id` | 字符串 | — | `chr_<PR #2 角色 id>` | 战斗 |
 | `name_key` | 字符串 | — | 显示名文本 key（PR #2 已有） | 文案 |
 | `playable_status` | 字符串 | — | `confirmed` / `pending_producer`（PR #2 待定的三人） | 制作人 |
-| `mvp` | 布尔 | — | 是否属于 MVP 角色。灵梦、魔理沙、琪露诺、紫为 true | 战斗 |
-| `unlock` | 字符串 | — | 可选。琪露诺和紫为 `defeat_boss_cirno`：击败琪露诺后才能放置。不写关卡号 | 战斗 |
+| `mvp` | 布尔 | — | 战斗行为是否放进 MVP。灵梦、魔理沙、琪露诺、紫为 true。琪露诺为 true 只表示行为写在 MVP 里 | 战斗 |
+| `unlock` | 字符串 | — | 可选。紫为 `chapter1_boss_clear`：第一章 Boss 关打完后才能放置。琪露诺为 `pending_producer`：可放置时机待定 | 战斗 |
 | `before_unlock` | 字符串 | — | 可选。紫为 `chapter1_gap_peek_once`：解锁前在第一章用隙间探头演示一次换位 | 战斗 |
+| `mvp_use` | 字符串 | — | 可选。紫为 `replay_cleared_levels`：MVP 里通过重打已通关的关卡放置 | 战斗 |
 | `role` | 字符串 | — | 定位标签，只给人看 | 战斗 |
 | `tags` | 数组 | — | 机制标签，如 `fade_immune` | 战斗 |
 | `attack.type` | 字符串 | — | 攻击类型，见 characters.md 第 3 节 | 战斗 |
@@ -291,6 +293,7 @@
 | `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
 | `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
 | `mvp_freeze_sources` | 数组 | MVP 冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze`、`chr_cirno`（解锁后的琪露诺本人） |
+| `mvp_freeze_source_unlock` | 对象 | 某个来源的解锁标记。`chr_cirno` 为 `pending_producer` |
 | `trigger.event` | 字符串 | `on_hit` / `on_gap_move` / `on_spell_cast` |
 | `trigger.check_step` | 字符串 | 在伤害流水线第几步判定 |
 | `trigger.attacker_character` / `attacker_damage_tag` / `target_has_status` | 字符串 | 条件 |
