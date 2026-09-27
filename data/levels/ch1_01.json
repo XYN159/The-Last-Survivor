@@ -28,21 +28,21 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "琪露诺加入。薄雾缩短射程，少量疾走玩具要用减速接住。",
+  "summary": "琪露诺加入。薄雾缩短射程，后半的快残影要用减速接住。",
   "player_feeling": "换了地图，但比序章最后一关松。新敌人很少，先看懂雾和减速。",
   "teaches": [
-    "浓雾里必须把角色贴着路线放",
-    "琪露诺能让残影变慢",
-    "疾走玩具比褪色玩具更快，数量还不多"
+    "雾里要贴着路线放",
+    "快残影比小残影更快，但更脆，数量大约占两成",
+    "琪露诺的减速能接住快残影"
   ],
   "new_character_ids": [
     "char.cirno"
   ],
   "new_enemy_ids": [
-    "remnant.swift_toy"
+    "shade_fast"
   ],
   "params": {
-    "starting_spirit_power": 180,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu",
@@ -157,7 +157,7 @@
         "col": 3,
         "row": 5,
         "label": "右移后的中段",
-        "why": "路线往右靠了之后，减速要放在贴着新路线的这一格。疾走玩具数量少，但一不减速就会冲过这段。"
+        "why": "路线往右靠了之后，减速要放在贴着新路线的这一格。快残影数量少，但一不减速就会冲过这段。"
       },
       {
         "id": "spot.lower",
@@ -179,11 +179,11 @@
     {
       "id": "w01",
       "delay_sec": 2.0,
-      "note": "前半只有褪色玩具。新来的疾走玩具留到后半。",
+      "note": "前半只有小残影。新来的快残影留到后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 12,
+          "enemy_id": "shade_small",
+          "count": 14,
           "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -194,11 +194,11 @@
     {
       "id": "w02",
       "delay_sec": 8.0,
-      "note": "前半只有褪色玩具。新来的疾走玩具留到后半。",
+      "note": "前半只有小残影。新来的快残影留到后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 15,
+          "enemy_id": "shade_small",
+          "count": 18,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -209,11 +209,11 @@
     {
       "id": "w03",
       "delay_sec": 7.3,
-      "note": "前半只有褪色玩具。新来的疾走玩具留到后半。",
+      "note": "前半只有小残影。新来的快残影留到后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 19,
+          "enemy_id": "shade_small",
+          "count": 22,
           "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -224,11 +224,11 @@
     {
       "id": "w04",
       "delay_sec": 6.6,
-      "note": "前半只有褪色玩具。新来的疾走玩具留到后半。",
+      "note": "前半只有小残影。新来的快残影留到后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 22,
+          "enemy_id": "shade_small",
+          "count": 26,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -239,11 +239,11 @@
     {
       "id": "w05",
       "delay_sec": 5.9,
-      "note": "前半只有褪色玩具。新来的疾走玩具留到后半。本波结束后弹出三选一，三张里选一张。",
+      "note": "前半只有小残影。新来的快残影留到后半。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 26,
+          "enemy_id": "shade_small",
+          "count": 30,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -254,19 +254,19 @@
     {
       "id": "w06",
       "delay_sec": 5.2,
-      "note": "后半才加入疾走玩具。这一关新残影大约占两成威胁，都挤在后半。",
+      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 21,
+          "enemy_id": "shade_small",
+          "count": 24,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 4,
+          "enemy_id": "shade_fast",
+          "count": 10,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -277,19 +277,19 @@
     {
       "id": "w07",
       "delay_sec": 4.6,
-      "note": "后半才加入疾走玩具。这一关新残影大约占两成威胁，都挤在后半。",
+      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 22,
+          "enemy_id": "shade_small",
+          "count": 26,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 5,
+          "enemy_id": "shade_fast",
+          "count": 12,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -300,19 +300,19 @@
     {
       "id": "w08",
       "delay_sec": 3.9,
-      "note": "后半才加入疾走玩具。这一关新残影大约占两成威胁，都挤在后半。",
+      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 26,
+          "enemy_id": "shade_small",
+          "count": 29,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 5,
+          "enemy_id": "shade_fast",
+          "count": 13,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -323,19 +323,19 @@
     {
       "id": "w09",
       "delay_sec": 3.2,
-      "note": "后半才加入疾走玩具。这一关新残影大约占两成威胁，都挤在后半。",
+      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 27,
+          "enemy_id": "shade_small",
+          "count": 32,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 6,
+          "enemy_id": "shade_fast",
+          "count": 14,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -346,19 +346,19 @@
     {
       "id": "w10",
       "delay_sec": 2.5,
-      "note": "后半才加入疾走玩具。这一关新残影大约占两成威胁，都挤在后半。本波结束后弹出三选一，三张里选一张。",
+      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 29,
+          "enemy_id": "shade_small",
+          "count": 35,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 7,
+          "enemy_id": "shade_fast",
+          "count": 15,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -373,6 +373,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

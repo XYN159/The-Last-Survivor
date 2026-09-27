@@ -38,7 +38,7 @@
   "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
-    "starting_spirit_power": 160,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu",
@@ -187,7 +187,7 @@
         "col": 3,
         "row": 10,
         "label": "青蛙前",
-        "why": "最后一段很短。用来补已经漏过弯道的疾走玩具，不当主阵地。"
+        "why": "最后一段很短。用来补已经漏过弯道的快残影，不当主阵地。"
       }
     ]
   },
@@ -195,19 +195,19 @@
     {
       "id": "w01",
       "delay_sec": 2.0,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 6,
+          "enemy_id": "shade_small",
+          "count": 7,
           "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 4,
+          "enemy_id": "shade_fast",
+          "count": 7,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -218,19 +218,19 @@
     {
       "id": "w02",
       "delay_sec": 8.0,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 8,
+          "enemy_id": "shade_small",
+          "count": 9,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 5,
+          "enemy_id": "shade_fast",
+          "count": 9,
           "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -241,19 +241,19 @@
     {
       "id": "w03",
       "delay_sec": 7.4,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 10,
+          "enemy_id": "shade_small",
+          "count": 11,
           "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 6,
+          "enemy_id": "shade_fast",
+          "count": 11,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -264,19 +264,19 @@
     {
       "id": "w04",
       "delay_sec": 6.8,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 12,
+          "enemy_id": "shade_small",
+          "count": 13,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 7,
+          "enemy_id": "shade_fast",
+          "count": 13,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -287,19 +287,19 @@
     {
       "id": "w05",
       "delay_sec": 6.2,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。本波结束后弹出三选一，三张里选一张。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 14,
+          "enemy_id": "shade_small",
+          "count": 15,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 8,
+          "enemy_id": "shade_fast",
+          "count": 15,
           "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -310,19 +310,19 @@
     {
       "id": "w06",
       "delay_sec": 5.6,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 18,
+          "enemy_id": "shade_small",
+          "count": 17,
           "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 8,
+          "enemy_id": "shade_fast",
+          "count": 17,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -333,19 +333,19 @@
     {
       "id": "w07",
       "delay_sec": 4.9,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 20,
+          "enemy_id": "shade_small",
+          "count": 19,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 9,
+          "enemy_id": "shade_fast",
+          "count": 19,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -356,19 +356,19 @@
     {
       "id": "w08",
       "delay_sec": 4.3,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 22,
+          "enemy_id": "shade_small",
+          "count": 21,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 10,
+          "enemy_id": "shade_fast",
+          "count": 21,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -379,19 +379,19 @@
     {
       "id": "w09",
       "delay_sec": 3.7,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 24,
+          "enemy_id": "shade_small",
+          "count": 23,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 11,
+          "enemy_id": "shade_fast",
+          "count": 23,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -402,19 +402,19 @@
     {
       "id": "w10",
       "delay_sec": 3.1,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。本波结束后弹出三选一，三张里选一张。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 26,
+          "enemy_id": "shade_small",
+          "count": 25,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 12,
+          "enemy_id": "shade_fast",
+          "count": 25,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -425,19 +425,19 @@
     {
       "id": "w11",
       "delay_sec": 2.5,
-      "note": "褪色和疾走混在同一波。疾走大约占一半威胁，前后都有。",
+      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 28,
+          "enemy_id": "shade_small",
+          "count": 27,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 13,
+          "enemy_id": "shade_fast",
+          "count": 27,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -452,6 +452,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

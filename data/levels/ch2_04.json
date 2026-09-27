@@ -22,7 +22,7 @@
   "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
-    "starting_spirit_power": 260,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu",
@@ -41,6 +41,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

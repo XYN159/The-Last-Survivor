@@ -28,10 +28,10 @@
     "char.reimu"
   ],
   "new_enemy_ids": [
-    "remnant.faded_toy"
+    "shade_small"
   ],
   "params": {
-    "starting_spirit_power": 60,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu"
@@ -151,11 +151,11 @@
     {
       "id": "w01",
       "delay_sec": 2.0,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 12,
+          "enemy_id": "shade_small",
+          "count": 14,
           "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -166,11 +166,11 @@
     {
       "id": "w02",
       "delay_sec": 8.0,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 15,
+          "enemy_id": "shade_small",
+          "count": 18,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -181,11 +181,11 @@
     {
       "id": "w03",
       "delay_sec": 7.1,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 19,
+          "enemy_id": "shade_small",
+          "count": 22,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -196,11 +196,11 @@
     {
       "id": "w04",
       "delay_sec": 6.2,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 22,
+          "enemy_id": "shade_small",
+          "count": 26,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -211,11 +211,11 @@
     {
       "id": "w05",
       "delay_sec": 5.2,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。本波结束后弹出三选一，三张里选一张。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 26,
+          "enemy_id": "shade_small",
+          "count": 30,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -226,11 +226,11 @@
     {
       "id": "w06",
       "delay_sec": 4.3,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 29,
+          "enemy_id": "shade_small",
+          "count": 34,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -241,11 +241,11 @@
     {
       "id": "w07",
       "delay_sec": 3.4,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 32,
+          "enemy_id": "shade_small",
+          "count": 38,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -256,11 +256,11 @@
     {
       "id": "w08",
       "delay_sec": 2.5,
-      "note": "直路上的褪色玩具，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 36,
+          "enemy_id": "shade_small",
+          "count": 42,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -275,6 +275,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

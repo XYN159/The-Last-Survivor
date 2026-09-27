@@ -342,7 +342,7 @@
         "combat_notes"
       ],
       "properties": {
-        "id": {"type": "string", "pattern": "^boss\\.[a-z0-9_]+$"},
+        "id": {"type": "string", "pattern": "^boss[._][a-z0-9_]+$"},
         "display_name": {"type": "string", "minLength": 1},
         "character_id": {"type": "string", "minLength": 1},
         "blocks_character_id": {"type": "string", "minLength": 1},

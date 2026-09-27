@@ -1,44 +1,91 @@
 {
   "schema_version": 1,
-  "_placeholder": true,
+  "_placeholder": false,
   "move_speed_unit": "cells_per_second",
-  "note": "图鉴里每一个 threat、hp、move_speed、armor 都是占位。一关有多重，看 data/balance/level_difficulty.json，不要把首领的 threat 再加进波次预算。首领强弱用那一关的 hp_multiplier 去乘图鉴生命，等数值策划写成正式公式。",
+  "note": "shade_small、shade_fast、shade_hard、boss_ch1 的第 1 关基础属性已由制作人确认。生命会再乘难度表里的 hp_multiplier。其余残影和首领仍未确认，每条 confirmed 为 false。移速单位是每秒走几格。",
   "entries": [
     {
-      "id": "remnant.faded_toy",
-      "display_name": "褪色玩具",
+      "id": "shade_small",
+      "display_name": "小残影",
       "category": "remnant",
+      "confirmed": true,
       "proposal": false,
       "introduced_in": "prologue_01",
       "threat": 1,
       "stats": {
-        "hp": 30,
-        "move_speed": 0.9,
-        "armor": 0
+        "hp": 60,
+        "move_speed": 1.0,
+        "armor": 0,
+        "spirit_on_kill": 5,
+        "lives_on_leak": 1
       },
       "tags": [
         "small",
         "ground"
       ],
-      "note": "叙事种类。又小又成群。move_speed 的单位提案是每秒走几格。全部 stats 和 threat 都是占位。"
+      "note": "已确认。第 1 关基础属性。后面关卡的生命再乘那一关的 hp_multiplier。"
     },
     {
-      "id": "remnant.swift_toy",
-      "display_name": "疾走玩具",
+      "id": "shade_fast",
+      "display_name": "快残影",
       "category": "remnant",
-      "proposal": true,
+      "confirmed": true,
+      "proposal": false,
       "introduced_in": "ch1_01",
-      "threat": 2,
+      "threat": 1,
       "stats": {
-        "hp": 24,
-        "move_speed": 1.6,
-        "armor": 0
+        "hp": 35,
+        "move_speed": 2.0,
+        "armor": 0,
+        "spirit_on_kill": 5,
+        "lives_on_leak": 1
       },
       "tags": [
         "fast",
         "ground"
       ],
-      "note": "提案。叙事里的褪色玩具已经又小又快。这里再拆一个更快的 id，专门给减速教学。若战斗策划认为不需要新 id，可以并回褪色玩具，只改速度。"
+      "note": "已确认。血更少、走得更快，威胁仍是 1。第一章用来教减速。"
+    },
+    {
+      "id": "shade_hard",
+      "display_name": "硬残影",
+      "category": "remnant",
+      "confirmed": true,
+      "proposal": false,
+      "introduced_in": "ch1_03",
+      "threat": 4,
+      "stats": {
+        "hp": 200,
+        "move_speed": 0.6,
+        "armor": 10,
+        "spirit_on_kill": 15,
+        "lives_on_leak": 2
+      },
+      "tags": [
+        "armored",
+        "ground"
+      ],
+      "note": "已确认。主题上属于第二章。第一章只在第 3 关最后三波各预告 1 只，正式教学留到第二章。"
+    },
+    {
+      "id": "boss_ch1",
+      "display_name": "琪露诺",
+      "category": "boss",
+      "confirmed": true,
+      "proposal": false,
+      "introduced_in": "ch1_04",
+      "threat": null,
+      "stats": {
+        "hp": 3000,
+        "move_speed": 0.4,
+        "armor": 5,
+        "spirit_on_kill": 100,
+        "lives_on_leak": 10
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "已确认的是第 1 关基础生命、移速、护甲、击破灵力和漏怪扣命。威胁点还没定。她单独出场，不占用那一波的预算。角色 id 仍是 char.cirno。"
     },
     {
       "id": "remnant.old_appliance",
@@ -56,7 +103,8 @@
         "armored",
         "ground"
       ],
-      "note": "叙事种类。慢、硬。护甲数值是占位。"
+      "note": "未确认。叙事种类。慢、硬。护甲数值是占位。",
+      "confirmed": false
     },
     {
       "id": "remnant.village_seeker",
@@ -74,7 +122,8 @@
         "targets_escort",
         "ground"
       ],
-      "note": "提案。叙事没有单独起名，只说残影会扑向村民。若战斗策划愿意，可以做成褪色玩具的行为标签，而不是新 id。"
+      "note": "未确认。提案。叙事没有单独起名，只说残影会扑向村民。若战斗策划愿意，可以做成褪色玩具的行为标签，而不是新 id。",
+      "confirmed": false
     },
     {
       "id": "remnant.flying_scrap",
@@ -91,7 +140,8 @@
       "tags": [
         "flying"
       ],
-      "note": "提案。叙事五种残影里没有单独的飞行种。制作人要求第四章教反空，所以先给一个飞行 id。"
+      "note": "未确认。提案。叙事五种残影里没有单独的飞行种。制作人要求第四章教反空，所以先给一个飞行 id。",
+      "confirmed": false
     },
     {
       "id": "remnant.forgotten_shade",
@@ -109,7 +159,8 @@
         "stealth",
         "ground"
       ],
-      "note": "叙事种类，半透明。叙事初稿把大量出现放在第四章，本框架按制作人的「第五章隐形」放到第五章。见总览里的待确认项。"
+      "note": "未确认。叙事种类，半透明。叙事初稿把大量出现放在第四章，本框架按制作人的「第五章隐形」放到第五章。见总览里的待确认项。",
+      "confirmed": false
     },
     {
       "id": "remnant.pile",
@@ -128,10 +179,11 @@
         "splits"
       ],
       "splits_into": {
-        "enemy_id": "remnant.faded_toy",
+        "enemy_id": "shade_small",
         "count": 2
       },
-      "note": "叙事种类。会分裂。当前 threat 只算本体，分裂出来的小残影另算不加进这只的威胁。是否改成含孩子，等数值策划。"
+      "note": "未确认。分裂出的孩子暂用已确认的 shade_small。孩子算不算进这只的威胁，还没定。",
+      "confirmed": false
     },
     {
       "id": "remnant.barrier_dreg",
@@ -149,24 +201,8 @@
         "elite",
         "fades_cells"
       ],
-      "note": "叙事种类。靠近时周围可放置格暂时褪色。具体格数等战斗策划。第五章 L3 才成群出现。"
-    },
-    {
-      "id": "boss.cirno",
-      "display_name": "琪露诺",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch1_04",
-      "threat": 15,
-      "stats": {
-        "hp": 600,
-        "move_speed": 0.7,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "第一章首领。威胁和生命都是占位。已完成关卡的预算包含这一次，不要在波次里再加一只。"
+      "note": "未确认。叙事种类。靠近时周围可放置格暂时褪色。具体格数等战斗策划。第五章 L3 才成群出现。",
+      "confirmed": false
     },
     {
       "id": "boss.sakuya",
@@ -183,7 +219,8 @@
       "tags": [
         "boss"
       ],
-      "note": "草案首领。第二章首领关还没做地图，这个威胁不要加进 stub 的预算里。stub 预算已经是整关占位。"
+      "note": "未确认。草案首领。第二章首领关还没做地图，这个威胁不要加进 stub 的预算里。stub 预算已经是整关占位。",
+      "confirmed": false
     },
     {
       "id": "boss.keine",
@@ -200,7 +237,8 @@
       "tags": [
         "boss"
       ],
-      "note": "草案首领。和妹红同关。stub 预算未拆开。"
+      "note": "未确认。草案首领。和妹红同关。stub 预算未拆开。",
+      "confirmed": false
     },
     {
       "id": "boss.mokou",
@@ -217,7 +255,8 @@
       "tags": [
         "boss"
       ],
-      "note": "草案首领。stub 预算未拆开。"
+      "note": "未确认。草案首领。stub 预算未拆开。",
+      "confirmed": false
     },
     {
       "id": "boss.sanae",
@@ -234,7 +273,8 @@
       "tags": [
         "boss"
       ],
-      "note": "草案首领。stub 预算未拆开。"
+      "note": "未确认。草案首领。stub 预算未拆开。",
+      "confirmed": false
     },
     {
       "id": "boss.yukari",
@@ -251,7 +291,8 @@
       "tags": [
         "boss"
       ],
-      "note": "草案首领。stub 预算未拆开。"
+      "note": "未确认。草案首领。stub 预算未拆开。",
+      "confirmed": false
     },
     {
       "id": "boss.wasure",
@@ -268,7 +309,8 @@
       "tags": [
         "boss"
       ],
-      "note": "终章首领。正式名未定，id 用叙事稿的 char.wasure / boss.wasure。stub 预算未拆开。"
+      "note": "未确认。终章首领。正式名未定，id 用叙事稿的 char.wasure / boss.wasure。stub 预算未拆开。",
+      "confirmed": false
     },
     {
       "id": "boss.meiling",
@@ -285,7 +327,8 @@
       "tags": [
         "boss"
       ],
-      "note": "提案 id。叙事有美铃决斗，但本框架的第二章首领关暂定只有咲夜。若制作人要美铃也做首领阶段，用这个 id，不要新造名字。"
+      "note": "未确认。提案 id。叙事有美铃决斗，但本框架的第二章首领关暂定只有咲夜。若制作人要美铃也做首领阶段，用这个 id，不要新造名字。",
+      "confirmed": false
     }
   ]
 }

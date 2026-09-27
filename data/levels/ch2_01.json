@@ -27,7 +27,7 @@
     "remnant.old_appliance"
   ],
   "params": {
-    "starting_spirit_power": 220,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu",
@@ -39,13 +39,13 @@
   "modifiers": [],
   "bosses": [],
   "wave_count": 8,
-  "design_notes": "双入口从这里开始，但侧门波次要很少，避免和挡门课抢注意力。美铃的符卡决斗不做成完整首领关：她在本关后段加入，下一关起可以放置。若制作人希望美铃也有首领阶段，用图鉴里的 boss.meiling，不要新造 id。",
+  "design_notes": "双入口从这里开始，但侧门波次要很少，避免和挡门课抢注意力。美铃的符卡决斗不做成完整首领关：她在本关后段加入，下一关起可以放置。若制作人希望美铃也有首领阶段，用图鉴里的 boss.meiling，不要新造 id。 数值上的带甲敌人已经确认，id 是 shade_hard。主题上属于这一章。第一章第 3 关只预告了 3 只。这里画图时用 shade_hard，不要再给旧电器另写一套生命。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

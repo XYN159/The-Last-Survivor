@@ -12,7 +12,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `index.json` | 24 关的顺序。这个顺序就是解锁顺序 |
 | `prologue_01.json` … `ch1_04.json` | 画完的 7 关 |
 | `ch2_01.json` … `final_01.json` | 17 关草案，只有说明，没有地图 |
-| `enemy_catalog.json` | 残影和首领的 id、占位威胁、占位属性 |
+| `enemy_catalog.json` | 残影和首领。小残影、快残影、硬残影、第一章首领的基础属性已确认 |
 | `character_roster.json` | 角色 id、能不能放、占位灵力消耗 |
 | `rating.json` | 星级区间。全游戏共用，不写进每一关 |
 | `data/balance/level_difficulty.json` | 数值策划的难度表。波数、威胁系数、生命倍率、三选一。不在 `data/levels/` 里 |
@@ -46,7 +46,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `teaches` | 学会的要点，字符串数组 |
 | `new_character_ids` | 这一关新给的角色。没有就是空数组。id 用叙事稿的 `char.reimu` 这一组 |
 | `new_enemy_ids` | 这一关新出现的残影。没有就是空数组 |
-| `params.starting_spirit_power` | 开局灵力。占位。击破后的回复不在这个文件里 |
+| `params.starting_spirit_power` | 开局灵力。已确认是 150。每活过一波再加 20，写在难度表，不写进每一波 |
 | `params.lives` | 开局生命。现在每一关都是 20，schema 把它定死了。困难模式以后另做，不在这里改小 |
 | `params.available_character_ids` | 这一关可以放置的角色。新角色必须在里面。正在和玩家决斗的角色不能在里面 |
 | `modifiers` | 全图生效的修正，例如浓雾。没有就是空数组 |
@@ -134,13 +134,13 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 
 | 字段 | 含义 |
 | --- | --- |
-| `enemy_id` | 敌人图鉴里的 id，例如 `remnant.faded_toy` |
+| `enemy_id` | 敌人图鉴里的 id，例如 `shade_small` |
 | `count` | 这一组出几只，至少 1 |
 | `interval_sec` | 这一组里，相邻两只相隔多少秒。必须大于 0 |
 | `entrance_id` | 从哪个入口出来。必须是这张图上有的入口 |
 | `path_id` | 走哪条路径。必须是这张图上有的路径 |
 | `delay_sec` | 相对这一波开始，这一组再等多少秒。和波本身的 `delay_sec` 不是同一个数 |
-| `elite` | 可选。`true` 表示这一组是精英压力。第一章第 3 关后半的疾走用了它。不是新的敌人 id |
+| `elite` | 可选，现在没有用。带甲的压力用 `shade_hard`，不要再另标精英 |
 
 画完的关：每一波的 `count × 该敌人的 threat` 加起来，必须等于难度表里这一波的 `wave_threat_budgets`。不要把首领的 threat 再加进去。首领强弱用那一关的 `hp_multiplier`。
 
@@ -153,26 +153,27 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | 字段 | 含义 |
 | --- | --- |
 | `_owner` | 固定「数值策划」 |
-| `_placeholder` | 固定 `true`。系数和倍率还没定案 |
-| `formula` | 用中文和算式写明威胁、生命倍率、四舍五入和三选一怎么来 |
-| `alignment_open` | 还没和关卡策划关死的点。现在有两条：生命倍率只升不降；一半生命踩在 1 星和 2 星的交界上 |
-| `levels` | 以关卡 id 为键。顺序和 `index.json` 一样 |
+| `confirmed` | 已经确认的规则：波次预算、生命倍率、开局灵力 150、每波 +20、生命 20、三选一、首领不占预算 |
+| `proposal` | 还没定的提议。现在只有威胁系数，默认 1.0 |
+| `alignment_open` | 还没关死的点。系数等数值策划拍板；一半生命仍踩在 1 星和 2 星的交界上 |
+| `levels` | 以关卡 id 为键。顺序和 `index.json` 一样。改某一关，先改这里的 `wave_count`，再改关卡文件里的 `waves` |
 
 `levels` 里的一行：
 
 | 字段 | 含义 |
 | --- | --- |
 | `level_number` | 解锁顺序，从 1 到 24。生命倍率用它 |
-| `role` | `teaching`、`practice`、`test`、`boss`。决定系数 |
+| `role` | `teaching`、`practice`、`test`、`boss`。说明这一关在章节里的位置，现在不改变预算 |
 | `wave_count` | 这一关几波。画完的关必须和 `waves` 的长度一样 |
-| `threat_budget_coef` | 威胁系数。教学 0.85，练习 1.0，试炼 1.15，首领 1.3 |
-| `hp_multiplier` | `1 + 0.15 × (level_number − 1)`。只升不降 |
+| `threat_budget_coef` | 威胁系数。现在每一关都是 1.0 |
+| `threat_budget_coef_status` | 固定 `proposal`。这是关卡策划的提议，等数值策划决定 |
+| `hp_multiplier` | `1 + 0.15 × (level_number − 1)`。已确认，只升不降 |
 | `buff_after_waves` | 哪些波结束之后弹出三选一。只含 5、10、15 里这一关打得到的 |
 | `buff_pick_count` | 固定 3。三张里选一张 |
-| `wave_threat_budgets` | 每一波四舍五入之后的威胁。由公式算出来，校验会重算一遍 |
-| `threat_budget_total` | 上面那一串的和 |
+| `wave_threat_budgets` | 每一波的威胁，就是 `10 + 4 × 波次`。系数是 1.0 时不用四舍五入 |
+| `threat_budget_total` | 上面那一串的和，等于 `10N + 2N(N+1)` |
 
-四舍五入不用小数直接乘。系数先看成百分数，例如 0.85 是 85。第 n 波的预算是 `( (10 + 4 × n) × 百分数 + 50 ) / 100`，只取整数。这样 0.85 不会因为二进制小数差 0.0001。
+若以后系数不再是 1，再把每一波预算乘上系数，并四舍五入到整数。现在不要提前乘。
 
 ## 修正 `modifiers`
 
@@ -203,7 +204,7 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 
 | 字段 | 含义 |
 | --- | --- |
-| `id` | 图鉴里的首领 id，例如 `boss.cirno` |
+| `id` | 图鉴里的首领 id。第一章是 `boss_ch1`。角色 id 仍是 `char.cirno` |
 | `display_name` | 给人看的名字 |
 | `character_id` | 对应的角色 id |
 | `blocks_character_id` | 决斗期间不能放置的角色。现在和 `character_id` 是同一个。这个角色不能出现在 `available_character_ids` 里 |
@@ -259,11 +260,11 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 
 ## 敌人图鉴 `enemy_catalog.json`
 
-整个文件有 `_placeholder: true`。
+整份文件不再标成占位。已确认的条目 `confirmed` 为 true，其余仍是 false。
 
 | 字段 | 含义 |
 | --- | --- |
-| `move_speed_unit` | 提案的单位名：`cells_per_second`，每秒走几格。未定案 |
+| `move_speed_unit` | `cells_per_second`，每秒走几格。已确认 |
 | `note` | 怎么把威胁加进预算 |
 | `entries` | 一条残影或一位首领 |
 
@@ -276,10 +277,13 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | `category` | `remnant` 或 `boss` |
 | `proposal` | `true` 表示这个 id 是关卡侧新提案，叙事稿里没有这个名字 |
 | `introduced_in` | 第一次出现的关卡 id。还没有任何关使用时是 `null`，例如 `boss.meiling` |
-| `threat` | 占位威胁。正整数 |
-| `stats.hp` | 占位生命 |
-| `stats.move_speed` | 占位移速 |
-| `stats.armor` | 占位护甲 |
+| `confirmed` | `true` 表示这一条的基础属性已经确认 |
+| `threat` | 威胁点。已确认的小残影和快残影是 1，硬残影是 4。第一章首领是 `null`，因为还没定，而且她不占波次预算 |
+| `stats.hp` | 第 1 关基础生命。实战再乘难度表的 `hp_multiplier` |
+| `stats.move_speed` | 每秒走几格 |
+| `stats.armor` | 护甲 |
+| `stats.spirit_on_kill` | 击破这一只加多少灵力 |
+| `stats.lives_on_leak` | 漏过这一只扣多少命 |
 | `tags` | 字符串标签，例如 `flying`、`stealth`、`splits`。给战斗策划看方向，不是结算规则 |
 | `splits_into` | 可选。堆积体用它写出分裂成谁、几只 |
 | `note` | 中文 |
@@ -309,9 +313,8 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | `stars_grant` | 现在写了 `cosmetics` 和 `codex_stories`。具体外观和图鉴句子还没做 |
 | `hard_mode` | `later`。这次没有困难倍率 |
 | `bands` | 三档。1 星是剩余 1 到 9，2 星是 10 到 17，3 星是 18 到 20 |
-| `leak._placeholder` | `true` |
-| `leak.lives_cost_per_remnant` | 暂定 1。等数值策划 |
-| `leak.note` | 中文说明精英和首领还没定 |
+| `leak._placeholder` | `false`。扣命改看图鉴里的 `lives_on_leak` |
+| `leak.note` | 已确认的四种怎么扣，以及未确认的敌人不要沿用旧的「一律扣 1」 |
 
 ## 这次故意不放进文件的字段
 

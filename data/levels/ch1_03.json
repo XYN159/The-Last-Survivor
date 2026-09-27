@@ -36,9 +36,11 @@
     "汇合后可以补漏，但不能代替两边的人"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "shade_hard"
+  ],
   "params": {
-    "starting_spirit_power": 140,
+    "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
       "char.reimu",
@@ -254,19 +256,19 @@
     {
       "id": "w01",
       "delay_sec": 2.0,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 10,
+          "enemy_id": "shade_small",
+          "count": 6,
           "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 3,
+          "enemy_id": "shade_fast",
+          "count": 8,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -277,19 +279,19 @@
     {
       "id": "w02",
       "delay_sec": 8.0,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 13,
+          "enemy_id": "shade_small",
+          "count": 7,
           "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 4,
+          "enemy_id": "shade_fast",
+          "count": 11,
           "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -300,19 +302,19 @@
     {
       "id": "w03",
       "delay_sec": 7.5,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 17,
+          "enemy_id": "shade_small",
+          "count": 9,
           "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 4,
+          "enemy_id": "shade_fast",
+          "count": 13,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -323,19 +325,19 @@
     {
       "id": "w04",
       "delay_sec": 6.9,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 20,
+          "enemy_id": "shade_small",
+          "count": 10,
           "interval_sec": 1.3,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 5,
+          "enemy_id": "shade_fast",
+          "count": 16,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -346,19 +348,19 @@
     {
       "id": "w05",
       "delay_sec": 6.3,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 23,
+          "enemy_id": "shade_small",
+          "count": 12,
           "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 6,
+          "enemy_id": "shade_fast",
+          "count": 18,
           "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -369,19 +371,19 @@
     {
       "id": "w06",
       "delay_sec": 5.8,
-      "note": "左右路同时出场，先把分叉走熟。精英从第 7 波才开始。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 25,
+          "enemy_id": "shade_small",
+          "count": 14,
           "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 7,
+          "enemy_id": "shade_fast",
+          "count": 20,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
@@ -392,82 +394,79 @@
     {
       "id": "w07",
       "delay_sec": 5.2,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 14,
+          "enemy_id": "shade_small",
+          "count": 15,
           "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 15,
+          "enemy_id": "shade_fast",
+          "count": 23,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
         }
       ]
     },
     {
       "id": "w08",
       "delay_sec": 4.7,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 14,
+          "enemy_id": "shade_small",
+          "count": 17,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 17,
+          "enemy_id": "shade_fast",
+          "count": 25,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
         }
       ]
     },
     {
       "id": "w09",
       "delay_sec": 4.2,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。",
+      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 15,
+          "enemy_id": "shade_small",
+          "count": 18,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 19,
+          "enemy_id": "shade_fast",
+          "count": 28,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
         }
       ]
     },
     {
       "id": "w10",
       "delay_sec": 3.6,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
+          "enemy_id": "shade_small",
           "count": 18,
           "interval_sec": 0.8,
           "entrance_id": "entrance.north",
@@ -475,61 +474,82 @@
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 20,
+          "enemy_id": "shade_fast",
+          "count": 28,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "shade_hard",
+          "count": 1,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
         }
       ]
     },
     {
       "id": "w11",
       "delay_sec": 3.0,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。",
+      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 18,
+          "enemy_id": "shade_small",
+          "count": 20,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 22,
+          "enemy_id": "shade_fast",
+          "count": 30,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "shade_hard",
+          "count": 1,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
         }
       ]
     },
     {
       "id": "w12",
       "delay_sec": 2.5,
-      "note": "左右路同时出场。疾走这一组标成精英，是这一关多出来的压力。",
+      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。",
       "groups": [
         {
-          "enemy_id": "remnant.faded_toy",
-          "count": 21,
+          "enemy_id": "shade_small",
+          "count": 22,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.left",
           "delay_sec": 0
         },
         {
-          "enemy_id": "remnant.swift_toy",
-          "count": 23,
+          "enemy_id": "shade_fast",
+          "count": 32,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.right",
-          "delay_sec": 0,
-          "elite": true
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "shade_hard",
+          "count": 1,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
         }
       ]
     }
@@ -540,6 +560,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

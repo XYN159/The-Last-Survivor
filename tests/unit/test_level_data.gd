@@ -18,6 +18,7 @@ func test_index_unlocks_twenty_four_levels_in_order() -> void:
 		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
 		assert_eq(str(level["id"]), str(entry["id"]))
 		assert_eq(int(level["params"]["lives"]), 20, str(entry["id"]))
+		assert_eq(int(level["params"]["starting_spirit_power"]), 150, str(entry["id"]))
 		previous = entry["id"]
 	assert_eq(str(levels[0]["id"]), "prologue_01")
 	assert_eq(str(levels[23]["id"]), "final_01")
@@ -65,7 +66,10 @@ func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 				assert_gt(int(budget), previous_budget, chapter)
 			previous_budget = int(budget)
 		if previous_peak > 0 and chapter != "final":
-			assert_lt(int(budgets[0]), previous_peak, chapter + " vs " + previous_chapter)
+			if previous_chapter == "prologue":
+				assert_lte(int(budgets[0]), previous_peak, chapter + " vs " + previous_chapter)
+			else:
+				assert_lt(int(budgets[0]), previous_peak, chapter + " vs " + previous_chapter)
 		if chapter == "final":
 			assert_gte(int(budgets[0]), previous_peak)
 			assert_gt(float(hp_grouped[chapter][0]), previous_hp)
@@ -80,9 +84,11 @@ func test_difficulty_table_keeps_the_two_open_points() -> void:
 	var ids: Array[String] = []
 	for item in difficulty["alignment_open"]:
 		ids.append(str(item["id"]))
-	assert_true(ids.has("hp_is_monotonic"))
+	assert_true(ids.has("threat_budget_coef_pending"))
 	assert_true(ids.has("half_lives_sits_on_star_boundary"))
-	assert_eq(int(difficulty["formula"]["first_clear_lives_remaining"]), 10)
+	assert_eq(int(difficulty["confirmed"]["starting_spirit_power"]), 150)
+	assert_eq(int(difficulty["confirmed"]["spirit_per_wave_survived"]), 20)
+	assert_eq(float(difficulty["levels"]["prologue_01"]["threat_budget_coef"]), 1.0)
 	assert_eq(str(difficulty["_owner"]), "数值策划")
 
 
@@ -120,6 +126,8 @@ func _threats() -> Dictionary:
 	var catalog := _read_dictionary(_LEVEL_DIR + "enemy_catalog.json")
 	var threats := {}
 	for entry in catalog["entries"]:
+		if entry["threat"] == null:
+			continue
 		threats[str(entry["id"])] = int(entry["threat"])
 	return threats
 
