@@ -9,7 +9,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | `enm_shade_basic` | 残影（通用，褪色杂物） | 1.0 | 沿路线走，不攻击 | shade | 30 / 0 / 5 / 1 | 是 |
 | `enm_shade_fast` | 褪色玩具 | 2.0（已确认） | 成群，走路时左右轻微晃动（纯视觉） | shade, outside_object, fast | 35 / 0 / 4 / 1（血量和移速已确认） | 是 |
-| `enm_shade_armored` | 旧电器 | 0.7 | 护甲高，被打时冒火花并飘「护甲」【框架】；击退减半 | shade, outside_object, armored | 70 / 8 / 10 / 2 | 是 |
+| `enm_shade_armored` | 旧电器 | 0.7 | 护甲高，被打时冒火花并飘「护甲」【框架】；击退减半 | shade, outside_object, armored | 70 / 8 / 10 / 2 | 否。MVP 之后才出现，定义和数值占位保留 |
 | `enm_shade_phantom` | 遗忘之影 | 1.2 | 隐形，被反隐（文）照到后才能被选为目标 | shade, stealth | 25 / 0 / 8 / 1【占位】 | 预留 |
 | `enm_shade_heap` | 堆积体 | 0.6 | 精英，死亡时分裂出 3 个快残影 | shade, elite | 200 / 4 / 20 / 3【占位】 | 预留 |
 | `enm_shade_rift` | 结界之渣 | 0.8 | 第五章起，周围 1 格的可放置格褪色（`ter_faded`） | shade, elite, rift | 120 / 2 / 15 / 2【占位】 | 预留 |
@@ -58,7 +58,7 @@
 4. **开场**：Boss 出生时就是第一阶段，出生演出后直接释放第一阶段符卡（也有立绘）。
 5. **重复施放**：阶段内每隔 `repeat_interval_sec` 再施放一次（不再播立绘，只有 0.8–1.0 秒的地面预警）。填 0 表示不重复。
 6. **控制**：Boss 免疫冻结、拦截、时停（都改成减速），免疫隙间换位和送回，不被击退；受地形影响（冰面上也会加速）。移动总倍率下限 0.5。
-7. **走到守护点**（已拍板，2026-09-27）：扣守护点的 `leak_damage`（`stats.json` → `enemies.boss_cirno.leak_damage`，当前占位 5 点），然后回到裂缝重新走（`on_reach_guard: loop_to_spawn`），保持当前血量和阶段。Boss 不因漏怪离场。Boss 关的胜利条件是打倒 Boss（`victory: must_defeat`）。
+7. **走到守护点**（已拍板，2026-09-27）：扣守护点的 `leak_damage`（`stats.json` → `enemies.boss_cirno.leak_damage`，当前占位 5 点），然后回到裂缝重新走（`on_reach_guard: loop_to_spawn`），保持当前血量和阶段。Boss 不因漏怪离场。Boss 关的最后一波要等 Boss 被击败才算打完（`victory: must_defeat`）。输了可以从当前波重来或整关重打，见 core_rules.md 第 5.2 节。
 8. **击败**：最后一段血打空 → 大型碎冰特效，自动触发一次慢动作（不受冷却限制），然后场上剩余残影继续清理，全部离场后胜利。
 9. **伴随刷怪**：由关卡数据的 Boss 波定义（关卡策划负责），战斗在每个阶段开始时发出事件 `on_boss_phase_start(boss_id, phase_index)`，关卡脚本可以挂额外刷怪。
 

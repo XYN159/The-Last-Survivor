@@ -33,7 +33,11 @@
 | `tick.max_ticks_per_frame` | 整数 | 次 | 一帧最多补跑几个 tick | 程序 |
 | `time_scale.speed_options` | 数组 | 倍 | 可选倍速 [1, 2]【框架】 | 战斗 |
 | `battle_flow.deploy_time_sec` | 数字 | 秒 | 布阵期 10【框架】 | 战斗（关卡可覆盖） |
-| `battle_flow.intermission_sec` | 数字 | 秒 | 空档 4，允许 3–5【框架】 | 战斗（关卡可覆盖） |
+| `battle_flow.intermission_sec` | 数字 | 秒 | 空档默认 4，允许 3–5。已拍板 | 战斗（关卡可覆盖） |
+| `battle_flow.wave_target_sec` | 数字 | 秒 | 每波大约 20 秒。已拍板 | 战斗/关卡 |
+| `battle_flow.tutorial_wave_count_may_be_below` | 整数 | 波 | 序章教学可以少于 5 波 | 战斗/关卡 |
+| `battle_flow.level_wave_count_min` / `_max` | 整数 | 波 | 其余关卡 10 到 20 波 | 战斗/关卡 |
+| `battle_flow.mvp_wave_count_min` / `_max` | 整数 | 波 | MVP 关卡多用 10 到 12 波 | 战斗/关卡 |
 | `battle_flow.early_call_allowed_states` | 数组 | — | 哪些局内状态能叫波 | 战斗 |
 | `battle_flow.early_call_reward_rounding` | 字符串 | — | 奖励取整方式 `floor` | 战斗 |
 | `targeting.default_rule` | 字符串 | — | 默认选敌 `closest_to_guard`（离守护点路程最近） | 战斗 |
@@ -56,7 +60,10 @@
 | `spell_energy.charge_from_spell_damage` | 布尔 | — | 符卡伤害是否充能（否） | 战斗 |
 | `spell_energy.count_overkill` | 布尔 | — | 溢出伤害是否充能（否） | 战斗 |
 | `spell_energy.target_full_sec_normal` / `_crisis` | 数字 | 秒 | 设计目标 60 / 40，给数值换算用，程序不读 | 战斗 |
-| `spell_energy.auto_release_default_on` | 布尔 | — | 自动释放默认关 | 战斗 |
+| `spell_energy.auto_release_scope` | 字符串 | — | 自动释放是全局开关，值为 `global`。已拍板 | 战斗 |
+| `spell_energy.auto_release_default_on` | 布尔 | — | 自动释放默认关。已拍板 | 战斗 |
+| `spell_energy.auto_release_toggle_during_battle` | 布尔 | — | 局内可以切换自动释放。已拍板为 true | 战斗 |
+| `spell_energy.auto_release_disabled_in_tutorial` | 布尔 | — | 教学关不锁死自动释放。值为 false：开局是关，局内可以打开 | 战斗 |
 | `spell_energy.auto_release_min_enemies` | 整数 | 只 | 自动释放条件之一：场上 ≥ 8 只 | 战斗 |
 | `spell_energy.auto_release_rows_from_bottom` | 整数 | 行 | 自动释放条件之二：有敌人进入最后 3 行 | 战斗 |
 | `spell_energy.caster_mode` | 字符串 | — | 已定为 `single_caster_switchable`（方案 A+，2026-09-27） | 制作人 |
@@ -78,8 +85,17 @@
 | `placement.place_delay_sec` | 数字 | 秒 | 放置后多久开始攻击 | 战斗 |
 | `placement.max_copies_per_character` | 整数 | 个 | 同一角色最多放几个。已定为 3（2026-09-27） | 制作人 |
 | `character_levels.max_level` | 整数 | 级 | 局内最高 3 级，即每个角色升 2 次。已和数值策划对齐 | 战斗/数值 |
-| `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 每 3 波三选一 | 战斗/系统 |
-| `buff_offers.scope` | 字符串 | — | 强化作用范围 `per_level`，待拍板 | 制作人/系统 |
+| `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 每 5 波三选一（第 5、10、15 波打完后）。已拍板 | 战斗/系统 |
+| `buff_offers.scope` | 字符串 | — | 强化只管当局，`per_level`。过关清空。已拍板 | 制作人/系统 |
+| `buff_offers.clear_on_level_end` | 布尔 | — | 过关清空强化。已定为 true | 战斗/系统 |
+| `buff_offers.allow_repeat_stacks` | 布尔 | — | 同一强化可以重复叠加。已定为 true | 战斗 |
+| `buff_offers.disabled_in_tutorial` | 布尔 | — | 序章教学关没有三选一。已定为 true | 战斗 |
+| `buff_offers.pity_owned_below_threshold` | 布尔 | — | 已拥有但未到质变层数的强化，下次三选一保底出现其中一个。已定为 true | 战斗 |
+| `buff_offers.skip_offer_on_final_wave` | 布尔 | — | 最后一波打完不再给三选一。已定为 true | 战斗 |
+| `placement.allowed_cell_mark` | 字符串 | — | 只能放在地图里标成 `P` 的格子。已拍板 | 战斗/关卡 |
+| `placement.routes_fixed_during_level` | 布尔 | — | 一关的路线中途不变。已定为 true | 战斗/关卡 |
+| `retry.on_defeat` | 数组 | — | 失败后可选 `restart_wave`（从当前波重来）或 `restart_level`（整关重打） | 战斗 |
+| `retry.restart_wave_restore` | 字符串 | — | `wave_start_snapshot`：恢复到该波开始时的快照，包括灵力、已放角色、强化、符卡充能 | 战斗 |
 | `fog.range_penalty_cells` / `min_range_cells` | 数字 | 格 | 浓雾射程 −1，最少 1 | 战斗 |
 | `performance.max_projectiles` / `max_damage_numbers` / `max_kill_orbs` | 整数 | 个 | 性能上限 300 / 40 / 60 | 程序/战斗 |
 | `rng.seeded_per_battle` | 布尔 | — | 每局一个随机种子 | 程序 |
@@ -126,8 +142,9 @@
 | `id` | 字符串 | — | `chr_<PR #2 角色 id>` | 战斗 |
 | `name_key` | 字符串 | — | 显示名文本 key（PR #2 已有） | 文案 |
 | `playable_status` | 字符串 | — | `confirmed` / `pending_producer`（PR #2 待定的三人） | 制作人 |
-| `mvp` | 布尔 | — | 是否能在 MVP 里放置。紫为 false | 战斗 |
-| `mvp_appearance` | 字符串 | — | 可选。紫为 `story_gap_peek_once`：MVP 只通过隙间探头演示一次换位 | 战斗 |
+| `mvp` | 布尔 | — | 是否属于 MVP 角色。灵梦、魔理沙、琪露诺、紫为 true | 战斗 |
+| `unlock` | 字符串 | — | 可选。琪露诺和紫为 `defeat_boss_cirno`：击败琪露诺后才能放置。不写关卡号 | 战斗 |
+| `before_unlock` | 字符串 | — | 可选。紫为 `chapter1_gap_peek_once`：解锁前在第一章用隙间探头演示一次换位 | 战斗 |
 | `role` | 字符串 | — | 定位标签，只给人看 | 战斗 |
 | `tags` | 数组 | — | 机制标签，如 `fade_immune` | 战斗 |
 | `attack.type` | 字符串 | — | 攻击类型，见 characters.md 第 3 节 | 战斗 |
@@ -175,7 +192,7 @@
 | `id` | 字符串 | — | `enm_shade_<类型>` | 战斗 |
 | `name_key` | 字符串 | — | 建议 `enemy.<类型>.name`，待文案新增 | 文案 |
 | `narrative_ref` | 字符串 | — | PR #2 的叙事对应，只给人看 | — |
-| `status` | 字符串 | — | `mvp` / `reserved`（预留） | 战斗 |
+| `status` | 字符串 | — | `mvp` / `post_mvp`（MVP 之后才出现）/ `reserved`（预留）。硬残影是 `post_mvp` | 战斗 |
 | `tags` | 数组 | — | `shade`、`outside_object`、`armored`、`elite`、`stealth` 等 | 战斗 |
 | `attacks_units` | 布尔 | — | 是否攻击角色（残影都是否） | 战斗 |
 | `hit_radius_cells` | 数字 | 格 | 受击半径 | 战斗 |
@@ -273,7 +290,7 @@
 | `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案） |
 | `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
 | `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
-| `mvp_freeze_sources` | 数组 | MVP 里允许触发冰碎的冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze` |
+| `mvp_freeze_sources` | 数组 | MVP 冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze`、`chr_cirno`（解锁后的琪露诺本人） |
 | `trigger.event` | 字符串 | `on_hit` / `on_gap_move` / `on_spell_cast` |
 | `trigger.check_step` | 字符串 | 在伤害流水线第几步判定 |
 | `trigger.attacker_character` / `attacker_damage_tag` / `target_has_status` | 字符串 | 条件 |
@@ -295,7 +312,7 @@
 | `offer_weight` | 整数 | 抽选权重 | 系统 |
 | `requires_characters_any` | 数组 | 本关带了这些角色之一才会出现 | 战斗 |
 | `per_stack[]` | 数组 | 每层效果；数值用 `stats_key` 去 `stats.json` 取 | 战斗（数值归数值） |
-| `thresholds[].stacks` | 整数 | 质变层数 | 战斗 |
+| `thresholds[].stacks` | 整数 | 质变层数。已定为 2 | 战斗 |
 | `thresholds[].override` / `add` | 对象 | 替换或追加的效果 | 战斗 |
 | `thresholds[].unit_visual` | 字符串 | 质变后的外观特效 | 战斗/美术 |
 | `thresholds[].feedback_event` | 字符串 | 质变反馈事件 | 战斗 |

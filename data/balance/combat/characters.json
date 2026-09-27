@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 2,
+    "schema_version": 3,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/characters.md",
@@ -206,7 +206,8 @@
       "id": "chr_cirno",
       "name_key": "char.cirno.name",
       "playable_status": "confirmed",
-      "mvp": false,
+      "mvp": true,
+      "unlock": "defeat_boss_cirno",
       "role": "slow_freeze_control",
       "tags": [],
       "attack": {
@@ -998,8 +999,9 @@
       "id": "chr_yukari",
       "name_key": "char.yukari.name",
       "playable_status": "confirmed",
-      "mvp": false,
-      "mvp_appearance": "story_gap_peek_once",
+      "mvp": true,
+      "unlock": "defeat_boss_cirno",
+      "before_unlock": "chapter1_gap_peek_once",
       "role": "gap_control",
       "tags": [],
       "attack": {

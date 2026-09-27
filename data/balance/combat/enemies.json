@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 2,
+    "schema_version": 3,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
@@ -38,7 +38,7 @@
       "id": "enm_shade_armored",
       "name_key": "enemy.shade_armored.name",
       "narrative_ref": "旧电器",
-      "status": "mvp",
+      "status": "post_mvp",
       "tags": ["shade", "outside_object", "armored"],
       "attacks_units": false,
       "hit_radius_cells": 0.35,
