@@ -274,7 +274,7 @@
       "unlock_after_clearing": "ch2_04",
       "first_placeable_level": "ch3_01",
       "status": "pending_文案策划",
-      "note": "提案：通关第二章首领后加入。"
+      "note": "提案：通关 ch2_04 后加入。该关首领是她的残影复制体，不是她本人。"
     },
     {
       "id": "chr_keine",
@@ -290,15 +290,15 @@
       "unlock_after_clearing": "ch3_04",
       "first_placeable_level": "ch4_01",
       "status": "pending_文案策划",
-      "note": "提案：通关第三章首领后加入。"
+      "note": "提案：通关 ch3_04 后加入。该关首领是她的残影复制体，不是她本人。"
     },
     {
       "id": "chr_sanae",
       "display_name": "早苗",
-      "unlock_after_clearing": "ch4_01",
-      "first_placeable_level": "ch4_02",
+      "unlock_after_clearing": "ch4_04",
+      "first_placeable_level": "ch5_01",
       "status": "pending_文案策划",
-      "note": "提案：文还不可玩，反空默认是早苗，通关 ch4_01 后加入。若文可玩，文占这个位置，早苗改到通关 ch4_04。"
+      "note": "提案：通关 ch4_04 后加入。该关首领是「风祝的残影」，不是早苗本人。对空位留给文；文还不可玩，所以不进 ch4_01。"
     },
     {
       "id": "chr_aya",
@@ -306,7 +306,7 @@
       "unlock_after_clearing": null,
       "first_placeable_level": null,
       "status": "pending_文案策划",
-      "note": "还不可玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，早苗改到通关 ch4_04。"
+      "note": "还不可玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，负责飞行残影。早苗仍在通关 ch4_04 后加入。"
     }
   ],
   "replay": {

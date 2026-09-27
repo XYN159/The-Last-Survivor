@@ -13,7 +13,7 @@
     "id": "guard.terakoya",
     "display_name": "寺子屋"
   },
-  "summary": "两条固定路线，外加一条短的避难路。有的残影去扑村民。咲夜从这一关起可放置，慧音要通关这一关才加入，都是提案，待文案。扑人残影还没有战斗 id。",
+  "summary": "两条固定路线，外加一条短的避难路。有的残影去扑村民，暂名扑人残影，待文案定稿。咲夜从这一关起可放置，慧音要通关这一关才加入，都是提案，待文案。",
   "player_feeling": "比红魔馆首领关松。先只保护一条短路，别的路几乎不闹。",
   "teaches": [
     "有的残影会打村民而不是只冲守护点",
@@ -23,7 +23,9 @@
   "new_character_ids": [
     "chr_sakuya"
   ],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "enm_shade_pouncer"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,

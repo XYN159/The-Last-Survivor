@@ -169,7 +169,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -189,7 +189,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -209,7 +209,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。",
+      "note": "直路上的小残影，间隔拉开，方便看清她们往哪走。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

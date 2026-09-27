@@ -191,7 +191,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯路上的普通残影。后半才会两组同时出场。",
+      "note": "弯路上的小残影。后半才会两组同时出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -211,7 +211,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯路上的普通残影。后半才会两组同时出场。",
+      "note": "弯路上的小残影。后半才会两组同时出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -231,7 +231,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯路上的普通残影。后半才会两组同时出场。",
+      "note": "弯路上的小残影。后半才会两组同时出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -251,7 +251,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯路上的普通残影。后半才会两组同时出场。",
+      "note": "弯路上的小残影。后半才会两组同时出场。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -271,7 +271,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯路上的普通残影。后半才会两组同时出场。本波结束后弹出三选一，三张里选一张。",
+      "note": "弯路上的小残影。后半才会两组同时出场。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

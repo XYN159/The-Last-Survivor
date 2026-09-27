@@ -18,7 +18,7 @@
   "player_feeling": "换了地图，但比序章最后一关松。新敌人很少，先看懂雾。",
   "teaches": [
     "雾里只能放在贴着路线的预定槽位",
-    "快残影比普通残影更快，但更脆。最后三波才少量出现，让玩家感到需要减速",
+    "快残影比小残影更快，但更脆。最后三波才少量出现，让玩家感到需要减速",
     "通关这一关后琪露诺加入，下一关才教她减速"
   ],
   "new_character_ids": [],
@@ -218,7 +218,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -238,7 +238,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -258,7 +258,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -278,7 +278,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -298,7 +298,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。本波结束后弹出三选一，三张里选一张。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -318,7 +318,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -338,7 +338,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "note": "只有小残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

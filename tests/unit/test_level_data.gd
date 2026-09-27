@@ -116,6 +116,16 @@ func test_fast_shade_stats_are_not_in_the_level_catalog() -> void:
 	var blob := JSON.stringify(catalog)
 	assert_false(blob.contains("生命 35"))
 	assert_false(blob.contains("每秒 2.0"))
+	assert_false(blob.contains("普通残影"))
+	assert_false(blob.contains("飞屑"))
+	assert_false(blob.contains("boss_yukari"))
+	var names := {}
+	for entry in catalog["entries"]:
+		names[str(entry["id"])] = str(entry["display_name"])
+	assert_eq(str(names["enm_shade_basic"]), "小残影")
+	assert_eq(str(names["enm_shade_flying"]), "飞行残影")
+	assert_eq(str(names["boss_ch4_sanae_shade"]), "风祝的残影")
+	assert_eq(str(names["boss_ch5_gatekeeper"]), "结界裂缝的守门残影")
 	for entry in catalog["entries"]:
 		assert_false(entry.has("hp"))
 		assert_false(entry.has("move_speed"))

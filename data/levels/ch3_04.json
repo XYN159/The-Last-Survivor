@@ -5,7 +5,7 @@
   "status": "stub",
   "chapter_id": "ch3",
   "index_in_chapter": 4,
-  "display_name": "历史与火焰",
+  "display_name": "火鸟的残影",
   "display_name_key": "level.ch3_04.name",
   "kind": "boss",
   "route_type": "dual_route",
@@ -13,15 +13,17 @@
     "id": "guard.terakoya",
     "display_name": "寺子屋"
   },
-  "summary": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段里关掉入口，或在仍开放的路上铺地形。",
-  "player_feeling": "激烈，但符卡看得懂：路被藏起来、被点着、然后两边一起着。",
+  "summary": "首领是妹红的残影复制体，暂名「火鸟的残影」，不是妹红本人。慧音已经在队里。妹红通关这一关后才加入。名字待文案。",
+  "player_feeling": "激烈，但符卡看得懂：关掉一条入口，或在仍开放的路上铺地形。",
   "teaches": [
     "一张符卡改一条已经存在的路的出怪或地形",
-    "慧音已在名单里。妹红通关本章首领后加入。都是提案，待文案",
+    "慧音已在名单里。妹红通关后加入。首领不是她们本人",
     "命到 0 才失败"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "boss_ch3_mokou_shade"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -37,7 +39,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段 1 关掉一条已经画好的入口。阶段 2、3 在仍开放的路线上铺地形，格子还在。移速之类的数字等战斗定。慧音已在名单里。妹红通关后加入。都是提案，待文案。胜负和普通关一样，首领漏怪扣命后回到裂缝。",
+  "design_notes": "首领 id 是 boss_ch3_mokou_shade，显示名「火鸟的残影」，状态 pending_文案策划。她模仿即将入队的妹红，不是盟友本人。慧音在 ch3_01 之后已经可放，不能再做成首领。不在战斗中藏掉或烧掉路线格子。阶段关掉已经画好的入口，或在仍开放的路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

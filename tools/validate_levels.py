@@ -358,7 +358,7 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
             if enemy_id == armored:
                 problems.append(f"{level_id} 是 MVP，不该出现硬残影")
             if level["chapter_id"] in ("prologue", "ch1") and enemy_id not in (basic, fast):
-                problems.append(f"{level_id} 的 MVP 敌人只有普通残影和快残影")
+                problems.append(f"{level_id} 的 MVP 敌人只有小残影和快残影")
     if level_id == "ch1_01":
         for index, wave in enumerate(level["waves"], start=1):
             has_fast = any(spawn["enemy_id"] == fast for spawn in wave["spawns"])
@@ -372,7 +372,7 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
         for wave in level["waves"]:
             kinds = {spawn["enemy_id"] for spawn in wave["spawns"]}
             if kinds != {basic, fast}:
-                problems.append(f"{wave['id']} 没有把普通残影和快残影混在同一波")
+                problems.append(f"{wave['id']} 没有把小残影和快残影混在同一波")
         if total_threat and not 0.45 <= swift_threat / total_threat <= 0.55:
             problems.append(f"练习关快残影占比 {swift_threat / total_threat:.3f} 不在一半附近")
     if level_id == "ch1_03":
@@ -383,7 +383,7 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
             if len(wave["spawns"]) < 2 or any(delay != 0 for delay in delays) or len(paths) < 2:
                 problems.append(f"{wave['id']} 没有左右同时出场")
             if kinds - {basic, fast}:
-                problems.append(f"{wave['id']} 只能有普通残影和快残影")
+                problems.append(f"{wave['id']} 只能有小残影和快残影")
     if level_id == "prologue_03":
         for index, wave in enumerate(level["waves"], start=1):
             if index < 6:
@@ -643,7 +643,7 @@ def index_problems(index: dict, levels: dict[str, dict]) -> list[str]:
         "chr_sakuya": ("ch2_04", "ch3_01"),
         "chr_keine": ("ch3_01", "ch3_02"),
         "chr_mokou": ("ch3_04", "ch4_01"),
-        "chr_sanae": ("ch4_01", "ch4_02"),
+        "chr_sanae": ("ch4_04", "ch5_01"),
     }
     by_proposal = {item.get("id"): item for item in proposals}
     for character_id, (unlock_after, first_level) in expected_proposals.items():
@@ -707,9 +707,21 @@ def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
     if source.get("enemies_field") != "enemies" or source.get("bosses_field") != "bosses":
         problems.append("图鉴要指向 stats.json 的 enemies 和 bosses")
     blob = json.dumps(catalog, ensure_ascii=False)
-    for phrase in ("生命 35", "每秒 2.0", "每秒 1.8"):
+    for phrase in ("生命 35", "每秒 2.0", "每秒 1.8", "普通残影", "飞屑", "boss_yukari", "boss_sakuya"):
         if phrase in blob:
-            problems.append("图鉴不要复制敌人的生命或移速数字")
+            problems.append(f"图鉴里不该再出现：{phrase}")
+    expected_names = {
+        "enm_shade_basic": "小残影",
+        "enm_shade_fast": "快残影",
+        "enm_shade_armored": "硬残影",
+        "enm_shade_flying": "飞行残影",
+        "boss_cirno": "冰之残影",
+        "boss_ch2_sakuya_shade": "女仆的残影",
+        "boss_ch3_mokou_shade": "火鸟的残影",
+        "boss_ch4_sanae_shade": "风祝的残影",
+        "boss_ch5_gatekeeper": "结界裂缝的守门残影",
+        "boss_wasure": "落野忘",
+    }
     by_id: dict[str, dict] = {}
     for entry in catalog.get("entries", []):
         enemy_id = entry["id"]
@@ -736,9 +748,20 @@ def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
     for enemy_id in BUDGET_THREATS:
         if enemy_id not in by_id:
             problems.append(f"缺少敌人 {enemy_id}")
-    for enemy_id in ("enm_shade_phantom", "enm_shade_heap", "enm_shade_rift"):
+    for enemy_id in ("enm_shade_phantom", "enm_shade_heap", "enm_shade_rift", "enm_shade_flying"):
         if enemy_id not in by_id:
             problems.append(f"缺少预留敌人 {enemy_id}")
+    for enemy_id, display_name in expected_names.items():
+        entry = by_id.get(enemy_id)
+        if entry is None:
+            problems.append(f"缺少 {enemy_id}")
+        elif entry.get("display_name") != display_name:
+            problems.append(f"{enemy_id} 的显示名应该是 {display_name}")
+    for enemy_id, entry in by_id.items():
+        if not enemy_id.startswith("boss_") or enemy_id == "boss_cirno":
+            continue
+        if entry.get("name_status") != "pending_文案策划":
+            problems.append(f"{enemy_id} 的名字要标成 pending_文案策划")
     return problems, by_id
 
 
@@ -757,7 +780,7 @@ def roster_file_problems(roster: dict) -> list[str]:
         "chr_sakuya": ("ch3_01", "ch2_04"),
         "chr_keine": ("ch3_02", "ch3_01"),
         "chr_mokou": ("ch4_01", "ch3_04"),
-        "chr_sanae": ("ch4_02", "ch4_01"),
+        "chr_sanae": ("ch5_01", "ch4_04"),
     }
     seen = set()
     for character in roster.get("characters", []):
@@ -828,6 +851,22 @@ def route_plan_problems(level: dict) -> list[str]:
     return []
 
 
+def boss_identity_problems(level: dict) -> list[str]:
+    expected = {
+        "ch2_04": "boss_ch2_sakuya_shade",
+        "ch3_04": "boss_ch3_mokou_shade",
+        "ch4_04": "boss_ch4_sanae_shade",
+        "ch5_04": "boss_ch5_gatekeeper",
+        "final_01": "boss_wasure",
+    }
+    boss_id = expected.get(level["id"])
+    if boss_id is None:
+        return []
+    if boss_id not in level.get("new_enemy_ids", []):
+        return [f"{level['id']} 的新敌人应该包含 {boss_id}"]
+    return []
+
+
 def stub_wave_problems(level: dict) -> list[str]:
     return wave_count_span_problems(level, level["wave_count"])
 
@@ -882,6 +921,7 @@ def main() -> int:
         else:
             problems.extend(stub_wave_problems(level))
         problems.extend(roster_problems(level, playable))
+        problems.extend(boss_identity_problems(level))
         problems.extend(route_plan_problems(level))
         if level["placeholders"].get("_placeholder") is not True:
             problems.append("缺少占位标记")

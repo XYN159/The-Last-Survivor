@@ -372,7 +372,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -400,7 +400,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -428,7 +428,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -456,7 +456,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -484,7 +484,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -512,7 +512,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -540,7 +540,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -568,7 +568,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -596,7 +596,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -624,7 +624,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -652,7 +652,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

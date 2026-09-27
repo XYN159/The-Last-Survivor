@@ -181,7 +181,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
+      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -201,7 +201,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
+      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -221,7 +221,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
+      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -241,7 +241,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
+      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

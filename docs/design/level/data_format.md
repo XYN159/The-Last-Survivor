@@ -261,13 +261,14 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | --- | --- |
 | `id` | `enm_` 或 `boss_` |
 | `display_name` | 中文名 |
-| `introduced_in` | 第一次出现的关卡。还没有关用到时是 `null`，例如 `boss_meiling` |
-| `threat_points` | 用来对波次预算。普通残影和快残影是 1，硬残影是 4。首领是 `null`，不占预算 |
+| `introduced_in` | 第一次出现的关卡。还没有关用到时是 `null` |
+| `threat_points` | 用来对波次预算。小残影和快残影是 1，硬残影是 4。首领是 `null`，不占预算 |
+| `name_status` | 可选。`pending_文案策划` 表示显示名还没定稿。MVP 的冰之残影不用这个 |
 | `threat_points_status` | `confirmed_for_budget` 或 `level_design_placeholder`。预留怪的数字不能当成已确认预算 |
-| `splits_into` | 可选。堆积体记下战斗草案：死亡分裂出 3 个 `enm_shade_fast` |
+| `splits_into` | 可选。堆积残影记下战斗草案：死亡分裂出 3 个 `enm_shade_fast` |
 | `note` | 中文 |
 
-预留、以后章节再用：`enm_shade_phantom`（遗忘之影）、`enm_shade_heap`（堆积体）、`enm_shade_rift`（结界之渣）。扑人残影和飞屑还没有战斗 id，不写进图鉴。
+以后章节再用，显示名除飞行残影外仍待文案：`enm_shade_pouncer`（扑人残影）、`enm_shade_flying`（飞行残影）、`enm_shade_phantom`（遗忘残影）、`enm_shade_heap`（堆积残影）、`enm_shade_rift`（结界残影）。
 
 ## 角色名单 `character_roster.json`
 

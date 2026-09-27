@@ -369,7 +369,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -397,7 +397,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -425,7 +425,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -453,7 +453,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -481,7 +481,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。只有小残影和快残影。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -509,7 +509,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -537,7 +537,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -565,7 +565,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -593,7 +593,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -621,7 +621,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。本波结束后弹出三选一，三张里选一张。",
+      "note": "左右路同时出场。只有小残影和快残影。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -649,7 +649,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
@@ -677,7 +677,7 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左右路同时出场。只有普通残影和快残影。",
+      "note": "左右路同时出场。只有小残影和快残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",

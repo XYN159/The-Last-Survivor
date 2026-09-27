@@ -5,7 +5,7 @@
   "status": "stub",
   "chapter_id": "ch4",
   "index_in_chapter": 4,
-  "display_name": "守矢的神风",
+  "display_name": "风祝的残影",
   "display_name_key": "level.ch4_04.name",
   "kind": "boss",
   "route_type": "flying",
@@ -13,15 +13,17 @@
     "id": "guard.moriya_shrine",
     "display_name": "守矢神社"
   },
-  "summary": "首领草案。飞行路线开战前固定。符卡只开关已经画好的入口，或铺地形，不改道。",
-  "player_feeling": "好看，而且会逼人挪位置。地上的人突然打不到原来的天路。",
+  "summary": "首领是早苗的残影复制体，暂名「风祝的残影」，不是早苗本人。早苗通关这一关后才加入。文还不可玩。名字待文案。",
+  "player_feeling": "好看，而且会逼人挪位置。天上的入口换一条，地上的人打不到原来的天路。",
   "teaches": [
     "飞行路线不在战斗中改道",
     "符卡可以改哪条入口出怪",
-    "早苗从 ch4_02 起可放置，是提案，待文案。本章首领不通关新人"
+    "首领是风祝的残影。早苗通关后才加入，本关不能放她"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "boss_ch4_sanae_shade"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -33,13 +35,12 @@
       "chr_meiling",
       "chr_sakuya",
       "chr_keine",
-      "chr_mokou",
-      "chr_sanae"
+      "chr_mokou"
     ]
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。飞行路线不在符卡里改道。阶段 1 关掉一条飞行入口、打开另一条已经画好的飞行入口。阶段 2 用地形把残影推向守护点，不平移格子。早苗从 ch4_02 起可放置，是提案，待文案。本章首领不通关新人。胜负和普通关一样。",
+  "design_notes": "首领 id 是 boss_ch4_sanae_shade，显示名「风祝的残影」，状态 pending_文案策划。和第一章的冰之残影同一套：即将入队的人不当本人来打，打的是她的残影复制体。飞行路线开战前固定。阶段关掉一条飞行入口、打开另一条已经画好的入口，不改格子。早苗通关后加入。文若以后可玩，改占 ch4_01 的对空位，不把已经入队的人再写成首领。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -48,5 +49,7 @@
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
-  "unlock_character_ids": []
+  "unlock_character_ids": [
+    "chr_sanae"
+  ]
 }

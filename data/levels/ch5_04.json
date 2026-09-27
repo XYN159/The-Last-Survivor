@@ -5,7 +5,7 @@
   "status": "stub",
   "chapter_id": "ch5",
   "index_in_chapter": 4,
-  "display_name": "紫的神隐",
+  "display_name": "守门残影",
   "display_name_key": "level.ch5_04.name",
   "kind": "boss",
   "route_type": "fixed_gates",
@@ -13,15 +13,17 @@
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "首领草案。不把两段路对调。阶段里开关已经画好的入口，再用障碍封掉预定槽位。紫已经在队里。",
-  "player_feeling": "最难的普通章首领。路和可放的格子一起变，但每次只变一件事。",
+  "summary": "首领不是八云紫。紫从第一章末就在队里。这是忘派来的原创敌人，暂名「结界裂缝的守门残影」，待文案定名。它召唤会分裂、会隐形的残影，并按阶段开关几条固定路线的入口。",
+  "player_feeling": "第五章的总测验。路不挪，但入口和槽位会按阶段变。",
   "teaches": [
-    "符卡可以开关固定路线的入口，不能交换格子",
-    "符卡可以把预定槽位临时变成障碍",
-    "命到 0 才失败"
+    "几条固定路线的入口按阶段打开或关掉，格子本身不改",
+    "符卡可以用 ter_barrier 暂时挡住一些预定槽位",
+    "它会叫出遗忘残影和堆积残影。命到 0 才失败"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "boss_ch5_gatekeeper"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -39,7 +41,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。不把两段路对调。阶段 1：几条固定路线里关掉两条入口、打开另外两条。阶段 2：用 ter_barrier 封掉四个预定槽位，路线格子不动。紫已经在队里，这一关不封锁她。胜负和普通关一样，首领漏怪后回到裂缝。",
+  "design_notes": "首领 id 是 boss_ch5_gatekeeper，显示名「结界裂缝的守门残影」，状态 pending_文案策划。不能用八云紫。她在 ch1_04 之后已经是盟友。玩法是第五章的综合测验：召唤会分裂的堆积残影和会隐形的遗忘残影。几条路线开战前就画好，阶段只开关入口。符卡把部分预定槽位变成 ter_barrier，持续一段时间，路线格子不动。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

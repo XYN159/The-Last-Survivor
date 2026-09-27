@@ -13,10 +13,10 @@
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "堆积体会裂开。路线固定，入口可以按波次开关。遗忘之影和前面的敌人混在一起。",
+  "summary": "堆积残影会裂开。路线固定，入口可以按波次开关。遗忘残影和前面的敌人混在一起。",
   "player_feeling": "练习。裂开和改道叠在一起，但每次移动都有预告的空档。",
   "teaches": [
-    "堆积体倒下会裂成快残影，孩子算不算威胁还没定",
+    "堆积残影倒下会裂成快残影，孩子算不算威胁还没定",
     "入口开关之前，预定槽位已经在那条路旁边"
   ],
   "new_character_ids": [],
@@ -40,7 +40,7 @@
   },
   "bosses": [],
   "wave_count": 12,
-  "design_notes": "路线固定。堆积体死亡分裂出 3 个 enm_shade_fast，孩子算不算进威胁还没定。入口可以按波次开关，格子不动。",
+  "design_notes": "路线固定。堆积残影死亡分裂出 3 个 enm_shade_fast，孩子算不算进威胁还没定。入口可以按波次开关，格子不动。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

@@ -50,7 +50,7 @@
       "joins_at_level": "ch2_02",
       "unlocked_by_clearing": "ch2_01",
       "join_status": "pending_文案策划",
-      "join_note": "提案，待文案：通关 ch2_01 后加入，ch2_02 起可放置。ch2_01 只用现有角色面对少量偏后的硬残影。"
+      "join_note": "全名红美铃。提案，待文案：通关 ch2_01 后加入，ch2_02 起可放置。她已经在队里，不能再当第二章首领。"
     },
     {
       "id": "chr_sakuya",
@@ -60,7 +60,7 @@
       "joins_at_level": "ch3_01",
       "unlocked_by_clearing": "ch2_04",
       "join_status": "pending_文案策划",
-      "join_note": "提案，待文案：通关 ch2_04 后加入，ch3_01 起可放置。"
+      "join_note": "全名十六夜咲夜。提案，待文案：通关 ch2_04 后加入，ch3_01 起可放置。第二章首领是她的残影复制体，不是她本人。"
     },
     {
       "id": "chr_remilia",
@@ -80,7 +80,7 @@
       "joins_at_level": "ch3_02",
       "unlocked_by_clearing": "ch3_01",
       "join_status": "pending_文案策划",
-      "join_note": "提案，待文案：通关 ch3_01 后加入，ch3_02 起可放置。"
+      "join_note": "全名上白泽慧音。提案，待文案：通关 ch3_01 后加入，ch3_02 起可放置。她已经在队里，不能再当第三章首领。"
     },
     {
       "id": "chr_mokou",
@@ -90,7 +90,7 @@
       "joins_at_level": "ch4_01",
       "unlocked_by_clearing": "ch3_04",
       "join_status": "pending_文案策划",
-      "join_note": "提案，待文案：通关 ch3_04 后加入，ch4_01 起可放置。"
+      "join_note": "全名藤原妹红。提案，待文案：通关 ch3_04 后加入，ch4_01 起可放置。第三章首领是她的残影复制体，不是她本人。"
     },
     {
       "id": "chr_aya",
@@ -100,17 +100,17 @@
       "joins_at_level": null,
       "unlocked_by_clearing": null,
       "join_status": "pending_producer",
-      "join_note": "还没定能不能玩，不进解锁链。若以后可玩，她占通关 ch4_01 后的反空位置，早苗改到通关 ch4_04。现在反空提案是早苗。"
+      "join_note": "全名射命丸文。还没定能不能玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，负责打飞行残影。不要把已经入队的人再写成首领。"
     },
     {
       "id": "chr_sanae",
       "display_name": "早苗",
       "playable": "pending_文案策划",
       "role": "anti_air",
-      "joins_at_level": "ch4_02",
-      "unlocked_by_clearing": "ch4_01",
+      "joins_at_level": "ch5_01",
+      "unlocked_by_clearing": "ch4_04",
       "join_status": "pending_文案策划",
-      "join_note": "提案，待文案：文还不可玩，所以反空默认是早苗。通关 ch4_01 后加入，ch4_02 起可放置。若文以后可玩，文占这个位置，早苗改到通关 ch4_04 后加入。"
+      "join_note": "提案，待文案：通关 ch4_04 后加入，ch5_01 起可放置。本章首领是她的残影复制体「风祝的残影」，不是她本人。对空位留给射命丸文；文还不可玩，所以 ch4_01 不解锁新人。"
     },
     {
       "id": "chr_yukari",
@@ -130,7 +130,7 @@
       "joins_at_level": null,
       "unlocked_by_clearing": null,
       "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "join_note": "全名落野忘，气泡名仍是忘。终章首领用这个暂名，状态 pending_文案策划。通关 final_01 之后才考虑能不能放，本关不能放，也不进当前解锁链。"
     }
   ]
 }

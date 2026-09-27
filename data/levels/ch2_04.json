@@ -5,7 +5,7 @@
   "status": "stub",
   "chapter_id": "ch2",
   "index_in_chapter": 4,
-  "display_name": "女仆长的时间",
+  "display_name": "女仆的残影",
   "display_name_key": "level.ch2_04.name",
   "kind": "boss",
   "route_type": "double_entrance",
@@ -13,15 +13,17 @@
     "id": "guard.scarlet_clock",
     "display_name": "钟楼大钟"
   },
-  "summary": "首领草案。符卡不改路线几何：已经画好的入口按阶段打开，或在路上铺地形。谁做首领仍待制作人。",
-  "player_feeling": "赶，但看得到路在变。美铃留在玩家这边挡门。",
+  "summary": "首领是咲夜的残影复制体，暂名「女仆的残影」，不是咲夜本人。美铃已经在队里，不能当首领。咲夜通关这一关后才加入。名字待文案。",
+  "player_feeling": "赶，但看得到入口在开关。美铃留在玩家这边挡门。",
   "teaches": [
     "符卡可以开关已经画好的入口，不能改格子",
     "停时是战斗效果，不把走廊拉长",
     "命到 0 才失败，最后一波结束还有命即胜利"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [],
+  "new_enemy_ids": [
+    "boss_ch2_sakuya_shade"
+  ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -35,7 +37,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。路线几何开战前固定，不把走廊拉长，也不插入新格子。阶段效果改成：已经画好的某条入口从这一阶段才出怪，或在路线上铺地形。咲夜是否做首领、美铃的符卡放哪，仍待制作人。胜负和普通关一样：最后一波结束后还有命即胜，命到 0 即败。首领走到守护点扣命后回到裂缝再走，扣多少归数值策划。",
+  "design_notes": "首领 id 是 boss_ch2_sakuya_shade，显示名「女仆的残影」，状态 pending_文案策划。她模仿即将入队的咲夜，不是盟友本人。美铃在 ch2_01 之后已经可放，不能再做成首领。路线几何开战前固定。阶段只让已经画好的入口出怪，或在路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

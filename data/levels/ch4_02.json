@@ -13,15 +13,13 @@
     "id": "guard.moriya_shrine",
     "display_name": "守矢神社"
   },
-  "summary": "飞行路变长，地面的旧敌人和飞屑混在一起。没有新的必用角色。",
+  "summary": "飞行路变长，地面的旧敌人和飞行残影混在一起。这一关没有新角色。",
   "player_feeling": "练习取舍。想两头都打，就会发现有的格子其实两头都差一点。",
   "teaches": [
     "飞行路和地面路的交点不一定值得留成预定槽位",
     "旧敌人仍走地面"
   ],
-  "new_character_ids": [
-    "chr_sanae"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -34,13 +32,12 @@
       "chr_meiling",
       "chr_sakuya",
       "chr_keine",
-      "chr_mokou",
-      "chr_sanae"
+      "chr_mokou"
     ]
   },
   "bosses": [],
   "wave_count": 12,
-  "design_notes": "飞行路变长是另一张固定的图，不是战斗中改道。遗忘之影不在本章，放在第五章。",
+  "design_notes": "飞行路变长是另一张固定的图，不是战斗中改道。遗忘残影不在本章，放在第五章。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
