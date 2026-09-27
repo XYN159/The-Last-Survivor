@@ -5,8 +5,8 @@ config_version=5
 
 [application]
 
-config/name="The Last Survivor"
-config/description="竖屏安卓生存策略游戏。"
+config/name="东方守幻录"
+config/description="东方Project 同人竖屏角色塔防。个人制作，免费，非商业。不是弹幕射击。"
 config/version="0.1.0"
 run/main_scene="res://scenes/main/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Mobile")

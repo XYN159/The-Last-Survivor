@@ -45,7 +45,7 @@ jobs:
 
       # 目前挂到 Release 上的仍是调试签名 APK。正式上架需要另行配置发布证书，且不能提交到仓库。
       - name: Export debug APK
-        run: ./ci/export_android_debug.sh "${GITHUB_WORKSPACE}/build/android/the-last-survivor-${GITHUB_REF_NAME}-debug.apk"
+        run: ./ci/export_android_debug.sh "${GITHUB_WORKSPACE}/build/android/touhou-forgotten-defense-${GITHUB_REF_NAME}-debug.apk"
 
       - name: Attach APK to the GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
