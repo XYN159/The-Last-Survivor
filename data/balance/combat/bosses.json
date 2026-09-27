@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/enemies_and_bosses.md",
+    "stats_file": "data/balance/combat/stats.json"
+  },
+  "bosses": [
+    {
+      "id": "boss_cirno",
+      "name_key": "char.cirno.name",
+      "tags": ["boss", "ice"],
+      "move_speed_cells_per_sec": 0.5,
+      "hit_radius_cells": 0.45,
+      "knockback_immune": true,
+      "status_conversions": [
+        {"from": "st_freeze", "to": "st_slow", "strength": 0.5, "keep_duration": true},
+        {"from": "st_hold", "to": "st_slow", "strength": 0.5, "keep_duration": true},
+        {"from": "st_time_stop", "to": "st_slow", "strength": 0.7, "keep_duration": true},
+        {"from": "st_gap_daze", "to": "none", "strength": 0, "keep_duration": false}
+      ],
+      "immune_to_effects": ["gap_swap", "send_back"],
+      "affected_by_terrain": true,
+      "on_reach_guard": "loop_to_spawn",
+      "phase_transition": {
+        "clamp_hp_at_threshold": true,
+        "invulnerable_sec": 1.5,
+        "stop_moving_while_invulnerable": true,
+        "clear_previous_phase_terrain": true,
+        "cutin_uses_spell_cutin_rules": true
+      },
+      "hp_bar": {"show_phase_pips": true, "position": "top"},
+      "phases": [
+        {
+          "index": 1,
+          "hp_ratio_start": 1.0,
+          "spell_card_id": "sc_boss_cirno_icicle_fall",
+          "cast_on_enter": true,
+          "repeat_interval_sec": 10.0,
+          "level_hook": "boss_cirno_p1"
+        },
+        {
+          "index": 2,
+          "hp_ratio_start": 0.66,
+          "spell_card_id": "sc_boss_cirno_perfect_freeze",
+          "cast_on_enter": true,
+          "repeat_interval_sec": 15.0,
+          "level_hook": "boss_cirno_p2"
+        },
+        {
+          "index": 3,
+          "hp_ratio_start": 0.33,
+          "spell_card_id": "sc_boss_cirno_diamond_blizzard",
+          "cast_on_enter": true,
+          "repeat_interval_sec": 0,
+          "level_hook": "boss_cirno_p3"
+        }
+      ],
+      "visual": {"sprite": "boss_cirno", "scale": 1.5, "portrait": "portrait_cirno", "defeat_vfx": "ice_shatter_big"}
+    }
+  ]
+}

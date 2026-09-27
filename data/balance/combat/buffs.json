@@ -1,0 +1,217 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/roguelite_buffs.md",
+    "stats_file": "data/balance/combat/stats.json"
+  },
+  "offer_rules": {
+    "trigger": "every_n_waves_cleared",
+    "n_rules_key": "buff_offers.every_n_waves_cleared",
+    "choices": 3,
+    "distinct": true,
+    "exclude_maxed": true,
+    "exclude_missing_required_characters": true,
+    "weight_field": "offer_weight",
+    "pauses_logic": true
+  },
+  "buffs": [
+    {
+      "id": "buff_split_shot",
+      "draft_name": "分裂弹",
+      "narrative_item": "断了链的钥匙扣",
+      "name_key": "buff.split_shot.name",
+      "desc_key": "buff.split_shot.desc",
+      "category": "projectile",
+      "max_stacks": 3,
+      "offer_weight": 10,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "on_hit_split", "sub_bullets_per_stack": 1, "spread": "fan_60", "sub_can_split": false, "damage_stats_key": "buffs.buff_split_shot.split_damage_ratio"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "split_starfall", "draft_name": "满天星", "override": {"type": "on_hit_split", "sub_bullets": 6, "spread": "radial_360", "sub_can_split": true, "max_generation": 2}, "unit_visual": "projectile_star_trail", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_sharp_ofuda",
+      "draft_name": "锐利",
+      "narrative_item": "削尖的旧铅笔",
+      "name_key": "buff.sharp_ofuda.name",
+      "desc_key": "buff.sharp_ofuda.desc",
+      "category": "attack",
+      "max_stacks": 5,
+      "offer_weight": 14,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "stat_pct", "stat": "attack", "attack_category": "buff", "stats_key": "buffs.buff_sharp_ofuda.attack_pct_per_stack"}
+      ],
+      "thresholds": []
+    },
+    {
+      "id": "buff_rapid_fire",
+      "draft_name": "连射",
+      "narrative_item": "上满弦的发条",
+      "name_key": "buff.rapid_fire.name",
+      "desc_key": "buff.rapid_fire.desc",
+      "category": "attack_speed",
+      "max_stacks": 3,
+      "offer_weight": 12,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "stat_pct", "stat": "attack_interval", "attack_category": "buff", "stats_key": "buffs.buff_rapid_fire.interval_pct_per_stack"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "rapid_burst", "draft_name": "三连发", "add": {"type": "every_nth_attack_repeat", "n": 5, "extra_attacks": 2, "repeat_gap_sec": 0.08}, "unit_visual": "aura_clockwork", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_frost_frog",
+      "draft_name": "寒气",
+      "narrative_item": "褪色的发条青蛙",
+      "name_key": "buff.frost_frog.name",
+      "desc_key": "buff.frost_frog.desc",
+      "category": "freeze",
+      "max_stacks": 3,
+      "offer_weight": 12,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "on_hit_status_chance", "status_id": "st_freeze", "duration_sec": 1.0, "chance_stats_key": "buffs.buff_frost_frog.freeze_chance_per_stack", "respect_immunity": true, "attack_kinds": ["normal"]}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "frog_ice_burst", "draft_name": "青蛙冰雕", "add": {"type": "on_frozen_enemy_shatter_or_death", "burst_radius_cells": 1.0, "damage_stats_key": "buffs.buff_frost_frog.shard_damage_coef", "apply_status": {"status_id": "st_freeze", "duration_sec": 1.0, "respect_immunity": true}, "max_chain_depth": 3}, "unit_visual": "frost_frog_orbit", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_crit_charm",
+      "draft_name": "会心",
+      "narrative_item": "掉漆的招财猫",
+      "name_key": "buff.crit_charm.name",
+      "desc_key": "buff.crit_charm.desc",
+      "category": "crit",
+      "max_stacks": 3,
+      "offer_weight": 10,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "stat_add", "stat": "crit_chance", "stats_key": "buffs.buff_crit_charm.crit_chance_per_stack"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "crit_explosion", "draft_name": "必中之符", "add": {"type": "on_crit_explode", "radius_cells": 0.8, "damage_stats_key": "buffs.buff_crit_charm.explosion_coef", "can_crit": false}, "unit_visual": "aura_gold_spark", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_great_barrier",
+      "draft_name": "大结界",
+      "narrative_item": "褪色的注连绳",
+      "name_key": "buff.great_barrier.name",
+      "desc_key": "buff.great_barrier.desc",
+      "category": "reimu_barrier",
+      "max_stacks": 3,
+      "offer_weight": 8,
+      "requires_characters_any": ["chr_reimu"],
+      "per_stack": [
+        {"type": "skill_param_add", "skill_id": "skl_reimu_barrier", "param": "effect.duration_sec", "value": 2.0}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "barrier_permanent", "draft_name": "常驻大结界", "override": {"type": "skill_mode", "skill_id": "skl_reimu_barrier", "mode": "permanent_all_path_cells_in_range", "vuln_add_stats_key": "buffs.buff_great_barrier.barrier_vuln_add_at_max"}, "unit_visual": "reimu_barrier_ring_big", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_spell_battery",
+      "draft_name": "充能",
+      "narrative_item": "还剩一格电的旧电池",
+      "name_key": "buff.spell_battery.name",
+      "desc_key": "buff.spell_battery.desc",
+      "category": "spell_charge",
+      "max_stacks": 3,
+      "offer_weight": 10,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "charge_pct", "stats_key": "buffs.buff_spell_battery.charge_pct_per_stack"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "spell_refund", "draft_name": "连续宣言", "add": {"type": "on_spell_cast_refund", "stats_key": "buffs.buff_spell_battery.refund_ratio_at_max"}, "unit_visual": "spell_button_double_ring", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_piercing_star",
+      "draft_name": "穿透",
+      "narrative_item": "一颗玻璃弹珠",
+      "name_key": "buff.piercing_star.name",
+      "desc_key": "buff.piercing_star.desc",
+      "category": "projectile",
+      "max_stacks": 3,
+      "offer_weight": 10,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "projectile_pierce_add", "stats_key": "buffs.buff_piercing_star.pierce_per_stack"}
+      ],
+      "thresholds": []
+    },
+    {
+      "id": "buff_spirit_greed",
+      "draft_name": "香火",
+      "narrative_item": "空空的存钱罐",
+      "name_key": "buff.spirit_greed.name",
+      "desc_key": "buff.spirit_greed.desc",
+      "category": "economy",
+      "max_stacks": 3,
+      "offer_weight": 10,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "spirit_per_kill_add", "stats_key": "buffs.buff_spirit_greed.spirit_per_kill_per_stack"}
+      ],
+      "thresholds": []
+    },
+    {
+      "id": "buff_guard_mend",
+      "draft_name": "修补",
+      "narrative_item": "缝补过的布偶",
+      "name_key": "buff.guard_mend.name",
+      "desc_key": "buff.guard_mend.desc",
+      "category": "guard",
+      "max_stacks": 3,
+      "offer_weight": 8,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "guard_heal_on_pick", "stats_key": "buffs.buff_guard_mend.guard_heal_per_pick"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "guard_sturdy", "draft_name": "不褪色", "add": {"type": "leak_damage_reduction", "stats_key": "buffs.buff_guard_mend.leak_reduction_at_max", "min_leak_damage": 1}, "unit_visual": "guard_glow", "feedback_event": "buff_threshold_reached"}
+      ]
+    },
+    {
+      "id": "buff_combo_fever",
+      "draft_name": "连击狂热",
+      "narrative_item": "转个不停的陀螺",
+      "name_key": "buff.combo_fever.name",
+      "desc_key": "buff.combo_fever.desc",
+      "category": "combo",
+      "max_stacks": 1,
+      "offer_weight": 6,
+      "requires_characters_any": [],
+      "per_stack": [
+        {"type": "combo_attack_bonus", "attack_category": "temp", "per_10_combo_stats_key": "buffs.buff_combo_fever.attack_pct_per_10_combo", "cap_stats_key": "buffs.buff_combo_fever.cap_pct"}
+      ],
+      "thresholds": []
+    },
+    {
+      "id": "buff_gap_eye",
+      "draft_name": "隙间之眼",
+      "narrative_item": "半张旧车票",
+      "name_key": "buff.gap_eye.name",
+      "desc_key": "buff.gap_eye.desc",
+      "category": "yukari_gap",
+      "max_stacks": 3,
+      "offer_weight": 8,
+      "requires_characters_any": ["chr_yukari"],
+      "per_stack": [
+        {"type": "skill_param_pct", "skill_id": "skl_yukari_gap_swap", "param": "cooldown_sec", "stats_key": "buffs.buff_gap_eye.cooldown_pct_per_stack"}
+      ],
+      "thresholds": [
+        {"stacks": 3, "id": "gap_corridor", "draft_name": "隙间回廊", "add": {"type": "skill_param_add", "skill_id": "skl_yukari_gap_swap", "param": "effect.pairs", "value": 1, "on_swap_hit": {"damage_coef": 2.0, "heavy": true}}, "unit_visual": "yukari_gap_ring_many", "feedback_event": "buff_threshold_reached"}
+      ]
+    }
+  ]
+}

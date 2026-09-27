@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/core_rules.md"
+  },
+  "grid": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "top_left",
+    "cell_size_px": 128,
+    "board_offset_px": [
+      92,
+      140
+    ]
+  },
+  "tick": {
+    "logic_hz": 60,
+    "max_ticks_per_frame": 4
+  },
+  "time_scale": {
+    "speed_options": [
+      1,
+      2
+    ],
+    "default_speed": 1,
+    "remember_last_speed": true
+  },
+  "battle_flow": {
+    "deploy_time_sec": 10,
+    "early_start_allowed": true,
+    "intermission_sec": 4,
+    "intermission_min_sec": 3,
+    "intermission_max_sec": 5,
+    "early_call_allowed_states": [
+      "deploy",
+      "waiting",
+      "intermission"
+    ],
+    "early_call_reward_rounding": "floor"
+  },
+  "targeting": {
+    "default_rule": "closest_to_guard",
+    "tie_breaker": "lowest_spawn_order",
+    "deprioritize_invulnerable": true,
+    "reevaluate_each_attack": true
+  },
+  "movement": {
+    "min_speed_mult": 0.3,
+    "max_speed_mult": 2.0,
+    "boss_min_speed_mult": 0.5,
+    "hard_stop_statuses": [
+      "st_freeze",
+      "st_time_stop",
+      "st_hold",
+      "st_gap_daze"
+    ]
+  },
+  "knockback": {
+    "default_cells": 0.1,
+    "per_enemy_cooldown_sec": 0.25,
+    "clamp_to_path_start": true
+  },
+  "enemy_spawn": {
+    "spawn_state_sec": 0.3,
+    "targetable_during_spawn": false
+  },
+  "guard": {
+    "alert_rows_from_bottom": 2,
+    "alert_throttle_real_sec": 2.0,
+    "damage_vignette_sec": 0.4
+  },
+  "crisis": {
+    "rows_from_bottom": 3,
+    "guard_hp_ratio": 0.3,
+    "charge_mult": 1.5
+  },
+  "spell_energy": {
+    "max": 100,
+    "start": 0,
+    "charge_from_spell_damage": false,
+    "count_overkill": false,
+    "target_full_sec_normal": 60,
+    "target_full_sec_crisis": 40,
+    "auto_release_default_on": false,
+    "auto_release_min_enemies": 8,
+    "auto_release_rows_from_bottom": 3,
+    "caster_mode": "single_caster",
+    "caster_mode_options": [
+      "single_caster",
+      "single_caster_switchable",
+      "per_character"
+    ],
+    "caster_switch_allowed_states": [
+      "deploy",
+      "intermission"
+    ],
+    "caster_absent_origin": "guard",
+    "caster_unfreeze_on_cast": true,
+    "auto_release_disabled_in_tutorial": true
+  },
+  "spell_cutin": {
+    "first_duration_sec": 1.2,
+    "repeat_duration_sec": 0.6,
+    "shorten_scope": "per_card_per_battle",
+    "skippable": true,
+    "pauses_logic": true
+  },
+  "combo": {
+    "chain_window_sec": 1.0,
+    "display_from": 3
+  },
+  "slowmo": {
+    "kills_window_sec": 0.2,
+    "kills_threshold": 8,
+    "spell_kills_threshold": 5,
+    "duration_real_sec": 0.5,
+    "time_mult": 0.3,
+    "cooldown_real_sec": 8.0
+  },
+  "damage": {
+    "armor_floor_ratio": 0.2,
+    "min_damage": 1,
+    "rounding": "round_half_away_from_zero",
+    "armor_feedback_ratio": 0.5,
+    "armor_feedback_throttle_sec": 0.5,
+    "attack_mult_categories": [
+      "buff",
+      "aura",
+      "temp"
+    ],
+    "damage_mult_buckets": [
+      "vulnerability",
+      "synergy"
+    ]
+  },
+  "placement": {
+    "place_delay_sec": 0.3,
+    "max_copies_per_character": 3,
+    "sell_allowed_during_wave": true,
+    "upgrade_allowed_during_wave": true
+  },
+  "character_levels": {
+    "max_level": 3
+  },
+  "buff_offers": {
+    "every_n_waves_cleared": 3,
+    "choices": 3,
+    "pauses_logic": true,
+    "offer_after_boss_phase": false,
+    "scope": "per_level"
+  },
+  "fog": {
+    "range_penalty_cells": 1.0,
+    "min_range_cells": 1.0
+  },
+  "performance": {
+    "max_projectiles": 300,
+    "max_damage_numbers": 40,
+    "max_kill_orbs": 60
+  },
+  "rng": {
+    "seeded_per_battle": true
+  }
+}

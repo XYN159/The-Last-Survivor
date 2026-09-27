@@ -38,6 +38,7 @@
 | [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) | 左边 Cursor、右边游戏：外部编辑器、运行时同步、真机部署、scrcpy、Agent |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 分支、提交、审查、合并、发版 |
 | [`docs/GDD.md`](docs/GDD.md) | 玩法草案，以及需要你亲自补上的部分 |
+| [`docs/design/combat/README.md`](docs/design/combat/README.md) | 东方同人塔防战斗规则草案和配置表索引（待审核；GDD 仍是旧玩法） |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | 目录、场景、数值、存档，以及以后服务器怎么接 |
 | [`docs/CODING_STYLE.md`](docs/CODING_STYLE.md) | GDScript 写法 |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | 从脚手架到单机 MVP，以及更后面的多人 |
