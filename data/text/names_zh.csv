@@ -25,8 +25,8 @@ char.sanae.name,早苗,气泡名
 char.sanae.fullname,东风谷早苗,
 char.yukari.name,紫,气泡名
 char.yukari.fullname,八云紫,
-char.wasure.name,忘,气泡名。原创角色，正式名待制作人决定；定名后只改文本，key 不变
-char.wasure.fullname,忘,正式名备选：落野 忘 / 百代 残 / 无名 拾
+char.wasure.name,忘,气泡名
+char.wasure.fullname,落野忘,
 stage.prologue.name,序章 神社的裂缝,
 stage.ch01.name,第一章 雾之湖,
 stage.ch02.name,第二章 红魔馆,

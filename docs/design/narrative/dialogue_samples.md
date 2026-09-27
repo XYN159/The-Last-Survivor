@@ -50,7 +50,7 @@
 - **章节**：`prologue`（序章）、`ch01`～`ch05`（第一至五章）、`final`（终章）。
 - **阶段**：`pre`（关前）、`mid`（关中触发）、`duel`（符卡决斗中）、`post`（关后）。序章没有 `duel`。
 - **序号**：三位数，按播放顺序递增。已接入的 key 不要改名、不要重排；以后插入台词时用新的序号追加，并在 `_note` 写明插在哪一句之后，实际播放顺序以关卡脚本为准。
-- **角色 id**：`reimu`、`marisa`、`cirno`、`daiyousei`、`meiling`、`sakuya`、`remilia`、`keine`、`mokou`、`aya`、`sanae`、`yukari`、`wasure`（忘，正式名定下后 key 也不改）。
+- **角色 id**：`reimu`、`marisa`、`cirno`、`daiyousei`、`meiling`、`sakuya`、`remilia`、`keine`、`mokou`、`aya`、`sanae`、`yukari`、`wasure`（落野忘，简称忘；key 不改）。
 - **说话人**：对话行的 `_speaker_key` 是 `char.<角色id>`，界面显示名取 `char.<角色id>.name`。
 - **播放顺序**：同一个触发点下的连续台词，按 key 序号依次播放。教学提示（`tut.*`）和对话交错出现时，以本文件里的排列顺序为准。
 - **触发条件**：暂时写在 `_note` 里，给关卡策划和程序参考。以后如果做了关卡脚本数据（例如每关一个 JSON），建议把触发条件搬过去，文本表只留文本。
