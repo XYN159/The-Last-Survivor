@@ -19,7 +19,7 @@
       "status": "confirmed_framework",
       "mvp": true,
       "mvp_freeze_sources": ["buff_frost_frog", "sc_boss_cirno_perfect_freeze", "chr_cirno"],
-      "mvp_freeze_source_unlock": {"chr_cirno": "pending_producer"},
+      "mvp_freeze_source_unlock": {"chr_cirno": "ch1_01_clear"},
       "requires": {"characters_any": ["chr_marisa"], "freeze_source": true},
       "trigger": {"event": "on_hit", "attacker_character": "chr_marisa", "target_has_status": "st_freeze", "check_step": "pipeline_4"},
       "effect": {"bucket": "synergy", "add": 1.0, "force_heavy": true, "remove_target_status": "st_freeze", "remove_at_step": "pipeline_7", "vfx": "ice_shatter", "sfx": "ice_break"}

@@ -142,7 +142,7 @@
     "max_copies_per_character": 3,
     "sell_allowed_during_wave": true,
     "upgrade_allowed_during_wave": true,
-    "allowed_cell_mark": "P",
+    "allowed_cell_mark": ".",
     "routes_fixed_during_level": true
   },
   "character_levels": {

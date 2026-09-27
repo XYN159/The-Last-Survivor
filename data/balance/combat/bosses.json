@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 3,
+    "schema_version": 4,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
@@ -9,7 +9,10 @@
   "bosses": [
     {
       "id": "boss_cirno",
-      "name_key": "char.cirno.name",
+      "draft_name": "冰之残影",
+      "name_key": "boss.ice_shade.name",
+      "identity": "cirno_copy",
+      "copy_of": "chr_cirno",
       "tags": ["boss", "ice"],
       "hit_radius_cells": 0.45,
       "knockback_immune": true,

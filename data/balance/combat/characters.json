@@ -207,7 +207,7 @@
       "name_key": "char.cirno.name",
       "playable_status": "confirmed",
       "mvp": true,
-      "unlock": "pending_producer",
+      "unlock": "ch1_01_clear",
       "role": "slow_freeze_control",
       "tags": [],
       "attack": {
