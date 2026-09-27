@@ -13,16 +13,14 @@
     "id": "guard.moriya_shrine",
     "display_name": "守矢神社"
   },
-  "summary": "早苗加入。地面一条路，天上一条短的飞行路，飞屑只来很少。",
+  "summary": "地上一路、飞行一路，开战前就定好。地上的人打不到飞行的残影。谁来反空仍待文案。飞屑还没有战斗 id。",
   "player_feeling": "比第三章首领关松。先看懂「地上的人打不到天上」。",
   "teaches": [
     "飞行残影不走地面路线",
     "覆盖两条路的格子往往更远，射程不够就打空",
     "早苗的范围用来补飞行路"
   ],
-  "new_character_ids": [
-    "chr_sanae"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -31,16 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou",
-      "chr_sanae"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 8,
-  "design_notes": "飞行路线正式做图时，path.kind 用 flying，允许经过障碍格。这次没有格子。好位置要做成取舍：贴地路打得着地面、够不着飞行；站在两路之间的格子两头都沾一点，但雾或射程短时会两头落空。射命丸文是否可玩仍等制作人。当前反空课由早苗承担。若文可玩，建议下一关加入，id 用 chr_aya。飞屑还没有战斗 id，关卡不新造，所以不放进图鉴。",
+  "wave_count": 10,
+  "design_notes": "飞行路线开战前就定好，path.kind 用 flying，允许经过障碍格。这次没有格子。预定槽位要做成取舍：贴地路打得着地面、够不着飞行。文是否可玩仍等制作人。飞屑还没有战斗 id，不新造。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -48,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

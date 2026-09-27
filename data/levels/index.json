@@ -3,7 +3,7 @@
   "game_title": "东方守幻录",
   "unlock_rule": "sequential_clear",
   "stars_do_not_grant_power": true,
-  "note": "按 levels 数组的顺序解锁。通关上一关才打开下一关。星级不解锁关卡，也不增加强度。",
+  "note": "按 levels 数组的顺序解锁关卡。通关上一关才打开下一关。角色另看每一关的 unlock_character_ids：通关后才加入，下一关的可放置名单才会出现。琪露诺的加入关是提案，状态 pending_文案策划：通关 ch1_01 后加入，ch1_02 起可放置。八云紫通关 ch1_04 后加入。星级不解锁关卡，也不增加强度。已通关的关可以随时重打，局外奖励更少，缺的星还能补。",
   "chapters": [
     {
       "id": "prologue",
@@ -255,5 +255,24 @@
       "chapter_id": "final",
       "unlock_after": "ch5_04"
     }
-  ]
+  ],
+  "starting_character_ids": [
+    "chr_reimu"
+  ],
+  "character_join_proposals": [
+    {
+      "id": "chr_cirno",
+      "display_name": "琪露诺",
+      "unlock_after_clearing": "ch1_01",
+      "first_placeable_level": "ch1_02",
+      "status": "pending_文案策划",
+      "note": "制作人 GDD 已按通关第一章第 1 关后加入来写。第一章首领是冰之残影，不锁放置。文案若改入队关卡，要同时改 unlock_character_ids。"
+    }
+  ],
+  "replay": {
+    "cleared_levels_anytime": true,
+    "reduced_meta_reward": true,
+    "can_earn_missing_stars": true,
+    "reward_table": "data/balance/level_tables/level_difficulty.csv"
+  }
 }

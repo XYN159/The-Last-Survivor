@@ -8,16 +8,16 @@
   "display_name": "会移动的路",
   "display_name_key": "level.ch5_02.name",
   "kind": "normal",
-  "route_type": "moving",
+  "route_type": "fixed_gates",
   "guard_point": {
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "堆积体会裂开。路线移动两次。遗忘之影和前面的敌人混在一起。",
+  "summary": "堆积体会裂开。路线固定，入口可以按波次开关。遗忘之影和前面的敌人混在一起。",
   "player_feeling": "练习。裂开和改道叠在一起，但每次移动都有预告的空档。",
   "teaches": [
-    "堆积体倒下会裂成普通残影",
-    "路线移动前要留人在新路旁边"
+    "堆积体倒下会裂成快残影，孩子算不算威胁还没定",
+    "入口开关之前，预定槽位已经在那条路旁边"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
@@ -30,17 +30,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou",
-      "chr_sanae",
       "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 10,
-  "design_notes": "战斗草案：死亡分裂出 3 个 enm_shade_fast，见敌人图鉴的 splits_into。关卡旧稿曾写 2 个普通残影。孩子算不算进威胁还没定。预告空档的秒数等战斗策划，关卡只要求「不要突然改」。",
+  "wave_count": 12,
+  "design_notes": "路线固定。堆积体死亡分裂出 3 个 enm_shade_fast，孩子算不算进威胁还没定。入口可以按波次开关，格子不动。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -48,5 +43,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

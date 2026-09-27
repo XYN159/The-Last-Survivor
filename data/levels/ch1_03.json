@@ -22,9 +22,7 @@
     "汇合后可以补漏，但不能代替两边的人"
   ],
   "new_character_ids": [],
-  "new_enemy_ids": [
-    "enm_shade_armored"
-  ],
+  "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
@@ -40,16 +38,16 @@
     "origin": "row_0_is_north",
     "cells": [
       "BBBSBBB",
-      "B..P..B",
+      "BB.PBBB",
       "BPPPPPB",
+      "BPBBBPB",
       "BP.B.PB",
-      "BP.B.PB",
-      "BP.B.PB",
-      "BP.B.PB",
-      "BP.B.PB",
+      "BPBBBPB",
+      "BPBBBPB",
+      "BPBBBPB",
       "BPPPPPB",
-      "B..P..B",
-      "B..P..B",
+      "BBBP.BB",
+      "BBBPBBB",
       "BBBGBBB"
     ],
     "cell_legend": {
@@ -331,30 +329,30 @@
       }
     ],
     "cell_sets": {},
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.before_fork",
+        "id": "slot.before_fork",
         "col": 2,
         "row": 1,
         "label": "分叉之前",
         "why": "左右还没分开。放在这里的角色打得到每一只残影。雾很浓，所以必须贴着这格，不能站到更外面。"
       },
       {
-        "id": "spot.left_only",
+        "id": "slot.left_only",
         "col": 2,
         "row": 4,
         "label": "只贴左路",
         "why": "中间是障碍，这一格打不到右路。左路要有自己的人。"
       },
       {
-        "id": "spot.right_only",
+        "id": "slot.right_only",
         "col": 4,
         "row": 4,
         "label": "只贴右路",
         "why": "和左路那格对称，只覆盖右路。两边都空着，就会有一侧直接漏到汇合点。"
       },
       {
-        "id": "spot.after_merge",
+        "id": "slot.after_merge",
         "col": 4,
         "row": 9,
         "label": "汇合之后",
@@ -387,7 +385,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w02",
@@ -413,7 +411,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w03",
@@ -439,7 +437,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w04",
@@ -465,7 +463,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w05",
@@ -491,7 +489,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。本波结束后弹出三选一，三张里选一张。"
+      "note": "左右路同时出场。只有普通残影和快残影。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
@@ -517,7 +515,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w07",
@@ -543,7 +541,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w08",
@@ -569,7 +567,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w09",
@@ -595,7 +593,7 @@
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。硬残影留到最后三波，各 1 只。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w10",
@@ -615,21 +613,13 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 28,
+          "count": 32,
           "interval_sec": 0.7,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_armored",
-          "path_id": "path.right",
-          "count": 1,
-          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。本波结束后弹出三选一，三张里选一张。"
+      "note": "左右路同时出场。只有普通残影和快残影。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w11",
@@ -649,21 +639,13 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 30,
+          "count": 34,
           "interval_sec": 0.6,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_armored",
-          "path_id": "path.right",
-          "count": 1,
-          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     },
     {
       "id": "w12",
@@ -683,21 +665,13 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.right",
-          "count": 32,
+          "count": 36,
           "interval_sec": 0.6,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_armored",
-          "path_id": "path.right",
-          "count": 1,
-          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
       ],
-      "note": "左右路同时出场。这一波有 1 只硬残影，只是第二章护甲的预告。"
+      "note": "左右路同时出场。只有普通残影和快残影。"
     }
   ],
   "placeholders": {
@@ -712,5 +686,6 @@
   "spell_charge_mult": 1.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": false,
-  "intermission_sec": 4
+  "intermission_sec": 4,
+  "unlock_character_ids": []
 }

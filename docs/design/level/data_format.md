@@ -23,7 +23,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 列 `col` 从左到右是 0 到 6。行 `row` 从上到下是 0 到 11。`map.origin` 固定写 `row_0_is_north`，表示第 0 行在画面最上方。残影往更大的行号走，最后到守护点。
 
-给人看的地图仍把入口画成 `E`、障碍画成 `#`、好位置画成 `*`。JSON 的 `cells` 用战斗侧字符：入口 `S`，守护点 `G`，障碍 `B`，路线 `P`，可放置 `.`。坐标是 0 起的 `[列, 行]`。
+给人看的地图仍把入口画成 `E`、障碍画成 `#`、预定槽位画成 `*`。JSON 的 `cells` 用战斗侧字符：入口 `S`，守护点 `G`，障碍 `B`，路线 `P`，预定槽位 `.`。战斗侧把 `.` 叫做可放置。这里每一个 `.` 都是槽位，不能再有别的可放置格。坐标是 0 起的 `[列, 行]`。
 
 ## 每一关都有的字段
 
@@ -46,9 +46,10 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `teaches` | 学会的要点，字符串数组 |
 | `new_character_ids` | 这一关新给的角色。没有就是空数组。id 用战斗侧的 `chr_` 加叙事角色 id，例如 `chr_reimu` |
 | `new_enemy_ids` | 这一关新出现的残影。没有就是空数组 |
+| `unlock_character_ids` | 通关这一关后加入的角色。下一关的可放置名单才会出现她们。这一关的首通名单不含她们 |
 | `params.starting_spirit_power` | 开局灵力。已确认是 150。每活过一波再加 20，写在难度表，不写进每一波 |
 | `params.lives` | 开局生命。现在每一关都是 20，schema 把它定死了。困难模式以后另做，不在这里改小 |
-| `params.available_character_ids` | 这一关可以放置的角色。新角色必须在里面。正在和玩家决斗的角色不能在里面 |
+| `params.available_character_ids` | 这一关首通可以放置的角色。等于开局角色加上前面每一关 `unlock_character_ids` 的合计 |
 | `bosses` | 首领。普通关和草案关都是空数组。画完的首领关才有内容 |
 | `placeholders._placeholder` | 固定 `true`。提醒读文件的人：还有和数值、战斗对齐的事 |
 | `placeholders.align_with` | 要找谁对齐。现在是「数值策划」和「战斗策划」 |
@@ -61,10 +62,10 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `straight` | 一条直路 |
 | `curve` | 弯路 |
 | `fork_merge` | 一个入口，中间分开，再汇合 |
-| `double_entrance` | 两个入口。从第二章开始 |
+| `double_entrance` | 两个入口。第一章第 2 关起就可以有 |
 | `dual_route` | 两条都要顾的路，第三章还要加上村民 |
 | `flying` | 有飞行路线。从第四章开始 |
-| `moving` | 战斗中路线会变。从第五章开始 |
+| `fixed_gates` | 几条路线开战前就画好。入口按波次或阶段打开、关掉。格子不在战斗中改。第五章和终章用这个 |
 
 ### 只在画完的关卡里有
 
@@ -84,21 +85,21 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 | 字段 | 含义 |
 | --- | --- |
-| `wave_count` | 计划中的波数。普通关 8 到 12，首领关 15 |
+| `wave_count` | 计划中的波数。序章前两关可以少于 5，但那两关已经画完，不写这个字段。草案关是 10 到 20 |
 | `design_notes` | 中文备注。首领阶段、符卡和还没画的地图变化写在这里 |
 
 画完的关卡不能写这两个字段。它们的说明在 `docs/design/level/` 对应的那一篇里。
 
 ## 地图 `map`
 
-战斗策划按这些字段读图。好位置是关卡多出来的，不影响他们读路线。
+战斗策划按这些字段读图。预定槽位用他们的 `.`，再由 `slots` 把每一个 `.` 列出来。他们可以不读 `slots`，但关卡校验要求两边一样。
 
 | 字段 | 含义 |
 | --- | --- |
 | `columns` | 固定 7 |
 | `rows` | 固定 12 |
 | `origin` | 固定 `row_0_is_north` |
-| `cells` | 12 个字符串，每个长度 7。`P` 路线，`.` 可放置，`B` 障碍，`S` 裂缝（入口），`G` 守护点 |
+| `cells` | 12 个字符串，每个长度 7。`P` 路线，`.` 预定槽位（战斗侧叫可放置），`B` 障碍，`S` 裂缝（入口），`G` 守护点 |
 | `cell_legend` | 上面五个字符的英文名，给战斗对照 |
 | `entrances` | 入口列表。每项有 `id`、`col`、`row`。id 形如 `entrance.north`。这一格在 `cells` 里必须是 `S` |
 | `guard.cell` | 守护点，`[列, 行]`。必须是 `G`，而且是每条路径的最后一格 |
@@ -106,7 +107,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `paths` | 路径列表 |
 | `terrain` | 关卡自带的地形。见下 |
 | `cell_sets` | 名字到格子的集合，给首领符卡查。琪露诺用三组，见 `ch1_04` |
-| `good_spots` | 好位置，3 到 6 个。战斗可以不读 |
+| `slots` | 预定槽位，3 到 6 个。必须和每一个 `.` 一一对应。战斗可以不读 |
 
 一条路径：
 
@@ -130,18 +131,18 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `duration_sec` | 秒。`-1` 表示一直在 |
 | `note` | 可选。给人看的中文 |
 
-`ter_ice` 只能铺在路线上，敌人移速 ×1.5，这是战斗的地形表，关卡不另写倍率。`ter_icicle` 只能铺在可放置格。`ter_fog` 让打在雾格上的目标射程减 1。第一章用它，不再写攻击范围倍率。
+`ter_ice` 只能铺在路线上，敌人移速 ×1.5，这是战斗的地形表，关卡不另写倍率。`ter_icicle` 只能铺在预定槽位上。`ter_fog` 让打在雾格上的目标射程减 1。第一章用它，不再写攻击范围倍率。
 
-一个好位置：
+一个预定槽位：
 
 | 字段 | 含义 |
 | --- | --- |
-| `id` | 形如 `spot.mid_left` |
+| `id` | 形如 `slot.mid_left` |
 | `col`、`row` | 坐标。这一格必须是 `.` |
 | `label` | 短名字 |
-| `why` | 为什么这里好 |
+| `why` | 为什么留在这里 |
 
-好位置必须上下左右至少挨着 `P`、`S` 或 `G`。斜着不算。
+槽位必须上下左右至少挨着 `P`、`S` 或 `G`。斜着不算。没有列进 `slots` 的格子不能是 `.`。
 
 ## 波次 `waves`
 
@@ -153,7 +154,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `next_wave_delay_sec` | 战斗字段。等于下一波的 `delay_sec`。最后一波是 0 |
 | `is_boss` | 只有首领入场的那一波为真，用来播一次登场 |
 | `pressure` | 可选。`minion` 或 `boss_phase`。琪露诺关仍交替，但交替不切换符卡 |
-| `note` | 可选。三选一那一波要写上「三选一」 |
+| `note` | 可选。有三选一的那一波要写上「三选一」。少于 5 波的关不要写 |
 | `spawns` | 这一波的刷怪。战斗读这个名字 |
 
 一组 `spawns`：
@@ -169,7 +170,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 画完的关：每一波的 `count × threat_points` 必须等于 `(10 + 4 × 波次) × threat_budget_coef`。系数种子是 1.0，所以现在就是整数。首领不占预算。
 
-普通关和教学关的波数是 8 到 12。首领关是 14 到 16。序章现在是 8、9、10。第一章是 10、11、12，首领 15。
+序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。其余关卡是 10 到 20 波，每 5 波一次三选一。序章第 3 关和第一章是 10、11、12，首领 15。后面各章草案是 10、12、14、16，终章 20。
 
 ## 难度表 `data/balance/level_tables/level_difficulty.csv`
 
@@ -177,7 +178,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 约定的每一波预算是 `(10 + 4 × wave_index) × threat_budget_coef`，`wave_index` 从 1 起。系数现在每一关都是 1.0，等模拟。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。系数若以后不是 1，按四舍五入到整数，再重做那一关的编组。
 
-首通剩余生命：普通关 11 到 13，首领关大约 10 到 11。这是关卡和数值已经对齐的目标，还等制作人确认。10 仍是 2 星的起点。
+首通剩余生命：普通关 11 到 13，首领关大约 10 到 11。这是手感目标，还等制作人确认。它不是星级分档。2 星的占位是剩余至少 50%（10/20）。
 
 | 列 | 含义 |
 | --- | --- |
@@ -190,9 +191,11 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `hp_multiplier` | `1 + 0.15 × (level_index − 1)`，只升不降 |
 | `reward_spirit_start` | 开局灵力 150 |
 | `reward_spirit_per_wave` | 每活过一波加 20 |
-| `reward_buff_after_waves` | 三选一的波次，用分号隔开，例如 `5;10;15` |
-| `reward_buff_pick_count` | 固定 3 |
+| `reward_buff_after_waves` | 三选一的波次，用分号隔开，例如 `5;10;15`。少于 5 波则空着 |
+| `reward_buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
 | `expected_first_clear_lives` | `11-13` 或首领的 `10-11` |
+| `reward_meta_first_clear` | 局外首通奖励。现在是 `pending_numbers`，不要发明数字 |
+| `reward_meta_replay` | 局外重打奖励。一定比首通少。现在也是 `pending_numbers` |
 
 生命 20、首领不占预算，写在文件开头的注释里，不每行重复。分波预算不存进表，校验按公式算。
 
@@ -205,7 +208,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `id` | `boss_cirno` 这种战斗侧 id |
 | `display_name` | 给人看的名字 |
 | `character_id` | 例如 `chr_cirno` |
-| `blocks_character_id` | 决斗期间不能放置的角色。不能出现在可放置名单里 |
+| `blocks_character_id` | 决斗期间不能放置的角色。不能出现在可放置名单里。冰之残影不锁琪露诺，写 `null` |
 | `enters_at_wave_id` | 从哪一波走进来 |
 | `entrance_id`、`path_id` | 从哪进、走哪条路 |
 | `prelude_wave_ids` | 入场前的波。琪露诺是前 4 波。这些波不必再被阶段瓜分 |
@@ -286,7 +289,10 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `stars_do_not_grant_power` | `true` |
 | `stars_grant` | 现在写了 `cosmetics` 和 `codex_stories`。具体外观和图鉴句子还没做 |
 | `hard_mode` | `later`。这次没有困难倍率 |
-| `bands` | 三档。1 星是剩余 1 到 9，2 星是 10 到 17，3 星是 18 到 20 |
+| `win`、`lose` | 最后一波结束还有命即胜，命到 0 即败。首领关相同 |
+| `two_star_lives_ratio` | 2 星要达到的剩余生命比例。现在是 `0.5`，状态 `pending_numbers` |
+| `bands` | 三档。1 星是通关且剩余 1 到 9，2 星是 10 到 19，3 星只有 20 |
+| `replay` | 已通关的关可以重打，并能补星。局外奖励看难度表那两列 |
 | `leak.stored_in_level_data` | `false`。扣几条命不写在关卡里 |
 | `leak.note` | 指向数值和战斗的属性表 |
 | `first_clear` | 普通关剩余 `11-13`，首领关 `10-11`。状态是关卡和数值已对齐，等制作人确认 |
@@ -297,7 +303,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 - 村民的避难路线，以及褪色几人算失败
 - 魔理沙的包把残影吸过去
-- 战斗中途改路径的 `path_shifts`
+- 战斗中途改路径的格子。路线几何已经定成开战前固定，不再做 `path_shifts`
 - 飞行路径具体经过哪些障碍格
 - 击破一只残影回复多少灵力
 - 困难模式
@@ -310,6 +316,6 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 python3 tools/validate_levels.py
 ```
 
-它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，好位置贴着路线，地形和琪露诺的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，三选一落在第 5、10、15 波，星级区间是上面那三档。图鉴里不能再出现生命和移速。
+它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，少于 5 波没有三选一、其余每 5 波一次，可放置名单跟着 `unlock_character_ids` 走，星级区间是上面那三档。图鉴里不能再出现生命和移速。
 
 Godot 测试 `tests/unit/test_level_data.gd` 再查一遍地图、路径、威胁和星级，不查 schema 文本。CI 的 lint 跑 Python 校验，test 跑 Godot 测试。

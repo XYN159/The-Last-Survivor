@@ -8,17 +8,17 @@
   "display_name": "灰色的鸟居",
   "display_name_key": "level.final_01.name",
   "kind": "final_boss",
-  "route_type": "moving",
+  "route_type": "fixed_gates",
   "guard_point": {
     "id": "guard.gap_torii",
     "display_name": "缝隙里的鸟居"
   },
-  "summary": "终章只有这一关。忘的三张符卡各改一次地图：失物堵住格子、一段路反向、最后开一条通向鸟居的直路。",
+  "summary": "终章只有这一关。三张符卡各做一件已画好的事：槽位变失物堆、打开一条固定路线的入口、再打开通向鸟居的入口。不反向，也不新挖路。",
   "player_feeling": "严肃，但是公平。三张牌一件一件来，打完就能把裂缝合上。",
   "teaches": [
-    "三张符卡对应三次地图变化",
-    "最后一阶段所有压力叠在一条新路上",
-    "通关之后才解锁忘，这一关不能放她"
+    "三张符卡对应三次入口或地形变化，格子开战前就在",
+    "最后一阶段压力叠在一条一开始就画好的直路上",
+    "通关之后才考虑解锁忘。这一关的可放置名单只有 MVP 四人"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -29,17 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou",
-      "chr_sanae",
       "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 15,
-  "design_notes": "全篇威胁最高的一关。不套用「新章第一关要比上一章首领轻松」，因为终章本身就是首领。3 个阶段，恰好对上叙事的三张原创符卡。阶段 1：拾遗「无人认领的失物招领处」（sc_lost_and_found），若干空地变成失物堆，被击散的残影会从这些格子再出现。再出现的规则等战斗策划。阶段 2：忘却「谁也记不起的歌」（sc_forgotten_song），一段路线反向，残影走回去再折返。阶段 3：终符「百代的归处」（spell.wasure.final），打开一条直通鸟居的新路，各入口同时加压。忘的正式名字未定。显示名先用「忘」，id 保持 boss_wasure / chr_wasure。",
+  "wave_count": 20,
+  "design_notes": "全篇威胁最高的一关。路线开战前就有，战斗中不反向、不新挖路。阶段 1：若干预定槽位变成失物堆，被击散的残影规则等战斗。阶段 2：一条方向不变的固定路线，入口到这一阶段才打开。阶段 3：另一条直通鸟居的固定路线打开入口。终符 id 仍是提案 spell.wasure.final，等战斗改成 sc_。胜负和普通关一样：最后一波结束还有命即胜，命到 0 即败。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -47,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

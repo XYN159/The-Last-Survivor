@@ -14,16 +14,14 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "琪露诺加入。薄雾缩短射程，后半的快残影要用减速接住。",
-  "player_feeling": "换了地图，但比序章最后一关松。新敌人很少，先看懂雾和减速。",
+  "summary": "薄雾缩短射程。后半才有快残影。琪露诺要通关这一关才加入，这一关还不能放她。",
+  "player_feeling": "换了地图，但比序章最后一关松。新敌人很少，先看懂雾。",
   "teaches": [
-    "雾里要贴着路线放",
+    "雾里只能放在贴着路线的预定槽位",
     "快残影比普通残影更快，但更脆，数量大约占两成",
-    "琪露诺的减速能接住快残影"
+    "通关这一关后琪露诺加入，下一关才能放她减速"
   ],
-  "new_character_ids": [
-    "chr_cirno"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [
     "enm_shade_fast"
   ],
@@ -32,8 +30,7 @@
     "lives": 20,
     "available_character_ids": [
       "chr_reimu",
-      "chr_marisa",
-      "chr_cirno"
+      "chr_marisa"
     ]
   },
   "map": {
@@ -42,16 +39,16 @@
     "origin": "row_0_is_north",
     "cells": [
       "BBBSBBB",
-      "B..P..B",
-      "B..P..B",
-      "BB.PP.B",
-      "BB..P.B",
-      "B...P.B",
-      "BB..PBB",
-      "BB.PP.B",
-      "B..P..B",
-      "B..P..B",
-      "B..P..B",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBPPBB",
+      "BBBBPBB",
+      "BBB.PBB",
+      "BBBBPBB",
+      "BBBPPBB",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBP.BB",
       "BBBGBBB"
     ],
     "cell_legend": {
@@ -181,30 +178,30 @@
       }
     ],
     "cell_sets": {},
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.early",
+        "id": "slot.early",
         "col": 2,
         "row": 1,
         "label": "贴着入口",
         "why": "雾会缩短射程。这一格紧贴路线，才打得到刚出现的残影。离路线再远一格，雾里就会空放。"
       },
       {
-        "id": "spot.bend",
+        "id": "slot.bend",
         "col": 3,
         "row": 5,
         "label": "右移后的中段",
         "why": "路线往右靠了之后，减速要放在贴着新路线的这一格。快残影数量少，但一不减速就会冲过这段。"
       },
       {
-        "id": "spot.lower",
+        "id": "slot.lower",
         "col": 2,
         "row": 8,
         "label": "回到中间之后",
-        "why": "路线拐回中列。灵梦放这里守下半段，琪露诺不必跟下来。"
+        "why": "路线拐回中列。灵梦放这里守下半段。这一关还不能放琪露诺。"
       },
       {
-        "id": "spot.last",
+        "id": "slot.last",
         "col": 4,
         "row": 10,
         "label": "青蛙前面",
@@ -446,5 +443,8 @@
   "spell_charge_mult": 1.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": false,
-  "intermission_sec": 4
+  "intermission_sec": 4,
+  "unlock_character_ids": [
+    "chr_cirno"
+  ]
 }

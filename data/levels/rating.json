@@ -2,29 +2,48 @@
   "schema_version": 1,
   "max_lives": 20,
   "defeat_lives": 0,
+  "win": "最后一波结束时守护点生命仍大于 0。首领关相同。首领那一波要等首领被击败才算结束。",
+  "lose": "生命到 0 即失败，没有星。首领走到守护点会扣命，然后回到裂缝再走。扣多少归数值策划，不写在关卡里。",
   "stars_do_not_grant_power": true,
   "stars_grant": [
     "cosmetics",
     "codex_stories"
   ],
+  "two_star_lives_ratio": 0.5,
+  "two_star_ratio_status": "pending_numbers",
+  "two_star_ratio_note": "2 星要剩余生命达到上限的这个比例。50% 即 10/20，是占位，等数值策划确认。",
   "hard_mode": "later",
   "bands": [
     {
       "stars": 1,
       "lives_min": 1,
-      "lives_max": 9
+      "lives_max": 9,
+      "rule": "clear"
     },
     {
       "stars": 2,
       "lives_min": 10,
-      "lives_max": 17
+      "lives_max": 19,
+      "rule": "lives_ratio_placeholder",
+      "ratio": 0.5,
+      "ratio_status": "pending_numbers"
     },
     {
       "stars": 3,
-      "lives_min": 18,
-      "lives_max": 20
+      "lives_min": 20,
+      "lives_max": 20,
+      "rule": "full_lives"
     }
   ],
+  "replay": {
+    "cleared_levels_anytime": true,
+    "can_earn_missing_stars": true,
+    "meta_reward_columns": [
+      "reward_meta_first_clear",
+      "reward_meta_replay"
+    ],
+    "note": "重打的局外奖励一定比首通少。数字在难度表那两列，现在都是 pending_numbers。关卡内的开局灵力 150 和每波加 20 不是这份局外奖励。"
+  },
   "leak": {
     "stored_in_level_data": false,
     "note": "漏几条命的权威数字在数值策划和战斗策划的属性表，不写进关卡图鉴。关卡只保留威胁点，用来对预算。扣到 0 即失败，没有星。"
@@ -33,6 +52,6 @@
     "normal_lives_remaining": "11-13",
     "boss_lives_remaining": "10-11",
     "status": "agreed_by_level_and_numbers_pending_producer",
-    "note": "关卡和数值已经对齐到这个区间，还等制作人确认。10 仍是 2 星的起点，首领目标的下沿贴着这条线。"
+    "note": "这是首通手感目标，不是星级分档。11 到 13 落在 2 星占位（至少 10 命）里面。还等制作人确认手感，2 星比例另等数值确认。"
   }
 }

@@ -39,16 +39,16 @@
     "origin": "row_0_is_north",
     "cells": [
       "BSBBBBB",
-      "BP....B",
-      "BP.BBBB",
-      "BPPP..B",
-      "BB.P..B",
-      "BBBP..B",
-      "BBBP..B",
-      "BBBP..B",
-      "BBBP..B",
-      "B..P..B",
-      "B..P.BB",
+      "BPBBBBB",
+      "BPBBBBB",
+      "BPPP.BB",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBP.BB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BB.PBBB",
       "BBBGBBB"
     ],
     "cell_legend": {
@@ -141,30 +141,30 @@
     ],
     "terrain": [],
     "cell_sets": {},
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.corner",
+        "id": "slot.corner",
         "col": 4,
         "row": 3,
         "label": "拐角",
         "why": "残影从横段拐进直路时会挤在这一格旁边。灵梦放这里，能打到转弯的那一小团。"
       },
       {
-        "id": "spot.straight_start",
+        "id": "slot.straight_start",
         "col": 2,
         "row": 4,
         "label": "直路起点",
         "why": "长直路刚开始的左侧。能罩住往下走的一列，但打不到上面的横段。"
       },
       {
-        "id": "spot.straight_mid",
+        "id": "slot.straight_mid",
         "col": 4,
         "row": 6,
         "label": "直路中段",
         "why": "贴着最长的那一列。适合补第二座灵梦，让直路上一直有人打。"
       },
       {
-        "id": "spot.straight_end",
+        "id": "slot.straight_end",
         "col": 2,
         "row": 10,
         "label": "直路尽头",
@@ -231,7 +231,7 @@
       "id": "w04",
       "wave_id": "w04",
       "delay_sec": 6.4,
-      "next_wave_delay_sec": 5.6,
+      "next_wave_delay_sec": 0,
       "is_boss": false,
       "spawns": [
         {
@@ -239,96 +239,6 @@
           "path_id": "path.main",
           "count": 26,
           "interval_sec": 1.2,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
-    },
-    {
-      "id": "w05",
-      "wave_id": "w05",
-      "delay_sec": 5.6,
-      "next_wave_delay_sec": 4.9,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 30,
-          "interval_sec": 1.1,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。本波结束后弹出三选一，三张里选一张。"
-    },
-    {
-      "id": "w06",
-      "wave_id": "w06",
-      "delay_sec": 4.9,
-      "next_wave_delay_sec": 4.1,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 34,
-          "interval_sec": 1.0,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
-    },
-    {
-      "id": "w07",
-      "wave_id": "w07",
-      "delay_sec": 4.1,
-      "next_wave_delay_sec": 3.3,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 38,
-          "interval_sec": 0.9,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
-    },
-    {
-      "id": "w08",
-      "wave_id": "w08",
-      "delay_sec": 3.3,
-      "next_wave_delay_sec": 2.5,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 42,
-          "interval_sec": 0.7,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
-    },
-    {
-      "id": "w09",
-      "wave_id": "w09",
-      "delay_sec": 2.5,
-      "next_wave_delay_sec": 0,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 46,
-          "interval_sec": 0.6,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -349,5 +259,6 @@
   "deploy_time_sec": 10,
   "deploy_wait_for_player": true,
   "intermission_sec": 4,
-  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。"
+  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。",
+  "unlock_character_ids": []
 }

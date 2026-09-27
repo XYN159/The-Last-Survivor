@@ -22,15 +22,15 @@
       "introduced_in": "ch1_01",
       "threat_points": 1,
       "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点仍是 1。生命和移速见文件顶部的 stat_conflict，关卡不依赖任何一边。第一章用它教 st_slow。"
+      "note": "预算用的威胁点仍是 1。生命和移速见文件顶部的 stat_conflict，关卡不依赖任何一边。第一章第 2 关用它教 st_slow。"
     },
     {
       "id": "enm_shade_armored",
       "display_name": "硬残影",
-      "introduced_in": "ch1_03",
+      "introduced_in": "ch2_01",
       "threat_points": 4,
       "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点是 4。战斗稿亦称旧电器。第二章用同一个 id，不再另造一条护甲。第一章只在第 3 关最后三波各预告 1 只。"
+      "note": "预算用的威胁点是 4。战斗稿亦称旧电器。MVP 的七关不用它。从第二章第 1 关起才用这个 id，不要另造一条护甲。"
     },
     {
       "id": "enm_shade_phantom",
@@ -63,10 +63,10 @@
     },
     {
       "id": "boss_cirno",
-      "display_name": "琪露诺",
+      "display_name": "冰之残影",
       "introduced_in": "ch1_04",
       "threat_points": null,
-      "note": "不占波次预算。生命、移速、护甲在数值和战斗的属性表，不在这里。"
+      "note": "不占波次预算。显示名是冰之残影，原型是琪露诺。生命、移速、护甲在数值和战斗的属性表，不在这里。"
     },
     {
       "id": "boss_meiling",

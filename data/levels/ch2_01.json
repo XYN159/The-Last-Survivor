@@ -13,15 +13,15 @@
     "id": "guard.scarlet_clock",
     "display_name": "钟楼大钟"
   },
-  "summary": "美铃加入。正门和侧门都有路，侧门只漏几只，先学会把她放在门口挡旧电器。",
+  "summary": "硬残影正式出现。正门和侧门都有路，侧门只漏几只。谁来挡门仍待文案，不把美铃写成已加入。",
   "player_feeling": "比琪露诺那关松。新东西是「挡得住」，不是更凶的一波。",
   "teaches": [
-    "美铃能挡住路上的残影",
-    "旧电器又慢又硬，先挡再打",
-    "第二个入口这关几乎不施压"
+    "硬残影又慢又硬，要先处理再打",
+    "第二个入口这关几乎不施压",
+    "路线开战前就固定"
   ],
   "new_character_ids": [
-    "chr_meiling"
+    "chr_yukari"
   ],
   "new_enemy_ids": [
     "enm_shade_armored"
@@ -33,12 +33,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 8,
-  "design_notes": "双入口从这里开始，但侧门波次要很少，避免和挡门课抢注意力。美铃的符卡决斗不做成完整首领关：她在本关后段加入，下一关起可以放置。若制作人希望美铃也有首领阶段，用图鉴里的 boss_meiling，不要新造 id。 数值上的带甲敌人已经确认，id 是 enm_shade_armored。主题上属于这一章。第一章第 3 关只预告了 3 只。这里画图时用 enm_shade_armored，不要再给旧电器另写一套生命。",
+  "wave_count": 10,
+  "design_notes": "双入口在第一章第 2 关已经教过。这一关正式使用硬残影 enm_shade_armored，侧门波次仍然少。MVP 能放的是灵梦、魔理沙、琪露诺，以及通关第一章首领后加入的八云紫。美铃等人是不是可玩、通关哪一关加入，仍待制作人和文案，不写进可放置名单。路线开战前就固定，战斗中不改格子。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -46,5 +46,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

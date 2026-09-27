@@ -18,7 +18,7 @@
   "player_feeling": "安心。路是直的，敌人少，放下去就会自己打。",
   "teaches": [
     "残影沿路线走向守护点",
-    "把灵梦放到贴着路线的空地",
+    "只能把灵梦放到预定槽位上",
     "角色会自动攻击",
     "点角色查看攻击范围",
     "符卡充满后点一下发动"
@@ -42,16 +42,16 @@
     "origin": "row_0_is_north",
     "cells": [
       "BBBSBBB",
-      "B..P..B",
-      "B..P..B",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBPBBB",
       "BB.P.BB",
-      "B..P..B",
-      "B..P..B",
-      "B..P..B",
-      "BB.P.BB",
-      "B..P..B",
-      "B..P..B",
-      "BB.P.BB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPBBB",
       "BBBGBBB"
     ],
     "cell_legend": {
@@ -136,27 +136,27 @@
     ],
     "terrain": [],
     "cell_sets": {},
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.early_left",
+        "id": "slot.early_left",
         "col": 2,
         "row": 1,
         "label": "靠入口",
         "why": "能更早开火。雾还没出现，但射程如果只有两三格，就打不到后半段直路。适合先看清攻击范围，不适合当唯一的输出点。"
       },
       {
-        "id": "spot.mid_left",
+        "id": "slot.mid_left",
         "col": 2,
         "row": 4,
         "label": "直路中段左",
         "why": "贴着整条直路的中段。灵梦放这里，上下都能打到，是这一关推荐的第一格。"
       },
       {
-        "id": "spot.mid_right",
+        "id": "slot.mid_right",
         "col": 4,
         "row": 4,
         "label": "直路中段右",
-        "why": "和左边那格一样贴着直路，左右没有优劣。教玩家：好位置往往是成对的，不是只有唯一答案。"
+        "why": "和左边那格一样贴着直路，左右没有优劣。教玩家：预定槽位往往是成对的，不是只有唯一答案。"
       }
     ]
   },
@@ -201,7 +201,7 @@
       "id": "w03",
       "wave_id": "w03",
       "delay_sec": 7.1,
-      "next_wave_delay_sec": 6.2,
+      "next_wave_delay_sec": 0,
       "is_boss": false,
       "spawns": [
         {
@@ -209,96 +209,6 @@
           "path_id": "path.main",
           "count": 22,
           "interval_sec": 1.3,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。"
-    },
-    {
-      "id": "w04",
-      "wave_id": "w04",
-      "delay_sec": 6.2,
-      "next_wave_delay_sec": 5.2,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 26,
-          "interval_sec": 1.2,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。"
-    },
-    {
-      "id": "w05",
-      "wave_id": "w05",
-      "delay_sec": 5.2,
-      "next_wave_delay_sec": 4.3,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 30,
-          "interval_sec": 1.0,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。本波结束后弹出三选一，三张里选一张。"
-    },
-    {
-      "id": "w06",
-      "wave_id": "w06",
-      "delay_sec": 4.3,
-      "next_wave_delay_sec": 3.4,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 34,
-          "interval_sec": 0.9,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。"
-    },
-    {
-      "id": "w07",
-      "wave_id": "w07",
-      "delay_sec": 3.4,
-      "next_wave_delay_sec": 2.5,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 38,
-          "interval_sec": 0.7,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "直路上的普通残影，间隔拉开，方便看清她们往哪走。"
-    },
-    {
-      "id": "w08",
-      "wave_id": "w08",
-      "delay_sec": 2.5,
-      "next_wave_delay_sec": 0,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 42,
-          "interval_sec": 0.6,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -319,5 +229,8 @@
   "deploy_time_sec": 10,
   "deploy_wait_for_player": true,
   "intermission_sec": 4,
-  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。"
+  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。",
+  "unlock_character_ids": [
+    "chr_marisa"
+  ]
 }

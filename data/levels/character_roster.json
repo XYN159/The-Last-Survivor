@@ -1,97 +1,136 @@
 {
   "schema_version": 1,
-  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、在哪一关加入。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 pending_producer 的角色不进可放置名单。忘在终章通关后才解锁，所以 joins_at_level 为空。",
+  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、第一次能放的关、通关哪一关才解锁。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 pending_producer 的角色不进可放置名单。MVP 只定灵梦、魔理沙、琪露诺、八云紫。其余角色谁加入仍待制作人和文案。",
   "characters": [
     {
       "id": "chr_reimu",
       "display_name": "灵梦",
       "playable": "yes",
       "role": "single_target",
-      "joins_at_level": "prologue_01"
+      "joins_at_level": "prologue_01",
+      "unlocked_by_clearing": null,
+      "join_status": "decided",
+      "join_note": "开局就能放。"
     },
     {
       "id": "chr_marisa",
       "display_name": "魔理沙",
       "playable": "yes",
       "role": "pierce",
-      "joins_at_level": "prologue_02"
+      "joins_at_level": "prologue_02",
+      "unlocked_by_clearing": "prologue_01",
+      "join_status": "decided",
+      "join_note": "通关序章第 1 关后，从序章第 2 关起可放置。"
     },
     {
       "id": "chr_cirno",
       "display_name": "琪露诺",
       "playable": "yes",
       "role": "slow",
-      "joins_at_level": "ch1_01"
+      "joins_at_level": "ch1_02",
+      "unlocked_by_clearing": "ch1_01",
+      "join_status": "pending_文案策划",
+      "join_note": "提案：通关 ch1_01 后加入，ch1_02 起可放置。状态 pending_文案策划。第一章首领是冰之残影，不锁放置。"
     },
     {
       "id": "chr_daiyousei",
       "display_name": "大妖精",
       "playable": "pending_producer",
       "role": "support",
-      "joins_at_level": null
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_meiling",
       "display_name": "美铃",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "block",
-      "joins_at_level": "ch2_01"
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_sakuya",
       "display_name": "咲夜",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "armor_break",
-      "joins_at_level": "ch2_02"
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_remilia",
       "display_name": "蕾米莉亚",
       "playable": "pending_producer",
       "role": "burst",
-      "joins_at_level": null
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_keine",
       "display_name": "慧音",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "protect",
-      "joins_at_level": "ch3_01"
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_mokou",
       "display_name": "妹红",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "lane_damage",
-      "joins_at_level": "ch3_02"
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_aya",
       "display_name": "文",
       "playable": "pending_producer",
       "role": "reveal",
-      "joins_at_level": null
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_sanae",
       "display_name": "早苗",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "anti_air",
-      "joins_at_level": "ch4_01"
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     },
     {
       "id": "chr_yukari",
       "display_name": "紫",
       "playable": "yes",
       "role": "control",
-      "joins_at_level": "ch5_01"
+      "joins_at_level": "ch2_01",
+      "unlocked_by_clearing": "ch1_04",
+      "join_status": "decided",
+      "join_note": "通关 ch1_04 后加入。MVP 的七关首通名单里没有她，重打已通关关卡才能放。第一次出现在首通名单是 ch2_01。"
     },
     {
       "id": "chr_wasure",
       "display_name": "忘",
-      "playable": "yes",
+      "playable": "pending_producer",
       "role": "convert",
-      "joins_at_level": null
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
     }
   ]
 }

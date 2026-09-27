@@ -22,6 +22,7 @@
     "teaches",
     "new_character_ids",
     "new_enemy_ids",
+    "unlock_character_ids",
     "params",
     "bosses",
     "placeholders"
@@ -51,8 +52,9 @@
         "double_entrance",
         "dual_route",
         "flying",
-        "moving"
-      ]
+        "fixed_gates"
+      ],
+      "description": "路线几何开战前就固定。fixed_gates 表示几条固定路线的入口可以按波次或阶段开关，格子本身不在战斗中改。"
     },
     "guard_point": {"$ref": "#/$defs/guardPoint"},
     "summary": {"type": "string", "minLength": 1},
@@ -72,6 +74,12 @@
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^(enm|boss)_[a-z0-9_]+$"}
     },
+    "unlock_character_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "通关这一关后加入的角色。下一关的可放置名单才会出现她们。这一关自己的首通名单不含她们。",
+      "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+    },
     "params": {"$ref": "#/$defs/params"},
     "bosses": {
       "type": "array",
@@ -84,7 +92,7 @@
       "minItems": 1,
       "items": {"$ref": "#/$defs/wave"}
     },
-    "wave_count": {"type": "integer", "minimum": 8, "maximum": 16},
+    "wave_count": {"type": "integer", "minimum": 10, "maximum": 20},
     "design_notes": {"type": "string", "minLength": 1},
     "spell_energy_start": {"type": "number", "minimum": 0, "maximum": 100},
     "spell_charge_mult": {"type": "number", "exclusiveMinimum": 0},
@@ -207,7 +215,7 @@
         "paths",
         "terrain",
         "cell_sets",
-        "good_spots"
+        "slots"
       ],
       "properties": {
         "columns": {"const": 7},
@@ -225,7 +233,7 @@
           "required": ["P", ".", "B", "S", "G"],
           "properties": {
             "P": {"const": "path"},
-            ".": {"const": "placeable"},
+            ".": {"const": "placeable", "description": "战斗侧仍叫可放置。本游戏里每一个 . 都是预定槽位，不能在别的格子放人。"},
             "B": {"const": "blocked"},
             "S": {"const": "spawn"},
             "G": {"const": "guard"}
@@ -277,10 +285,11 @@
             ]
           }
         },
-        "good_spots": {
+        "slots": {
           "type": "array",
           "minItems": 3,
           "maxItems": 6,
+          "description": "预定槽位。必须和 cells 里的每一个 . 一一对应。",
           "items": {"$ref": "#/$defs/goodSpot"}
         }
       }
@@ -349,7 +358,7 @@
       "additionalProperties": false,
       "required": ["id", "col", "row", "label", "why"],
       "properties": {
-        "id": {"type": "string", "pattern": "^spot\\.[a-z0-9_]+$"},
+        "id": {"type": "string", "pattern": "^slot\\.[a-z0-9_]+$"},
         "col": {"type": "integer", "minimum": 0, "maximum": 6},
         "row": {"type": "integer", "minimum": 0, "maximum": 11},
         "label": {"type": "string", "minLength": 1},
@@ -407,7 +416,13 @@
         "id": {"type": "string", "pattern": "^boss_[a-z0-9_]+$"},
         "display_name": {"type": "string", "minLength": 1},
         "character_id": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"},
-        "blocks_character_id": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"},
+        "blocks_character_id": {
+          "description": "决斗期间不能放置的角色。冰之残影不锁琪露诺，所以是 null。",
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+          ]
+        },
         "enters_at_wave_id": {"type": "string", "minLength": 1},
         "entrance_id": {"type": "string", "minLength": 1},
         "path_id": {"type": "string", "minLength": 1},

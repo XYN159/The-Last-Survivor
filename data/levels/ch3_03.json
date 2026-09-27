@@ -28,15 +28,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 12,
-  "design_notes": "起始灵力不够把所有人放满。村民褪色上限仍用上一关的占位，等制作人定是失败还是只影响星级。",
+  "wave_count": 14,
+  "design_notes": "两条固定路线和村民一起挨打。起始灵力不够放满。村民褪色上限等制作人，不写成改路。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -44,5 +41,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

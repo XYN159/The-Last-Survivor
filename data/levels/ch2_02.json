@@ -13,16 +13,14 @@
     "id": "guard.scarlet_clock",
     "display_name": "钟楼大钟"
   },
-  "summary": "咲夜加入，用来打穿旧电器的护甲。两个入口都开始有敌人，新旧残影混在一起。",
+  "summary": "两个入口都开始有敌人，新旧残影混在一起。路线不在战斗中拉长。谁加入仍待文案。",
   "player_feeling": "练习。知道该挡谁、该让咲夜打谁。",
   "teaches": [
-    "咲夜打单个硬目标",
     "旧电器和前面的残影混波",
-    "馆内路线以后可以在中途被拉长"
+    "若馆内更大，是另一条从某一波才出怪的固定路线",
+    "预定槽位要兼顾两扇门"
   ],
-  "new_character_ids": [
-    "chr_sakuya"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -31,13 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 10,
-  "design_notes": "叙事要求馆内比外面大，某波之后走廊被拉长。正式做图时加 path 的中途改道，这次草案只有这句话。拉长的具体格子等战斗和关卡一起定，不提前写死。",
+  "wave_count": 12,
+  "design_notes": "路线在开战前就画好，战斗中不拉长走廊。若要做出「馆内比外面大」，用一条一开始就存在、但从某一波才开始出怪的固定路线。这一关具体谁加入仍待文案。可放置名单只有 MVP 四人。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -45,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

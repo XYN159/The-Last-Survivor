@@ -13,16 +13,14 @@
     "id": "guard.terakoya",
     "display_name": "寺子屋"
   },
-  "summary": "慧音加入。村民沿一条短的避难路走向寺子屋，少量扑人残影会去追他们。",
+  "summary": "两条固定路线，外加一条短的避难路。有的残影去扑村民。谁加入仍待文案。扑人残影还没有战斗 id。",
   "player_feeling": "比红魔馆首领关松。先只保护一条短路，别的路几乎不闹。",
   "teaches": [
     "有的残影会打村民而不是只冲守护点",
     "慧音能让村民暂时不被发现",
     "漏掉村民和漏掉守护点不是同一件事"
   ],
-  "new_character_ids": [
-    "chr_keine"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -31,14 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 8,
-  "design_notes": "护送路线和失败条件这次不进地图数据。提案：守护点褪完即失败；褪色村民达到 3 人也失败。3 是占位，叙事已经在问制作人要不要把村民数量当成失败条件。魔理沙的包吸引残影，建议只在下一关前半出现，本关先不放这个机制。扑人残影还没有战斗 id，关卡不新造，所以不放进图鉴。",
+  "wave_count": 10,
+  "design_notes": "两条路线开战前就固定。护送失败条件这次不进地图。提案仍是守护点没血即失败；褪色村民要不要另算失败，等制作人。扑人残影还没有战斗 id，不放进图鉴。谁通关后加入仍待文案。可放置名单只有 MVP 四人。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -46,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

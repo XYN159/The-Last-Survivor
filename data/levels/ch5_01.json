@@ -8,21 +8,19 @@
   "display_name": "缝隙的入口",
   "display_name_key": "level.ch5_01.name",
   "kind": "normal",
-  "route_type": "moving",
+  "route_type": "fixed_gates",
   "guard_point": {
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "紫加入。遗忘之影很少，路线只在后半挪一次，而且挪得很短。",
+  "summary": "两条固定路线，后半才打开第二个入口。遗忘之影很少。八云紫在第一章首领后已经加入。",
   "player_feeling": "比守矢首领关松。新东西一次只来一样：先是看不见的残影，路只轻轻动一下。",
   "teaches": [
     "有的残影需要特殊手段才打得准",
-    "路线会在战斗中改，但这一关只改一次",
-    "紫能把残影送回起点，路一变就用得上"
+    "路线几何不变，只按波次开关入口",
+    "这一关只多开一个入口，避免比上一章首领还难"
   ],
-  "new_character_ids": [
-    "chr_yukari"
-  ],
+  "new_character_ids": [],
   "new_enemy_ids": [
     "enm_shade_phantom"
   ],
@@ -33,17 +31,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou",
-      "chr_sanae",
       "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 8,
-  "design_notes": "隐形的现形规则等战斗策划。若文不可玩，需要另一套现形（提案：紫的隙间照出她们，或被打中一次后现形）。路线移动正式做图时用 path_shifts，这次只在备注里约定：全章 L1 只移动一次，避免比第四章首领还难。",
+  "wave_count": 10,
+  "design_notes": "路线几何固定，战斗中不挪格子。这一关用两条固定路线，后半才打开第二个入口。隐形的现形规则等战斗策划。八云紫在第一章首领通关后已经加入，本章不再把她当成新角色。遗忘之影用预留 id enm_shade_phantom。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -51,5 +44,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

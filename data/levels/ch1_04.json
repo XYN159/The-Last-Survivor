@@ -3,9 +3,9 @@
   "bosses": [
     {
       "id": "boss_cirno",
-      "display_name": "琪露诺",
+      "display_name": "冰之残影",
       "character_id": "chr_cirno",
-      "blocks_character_id": "chr_cirno",
+      "blocks_character_id": null,
       "enters_at_wave_id": "w05",
       "entrance_id": "entrance.north",
       "path_id": "path.main",
@@ -27,7 +27,7 @@
           "terrain_id": "ter_icicle",
           "duration_sec": 12,
           "status_on_character": "st_freeze",
-          "note": "100% 到 66% 血。落点用格子集合。空格变成冰柱 12 秒并挡住直线；格上有角色则改为冻结。秒数是战斗规则。"
+          "note": "100% 到 66% 血。落点是预定槽位。格子变成冰柱 12 秒并挡住直线；格上有角色则改为冻结。秒数是战斗规则。"
         },
         {
           "id": "phase_2",
@@ -39,7 +39,7 @@
           "cells_ref": "boss_cirno_p2_area",
           "status_on_character": "st_freeze",
           "status_on_shade": "st_freeze",
-          "note": "66% 到 33% 血。范围跟着琪露诺走，半径 2.5 格，见 cell_sets 里的对象，不是写死的格子。"
+          "note": "66% 到 33% 血。范围跟着冰之残影走，半径 2.5 格，见 cell_sets 里的对象，不是写死的格子。"
         },
         {
           "id": "phase_3",
@@ -55,9 +55,10 @@
         }
       ],
       "combat_notes": [
-        "琪露诺从 w05 沿 path.main 入场，一直走到决斗结束。只有入场那一波 is_boss 为真，避免每波都重播登场。",
+        "冰之残影从 w05 沿 path.main 入场。她是被遗忘的冰之琪露诺，不是把可放置的琪露诺锁起来。只有入场那一波 is_boss 为真。",
         "三张符卡按 100%、66%、33% 血量切换。波次仍交替加压，但加压不切换符卡。",
-        "冰瀑落在四个推荐位和竖路旁边多一格，玩家要改放到拐角内侧。完美冻结不写死格子。",
+        "冰瀑落在四个预定槽位上。拐角内侧那一格留着，让玩家改放。完美冻结不写死格子。",
+        "走到守护点会扣命，然后回到裂缝，再沿同一条固定路线走。扣多少归数值策划。最后一波要等她被击败才结束。",
         "第三张是战斗稿新增的雪符「钻石风暴」。文案 key 仍要补。关卡只提供格子集合。"
       ]
     }
@@ -75,13 +76,14 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "和琪露诺符卡决斗。血量到 66% 和 33% 时换符卡。冰柱占住几个好位置，最后一段路结冰。",
+  "summary": "和冰之残影符卡决斗。她是被遗忘的冰之琪露诺，这一关仍能放琪露诺。血量到 66% 和 33% 时换符卡。冰柱占住几个预定槽位，最后一段路结冰。",
   "player_feeling": "热闹、赶，还有一点好笑。雾散开了，看得清哪几格在结冰。",
   "teaches": [
-    "首领会沿路线走进来，并宣言符卡",
-    "符卡按血量换，会改地图，而不只是放一段动画",
-    "冰柱会占住好位置并挡住直线，冰面会让残影变快",
-    "这一关不能放置琪露诺"
+    "首领会沿固定路线走进来，并宣言符卡",
+    "符卡按血量换，会改地形，而不只是放一段动画",
+    "冰柱会占住预定槽位并挡住直线，冰面会让残影变快",
+    "通关后八云紫加入。重打已经通关的关卡才能放她",
+    "命到 0 才失败。最后一波结束时还有命即胜利，首领关也一样"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -90,7 +92,8 @@
     "lives": 20,
     "available_character_ids": [
       "chr_reimu",
-      "chr_marisa"
+      "chr_marisa",
+      "chr_cirno"
     ]
   },
   "map": {
@@ -99,16 +102,16 @@
     "origin": "row_0_is_north",
     "cells": [
       "BBBSBBB",
-      "B..P..B",
-      "B..P..B",
-      "B..P..B",
-      "B..PPPB",
-      "B....PB",
-      "B....PB",
-      "B.B..PB",
-      "B.B..PB",
-      "B.BPPPB",
-      "B..P..B",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBPPPB",
+      "BBBB.PB",
+      "BBBBBPB",
+      "BBBBBPB",
+      "BBB..PB",
+      "BBBPPPB",
+      "BBBP.BB",
       "BBBGBBB"
     ],
     "cell_legend": {
@@ -220,10 +223,6 @@
         ],
         [
           4,
-          6
-        ],
-        [
-          4,
           8
         ],
         [
@@ -280,37 +279,37 @@
         ]
       ]
     },
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.above_ice",
+        "id": "slot.above_ice",
         "col": 2,
         "row": 1,
         "label": "靠入口",
         "why": "入场前很稳。冰瀑会在这一格落下冰柱 12 秒，人要挪开，直线也会被挡住。"
       },
       {
-        "id": "spot.ice_column",
+        "id": "slot.ice_column",
         "col": 4,
         "row": 5,
         "label": "竖路旁边",
         "why": "贴着右边那条竖路，魔理沙的直线从这里伸出去。冰瀑会占住这一格，射线被切断。"
       },
       {
-        "id": "spot.ice_lower",
+        "id": "slot.ice_lower",
         "col": 4,
         "row": 8,
         "label": "竖路下段",
         "why": "同一条竖路的下半。它也会被冰柱占住，不能当成上段被封之后的备位。"
       },
       {
-        "id": "spot.inside_turn",
+        "id": "slot.inside_turn",
         "col": 3,
         "row": 8,
         "label": "拐角内侧",
         "why": "贴着即将结冰的下转弯，而且不在冰瀑的落点里。其他推荐位会被冰柱占住，改放这里。"
       },
       {
-        "id": "spot.last_step",
+        "id": "slot.last_step",
         "col": 4,
         "row": 10,
         "label": "最后一步",
@@ -344,7 +343,7 @@
         }
       ],
       "pressure": "minion",
-      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
+      "note": "前奏。冰之残影还没入场。她不占这一波的预算。"
     },
     {
       "id": "w02",
@@ -371,7 +370,7 @@
         }
       ],
       "pressure": "minion",
-      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
+      "note": "前奏。冰之残影还没入场。她不占这一波的预算。"
     },
     {
       "id": "w03",
@@ -398,7 +397,7 @@
         }
       ],
       "pressure": "minion",
-      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
+      "note": "前奏。冰之残影还没入场。她不占这一波的预算。"
     },
     {
       "id": "w04",
@@ -425,7 +424,7 @@
         }
       ],
       "pressure": "minion",
-      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
+      "note": "前奏。冰之残影还没入场。她不占这一波的预算。"
     },
     {
       "id": "w05",
@@ -452,7 +451,7 @@
         }
       ],
       "pressure": "boss_phase",
-      "note": "琪露诺入场。符卡按血量切换，不按波次切。首领不占预算。本波结束后弹出三选一，三张里选一张。"
+      "note": "冰之残影入场。符卡按血量切换，不按波次切。首领不占预算。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
@@ -737,5 +736,8 @@
   "spell_charge_mult": 1.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": false,
-  "intermission_sec": 4
+  "intermission_sec": 4,
+  "unlock_character_ids": [
+    "chr_yukari"
+  ]
 }

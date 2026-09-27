@@ -13,11 +13,12 @@
     "id": "guard.terakoya",
     "display_name": "寺子屋"
   },
-  "summary": "慧音和妹红作为首领。三张符卡分别藏路、烧一条路、让两条路一起烧。",
+  "summary": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段里关掉入口，或在仍开放的路上铺地形。",
   "player_feeling": "激烈，但符卡看得懂：路被藏起来、被点着、然后两边一起着。",
   "teaches": [
-    "一张符卡改一条路的状态",
-    "这一关不能放慧音和妹红"
+    "一张符卡改一条已经存在的路的出怪或地形",
+    "慧音和妹红是否可玩仍待制作人",
+    "命到 0 才失败"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -28,13 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 15,
-  "design_notes": "首领草案，3 个阶段。本关不能放 chr_keine 和 chr_mokou。阶段 1：虚史「幻想乡传说」（spell.keine.legend_of_gensokyo），一条路被藏起，残影挤到另一条。阶段 2：不死「火鸟 -凤翼天翔-」（spell.mokou.phoenix_wings），一条路着火，走上去的残影移速 ×1.2（占位），掉血由战斗策划定。阶段 3：「凤凰再诞」（spell.mokou.phoenix_rebirth），两条路一起着火，只留下汇合前的窄口。转世「一条归桥」（spell.keine.modoribashi）留作慧音的可玩符卡，不占阶段。叙事是双首领决斗，和「角色已在 L1、L2 加入」叠在一起：平时能用，决斗关暂时不能用。",
+  "wave_count": 16,
+  "design_notes": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段 1 关掉一条已经画好的入口。阶段 2、3 在仍开放的路线上铺地形，格子还在。移速之类的数字等战斗定。慧音、妹红是否可玩仍待制作人。胜负和普通关一样，首领漏怪扣命后回到裂缝。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -42,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

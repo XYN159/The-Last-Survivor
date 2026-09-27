@@ -95,6 +95,15 @@ func test_difficulty_seed_records_the_open_points() -> void:
 	assert_eq(str(rows["ch1_01"]["expected_first_clear_lives"]), "11-13")
 	assert_eq(str(rows["prologue_01"]["reward_spirit_start"]), "150")
 	assert_eq(str(rows["prologue_01"]["reward_spirit_per_wave"]), "20")
+	assert_true(text.contains("pending_numbers"))
+	assert_true(text.contains("重打"))
+	assert_true(text.contains("50%"))
+	assert_eq(str(rows["prologue_01"]["wave_count"]), "3")
+	assert_eq(str(rows["prologue_01"]["reward_buff_pick_count"]), "0")
+	assert_eq(str(rows["prologue_03"]["reward_buff_after_waves"]), "5;10")
+	assert_eq(str(rows["ch1_01"]["reward_meta_first_clear"]), "pending_numbers")
+	assert_eq(str(rows["ch1_01"]["reward_meta_replay"]), "pending_numbers")
+	assert_eq(str(rows["final_01"]["wave_count"]), "20")
 
 
 func test_fast_shade_stats_are_not_in_the_level_catalog() -> void:
@@ -122,12 +131,54 @@ func test_rating_bands_use_twenty_lives() -> void:
 	assert_eq(int(bands[0]["lives_min"]), 1)
 	assert_eq(int(bands[0]["lives_max"]), 9)
 	assert_eq(int(bands[1]["lives_min"]), 10)
-	assert_eq(int(bands[1]["lives_max"]), 17)
-	assert_eq(int(bands[2]["lives_min"]), 18)
+	assert_eq(int(bands[1]["lives_max"]), 19)
+	assert_eq(int(bands[2]["lives_min"]), 20)
 	assert_eq(int(bands[2]["lives_max"]), 20)
+	assert_eq(float(rating["two_star_lives_ratio"]), 0.5)
+	assert_eq(str(rating["two_star_ratio_status"]), "pending_numbers")
+	assert_true(bool(rating["replay"]["cleared_levels_anytime"]))
+	assert_true(bool(rating["replay"]["can_earn_missing_stars"]))
 	assert_false(bool(rating["leak"]["stored_in_level_data"]))
 	assert_eq(str(rating["first_clear"]["normal_lives_remaining"]), "11-13")
 	assert_eq(str(rating["first_clear"]["boss_lives_remaining"]), "10-11")
+
+
+func test_character_unlocks_follow_clears() -> void:
+	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	var proposals: Array = index["character_join_proposals"]
+	assert_eq(str(proposals[0]["id"]), "chr_cirno")
+	assert_eq(str(proposals[0]["status"]), "pending_文案策划")
+	assert_eq(str(proposals[0]["unlock_after_clearing"]), "ch1_01")
+	assert_eq(str(proposals[0]["first_placeable_level"]), "ch1_02")
+	var unlocked: Array[String] = ["chr_reimu"]
+	var previous: Array[String] = []
+	for entry in index["levels"]:
+		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
+		var available: Array = level["params"]["available_character_ids"]
+		assert_eq(available, unlocked, str(level["id"]))
+		var expected_new: Array[String] = []
+		for character_id in available:
+			if not previous.has(str(character_id)):
+				expected_new.append(str(character_id))
+		assert_eq(level["new_character_ids"], expected_new, str(level["id"]))
+		for character_id in level["unlock_character_ids"]:
+			unlocked.append(str(character_id))
+		previous.clear()
+		for character_id in available:
+			previous.append(str(character_id))
+
+
+func test_mvp_levels_only_spawn_basic_and_fast_shades() -> void:
+	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	for entry in index["levels"]:
+		if str(entry["status"]) != "complete":
+			continue
+		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
+		for wave in level["waves"]:
+			for spawn in wave["spawns"]:
+				var enemy_id := str(spawn["enemy_id"])
+				var allowed := enemy_id == "enm_shade_basic" or enemy_id == "enm_shade_fast"
+				assert_true(allowed, "%s %s" % [str(level["id"]), enemy_id])
 
 
 func _read_dictionary(path: String) -> Dictionary:
@@ -239,21 +290,24 @@ func _map_problems(level: Dictionary) -> PackedStringArray:
 			var last: Array = cells[cells.size() - 1]
 			if int(last[0]) != guard_col or int(last[1]) != guard_row:
 				problems.append("%s 没有走到守护点" % str(path["path_id"]))
+	var slot_cells := {}
+	for spot in level_map["slots"]:
+		var col := int(spot["col"])
+		var row := int(spot["row"])
+		slot_cells["%d,%d" % [col, row]] = true
+		if _cell(grid, col, row) != ".":
+			problems.append("%s 预定槽位不是 ." % str(spot["id"]))
+		elif not _touches_route(grid, col, row):
+			problems.append("%s 预定槽位没有贴着路线" % str(spot["id"]))
 	for row_index in grid.size():
 		var line := str(grid[row_index])
 		for col_index in line.length():
-			if (
-				line.substr(col_index, 1) == "P"
-				and not covered.has("%d,%d" % [col_index, row_index])
-			):
+			var here := line.substr(col_index, 1)
+			var key := "%d,%d" % [col_index, row_index]
+			if here == "P" and not covered.has(key):
 				problems.append("%s 有路线格没人走" % str(level["id"]))
-	for spot in level_map["good_spots"]:
-		var col := int(spot["col"])
-		var row := int(spot["row"])
-		if _cell(grid, col, row) != ".":
-			problems.append("%s 好位置不是空地" % str(spot["id"]))
-		elif not _touches_route(grid, col, row):
-			problems.append("%s 好位置没有贴着路线" % str(spot["id"]))
+			if here == "." and not slot_cells.has(key):
+				problems.append("%s 有可放置格不在槽位名单" % str(level["id"]))
 	return problems
 
 

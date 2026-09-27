@@ -9,19 +9,21 @@
   "display_name": "雾里的弯道",
   "display_name_key": "level.ch1_02.name",
   "kind": "normal",
-  "route_type": "curve",
+  "route_type": "double_entrance",
   "guard_point": {
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "没有新角色。弯路更长，雾更浓，两种残影混在一起。",
-  "player_feeling": "练习。规则没变，但要自己把减速放到长直段上。",
+  "summary": "琪露诺加入。第二个入口从这里开始，两种残影各走一门，雾更浓。",
+  "player_feeling": "练习看两扇门。把减速放到长直段上。",
   "teaches": [
-    "旧残影和新残影会同一波出现",
-    "雾更浓时，好位置更要贴路",
-    "长弯道要分段放人，不能只守入口"
+    "通关上一关后可以放琪露诺，减速能接住快残影",
+    "两个入口同时出怪，路线开战前就固定",
+    "雾更浓时，预定槽位更要贴路"
   ],
-  "new_character_ids": [],
+  "new_character_ids": [
+    "chr_cirno"
+  ],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -37,17 +39,17 @@
     "rows": 12,
     "origin": "row_0_is_north",
     "cells": [
-      "BSBBBBB",
-      "BP....B",
-      "BPBBBB.",
+      "BSBBBSB",
+      "BP.BBPB",
+      "BPBBBPB",
       "BPPPPPB",
-      "B..B.PB",
-      "B....PB",
-      "B....PB",
-      "B....P.",
-      "B.PPPPB",
-      "B.P...B",
-      "B.P...B",
+      "BBBB.PB",
+      "BBBBBPB",
+      "BBBB.PB",
+      "BBBBBPB",
+      "BBPPPPB",
+      "BBPBBBB",
+      "BBP.BBB",
       "BBGBBBB"
     ],
     "cell_legend": {
@@ -62,6 +64,11 @@
         "id": "entrance.north",
         "col": 1,
         "row": 0
+      },
+      {
+        "id": "entrance.east",
+        "col": 5,
+        "row": 0
       }
     ],
     "guard": {
@@ -74,8 +81,8 @@
     },
     "paths": [
       {
-        "path_id": "path.main",
-        "id": "path.main",
+        "path_id": "path.west",
+        "id": "path.west",
         "entrance_id": "entrance.north",
         "kind": "ground",
         "cells": [
@@ -106,6 +113,74 @@
           [
             4,
             3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ]
+        ]
+      },
+      {
+        "path_id": "path.east",
+        "id": "path.east",
+        "entrance_id": "entrance.east",
+        "kind": "ground",
+        "cells": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
           ],
           [
             5,
@@ -237,6 +312,18 @@
           [
             2,
             11
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
           ]
         ],
         "start": "wave_2",
@@ -245,30 +332,30 @@
       }
     ],
     "cell_sets": {},
-    "good_spots": [
+    "slots": [
       {
-        "id": "spot.upper",
+        "id": "slot.upper",
         "col": 2,
         "row": 1,
         "label": "上段直路",
         "why": "雾比上一关更浓，这一格仍然贴着入口直路，打得到刚下来的残影。"
       },
       {
-        "id": "spot.right_top",
+        "id": "slot.right_top",
         "col": 4,
         "row": 4,
         "label": "右列起点",
         "why": "残影拐上右边长列的第一格。减速放这里，后面整列都会变慢。"
       },
       {
-        "id": "spot.right_mid",
+        "id": "slot.right_mid",
         "col": 4,
         "row": 6,
         "label": "右列中段",
         "why": "贴着这张图最长的直段。魔理沙打这一列，琪露诺不必挪下来。"
       },
       {
-        "id": "spot.before_guard",
+        "id": "slot.before_guard",
         "col": 3,
         "row": 10,
         "label": "青蛙前",
@@ -286,7 +373,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 7,
           "interval_sec": 1.6,
           "delay_sec": 0,
@@ -294,14 +381,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 7,
           "interval_sec": 1.5,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w02",
@@ -312,7 +399,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 9,
           "interval_sec": 1.5,
           "delay_sec": 0,
@@ -320,14 +407,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 9,
           "interval_sec": 1.4,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w03",
@@ -338,7 +425,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 11,
           "interval_sec": 1.4,
           "delay_sec": 0,
@@ -346,14 +433,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 11,
           "interval_sec": 1.3,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w04",
@@ -364,7 +451,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 13,
           "interval_sec": 1.3,
           "delay_sec": 0,
@@ -372,14 +459,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 13,
           "interval_sec": 1.2,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w05",
@@ -390,7 +477,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 15,
           "interval_sec": 1.2,
           "delay_sec": 0,
@@ -398,14 +485,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 15,
           "interval_sec": 1.1,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
@@ -416,7 +503,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 17,
           "interval_sec": 1.1,
           "delay_sec": 0,
@@ -424,14 +511,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 17,
           "interval_sec": 1.0,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w07",
@@ -442,7 +529,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 19,
           "interval_sec": 1.0,
           "delay_sec": 0,
@@ -450,14 +537,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 19,
           "interval_sec": 0.9,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w08",
@@ -468,7 +555,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 21,
           "interval_sec": 0.9,
           "delay_sec": 0,
@@ -476,14 +563,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 21,
           "interval_sec": 0.8,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w09",
@@ -494,7 +581,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 23,
           "interval_sec": 0.8,
           "delay_sec": 0,
@@ -502,14 +589,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 23,
           "interval_sec": 0.7,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     },
     {
       "id": "w10",
@@ -520,7 +607,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 25,
           "interval_sec": 0.7,
           "delay_sec": 0,
@@ -528,14 +615,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 25,
           "interval_sec": 0.6,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w11",
@@ -546,7 +633,7 @@
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
+          "path_id": "path.west",
           "count": 27,
           "interval_sec": 0.6,
           "delay_sec": 0,
@@ -554,14 +641,14 @@
         },
         {
           "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
+          "path_id": "path.east",
           "count": 27,
           "interval_sec": 0.6,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
         }
       ],
-      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
     }
   ],
   "placeholders": {
@@ -576,5 +663,6 @@
   "spell_charge_mult": 1.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": false,
-  "intermission_sec": 4
+  "intermission_sec": 4,
+  "unlock_character_ids": []
 }

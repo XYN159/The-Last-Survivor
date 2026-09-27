@@ -29,13 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 12,
-  "design_notes": "起始灵力故意不够把五个人同时放满，逼玩家选位置。回复规则仍未定。",
+  "wave_count": 14,
+  "design_notes": "两条固定路线都施压。起始灵力故意不够把人放满，逼玩家在预定槽位里挑。回复规则仍未定。谁加入仍待文案。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -43,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }

@@ -8,17 +8,17 @@
   "display_name": "紫的神隐",
   "display_name_key": "level.ch5_04.name",
   "kind": "boss",
-  "route_type": "moving",
+  "route_type": "fixed_gates",
   "guard_point": {
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "紫作为首领。神隐把两段路对调，四重结界再封掉四格空地。",
+  "summary": "首领草案。不把两段路对调。阶段里开关已经画好的入口，再用障碍封掉预定槽位。紫已经在队里。",
   "player_feeling": "最难的普通章首领。路和可放的格子一起变，但每次只变一件事。",
   "teaches": [
-    "符卡可以交换路线",
-    "符卡可以把空地临时变成障碍",
-    "这一关不能放紫"
+    "符卡可以开关固定路线的入口，不能交换格子",
+    "符卡可以把预定槽位临时变成障碍",
+    "命到 0 才失败"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -29,16 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_meiling",
-      "chr_sakuya",
-      "chr_keine",
-      "chr_mokou",
-      "chr_sanae"
+      "chr_yukari"
     ]
   },
   "bosses": [],
-  "wave_count": 15,
-  "design_notes": "首领草案，2 个阶段。本关不能放 chr_yukari。阶段 1：罔两「八云紫的神隐」（sc_spiriting_away），两段路线对调，原来的好位置对着另一条路。阶段 2：境符「四重结界」（sc_quadruple_barrier），四格空地变成障碍，路线绕开它们。战斗侧的「把塔换位置」和关卡侧的「把路对调」可以同时存在，等战斗策划决定做哪一层，避免两个效果抢同一张牌。",
+  "wave_count": 16,
+  "design_notes": "首领草案。不把两段路对调。阶段 1：几条固定路线里关掉两条入口、打开另外两条。阶段 2：用 ter_barrier 封掉四个预定槽位，路线格子不动。紫已经在队里，这一关不封锁她。胜负和普通关一样，首领漏怪后回到裂缝。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -46,5 +42,6 @@
       "战斗策划"
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
-  }
+  },
+  "unlock_character_ids": []
 }
