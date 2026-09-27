@@ -66,9 +66,10 @@ SCENARIOS = {
 }
 
 # 解锁口径
-#   story    = 制作人定：打败琪露诺（ch1_04）后琪露诺和紫一起解锁（level_difficulty.csv 的 unlock_characters）
-#   pr5_cirno = 关卡策划 PR #5 的写法：琪露诺第一章第 1 关起就能用（只做对照，用同一套系数）
-UNLOCK_OVERRIDES = {"pr5_cirno": {"ch1_01": ["cirno"]}}
+#   story = 制作人定的方案 B（level_difficulty.csv 的 unlock_characters，和关卡策划 PR #5 最新分支一致）：
+#           琪露诺通关 ch1_01 后加入（ch1_02 起可用），紫通关 ch1_04 后加入（ch2_01 起），美铃 ch2_02、咲夜 ch3_01、
+#           慧音 ch3_02、妹红 ch4_01、早苗 ch5_01 起可用
+UNLOCK_OVERRIDES = {}
 
 
 def scenario_level(level, scenario):
@@ -127,7 +128,7 @@ def boss_fix(level, rules):
     return L, {"boss_hp_uses_level_mult": 0}
 
 
-def calibrate(T, level, lineup, meta, target, rules_override=None):
+def calibrate(T, level, lineup, meta, target, rules_override=None, info=None):
     lo, hi = C.COEF_MIN, C.COEF_MAX
     cache = {}
 
@@ -136,23 +137,42 @@ def calibrate(T, level, lineup, meta, target, rules_override=None):
         if c not in cache:
             cache[c] = mean_hp(simulate_level(T, level, lineup, meta, C.CALIBRATE_SEEDS, c, rules_override)) - target
         return cache[c]
-    # 先按 0.1 一格扫一遍（难度对系数不一定单调：系数太低时击杀少、灵力少，Boss 关反而更难），
-    # 取「最大的、剩余生命还 ≥ 目标」的格子，再在它和右边一格之间补 0.05，选最接近目标的。
-    grid = [round(lo + 0.1 * i, 2) for i in range(int(round((1.6 - lo) / 0.1)) + 1)]
+    # 第 1 步（粗扫）：按 0.05 一格从 0.2 扫到 1.6。难度对系数不一定单调：系数太低时击杀少、灵力少，Boss 关反而更难，
+    # 所以不找「最接近目标」的点，而是找「最大的、剩余生命还 ≥ 目标 − 1.5、而且左边一格也满足」的系数 c0
+    # （第一章目标 13/12/11，−1.5 正好是 11–13 条命区间的下沿；「左边一格也满足」防止偶然的好种子）。
+    step = C.COEF_ROUND
+    band = 1.5
+    grid = [round(lo + step * i, 2) for i in range(int(round((1.6 - lo) / step)) + 1)]
     while f(grid[-1]) > 0 and grid[-1] < hi:
         grid.append(round(grid[-1] + 0.2, 2))
-    ok = [c for c in grid if f(c) >= 0]
-    if not ok:
-        best = max(grid, key=f)
+    cand = [c for i, c in enumerate(grid) if f(c) >= -band and (i == 0 or f(grid[i - 1]) >= -band)]
+    if not cand:
+        best = max(grid, key=lambda x: (f(x), -x))
         return best, "unreachable"
-    c0 = max(ok)
+    c0 = max(cand)
     if c0 == grid[-1]:
         return c0, "hit_max"
-    c1 = grid[grid.index(c0) + 1]
-    mid = round((c0 + c1) / 2 / C.COEF_ROUND) * C.COEF_ROUND
-    cands = [c0, round(mid, 2), c1]
-    best = min(cands, key=lambda x: (abs(f(x)), -x))
-    return best, "ok"
+    fs, sm = C.CAL_FINE_STEP, C.CAL_SMOOTH
+    if not fs:
+        return c0, "ok"
+    # 第 2 步（细扫）：MVP 只有 3–5 个预定槽位、编组固定，剩余生命随系数是锯齿状的（差 0.01 就能差 3–5 条命），单点靠不住。
+    # 在 c0 左右 ±0.10 按 0.01 一格细扫，每个系数的「期望剩余生命」= 它左右 ±C.CAL_SMOOTH 内 5 个系数 × 5 个种子共 25 局的平均。
+    # 选「期望 ≥ 目标 − 0.5」的最大系数；都不满足就选期望最高的。
+    k = int(round(sm / fs))
+    fine = [round(c0 - 0.10 + fs * i, 2) for i in range(int(round(0.20 / fs)) + 1)]
+    fine = [c for c in fine if c >= lo]
+
+    def g(c):
+        pts = [round(c + fs * j, 2) for j in range(-k, k + 1) if c + fs * j >= lo - 1e-9]
+        return sum(f(p) for p in pts) / len(pts)
+    ok = [c for c in fine if g(c) >= -0.5]
+    best = max(ok) if ok else max(fine, key=lambda x: (g(x), -x))
+    drop = f(round(best + 0.05, 2))                     # 再加 0.05 会怎样：掉到目标以下 3 条命以上 = 台阶（cliff）
+    if info is not None:
+        info.update(smoothed_hp=round(g(best) + target, 1), coarse_coef=c0, plus005_hp=round(drop + target, 1))
+    if g(best) < -band:
+        return best, "short"
+    return best, ("cliff" if drop < -3 else "ok")
 
 
 def level_up_cost(levels, cid, T):
@@ -183,7 +203,7 @@ def spend(levels_meta, squad, fragments, T, alloc):
 
 
 def run_campaign(T, scenario="confirmed", do_calibrate=False, alloc="even", unlock="story", rules_override=None,
-                 seeds=None, verbose=True, spell_mode=None, stop_after=None):
+                 seeds=None, verbose=True, spell_mode=None, stop_after=None, spend_rule="pinned"):
     seeds = seeds or C.SEEDS
     rules = T["rules"]
     levels_meta: dict[str, int] = {}
@@ -202,6 +222,7 @@ def run_campaign(T, scenario="confirmed", do_calibrate=False, alloc="even", unlo
         meta = {c: levels_meta[c] for c in squad}
         coef = tdsim.num(level["threat_budget_coef"], 1.0)
         status = "table"
+        smoothed = ""
         if do_calibrate:
             pd = per_damage_for(T, level, squad, meta, C.CALIBRATE_SEEDS, coef)
             level["spell_charge_per_damage"] = raw_level["spell_charge_per_damage"] = f"{pd:.3g}"
@@ -210,7 +231,9 @@ def run_campaign(T, scenario="confirmed", do_calibrate=False, alloc="even", unlo
                 if lid in C.FIX_COEF:
                     coef, status = C.FIX_COEF[lid], "fixed"
                 else:
-                    coef, status = calibrate(T, level, squad, meta, tdsim.num(level["target_hp_first_clear"]))
+                    info = {}
+                    coef, status = calibrate(T, level, squad, meta, tdsim.num(level["target_hp_first_clear"]), info=info)
+                    smoothed = info.get("smoothed_hp", "")
                 level["threat_budget_coef"] = raw_level["threat_budget_coef"] = f"{coef:.2f}"
                 pd = per_damage_for(T, level, squad, meta, C.CALIBRATE_SEEDS, coef)
                 level["spell_charge_per_damage"] = raw_level["spell_charge_per_damage"] = f"{pd:.3g}"
@@ -221,10 +244,11 @@ def run_campaign(T, scenario="confirmed", do_calibrate=False, alloc="even", unlo
         gain = tdsim.num(level["reward_first_clear"])
         fragments += gain
         meta_before = dict(meta)
-        fragments = spend(levels_meta, squad, fragments, T, alloc)
+        spend_to = C.SPEND_ONLY.get(lid, squad) if (spend_rule == "pinned" and alloc == "even") else squad
+        fragments = spend(levels_meta, [c for c in spend_to if c in levels_meta], fragments, T, alloc)
         row = dict(scenario=scenario, alloc=alloc, unlock=unlock, start_spirit=tdsim.num(level["start_spirit"]),
                    level_index=idx, level_id=lid, role=level["level_role_zh"], waves=int(level["wave_count"]),
-                   budget_coef=coef, calib=status, hp_mult=tdsim.hp_multiplier(idx, rules["hp_mult_per_level"]),
+                   budget_coef=coef, calib=status, smoothed_hp=smoothed, hp_mult=tdsim.hp_multiplier(idx, rules["hp_mult_per_level"]),
                    target=tdsim.num(level["target_hp_first_clear"], 0), hp_mean=round(hp, 1),
                    hp_min=min(r["hp_left"] for r in res), hp_max=max(r["hp_left"] for r in res),
                    fail_seeds=sum(1 for r in res if not r["cleared"]), squad="|".join(squad),

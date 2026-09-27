@@ -33,9 +33,15 @@ JOIN_RULE = "avg_floor"          # 新角色加入时等级 = 已有角色平均
 #   even  = 每次给出战阵容里等级最低的人升 1 级（平均分）
 #   focus = 只培养偏好最靠前的 FOCUS_COUNT 人，其他人停在加入时的等级
 FOCUS_COUNT = 3
+# 方案 B（琪露诺通关 ch1_01 后加入）下「同样的养成假设」：第一章 2–4 关首通时碎片照旧只花在灵梦和魔理沙身上，
+# 两人的局外等级和上一版首通推演完全一样（ch1_02 4/3 级、ch1_03 5/5 级、ch1_04 6/6 级），琪露诺按加入规则停在 3 级。
+# 打完 ch1_04 后恢复「平均分」。对照：run_campaign(spend_rule="even_all") = 碎片也平均分给琪露诺。
+SPEND_ONLY = {"ch1_02": ["reimu", "marisa"], "ch1_03": ["reimu", "marisa"], "ch1_04": ["reimu", "marisa"]}
 
 # ---------------- 校准
 COEF_MIN, COEF_MAX = 0.2, 3.0
 COEF_ROUND = 0.05
+CAL_FINE_STEP = 0.01             # 校准第 2 步：在粗扫结果左右 ±0.10 按 0.01 细扫（0 = 不细扫）
+CAL_SMOOTH = 0.02                # 细扫时每个系数取左右 ±0.02 内的点一起平均（抹平锯齿），见 campaign.calibrate
 FIX_COEF = {}                    # 需要锁死系数的关，例如 {"prologue_01": 1.0}；报告里另有「系数=1.00 时」的对照列
 SPELL_MODE = "manual"            # 符卡默认手动放（自动释放是全局开关、默认关，系统策划 PR #3）；报告另有自动释放对照

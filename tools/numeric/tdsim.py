@@ -111,7 +111,8 @@ def upgrade_mult(upgrades: int, pct: float = 0.4) -> float:
 
 # ---------------------------------------------------------------- 地图
 # 7 列 × 12 行，x = 列(0..6)，y = 行(0..11)，格子中心为整数坐标，第 0 行在最上面（北）。
-# MVP 7 关用关卡策划 PR #5 的真实地图（快照在 tools/numeric/ref_maps.json）：只能放在「.」格，路线是「P」格，可以有多条固定路线。
+# MVP 7 关用关卡策划 PR #5 的真实地图（快照在 tools/numeric/ref_maps.json，由 import_pr5_maps.py 导出）：
+# 只能放在「.」预定槽位（每关 3–5 格），路线是「P」格，可以有多条固定路线；浓雾、首领格子、逐波编组也从快照读。
 # 其他关还没有地图，用下面这条「参考路径」（S 形，约 22 格长）。
 GRID_W, GRID_H = 7, 12
 REF_WAYPOINTS = [(1, -0.5), (1, 3), (5, 3), (5, 7), (1, 7), (1, 10), (3, 10), (3, 11.5)]
@@ -187,6 +188,10 @@ class LevelMap:
     def __init__(self, level_id: str, source: str):
         self.level_id = level_id
         self.ice_phases = []
+        self.fog = []            # [(雾格集合, 从第几波开始)]
+        self.boss = {}           # ch1_04 首领三阶段的格子
+        self.waves = []          # 逐波编组（系数 1.0 时的原样）
+        self.spell_charge_mult = 1.0
         data = None
         if source == "pr5_snapshot" and MAPS_FILE.exists():
             data = json.loads(MAPS_FILE.read_text(encoding="utf-8"))["levels"].get(level_id)
@@ -194,6 +199,10 @@ class LevelMap:
             self.paths = [path_from_cells(p["cells"], p["id"]) for p in data["paths"]]
             self.placeable = sorted((x, y) for y, row in enumerate(data["grid"]) for x, ch in enumerate(row) if ch == ".")
             self.ice_phases = data.get("ice_phases", [])
+            self.fog = [({tuple(c) for c in f["cells"]}, int(f.get("from_wave", 1))) for f in data.get("fog", [])]
+            self.boss = data.get("boss", {})
+            self.waves = data.get("waves", [])
+            self.spell_charge_mult = float(data.get("spell_charge_mult", 1.0) or 1.0)
             self.source = "pr5_snapshot"
         else:
             self.paths = [Path2D(REF_WAYPOINTS, "ref")]
@@ -203,6 +212,18 @@ class LevelMap:
         self.path_cells = set()
         for p in self.paths:
             self.path_cells |= p.path_cells()
+        # 每条路线每个采样点落在哪一格（算「目标是否站在雾格上」用）
+        self.sample_cells = {P.pid: [(round(x), round(y)) for x, y in P.samples] for P in self.paths}
+
+    def fog_mask(self, wave):
+        """本波生效的雾：{路线 id: [每个采样点是否在雾格上]}；没有雾返回 None。"""
+        cells = set()
+        for cs, w0 in self.fog:
+            if wave >= w0:
+                cells |= cs
+        if not cells:
+            return None
+        return {pid: [c in cells for c in lst] for pid, lst in self.sample_cells.items()}
 
 
 _MAP_CACHE: dict = {}
@@ -274,6 +295,8 @@ class Unit:
     cooldown: float = 0.0
     skill_cd: float = 1.0
     ivs: dict = field(default_factory=dict)       # {路线 id: [(p0, p1), ...]}
+    ivs_fog: dict = field(default_factory=dict)   # 射程 −1 时的覆盖区间（目标站在雾格上时用）
+    frozen_until: float = -1.0                    # 被首领符卡冻结（不能攻击、不能放技能）
     rng: float = 0.0
     block_path: str = ""
     hp: float = 0.0
@@ -306,6 +329,11 @@ class Battle:
         self.caster_switches = 0
         self.ready_since = None               # 手动玩家：满足放符卡条件的起始时间（反应时间）
         self.ice_cells = set()
+        self.fog_mask = None
+        self.boss_ref = None
+        self.boss_events = []
+        self.dmg_by = {}                      # {(角色, 敌人 ID): 有效伤害}，含符卡
+        self.leak_by = {}                     # {敌人 ID: 扣掉的生命}
         self.boss_timeout = False
         self.spawn_count = 0
         self.buff_offers = 0
@@ -444,13 +472,24 @@ class Battle:
 
     # ---------------- 摆位
     def covers(self, u: Unit, e: Enemy) -> bool:
-        return in_ivs(e.progress, u.ivs.get(e.path.pid, ()))
+        pid = e.path.pid
+        if not in_ivs(e.progress, u.ivs.get(pid, ())):
+            return False
+        if self.fog_mask is not None:
+            mask = self.fog_mask.get(pid)
+            i = min(len(mask) - 1, max(0, int(round(e.progress / SAMPLE_STEP)))) if mask else 0
+            if mask and mask[i]:                   # 目标站在雾格上：射程 −1 格（PR #5 / PR #4 口径）
+                return in_ivs(e.progress, u.ivs_fog.get(pid, ()))
+        return True
+
+    def fog_range(self, rng) -> float:
+        return max(self.R.get("fog_min_range", 1.0), rng - self.R.get("fog_range_minus", 1.0)) if rng > 0 else rng
 
     def unit_range(self, row) -> float:
-        """射程 × 本关浓雾倍率（最低 fog_min_range 格）。"""
+        """射程。旧写法「× 本关浓雾倍率」只在没有 PR #5 雾格的参考地图上用（fog_range_mult 列）。"""
         rng = num(row["range"])
         fog = num(self.level.get("fog_range_mult"), 1.0) or 1.0
-        if fog < 1.0 and rng > 0:
+        if fog < 1.0 and rng > 0 and not self.map.fog:
             rng = max(self.R.get("fog_min_range", 1.0), rng * fog)
         return rng
 
@@ -496,6 +535,7 @@ class Battle:
                  copy_index=int(key.split("#")[1]) if "#" in key else 1)
         u.rng = rng
         u.ivs = {P.pid: P.coverage(best[0], best[1], rng) for P in M.paths}
+        u.ivs_fog = {P.pid: P.coverage(best[0], best[1], self.fog_range(rng)) for P in M.paths} if M.fog else {}
         if num(row["max_hp"]) > 0:
             m = meta_attack_mult(u.meta_level, self.R["meta_attack_per_level"]) if self.R.get("meta_hp_scaling", 0) else 1
             u.maxhp = u.hp = num(row["max_hp"]) * m
@@ -566,7 +606,9 @@ class Battle:
         return k if any(abs(x - cx) <= 1.5 and abs(y - cy) <= 1.5 for cx, cy, until, _ in self.zones) else 0.0
 
     def charge_mult(self):
-        return (self.R["crisis_charge_mult"] if self.crisis else 1.0) * (1 + self.mod["energy_pct"])
+        # 关卡倍率 spell_charge_mult：PR #5 序章 3 关写 2.0（新手期符卡充得快），其他关 1.0
+        return ((self.R["crisis_charge_mult"] if self.crisis else 1.0) * (1 + self.mod["energy_pct"])
+                * self.map.spell_charge_mult)
 
     def add_energy(self, amount, kind):
         mx = self.energy_max()
@@ -609,7 +651,10 @@ class Battle:
                 e.hp = ratios[e.phase - 1] * e.maxhp
                 e.phase += 1
                 e.invuln_until = self.t + self.R.get("boss_phase_invuln_sec", 1.5)
+                self.boss_phase_start(e)
         if u is not None:
+            k = (u.cid, e.eid)
+            self.dmg_by[k] = self.dmg_by.get(k, 0.0) + eff
             if spell:
                 u.spell_damage += eff
             else:
@@ -669,22 +714,70 @@ class Battle:
 
     # ---------------- 刷怪
     def build_waves(self):
-        """每波威胁预算 (10 + 4 × 波次) × 系数，按本关参考组成换成敌人个数（余数滚到下一波）。
-        Boss 不占预算（PR #5），在 boss_wave 那一波额外加入。fast_from_wave 之前的快残影份额并入小残影。"""
+        """返回每一波的出怪表 [(相对本波开始的秒数, 敌人 ID, 路线 ID 或 None), ...]。
+
+        有 PR #5 逐波编组的关（MVP 7 关）：每组个数 × 本关系数（余数按「敌人 + 路线」滚到下一波），
+        出怪时间照关卡文件（同一组的总时长不变，个数变了就按比例改间隔）。编组本身每波正好是 (10 + 4 × 波次) 威胁点。
+        没有编组的关：每波威胁预算 (10 + 4 × 波次) × 系数，按本关参考组成换成敌人个数，在刷怪窗口里按 √威胁点 摊开。
+        Boss 不占预算（PR #5），在 boss_wave 那一波开头额外加入。
+        extra_spawns（只做方案对比）：「波次:个数:路线」用分号隔开，在这一波加入硬残影，并从同一路线扣掉等量威胁点的小/快残影。"""
         L = self.level
         waves = int(L["wave_count"])
         coef = num(L["threat_budget_coef"], 1)
+        boss_id = L.get("boss_enemy_id") or ""
+        boss_wave = int(num(L.get("boss_wave"))) if boss_id else -1
+        window = self.R.get("wave_spawn_window_base", 20)
+        extra = {}
+        for part in str(L.get("extra_spawns") or "").split(";"):
+            if part.strip():
+                w_, n_, pid_ = (part.split(":") + [""])[:3]
+                extra.setdefault(int(w_), []).append((int(n_), pid_ or None))
+        extra_id = L.get("extra_enemy_id") or "enm_shade_armored"
+        plan = []
+        if self.map.waves and len(self.map.waves) == waves:
+            carry = {}
+            for w, spec in enumerate(self.map.waves, start=1):
+                ev = []
+                dur = spec.get("duration_sec", window)
+                counts = []
+                for g in spec["spawns"]:
+                    key = (g["enemy_id"], g["path"])
+                    exact = g["count"] * coef + carry.get(key, 0.0)
+                    n = int(exact + 1e-9)
+                    carry[key] = exact - n
+                    counts.append(n)
+                for n_extra, pid in extra.get(w, []):
+                    th = n_extra * num(self.E[extra_id]["threat_points"])
+                    for j, g in enumerate(spec["spawns"]):          # 从同一路线的组里扣等量威胁点（按系数缩放之后扣）
+                        if pid and g["path"] != pid:
+                            continue
+                        t1 = num(self.E[g["enemy_id"]]["threat_points"])
+                        take = min(counts[j], int(math.ceil(th / t1 - 1e-9)))
+                        counts[j] -= take
+                        th -= take * t1
+                        if th <= 0:
+                            break
+                    for k in range(n_extra):
+                        ev.append((round(dur * 0.3 + k * dur * 0.4 / max(1, n_extra), 2), extra_id, pid))
+                for g, n in zip(spec["spawns"], counts):
+                    if n <= 0:
+                        continue
+                    gap = g["interval_sec"] * max(1, g["count"]) / n
+                    for k in range(n):
+                        ev.append((min(dur, g["delay_sec"] + k * gap), g["enemy_id"], g["path"]))
+                if w == boss_wave:
+                    ev.append((0.0, boss_id, self.map.boss.get("_path") if self.map.boss else None))
+                ev.sort(key=lambda x: x[0])
+                plan.append(ev)
+            return plan
         mix = {MIX_PREFIX + k: num(L.get("ref_mix_" + k)) for k in MIX_KEYS}
         fast_from = int(num(L.get("fast_from_wave"), 1) or 1)
         carry = {k: 0.0 for k in mix}
-        plan = []
         for w in range(1, waves + 1):
             budget = wave_budget(w, self.R["budget_base"], self.R["budget_per_wave"], coef)
-            is_boss_wave = bool(L["boss_enemy_id"]) and int(num(L["boss_wave"])) == w
             lst = []
-            if is_boss_wave:
-                lst.append(L["boss_enemy_id"])
-                budget -= num(self.E[L["boss_enemy_id"]]["threat_points"])
+            if w == boss_wave:
+                budget -= num(self.E[boss_id]["threat_points"])
             budget = max(budget, 0)
             m = dict(mix)
             if w < fast_from and m.get(FAST_ID, 0) > 0:
@@ -699,15 +792,26 @@ class Battle:
                 carry[k] = exact - n
                 lst += [k] * n
             self.rng.shuffle(lst)
-            lst.sort(key=lambda k: 1 if self.E[k]["category"] == "boss" else 0)
-            plan.append(lst)
+            win = min(self.R["wave_spawn_window_max"],
+                      self.R["wave_spawn_window_base"] + self.R["wave_spawn_window_per_wave"] * w)
+            weights = [math.sqrt(max(0.25, num(self.E[k]["threat_points"]))) for k in lst]
+            unit_gap = win / max(1e-9, sum(weights)) if weights else 0
+            ev, t = [], 0.0
+            if w == boss_wave:
+                ev.append((0.0, boss_id, None))
+            for k, wt in zip(lst, weights):
+                ev.append((round(t, 3), k, None))
+                t += unit_gap * wt
+            plan.append(ev)
         return plan
 
-    def spawn(self, eid, wave):
+    def spawn(self, eid, wave, pid=None):
         r = self.E[eid]
         hp = num(r["hp"]) * (self.hp_mult if (r["category"] != "boss" or self.R.get("boss_hp_uses_level_mult", 1)) else 1.0)
         paths = self.map.paths
-        P = paths[self.spawn_count % len(paths)]          # 多条路线：轮流分配
+        P = next((p for p in paths if p.pid == pid), None) if pid else None
+        if P is None:
+            P = paths[self.spawn_count % len(paths)]      # 没指定路线：多条路线轮流分配
         self.spawn_count += 1
         e = Enemy(eid=eid, hp=hp, maxhp=hp, armor=num(r["armor"]), speed=num(r["move_speed_cells_per_sec"]),
                   reward=num(r["spirit_drop"]), leak=num(r["leak_damage"]), block_dps=num(r["block_dps"]),
@@ -715,10 +819,46 @@ class Battle:
                   charge_on_kill=num(r.get("kill_charge")))
         e.is_chapter_boss = r["category"] == "boss"
         self.enemies.append(e)
+        if e.is_chapter_boss:
+            self.boss_ref = e
+            self.boss_phase_start(e)
         return e
+
+    def boss_phase_start(self, e):
+        """PR #5 ch1_04 冰之残影三张符卡（按 100% / 66% / 33% 血量切换）：
+        1 冰瀑：冰柱落在 4 个预定槽位 12 秒，格上的角色被冻结 12 秒（挡直线这一条没模拟）；
+        2 完美冻结：以她当前位置为圆心 2.5 格，角色和残影都冻结（秒数用 ice_stop_on_declare_sec = 2 秒，宣言时一次）；
+        3 钻石风暴：守护点前 10 格路线变成冰面（敌人移速 ×1.5），直到她被击败。"""
+        B = self.map.boss
+        ph = B.get(f"phase_{e.phase}") if B else None
+        if not ph:
+            return
+        t = self.t
+        cells = {tuple(c) for c in ph.get("cells", [])}
+        if ph.get("terrain") == "ter_ice":
+            self.ice_cells = cells
+        elif cells and ph.get("freeze_characters"):
+            dur = ph.get("duration_sec") or 12
+            for u in self.units:
+                if u.cell in cells:
+                    u.frozen_until = max(u.frozen_until, t + dur)
+        if ph.get("radius"):
+            x, y = _pos(e)
+            dur = self.R.get("ice_stop_on_declare_sec", 2)
+            if ph.get("freeze_characters"):
+                for u in self.units:
+                    if math.hypot(u.cell[0] - x, u.cell[1] - y) <= ph["radius"] + 1e-9:
+                        u.frozen_until = max(u.frozen_until, t + dur)
+            if ph.get("freeze_shades"):
+                for o in self.enemies:
+                    if o.alive and not o.boss and math.hypot(*_sub(_pos(o), (x, y))) <= ph["radius"] + 1e-9:
+                        self.freeze(o, dur, ignore_immunity=True)
+        self.boss_events.append((round(t, 1), e.phase))
 
     def update_terrain(self, w):
         """Boss 符卡改出来的冰面（PR #5 ch1_04）：按波次换冰面格子；第 2 阶段宣言时冰上的敌人先停住。"""
+        if not self.map.ice_phases:
+            return
         cells = set()
         for ph in self.map.ice_phases:
             if ph["from_wave"] <= w <= ph["to_wave"]:
@@ -739,47 +879,50 @@ class Battle:
     def run(self):
         plan = self.build_waves()
         pick_waves = {int(x) for x in self.level["buff_pick_waves"].split("|") if x}
-        self.try_buy()  # 开局准备（不计时）
+        self.try_buy()  # 布阵期（PR #5 10 秒，模拟里视为摆好再开打）
         n_waves = len(plan)
-        for w, lst in enumerate(plan, start=1):
+        window = self.R.get("wave_spawn_window_base", 20)
+        gap = self.R.get("wave_gap_after_clear", 4)
+        fixed = str(self.R.get("wave_advance_mode", "spawn_window")) == "spawn_window"
+        for w, events in enumerate(plan, start=1):
             self.current_wave = w
             self.update_terrain(w)
+            if self.map.fog:
+                self.fog_mask = self.map.fog_mask(w)
             self.try_buy()
             self.choose_caster()   # 波次开始前可以换符卡使（方案 A+）；换人充能清零
             wave_start = self.t
             hp_before = self.base_hp
             wave_enemies = []
-            queue = list(lst)
-            window = min(self.R["wave_spawn_window_max"],
-                         self.R["wave_spawn_window_base"] + self.R["wave_spawn_window_per_wave"] * w)
-            weights = [math.sqrt(max(0.25, num(self.E[k]["threat_points"]))) for k in queue]
-            unit_gap = window / max(1e-9, sum(weights)) if weights else 0
-            gaps = [unit_gap * x for x in weights]
-            next_spawn = self.t
+            i = 0
             last_spawn_t = self.t
             while True:
-                if queue and self.t >= next_spawn - 1e-9:
-                    eid = queue.pop(0)
-                    wave_enemies.append(self.spawn(eid, w))
-                    next_spawn = self.t + gaps.pop(0)
+                while i < len(events) and self.t >= wave_start + events[i][0] - 1e-9:
+                    wave_enemies.append(self.spawn(events[i][1], w, events[i][2]))
                     last_spawn_t = self.t
+                    i += 1
                 self.step()
-                if not queue:
+                if i < len(events):
+                    continue
+                if fixed:
+                    # PR #5：ends_when = spawn_window，刷怪窗口 20 秒一到就算这波结束（不等清场）
+                    if self.t >= wave_start + window - 1e-9:
+                        break
+                else:
                     if all((not e.alive) or e.is_chapter_boss for e in wave_enemies):
                         break
                     if self.t - last_spawn_t >= self.R["wave_force_next_after_spawn"]:
                         break
-            wait_until = self.t + self.R["wave_gap_after_clear"]
             leaks = sum(1 for e in wave_enemies if e.leaked)
             self.spirit += self.R["wave_clear_bonus"]
             self.spirit_earned += self.R["wave_clear_bonus"]
-            # 打完最后一波直接结算，不再给三选一（制作人定）。
-            # 等于总波数的那一次本来就不影响当关结果，这里连计数也不做。
-            if w in pick_waves and w < n_waves:
+            if w in pick_waves:
                 self.buff_offers += 1
-                self.pick_buff()
+                if w < n_waves:           # 最后一波打完的那次三选一对本局没有作用，只计数
+                    self.pick_buff()
             if w < n_waves:
-                while self.t < wait_until:
+                wait_until = self.t + gap  # 波间空隙 4 秒（PR #5 delay_sec）
+                while self.t < wait_until - 1e-9:
                     self.step()
             self.wave_log.append(dict(wave=w, enemies=len(wave_enemies), leaked_count=leaks,
                                       hp_lost=hp_before - self.base_hp,
@@ -809,6 +952,7 @@ class Battle:
         dmg = e.leak
         if self.mod["leak_reduce"]:
             dmg = max(1, dmg - self.mod["leak_reduce"])
+        self.leak_by[e.eid] = self.leak_by.get(e.eid, 0) + dmg
         self.base_hp -= dmg
         self.min_hp_seen = min(self.min_hp_seen, self.base_hp)
 
@@ -827,7 +971,9 @@ class Battle:
                        or any(_pos(e)[1] >= edge for e in alive))
         if self.energy < self.energy_max() and self.caster is not None:
             self.cycle["crisis" if self.crisis else "normal"] += dt
-        # 1) 角色状态
+        # 1) 角色状态；首领被打倒后钻石风暴的冰面消失
+        if self.boss_ref is not None and not self.boss_ref.alive and self.ice_cells and not self.map.ice_phases:
+            self.ice_cells = set()
         for u in self.units:
             if u.cid == "mokou" and u.down_until > 0 and t >= u.down_until and u.hp <= 0:
                 u.hp = u.maxhp
@@ -895,13 +1041,15 @@ class Battle:
         for u in self.units:
             if u.retreated or (u.maxhp > 0 and u.hp <= 0):
                 continue
+            if t < u.frozen_until:
+                continue
             if u.cid in ("reimu", "cirno", "keine"):
                 u.skill_cd -= dt
                 if u.skill_cd <= 0:
                     self.use_skill(u, alive)
         # 5) 普攻
         for u in self.units:
-            if u.retreated or (u.maxhp > 0 and u.hp <= 0) or num(u.row["attack"]) <= 0:
+            if u.retreated or (u.maxhp > 0 and u.hp <= 0) or num(u.row["attack"]) <= 0 or t < u.frozen_until:
                 continue
             u.cooldown -= dt
             if u.cooldown > 0:
@@ -1141,7 +1289,7 @@ class Battle:
         return bool(b) and self.transform_at(b) > 0 and self.buff_stacks.get(bid, 0) >= self.transform_at(b)
 
     def pick_buff(self):
-        """每 5 波三选一，但打完最后一波不再给。保底：已拥有但还没质变的强化，这次必出其中一个（制作人定）。
+        """每 5 波三选一。保底：已拥有但还没质变的强化，这次必出其中一个（制作人定）。
         模拟玩家：生命 ≤ 10 且有「修补」先拿；否则有能凑成质变的就拿（质变很强）；再按优先级表。"""
         owned = {self.C[c]["combat_id"] for c in self.lineup}
         pool = []
@@ -1247,7 +1395,10 @@ class Battle:
                     waves_clean=sum(1 for w in self.wave_log if w["leaked_count"] == 0),
                     boss_timeout=self.boss_timeout, boss_loops=sum(e.loops for e in self.enemies if e.is_chapter_boss),
                     buff_offers=self.buff_offers, guaranteed_offers=self.guaranteed_offers, transforms=list(self.transforms),
-                    caster_switches=self.caster_switches, spell_mode=self.spell_mode, map_source=self.map.source)
+                    caster_switches=self.caster_switches, spell_mode=self.spell_mode, map_source=self.map.source,
+                    dmg_by={f"{a}|{b}": round(v) for (a, b), v in self.dmg_by.items()}, leak_by=dict(self.leak_by),
+                    spawned={k: sum(1 for e in self.enemies if e.eid == k) for k in {e.eid for e in self.enemies}},
+                    boss_events=list(self.boss_events))
 
 
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1)]

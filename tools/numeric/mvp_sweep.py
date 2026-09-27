@@ -12,7 +12,7 @@ import config as C
 import run_all
 import tdsim
 
-COEFS = [round(0.3 + 0.1 * i, 2) for i in range(9)]  # 0.30 … 1.10
+COEFS = [round(0.3 + 0.05 * i, 2) for i in range(15)]  # 0.30 … 1.00，每 0.05 一格
 
 
 def main():
@@ -33,7 +33,8 @@ def main():
     fields = list(out[0].keys())
     run_all.write_csv(run_all.OUT / "mvp_coef_sweep.csv", out, fields)
     md = ("# MVP 7 关：威胁预算系数 → 首通剩余生命（脚本生成）\n\n"
-          "每格是「5 个种子平均 / 最差种子」。阵容（首通只有灵梦和魔理沙）和各角色局外等级按只打首通的玩家推算（同 sim_results.md）。"
+          "每格是「5 个种子平均 / 最差种子」。阵容（序章和 ch1_01 灵梦 + 魔理沙，ch1_02–04 再加琪露诺，方案 B）和各角色局外等级按只打首通的玩家推算（同 sim_results.md）。"
+          "MVP 只有 3–5 个预定槽位，剩余生命随系数是锯齿状的，相邻两格差 3–5 条命很正常；看趋势，别只看一格。"
           "用法：想让某关更紧，就往右找平均值低 1–2 的那一格；如果最差种子掉到 0 以下，说明那里有「悬崖」，别再往右。\n\n")
     md += run_all.md_table(out, fields, ["关卡", "表内系数", "目标"] + [f"{c:.2f}" for c in COEFS])
     (run_all.DOC / "mvp_coef_sweep.md").write_text(md, encoding="utf-8")

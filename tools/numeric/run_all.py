@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import csv
+import math
 import statistics as st
 import sys
 import time
@@ -43,6 +44,7 @@ def summarize(rows):
         out.append(dict(
             level_id=r["level_id"], level_index=r["level_index"], role=r["role"], waves=r["waves"],
             start_spirit=int(r["start_spirit"]), threat_budget_coef=f'{r["budget_coef"]:.2f}', calib=r["calib"],
+            sim_hp_smoothed=r.get("smoothed_hp", ""),
             hp_multiplier=round(r["hp_mult"], 2), target_hp=r["target"], sim_hp_mean=r["hp_mean"],
             sim_hp_min=r["hp_min"], sim_hp_max=r["hp_max"], fail_seeds=r["fail_seeds"],
             star2_share=f'{r["star2"]:.0%}', star3_share=f'{r["star3"]:.0%}',
@@ -125,7 +127,8 @@ def mvp_waves(T, rows):
         L["threat_budget_coef"] = f'{r["budget_coef"]:.2f}'
         b = tdsim.Battle(L, r["squad"].split("|"), {}, seed=1, rules=R, chars=T["chars"], enemies=T["enemies"], buffs=T["buffs"])
         plan = b.build_waves()
-        for w, lst in enumerate(plan, start=1):
+        for w, ev in enumerate(plan, start=1):
+            lst = [x[1] for x in ev]
             losses = [x["waves"][w - 1]["hp_lost"] for x in r["results"] if len(x["waves"]) >= w]
             leaks = [x["waves"][w - 1]["leaked_count"] for x in r["results"] if len(x["waves"]) >= w]
             secs = [x["waves"][w - 1]["duration"] for x in r["results"] if len(x["waves"]) >= w]
@@ -137,19 +140,152 @@ def mvp_waves(T, rows):
                             wave_sec=round(st.mean(secs), 1) if secs else "",
                             avg_leaked=round(st.mean(leaks), 1) if leaks else "",
                             avg_hp_lost=round(st.mean(losses), 1) if losses else "",
-                            buff_pick="是" if str(w) in lv["buff_pick_waves"].split("|") and w < int(lv["wave_count"]) else ""))
+                            buff_pick="是" if str(w) in lv["buff_pick_waves"].split("|") else ""))
     return out
 
 
 def md_table(rows, cols, heads):
     s = "| " + " | ".join(heads) + " |\n| " + " | ".join("---" for _ in heads) + " |\n"
     for r in rows:
-        s += "| " + " | ".join(str(r.get(c, "")) for c in cols) + " |\n"
+        s += "| " + " | ".join(str(r.get(c, "")).replace("|", "、") for c in cols) + " |\n"
     return s
 
 
 def hp_of(res):
     return round(campaign.mean_hp(res), 1)
+
+
+def meta_of(raw):
+    return {kv.split(":")[0]: int(kv.split(":")[1]) for kv in raw["meta_levels"].split("|")}
+
+
+# ch1_03 的硬残影（制作人定：硬残影进 MVP，只在 ch1_03 少量出现）。主版本的出场写在 level_difficulty.csv 的 extra_spawns 列：
+# 「波次:只数:路线」，每只硬残影从同一路线扣掉 4 点威胁的小残影（左路）或快残影（右路），全关总预算不变。
+# 下面几种写法只做对照（每种都重新校准系数）。
+ARMORED_SPECS = [
+    ("关卡策划倾向：第 6–12 波各 1 只（7 只）",
+     "6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:1:path.left"),
+    ("第 6–9 波各 1 只、第 10–12 波各 2 只（10 只）",
+     "6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:2:path.left;11:2:path.right;12:2:path.left"),
+    ("只有小残影和快残影（旧版，对照）", ""),
+]
+
+
+def level_budget(L, coef, R):
+    return sum(tdsim.wave_budget(w, R["budget_base"], R["budget_per_wave"], coef) for w in range(1, int(L["wave_count"]) + 1))
+
+
+def n_armored(spec):
+    return sum(int(x.split(":")[1]) for x in spec.split(";") if x.strip())
+
+
+def armored_variant(T, A, levels, cal):
+    raw = next(r for r in A if r["level_id"] == "ch1_03")
+    base = campaign.scenario_level(levels["ch1_03"], "confirmed")
+    squad, meta = raw["squad"].split("|"), meta_of(raw)
+    tgt = tdsim.num(base["target_hp_first_clear"])
+    th = tdsim.num(T["enemies"]["enm_shade_armored"]["threat_points"])
+    R = T["rules"]
+    main_spec = base.get("extra_spawns", "")
+    tried = [dict(name="主版本（写进表里）：第 6–11 波各 1 只、第 12 波 2 只", spec=main_spec, n=n_armored(main_spec),
+                  coef=raw["budget_coef"], status=raw["calib"], res=raw["results"], L=base, smoothed=raw.get("smoothed_hp", ""),
+                  share=n_armored(main_spec) * th / level_budget(base, raw["budget_coef"], R), main=True)]
+    for name, spec in ARMORED_SPECS:
+        L = dict(base, extra_spawns=spec)
+        info = {}
+        if cal or (spec == "" and not base.get("threat_budget_coef_no_armored")) or spec:
+            coef, status = campaign.calibrate(T, L, squad, meta, tgt, info=info)
+        else:
+            coef, status = tdsim.num(base["threat_budget_coef_no_armored"]), "table"
+        res = campaign.simulate_level(T, L, squad, meta, C.SEEDS, coef)
+        tried.append(dict(name=name, spec=spec, n=n_armored(spec), coef=coef, status=status, res=res, L=L,
+                          smoothed=info.get("smoothed_hp", ""), share=n_armored(spec) * th / level_budget(L, coef, R), main=False))
+        if spec == "":
+            levels["ch1_03"]["threat_budget_coef_no_armored"] = f"{coef:.2f}"
+        print(f"ch1_03 {name}: 系数 {coef:.2f} 剩余 {hp_of(res)} 占比 {tried[-1]['share']:.1%}", flush=True)
+    pick = tried[0]
+
+    def split(res, eid):
+        agg = {}
+        for r in res:
+            for k, v in r["dmg_by"].items():
+                c, e = k.split("|")
+                if e == eid:
+                    agg[c] = agg.get(c, 0) + v
+        tot = sum(agg.values()) or 1
+        return {c: agg.get(c, 0) / tot for c in squad}
+    res = pick["res"]
+    spawned = st.mean(r["spawned"].get("enm_shade_armored", 0) for r in res)
+    leaked_hp = st.mean(r["leak_by"].get("enm_shade_armored", 0) for r in res)
+    chars = T["chars"]
+    per_hit = []
+    for c in squad:
+        row = chars[c]
+        atk = tdsim.num(row["attack"]) * tdsim.meta_attack_mult(meta[c], R["meta_attack_per_level"])
+        for up in (0, 2):
+            a = atk * tdsim.upgrade_mult(up, R["upgrade_attack_pct"])
+            d0 = tdsim.final_damage(a, 0, 0, 0, R["armor_floor_ratio"], R.get("min_damage", 1))
+            d10 = tdsim.final_damage(a, 10, 0, 0, R["armor_floor_ratio"], R.get("min_damage", 1))
+            itv = tdsim.num(row["attack_interval"])
+            per_hit.append(dict(character=row["name_zh"], meta_level=meta[c], upgrades=up, attack=round(a, 1),
+                                hit_vs_0_armor=d0, hit_vs_10_armor=d10, kept=f"{d10 / d0:.0%}",
+                                dps_vs_10_armor=round(d10 / itv, 1),
+                                hits_to_kill_armored=math.ceil(200 * tdsim.hp_multiplier(6, R["hp_mult_per_level"]) / d10)))
+    no_armor = campaign.simulate_level(T, pick["L"], squad, meta, C.SEEDS, pick["coef"],
+                                       enemies_override={"enm_shade_armored": {"armor": "0"}})
+    plain_same = campaign.simulate_level(T, dict(base, extra_spawns=""), squad, meta, C.SEEDS, pick["coef"])
+    drop = {}
+    for c in squad:
+        sq = [x for x in squad if x != c]
+        drop[c] = hp_of(campaign.simulate_level(T, pick["L"], sq, {x: meta[x] for x in sq}, C.SEEDS, pick["coef"]))
+    # 逐波：威胁预算和敌人个数（种子 1 的出怪表）
+    b = tdsim.Battle(pick["L"], squad, meta, seed=1, rules=R, chars=chars, enemies=T["enemies"], buffs=T["buffs"])
+    waves = []
+    for w, ev in enumerate(b.build_waves(), start=1):
+        ids = [x[1] for x in ev]
+        thr = sum(tdsim.num(T["enemies"][i]["threat_points"]) for i in ids)
+        waves.append(dict(wave=w, budget=round(tdsim.wave_budget(w, R["budget_base"], R["budget_per_wave"], pick["coef"]), 1),
+                          threat_spawned=int(thr), n_basic=ids.count("enm_shade_basic"), n_fast=ids.count("enm_shade_fast"),
+                          n_armored=ids.count("enm_shade_armored"), armored_threat=4 * ids.count("enm_shade_armored")))
+    return dict(pick=pick, tried=tried, spawned=spawned, leaked_hp=leaked_hp, per_hit=per_hit,
+                hp_no_armor=hp_of(no_armor), hp_plain_same_coef=hp_of(plain_same), drop=drop, waves=waves,
+                dmg_split_all={e: split(res, e) for e in ("enm_shade_basic", "enm_shade_fast", "enm_shade_armored")})
+
+
+def coef_sensitivity(T, A, levels, boss_rows, arm):
+    """每关用校准系数 ±0.05 跑一遍（同样的阵容、局外等级、每点伤害充能），看剩余生命怎么变。"""
+    out = []
+    fix = {b["level_id"]: b for b in boss_rows}
+    for raw in A:
+        L = campaign.scenario_level(levels[raw["level_id"]], "confirmed")
+        squad, meta = raw["squad"].split("|"), meta_of(raw)
+        c0 = raw["budget_coef"]
+        vname = "主版本（含 8 只硬残影）" if raw["level_id"] == "ch1_03" else "现行规则"
+        row = dict(level_id=raw["level_id"], variant=vname, target=raw["target"], coef=f"{c0:.2f}")
+        for tag, d in (("minus", -0.05), ("base", 0.0), ("plus", 0.05)):
+            c = round(max(0.05, c0 + d), 2)
+            res = raw["results"] if d == 0 else campaign.simulate_level(T, L, squad, meta, C.SEEDS, c)
+            row[f"hp_{tag}"] = hp_of(res)
+            row[f"min_{tag}"] = min(r["hp_left"] for r in res)
+        out.append(row)
+        if raw["level_id"] in fix:
+            LF, ov = campaign.boss_fix(L, T["rules"])
+            cf = float(fix[raw["level_id"]]["coef_fix"])
+            row = dict(level_id=raw["level_id"], variant="Boss 修正", target=raw["target"], coef=f"{cf:.2f}")
+            for tag, d in (("minus", -0.05), ("base", 0.0), ("plus", 0.05)):
+                res = campaign.simulate_level(T, LF, squad, meta, C.SEEDS, round(cf + d, 2), ov)
+                row[f"hp_{tag}"] = hp_of(res)
+                row[f"min_{tag}"] = min(r["hp_left"] for r in res)
+            out.append(row)
+        if raw["level_id"] == "ch1_03" and arm:
+            p = next(t for t in arm["tried"] if t["spec"] == "")
+            row = dict(level_id="ch1_03", variant="只有小和快（对照）", target=raw["target"], coef=f'{p["coef"]:.2f}')
+            for tag, d in (("minus", -0.05), ("base", 0.0), ("plus", 0.05)):
+                res = campaign.simulate_level(T, p["L"], squad, meta, C.SEEDS, round(p["coef"] + d, 2))
+                row[f"hp_{tag}"] = hp_of(res)
+                row[f"min_{tag}"] = min(r["hp_left"] for r in res)
+            out.append(row)
+    return out
 
 
 def main():
@@ -195,9 +331,10 @@ def main():
         tgt = tdsim.num(base["target_hp_first_clear"])
         same = campaign.simulate_level(T, LF, squad, meta, C.SEEDS, raw["budget_coef"], ov)
         if cal:
-            coef, status = campaign.calibrate(T, LF, squad, meta, tgt, ov)
+            info = {}
+            coef, status = campaign.calibrate(T, LF, squad, meta, tgt, ov, info=info)
         else:
-            coef, status = tdsim.num(base.get("threat_budget_coef_boss_fix"), raw["budget_coef"]), "table"
+            coef, status, info = tdsim.num(base.get("threat_budget_coef_boss_fix"), raw["budget_coef"]), "table", {}
         res = campaign.simulate_level(T, LF, squad, meta, C.SEEDS, coef, ov)
         base["threat_budget_coef_boss_fix"] = f"{coef:.2f}"
         base["sim_hp_boss_fix"] = hp_of(res)
@@ -205,6 +342,7 @@ def main():
                               coef_confirmed=f'{raw["budget_coef"]:.2f}', hp_confirmed=raw["hp_mean"],
                               boss_loops_confirmed=row["boss_loops"],
                               hp_fix_same_coef=hp_of(same), coef_fix=f"{coef:.2f}", calib=status, hp_fix=hp_of(res),
+                              hp_fix_smoothed=info.get("smoothed_hp", ""),
                               boss_loops_fix=round(st.mean(x["boss_loops"] for x in res), 2),
                               star2_fix=f'{campaign.star_share(res, 2):.0%}',
                               duration_min_fix=round(st.mean(x["duration"] for x in res) / 60, 1)))
@@ -219,14 +357,18 @@ def main():
                                focus_hp=f["hp_mean"], focus_min=f["hp_min"], focus_fail_seeds=f["fail_seeds"],
                                focus_meta=f["meta_levels"]))
 
-    print("== 对照：PR #5 写法（琪露诺第一章第 1 关起可用），同一套系数 ==")
-    P = campaign.run_campaign(T, "confirmed", unlock="pr5_cirno", verbose=False, stop_after="ch1_04")
-    pr5_rows = [dict(level_id=p["level_id"], story_hp=by_a[p["level_id"]]["sim_hp_mean"], pr5_squad=p["squad"],
-                     pr5_meta=p["meta_levels"], pr5_hp=p["hp_mean"], pr5_min=p["hp_min"]) for p in P]
+    print("== 对照：第一章首通时碎片也平均分给琪露诺（even_all），同一套系数 ==")
+    P = campaign.run_campaign(T, "confirmed", spend_rule="even_all", verbose=False, stop_after="ch1_04")
+    pr5_rows = [dict(level_id=p["level_id"], pinned_meta=by_a[p["level_id"]]["meta_levels"],
+                     pinned_hp=by_a[p["level_id"]]["sim_hp_mean"], even_meta=p["meta_levels"], even_hp=p["hp_mean"],
+                     even_min=p["hp_min"]) for p in P if p["level_id"].startswith("ch1_")]
+
+    print("== ch1_03 硬残影：主版本和几种对照写法 ==")
+    arm = armored_variant(T, A, levels, cal)
 
     print("== 重打 MVP 7 关：打完 ch1_04 后的局外等级，阵容加入琪露诺和紫 ==")
     after = dict(A[6]["meta_after"])
-    for c in ("cirno", "yukari"):
+    for c in ("yukari",):
         after.setdefault(c, max(1, int(st.mean(after.values()))))
     replay_rows = []
     for raw in A[:7]:
@@ -260,6 +402,8 @@ def main():
         L["expected_meta_level"] = a["meta_avg"]
         L.setdefault("threat_budget_coef_boss_fix", "")
         L.setdefault("sim_hp_boss_fix", "")
+        L.setdefault("threat_budget_coef_no_armored", "")
+        L.setdefault("extra_spawns", "")
     campaign.write_level_curve(T)
     write_csv(OUT / "campaign_confirmed.csv", sa, list(sa[0].keys()))
     write_csv(OUT / "spell_charge_by_level.csv", sp, list(sp[0].keys()))
@@ -270,7 +414,18 @@ def main():
     write_csv(OUT / "mvp_waves.csv", mw, list(mw[0].keys()))
     write_csv(OUT / "boss_fix.csv", boss_rows, list(boss_rows[0].keys()))
     write_csv(OUT / "meta_even_vs_focus.csv", focus_rows, list(focus_rows[0].keys()))
-    write_csv(OUT / "pr5_cirno_early.csv", pr5_rows, list(pr5_rows[0].keys()))
+    write_csv(OUT / "ch1_meta_pinned_vs_even.csv", pr5_rows, list(pr5_rows[0].keys()))
+    print("== 系数敏感度（±0.05）==")
+    csens = coef_sensitivity(T, A, levels, boss_rows, arm)
+    write_csv(OUT / "coef_sensitivity.csv", csens, list(csens[0].keys()))
+    arm_rows = [dict(name=t["name"], spec=t["spec"], n=t["n"], coef=f'{t["coef"]:.2f}', calib=t["status"],
+                     share=f'{t["share"]:.1%}', hp=hp_of(t["res"]), smoothed=t["smoothed"], hp_min=min(r["hp_left"] for r in t["res"]),
+                     picked="主版本" if t["main"] else "对照") for t in arm["tried"]]
+    write_csv(OUT / "ch1_03_waves.csv", arm["waves"], list(arm["waves"][0].keys()))
+    write_csv(OUT / "ch1_03_armored.csv", arm_rows, list(arm_rows[0].keys()))
+    write_csv(OUT / "ch1_03_armored_per_hit.csv", arm["per_hit"], list(arm["per_hit"][0].keys()))
+    names = {c: T["chars"][c]["name_zh"] for c in T["chars"]}
+    split_rows = [dict(enemy=e, **{names[c]: f"{v:.0%}" for c, v in d.items()}) for e, d in arm["dmg_split_all"].items()]
     replay_fields = list(dict.fromkeys(k for r in replay_rows for k in r))
     write_csv(OUT / "mvp_replay_with_cirno_yukari.csv", replay_rows, replay_fields)
 
@@ -309,30 +464,50 @@ def main():
 
     DOC.mkdir(parents=True, exist_ok=True)
     cols = ["level_id", "role", "waves", "threat_budget_coef", "calib", "hp_multiplier", "meta_levels", "target_hp",
-            "sim_hp_mean", "sim_hp_min", "fail_seeds", "star2_share", "star3_share", "sim_hp_at_coef_1", "sim_hp_one_copy",
+            "sim_hp_mean", "sim_hp_smoothed", "sim_hp_min", "fail_seeds", "star2_share", "star3_share", "sim_hp_at_coef_1", "sim_hp_one_copy",
             "sim_hp_auto_spell", "sim_hp_proposed_B", "sim_hp_focus", "early5_loss_share", "duration_min", "sec_per_wave",
             "boss_loops", "transforms"]
-    heads = ["关卡", "定位", "波数", "预算系数", "校准", "血量倍率", "各角色局外等级", "目标剩余生命", "模拟剩余(均值)", "最差种子",
+    heads = ["关卡", "定位", "波数", "预算系数", "校准", "血量倍率", "各角色局外等级", "目标剩余生命", "模拟剩余(均值)",
+             "期望(系数±0.02平滑)", "最差种子",
              "失败种子数", "≥2星占比", "3星占比", "系数=1.00时", "同名只能1个时", "符卡自动释放时", "方案B(开局灵力递增)",
              "集中培养3人时", "前5波掉血占比", "时长(分)", "秒/波", "Boss漏过次数", "每局质变次数"]
     md = ["# 模拟结果（脚本自动生成，请勿手改）\n\n",
           f"生成命令：`python tools/numeric/run_all.py{' --calibrate' if cal else ''}{' --quick' if quick else ''}`，种子 {C.SEEDS}。说明见 `../09_simulation.md`。\n\n",
           "## 方案 A：用户已确认值 + 战斗策划 PR #4 的规则（首通，平均分资源，符卡手动）\n\n",
           "开局 150 灵力，每波预算 (10+4×波次)×系数；同名角色最多 3 个；强化 2 层质变、未质变保底；"
-          "打败琪露诺（ch1_04）后琪露诺和紫才解锁，所以 MVP 7 关首通只有灵梦和魔理沙。"
-          "三选一：打完最后一波直接结算，不再给（10 波 1 次、15 波 2 次、20 波 3 次）。"
-          "最后一波之后的强化本来就不影响当关结果，所以本表的剩余生命等结论不变。"
-          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。\n\n",
+          "解锁按方案 B（和关卡策划 PR #5 最新分支一致）：序章 3 关和 ch1_01 首通只有灵梦和魔理沙，ch1_02–ch1_04 首通多一个琪露诺，"
+          "紫通关 ch1_04 后加入（MVP 首通用不到）。第一章 2–4 关首通时碎片照旧只花在灵梦和魔理沙身上（和上一版首通等级一样），琪露诺停在加入时的 3 级。"
+          "MVP 7 关用 PR #5 最新分支的地图（只能放预定槽位，每关 3–5 格）、逐波编组（个数 × 系数）、浓雾（目标在雾格上射程 −1）和 ch1_04 首领三阶段；"
+          "每波 20 秒刷怪窗口 + 4 秒空隙，不等清场。"
+          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。"
+          "校准先按 0.05 粗扫，再在附近按 0.01 细扫；剩余生命随系数是锯齿状的，所以每个系数取左右 ±0.02 共 5 个点 × 5 个种子的平均当「期望」，"
+          "选「期望 ≥ 目标 − 0.5」的最大系数（系数太低时灵力少、反而难，所以取大的）。「模拟剩余」是这个系数本身 5 个种子的平均，和期望差 1–3 条命是正常的锯齿；校准列 cliff = 再加 0.05 就掉到目标以下 3 条命以上。\n\n",
           md_table(sa, cols, heads),
           "\n## Boss 关：现行规则 vs 数值建议的 Boss 方案（Boss 血量不乘关卡倍率 + 倒数第 5 波入场，待拍板）\n\n",
           md_table(boss_rows, list(boss_rows[0].keys()), ["关卡", "阵容", "目标", "现行系数", "现行剩余", "现行Boss漏过",
-                                                          "建议方案(同系数)", "建议方案系数", "校准", "建议方案剩余",
+                                                          "建议方案(同系数)", "建议方案系数", "校准", "建议方案剩余", "建议方案期望(平滑)",
                                                           "建议方案Boss漏过", "≥2星占比", "时长(分)"]),
           "\n## 养成对照：平均分（even，校准用） vs 集中培养前 3 人（focus），同一套系数\n\n",
           md_table(focus_rows, list(focus_rows[0].keys()), ["关卡", "目标", "平均分剩余", "平均分等级", "集中剩余", "集中最差种子",
                                                             "集中失败种子数", "集中等级"]),
-          "\n## 对照：PR #5 写法（琪露诺第一章第 1 关起可用），同一套系数\n\n",
-          md_table(pr5_rows, list(pr5_rows[0].keys()), ["关卡", "剧情解锁口径剩余", "PR #5 阵容", "PR #5 等级", "PR #5 剩余", "最差种子"]),
+          "\n## 对照：第一章首通时碎片也平均分给琪露诺，同一套系数\n\n",
+          md_table(pr5_rows, list(pr5_rows[0].keys()), ["关卡", "主口径等级", "主口径剩余", "平均分等级", "平均分剩余", "平均分最差种子"]),
+          "\n## 系数敏感度：每关系数 ±0.05 时的剩余生命（同样的阵容和等级，5 个种子平均；括号外均值，min_ 为最差种子）\n\n",
+          md_table(csens, list(csens[0].keys()), ["关卡", "版本", "目标", "系数", "−0.05 剩余", "−0.05 最差", "原系数剩余", "原系数最差",
+                                                   "+0.05 剩余", "+0.05 最差"]),
+          "\n## ch1_03 的硬残影（enm_shade_armored：200 血 / 0.6 速 / 10 甲 / 漏过扣 2 / 威胁 4）\n\n",
+          "制作人定：硬残影进 MVP，只在 ch1_03 少量出现。主版本（写进难度表）：第 6–11 波各 1 只、第 12 波 2 只，共 8 只，左右两路轮流；"
+          "每只从同一路线扣掉 4 点威胁的小残影（左路）或快残影（右路），全关总预算不变。下面的对照写法都各自重新校准过系数。\n\n",
+          md_table(arm_rows, list(arm_rows[0].keys()), ["写法", "出场（波:只数:路线）", "只数", "系数", "校准", "占全关预算", "剩余", "期望(平滑)", "最差种子", "用途"]),
+          "\nch1_03 主版本逐波（种子 1 的出怪表；威胁预算 = (10 + 4 × 波次) × 系数，实际刷出的威胁点因为取整和余数滚动会差 1）：\n\n",
+          md_table(arm["waves"], list(arm["waves"][0].keys()), ["波", "威胁预算", "实际威胁点", "小残影", "快残影", "硬残影", "硬残影威胁点"]),
+          f"\n选中写法下：每局出 {arm['spawned']:.1f} 只硬残影，平均漏过扣 {arm['leaked_hp']:.1f} 条命；同系数把硬残影护甲改成 0 时剩余 {arm['hp_no_armor']}；"
+          f"同系数不加硬残影（原版编组）剩余 {arm['hp_plain_same_coef']}。去掉某个角色（同系数）后的剩余："
+          + "、".join(f"去掉{names[c]} {v}" for c, v in arm["drop"].items()) + "。\n\n各角色打各类残影的有效伤害占比（含符卡）：\n\n",
+          md_table(split_rows, list(split_rows[0].keys()), ["敌人"] + list(split_rows[0].keys())[1:]),
+          "\n单发伤害（本关局外等级，不暴击；硬残影实战血量 = 200 × 本关血量倍率）：\n\n",
+          md_table(arm["per_hit"], list(arm["per_hit"][0].keys()), ["角色", "局外等级", "局内升级", "攻击", "打 0 甲", "打 10 甲", "保留",
+                                                                    "对 10 甲每秒伤害", "打死 1 只硬残影要几下"]),
           "\n## 重打 MVP 7 关（打完 ch1_04 后的局外等级，阵容加入琪露诺和紫）\n\n",
           md_table(replay_rows, replay_fields, replay_fields),
           "\n## 符卡充能（方案 A，手动释放，每关）\n\n",

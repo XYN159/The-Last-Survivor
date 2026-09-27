@@ -35,32 +35,32 @@
   },
   "spell_charge": {
     "energy_max_default": 100,
-    "per_damage": 0.042,
+    "per_damage": 0.04,
     "per_damage_by_level": {
-      "prologue_01": 0.042,
-      "prologue_02": 0.0365,
-      "prologue_03": 0.0165,
-      "ch1_01": 0.02,
-      "ch1_02": 0.0195,
-      "ch1_03": 0.019,
-      "ch1_04": 0.0144,
-      "ch2_01": 0.00931,
-      "ch2_02": 0.0101,
-      "ch2_03": 0.0103,
-      "ch2_04": 0.0131,
-      "ch3_01": 0.00987,
-      "ch3_02": 0.00907,
-      "ch3_03": 0.00847,
-      "ch3_04": 0.0107,
-      "ch4_01": 0.00831,
-      "ch4_02": 0.00719,
-      "ch4_03": 0.00736,
-      "ch4_04": 0.0072,
-      "ch5_01": 0.00694,
-      "ch5_02": 0.00707,
-      "ch5_03": 0.00821,
-      "ch5_04": 0.00886,
-      "final_01": 0.00528
+      "prologue_01": 0.04,
+      "prologue_02": 0.0305,
+      "prologue_03": 0.0189,
+      "ch1_01": 0.0161,
+      "ch1_02": 0.0175,
+      "ch1_03": 0.0134,
+      "ch1_04": 0.0173,
+      "ch2_01": 0.00993,
+      "ch2_02": 0.0102,
+      "ch2_03": 0.0108,
+      "ch2_04": 0.0141,
+      "ch3_01": 0.0105,
+      "ch3_02": 0.00915,
+      "ch3_03": 0.00981,
+      "ch3_04": 0.00877,
+      "ch4_01": 0.00932,
+      "ch4_02": 0.00992,
+      "ch4_03": 0.00891,
+      "ch4_04": 0.00742,
+      "ch5_01": 0.0104,
+      "ch5_02": 0.00941,
+      "ch5_03": 0.0083,
+      "ch5_04": 0.00892,
+      "final_01": 0.0048
     },
     "per_damage_fallback": {
       "base": 0.02,
@@ -89,12 +89,14 @@
     "choices": 3,
     "transform_at_stacks_default": 2,
     "guarantee_owned_untransformed": true,
-    "rule_zh": "已拥有但还没质变的强化，下一次三选一保底出现其中一个；打完最后一波直接结算，不再给三选一（10 波 1 次、15 波 2 次、20 波 3 次）"
+    "rule_zh": "已拥有但还没质变的强化，下一次三选一保底出现其中一个；最后一波之后那次三选一对本局无效"
   },
   "waves": {
-    "gap_after_clear_sec": 4,
-    "force_next_after_spawn_sec": 12,
-    "target_wave_sec": 20
+    "advance_mode": "spawn_window",
+    "spawn_window_sec": 20,
+    "gap_sec": 4,
+    "deploy_time_sec": 10,
+    "rule_zh": "每波刷怪窗口 20 秒，窗口结束 + 4 秒后下一波，不等清场（关卡策划 PR #5 ends_when = spawn_window）"
   },
   "boss_rules": {
     "enter_waves_from_end": 10,
@@ -112,13 +114,9 @@
       "stop_on_declare_sec": 2
     },
     "ter_fog": {
-      "range_mult_by_level": {
-        "ch1_01": 0.85,
-        "ch1_02": 0.75,
-        "ch1_03": 0.65
-      },
+      "range_minus_cells": 1,
       "min_range_cells": 1,
-      "note_zh": "关卡策划 PR #5 写射程倍率，战斗策划 PR #4 写射程 −1 格，待两位对齐；本文件按倍率"
+      "note_zh": "目标站在雾格上时，角色射程 −1 格（最少 1 格）。雾格和从第几波开始由关卡文件的 terrain 决定（PR #5 最新分支，和 PR #4 一致）"
     }
   },
   "level_scaling": {
@@ -481,7 +479,7 @@
       "leak_damage": 2,
       "threat_points": 4,
       "kill_charge": 1.2,
-      "first_level_id": "ch2_01",
+      "first_level_id": "ch1_03",
       "value_status": "confirmed",
       "block_dps": 15
     },
@@ -558,7 +556,7 @@
       "value_status": "partial",
       "block_dps": 50
     },
-    "boss_sakuya": {
+    "boss_ch2_sakuya_shade": {
       "hp": 3000,
       "move_speed_cells_per_sec": 0.4,
       "armor": 5,
@@ -570,7 +568,7 @@
       "value_status": "partial",
       "block_dps": 50
     },
-    "boss_keine_mokou": {
+    "boss_ch3_mokou_shade": {
       "hp": 3000,
       "move_speed_cells_per_sec": 0.4,
       "armor": 5,
@@ -582,7 +580,7 @@
       "value_status": "partial",
       "block_dps": 50
     },
-    "boss_sanae": {
+    "boss_ch4_sanae_shade": {
       "hp": 3000,
       "move_speed_cells_per_sec": 0.4,
       "armor": 5,
@@ -594,7 +592,7 @@
       "value_status": "partial",
       "block_dps": 50
     },
-    "boss_yukari": {
+    "boss_ch5_gatekeeper": {
       "hp": 3000,
       "move_speed_cells_per_sec": 0.4,
       "armor": 5,

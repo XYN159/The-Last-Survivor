@@ -1,19 +1,19 @@
 {
- "_note_zh": "关卡策划 PR #5（分支 cursor/design-level-framework-01a3，提交 1250533）里 MVP 7 关的地图快照，只取模拟需要的字段：格子（# 墙 / . 可放角色 / P 路线）、路线格子、浓雾射程倍率、Boss 符卡改出来的冰面。数值模拟用它代替参考地图；关卡策划改图后请重新导出（或 PR #5 合并后改为直接读 data/levels/<关卡>.json）。波次内容不取，波次由本目录按每波预算生成。倍率数值归数值策划：冰面按 PR #4 ter_ice ×1.5（PR #5 占位 1.4），浓雾倍率暂用 PR #5 的占位。",
+ "_note_zh": "关卡策划 PR #5（分支 cursor/design-level-framework-01a3，提交 2db8b6c9f2a0391a261ab193a306a7e70bfd398a 2026-09-27T13:42:19Z）里 MVP 7 关的快照，由 tools/numeric/import_pr5_maps.py 导出。格子：# 墙 / . 预定槽位（只能放这里）/ P 路线。浓雾 = 目标站在雾格上时射程 −1 格；ch1_04 首领三阶段的格子；逐波编组是系数 1.0 时的原样，模拟里每组个数 × 本关系数。关卡策划改图后请重新导出。",
  "levels": {
   "prologue_01": {
    "grid": [
     "###P###",
-    "#..P..#",
-    "#..P..#",
+    "##.P###",
+    "###P###",
+    "###P###",
     "##.P.##",
-    "#..P..#",
-    "#..P..#",
-    "#..P..#",
-    "##.P.##",
-    "#..P..#",
-    "#..P..#",
-    "##.P.##",
+    "###P###",
+    "###P###",
+    "###P###",
+    "###P###",
+    "###P###",
+    "###P###",
     "###P###"
    ],
    "paths": [
@@ -71,21 +71,94 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 1.0
+   "slots": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "fog": [],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 22,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 2.0,
+   "available_characters": [
+    "reimu"
+   ],
+   "unlock_on_clear": [
+    "marisa"
+   ]
   },
   "prologue_02": {
    "grid": [
     "#P#####",
-    "#P....#",
-    "#P.####",
-    "#PPP..#",
-    "##.P..#",
-    "###P..#",
-    "###P..#",
-    "###P..#",
-    "###P..#",
-    "#..P..#",
-    "#..P.##",
+    "#P#####",
+    "#P#####",
+    "#PPP.##",
+    "##.P###",
+    "###P###",
+    "###P.##",
+    "###P###",
+    "###P###",
+    "###P###",
+    "##.P###",
     "###P###"
    ],
    "paths": [
@@ -151,21 +224,113 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 1.0
+   "slots": [
+    [
+     4,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     2,
+     10
+    ]
+   ],
+   "fog": [],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 22,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 26,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 2.0,
+   "available_characters": [
+    "reimu",
+    "marisa"
+   ],
+   "unlock_on_clear": []
   },
   "prologue_03": {
    "grid": [
     "##P####",
-    "#.P...#",
     "#.P####",
-    "#.PPPP#",
-    "#...#P#",
-    "#...#P.",
-    "###.#P#",
-    "#..PPP#",
-    "#..P#.#",
-    "#..P..#",
-    "##.P..#",
+    "##P####",
+    "##PPPP#",
+    "#####P#",
+    "#####P.",
+    "#####P#",
+    "##.PPP#",
+    "###P###",
+    "###P.##",
+    "###P###",
     "###P###"
    ],
    "paths": [
@@ -243,21 +408,244 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 1.0
+   "slots": [
+    [
+     1,
+     1
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     4,
+     9
+    ]
+   ],
+   "fog": [],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 22,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 26,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 5,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 30,
+       "interval_sec": 0.7,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 6,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 7,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 19,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 19,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 8,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 9,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 23,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 23,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 10,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 2.0,
+   "available_characters": [
+    "reimu",
+    "marisa"
+   ],
+   "unlock_on_clear": []
   },
   "ch1_01": {
    "grid": [
     "###P###",
-    "#..P..#",
-    "#..P..#",
-    "##.PP.#",
-    "##..P.#",
-    "#...P.#",
-    "##..P##",
-    "##.PP.#",
-    "#..P..#",
-    "#..P..#",
-    "#..P..#",
+    "##.P###",
+    "###P###",
+    "###PP##",
+    "####P##",
+    "###.P##",
+    "####P##",
+    "###PP##",
+    "##.P###",
+    "###P###",
+    "###P.##",
     "###P###"
    ],
    "paths": [
@@ -323,26 +711,271 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 0.85
+   "slots": [
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     4,
+     10
+    ]
+   ],
+   "fog": [
+    {
+     "cells": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       3,
+       3
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "from_wave": 1
+    }
+   ],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 22,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 26,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 5,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 30,
+       "interval_sec": 0.7,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 6,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 34,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 7,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 38,
+       "interval_sec": 0.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 8,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 34,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 8,
+       "interval_sec": 2.9,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 9,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 36,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 10,
+       "interval_sec": 2.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 10,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 36,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 1.0,
+   "available_characters": [
+    "reimu",
+    "marisa"
+   ],
+   "unlock_on_clear": [
+    "cirno"
+   ]
   },
   "ch1_02": {
    "grid": [
-    "#P#####",
-    "#P....#",
-    "#P####.",
+    "#P###P#",
+    "#P.##P#",
+    "#P###P#",
     "#PPPPP#",
-    "#..#.P#",
-    "#....P#",
-    "#....P#",
-    "#....P.",
-    "#.PPPP#",
-    "#.P...#",
-    "#.P...#",
+    "####.P#",
+    "#####P#",
+    "####.P#",
+    "#####P#",
+    "##PPPP#",
+    "##P####",
+    "##P.###",
     "##P####"
    ],
    "paths": [
     {
-     "id": "path.main",
+     "id": "path.west",
      "cells": [
       [
        1,
@@ -421,23 +1054,464 @@
        11
       ]
      ]
+    },
+    {
+     "id": "path.east",
+     "cells": [
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       5,
+       5
+      ],
+      [
+       5,
+       6
+      ],
+      [
+       5,
+       7
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       4,
+       8
+      ],
+      [
+       3,
+       8
+      ],
+      [
+       2,
+       8
+      ],
+      [
+       2,
+       9
+      ],
+      [
+       2,
+       10
+      ],
+      [
+       2,
+       11
+      ]
+     ]
     }
    ],
-   "fog_range_mult_pr5": 0.75
+   "slots": [
+    [
+     2,
+     1
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     3,
+     10
+    ]
+   ],
+   "fog": [
+    {
+     "cells": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       3
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       5,
+       5
+      ],
+      [
+       5,
+       6
+      ],
+      [
+       5,
+       7
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       4,
+       8
+      ],
+      [
+       3,
+       8
+      ],
+      [
+       2,
+       8
+      ],
+      [
+       2,
+       9
+      ],
+      [
+       2,
+       10
+      ],
+      [
+       2,
+       11
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "from_wave": 2
+    }
+   ],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 7,
+       "interval_sec": 3.3,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 7,
+       "interval_sec": 3.3,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 9,
+       "interval_sec": 2.5,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 9,
+       "interval_sec": 2.5,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 11,
+       "interval_sec": 2.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 11,
+       "interval_sec": 2.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 13,
+       "interval_sec": 1.7,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 13,
+       "interval_sec": 1.7,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 5,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 15,
+       "interval_sec": 1.4,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 15,
+       "interval_sec": 1.4,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 6,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 7,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 19,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 19,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 8,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 9,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 23,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 23,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 10,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 11,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.west",
+       "count": 27,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.east",
+       "count": 27,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 1.0,
+   "available_characters": [
+    "reimu",
+    "marisa",
+    "cirno"
+   ],
+   "unlock_on_clear": []
   },
   "ch1_03": {
    "grid": [
     "###P###",
-    "#..P..#",
+    "##.P###",
     "#PPPPP#",
+    "#P###P#",
     "#P.#.P#",
-    "#P.#.P#",
-    "#P.#.P#",
-    "#P.#.P#",
-    "#P.#.P#",
+    "#P###P#",
+    "#P###P#",
+    "#P###P#",
     "#PPPPP#",
-    "#..P..#",
-    "#..P..#",
+    "###P.##",
+    "###P###",
     "###P###"
    ],
    "paths": [
@@ -580,21 +1654,432 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 0.65
+   "slots": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     9
+    ]
+   ],
+   "fog": [
+    {
+     "cells": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       1,
+       7
+      ],
+      [
+       1,
+       8
+      ],
+      [
+       2,
+       8
+      ],
+      [
+       3,
+       8
+      ],
+      [
+       3,
+       9
+      ],
+      [
+       3,
+       10
+      ],
+      [
+       3,
+       11
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       5,
+       5
+      ],
+      [
+       5,
+       6
+      ],
+      [
+       5,
+       7
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       4,
+       8
+      ]
+     ],
+     "from_wave": 1
+    }
+   ],
+   "boss": {},
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 6,
+       "interval_sec": 4.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 8,
+       "interval_sec": 2.9,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 7,
+       "interval_sec": 3.3,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 11,
+       "interval_sec": 2.0,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 9,
+       "interval_sec": 2.5,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 13,
+       "interval_sec": 1.7,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 10,
+       "interval_sec": 2.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 16,
+       "interval_sec": 1.3,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 5,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 12,
+       "interval_sec": 1.8,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 6,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 20,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 7,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 15,
+       "interval_sec": 1.4,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 23,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 8,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 9,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 28,
+       "interval_sec": 0.7,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 10,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 32,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 11,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 20,
+       "interval_sec": 1.1,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 34,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      }
+     ]
+    },
+    {
+     "wave": 12,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.left",
+       "count": 22,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.right",
+       "count": 36,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      }
+     ]
+    }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 1.0,
+   "available_characters": [
+    "reimu",
+    "marisa",
+    "cirno"
+   ],
+   "unlock_on_clear": []
   },
   "ch1_04": {
    "grid": [
     "###P###",
-    "#..P..#",
-    "#..P..#",
-    "#..P..#",
-    "#..PPP#",
-    "#....P#",
-    "#....P#",
-    "#.#..P#",
-    "#.#..P#",
-    "#.#PPP#",
-    "#..P..#",
+    "##.P###",
+    "###P###",
+    "###P###",
+    "###PPP#",
+    "####.P#",
+    "#####P#",
+    "#####P#",
+    "###..P#",
+    "###PPP#",
+    "###P.##",
     "###P###"
    ],
    "paths": [
@@ -668,49 +2153,65 @@
      ]
     }
    ],
-   "fog_range_mult_pr5": 1.0,
-   "ice_phases": [
-    {
-     "phase": "phase_1",
-     "from_wave": 5,
-     "to_wave": 10,
+   "slots": [
+    [
+     2,
+     1
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     4,
+     8
+    ],
+    [
+     3,
+     8
+    ],
+    [
+     4,
+     10
+    ]
+   ],
+   "fog": [],
+   "boss": {
+    "phase_1": {
      "cells": [
       [
-       5,
-       4
+       2,
+       1
       ],
       [
-       5,
+       4,
        5
       ],
       [
-       5,
-       6
-      ],
-      [
-       5,
-       7
-      ],
-      [
-       5,
+       4,
        8
       ],
       [
-       5,
-       9
+       4,
+       10
       ]
      ],
-     "stop_on_declare_sec_pr5": 0
+     "radius": 0,
+     "terrain": "ter_icicle",
+     "duration_sec": 12,
+     "freeze_characters": true,
+     "freeze_shades": false
     },
-    {
-     "phase": "phase_2",
-     "from_wave": 11,
-     "to_wave": 15,
+    "phase_2": {
+     "cells": [],
+     "radius": 2.5,
+     "terrain": "",
+     "duration_sec": 0,
+     "freeze_characters": true,
+     "freeze_shades": true
+    },
+    "phase_3": {
      "cells": [
-      [
-       3,
-       4
-      ],
       [
        4,
        4
@@ -752,8 +2253,371 @@
        10
       ]
      ],
-     "stop_on_declare_sec_pr5": 3
+     "radius": 0,
+     "terrain": "ter_ice",
+     "duration_sec": -1,
+     "freeze_characters": false,
+     "freeze_shades": false
+    },
+    "_enters_at_wave": 5,
+    "_path": "path.main"
+   },
+   "waves": [
+    {
+     "wave": 1,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 11,
+       "interval_sec": 2.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 3,
+       "interval_sec": 9.6,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 2,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 14,
+       "interval_sec": 1.5,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 4,
+       "interval_sec": 6.4,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 3,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 18,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 4,
+       "interval_sec": 6.4,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 4,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 5,
+       "interval_sec": 4.8,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 5,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": true,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 13,
+       "interval_sec": 1.7,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0.4
+      }
+     ]
+    },
+    {
+     "wave": 6,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 27,
+       "interval_sec": 0.8,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 7,
+       "interval_sec": 3.2,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 7,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 17,
+       "interval_sec": 1.2,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0.4
+      }
+     ]
+    },
+    {
+     "wave": 8,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 34,
+       "interval_sec": 0.6,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 8,
+       "interval_sec": 2.7,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 9,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 21,
+       "interval_sec": 1.0,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 25,
+       "interval_sec": 0.8,
+       "delay_sec": 0.4
+      }
+     ]
+    },
+    {
+     "wave": 10,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 40,
+       "interval_sec": 0.5,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 10,
+       "interval_sec": 2.1,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 11,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 24,
+       "interval_sec": 0.9,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 30,
+       "interval_sec": 0.7,
+       "delay_sec": 0.4
+      }
+     ]
+    },
+    {
+     "wave": 12,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 46,
+       "interval_sec": 0.4,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 12,
+       "interval_sec": 1.7,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 13,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 28,
+       "interval_sec": 0.7,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 34,
+       "interval_sec": 0.6,
+       "delay_sec": 0.4
+      }
+     ]
+    },
+    {
+     "wave": 14,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "spawn_window",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 53,
+       "interval_sec": 0.4,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 13,
+       "interval_sec": 1.6,
+       "delay_sec": 0.8
+      }
+     ]
+    },
+    {
+     "wave": 15,
+     "duration_sec": 20,
+     "delay_sec": 4.0,
+     "ends_when": "boss_defeated",
+     "is_boss": false,
+     "spawns": [
+      {
+       "enemy_id": "enm_shade_basic",
+       "path": "path.main",
+       "count": 31,
+       "interval_sec": 0.7,
+       "delay_sec": 0
+      },
+      {
+       "enemy_id": "enm_shade_fast",
+       "path": "path.main",
+       "count": 39,
+       "interval_sec": 0.5,
+       "delay_sec": 0.4
+      }
+     ]
     }
+   ],
+   "deploy_time_sec": 10,
+   "spell_charge_mult": 1.0,
+   "available_characters": [
+    "reimu",
+    "marisa",
+    "cirno"
+   ],
+   "unlock_on_clear": [
+    "yukari"
    ]
   }
  }
