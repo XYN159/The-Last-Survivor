@@ -14,12 +14,12 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "薄雾缩短射程。后半才有快残影。琪露诺要通关这一关才加入，这一关还不能放她。",
+  "summary": "薄雾缩短射程。最后三波才有少量快残影，现有角色勉强应付。琪露诺要通关这一关才加入，这一关还不能放她。",
   "player_feeling": "换了地图，但比序章最后一关松。新敌人很少，先看懂雾。",
   "teaches": [
     "雾里只能放在贴着路线的预定槽位",
-    "快残影比普通残影更快，但更脆，数量大约占两成",
-    "通关这一关后琪露诺加入，下一关才能放她减速"
+    "快残影比普通残影更快，但更脆。最后三波才少量出现，让玩家感到需要减速",
+    "通关这一关后琪露诺加入，下一关才教她减速"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
@@ -191,7 +191,7 @@
         "col": 3,
         "row": 5,
         "label": "右移后的中段",
-        "why": "路线往右靠了之后，减速要放在贴着新路线的这一格。快残影数量少，但一不减速就会冲过这段。"
+        "why": "路线往右靠了之后，这一格贴着新路线。这一关还不能放琪露诺，只能靠现有角色勉强打过最后三波的少量快残影。"
       },
       {
         "id": "slot.lower",
@@ -213,105 +213,186 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 2.0,
-      "next_wave_delay_sec": 8.0,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 14,
-          "interval_sec": 1.6,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "前半只有普通残影。新来的快残影留到后半。"
+      ]
     },
     {
       "id": "w02",
       "wave_id": "w02",
-      "delay_sec": 8.0,
-      "next_wave_delay_sec": 7.3,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 18,
-          "interval_sec": 1.5,
+          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "前半只有普通残影。新来的快残影留到后半。"
+      ]
     },
     {
       "id": "w03",
       "wave_id": "w03",
-      "delay_sec": 7.3,
-      "next_wave_delay_sec": 6.6,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 22,
-          "interval_sec": 1.4,
+          "interval_sec": 1.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "前半只有普通残影。新来的快残影留到后半。"
+      ]
     },
     {
       "id": "w04",
       "wave_id": "w04",
-      "delay_sec": 6.6,
-      "next_wave_delay_sec": 5.9,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 26,
-          "interval_sec": 1.3,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "前半只有普通残影。新来的快残影留到后半。"
+      ]
     },
     {
       "id": "w05",
       "wave_id": "w05",
-      "delay_sec": 5.9,
-      "next_wave_delay_sec": 5.2,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 30,
-          "interval_sec": 1.2,
+          "interval_sec": 0.7,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "前半只有普通残影。新来的快残影留到后半。本波结束后弹出三选一，三张里选一张。"
+      ]
     },
     {
       "id": "w06",
       "wave_id": "w06",
-      "delay_sec": 5.2,
-      "next_wave_delay_sec": 4.6,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 24,
-          "interval_sec": 1.0,
+          "count": 34,
+          "interval_sec": 0.6,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "wave_id": "w07",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有普通残影。快残影留到最后三波，数量很少，让现有角色勉强应付。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 38,
+          "interval_sec": 0.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "wave_id": "w08",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "最后三波才出现少量快残影。现有角色勉强应付，让玩家感到需要减速。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 34,
+          "interval_sec": 0.6,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 8,
+          "interval_sec": 2.9,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "wave_id": "w09",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "最后三波才出现少量快残影。现有角色勉强应付，让玩家感到需要减速。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 36,
+          "interval_sec": 0.6,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -319,77 +400,27 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.main",
           "count": 10,
-          "interval_sec": 0.9,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。"
-    },
-    {
-      "id": "w07",
-      "wave_id": "w07",
-      "delay_sec": 4.6,
-      "next_wave_delay_sec": 3.9,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 26,
-          "interval_sec": 0.9,
+          "interval_sec": 2.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
-          "count": 12,
-          "interval_sec": 0.8,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
         }
-      ],
-      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。"
+      ]
     },
     {
-      "id": "w08",
-      "wave_id": "w08",
-      "delay_sec": 3.9,
-      "next_wave_delay_sec": 3.2,
+      "id": "w10",
+      "wave_id": "w10",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "最后三波才出现少量快残影。现有角色勉强应付，让玩家感到需要减速。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 29,
-          "interval_sec": 0.8,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
-          "count": 13,
-          "interval_sec": 0.7,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。"
-    },
-    {
-      "id": "w09",
-      "wave_id": "w09",
-      "delay_sec": 3.2,
-      "next_wave_delay_sec": 2.5,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 32,
-          "interval_sec": 0.7,
+          "count": 36,
+          "interval_sec": 0.6,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -397,38 +428,11 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.main",
           "count": 14,
-          "interval_sec": 0.6,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
-        }
-      ],
-      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。"
-    },
-    {
-      "id": "w10",
-      "wave_id": "w10",
-      "delay_sec": 2.5,
-      "next_wave_delay_sec": 0,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.main",
-          "count": 35,
-          "interval_sec": 0.6,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.main",
-          "count": 15,
-          "interval_sec": 0.6,
-          "delay_sec": 0.8,
-          "entrance_id": "entrance.north"
         }
-      ],
-      "note": "后半才加入快残影。这一关新残影大约占两成威胁，都挤在后半。本波结束后弹出三选一，三张里选一张。"
+      ]
     }
   ],
   "placeholders": {

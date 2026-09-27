@@ -18,7 +18,7 @@
   "teaches": [
     "三张符卡对应三次入口或地形变化，格子开战前就在",
     "最后一阶段压力叠在一条一开始就画好的直路上",
-    "通关之后才考虑解锁忘。这一关的可放置名单只有 MVP 四人"
+    "第五章和终章不加入新角色。忘仍待制作人，不进可放置名单"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -29,7 +29,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
     ]
   },
   "bosses": [],

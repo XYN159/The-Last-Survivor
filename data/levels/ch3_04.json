@@ -17,7 +17,7 @@
   "player_feeling": "激烈，但符卡看得懂：路被藏起来、被点着、然后两边一起着。",
   "teaches": [
     "一张符卡改一条已经存在的路的出怪或地形",
-    "慧音和妹红是否可玩仍待制作人",
+    "慧音已在名单里。妹红通关本章首领后加入。都是提案，待文案",
     "命到 0 才失败"
   ],
   "new_character_ids": [],
@@ -29,12 +29,15 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine"
     ]
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段 1 关掉一条已经画好的入口。阶段 2、3 在仍开放的路线上铺地形，格子还在。移速之类的数字等战斗定。慧音、妹红是否可玩仍待制作人。胜负和普通关一样，首领漏怪扣命后回到裂缝。",
+  "design_notes": "首领草案。不在战斗中藏掉或烧掉路线格子。阶段 1 关掉一条已经画好的入口。阶段 2、3 在仍开放的路线上铺地形，格子还在。移速之类的数字等战斗定。慧音已在名单里。妹红通关后加入。都是提案，待文案。胜负和普通关一样，首领漏怪扣命后回到裂缝。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
@@ -43,5 +46,7 @@
     ],
     "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
-  "unlock_character_ids": []
+  "unlock_character_ids": [
+    "chr_mokou"
+  ]
 }

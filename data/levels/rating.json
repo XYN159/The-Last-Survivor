@@ -3,7 +3,7 @@
   "max_lives": 20,
   "defeat_lives": 0,
   "win": "最后一波结束时守护点生命仍大于 0。首领关相同。首领那一波要等首领被击败才算结束。",
-  "lose": "生命到 0 即失败，没有星。首领走到守护点会扣命，然后回到裂缝再走。扣多少归数值策划，不写在关卡里。",
+  "lose": "生命到 0 即失败，没有星。首领走到守护点会扣命，然后回到裂缝再沿同一条路走。扣多少看 data/balance/combat/stats.json，不写在关卡里。",
   "stars_do_not_grant_power": true,
   "stars_grant": [
     "cosmetics",
@@ -46,7 +46,7 @@
   },
   "leak": {
     "stored_in_level_data": false,
-    "note": "漏几条命的权威数字在数值策划和战斗策划的属性表，不写进关卡图鉴。关卡只保留威胁点，用来对预算。扣到 0 即失败，没有星。"
+    "note": "漏几条命的权威数字在 data/balance/combat/stats.json 的 enemies 和 bosses 里，字段是 leak_damage。不写进关卡图鉴，也不在首领的 leak 对象里抄数字。关卡只保留威胁点，用来对预算。扣到 0 即失败，没有星。"
   },
   "first_clear": {
     "normal_lives_remaining": "11-13",

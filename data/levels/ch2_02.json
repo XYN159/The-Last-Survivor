@@ -13,14 +13,16 @@
     "id": "guard.scarlet_clock",
     "display_name": "钟楼大钟"
   },
-  "summary": "两个入口都开始有敌人，新旧残影混在一起。路线不在战斗中拉长。谁加入仍待文案。",
+  "summary": "两个入口都开始有敌人，新旧残影混在一起。路线不在战斗中拉长。美铃从这一关起可放置，是提案，待文案。",
   "player_feeling": "练习。知道该挡谁、该让咲夜打谁。",
   "teaches": [
     "旧电器和前面的残影混波",
     "若馆内更大，是另一条从某一波才出怪的固定路线",
     "预定槽位要兼顾两扇门"
   ],
-  "new_character_ids": [],
+  "new_character_ids": [
+    "chr_meiling"
+  ],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -29,12 +31,13 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling"
     ]
   },
   "bosses": [],
   "wave_count": 12,
-  "design_notes": "路线在开战前就画好，战斗中不拉长走廊。若要做出「馆内比外面大」，用一条一开始就存在、但从某一波才开始出怪的固定路线。这一关具体谁加入仍待文案。可放置名单只有 MVP 四人。",
+  "design_notes": "路线在开战前就画好，战斗中不拉长走廊。若要做出「馆内比外面大」，用一条一开始就存在、但从某一波才开始出怪的固定路线。美铃从这一关起可放置，是提案，待文案。咲夜要等本章首领通关。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

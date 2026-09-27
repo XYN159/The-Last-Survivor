@@ -18,7 +18,7 @@
   "teaches": [
     "飞行路线不在战斗中改道",
     "符卡可以改哪条入口出怪",
-    "早苗是否可玩仍待制作人"
+    "早苗从 ch4_02 起可放置，是提案，待文案。本章首领不通关新人"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -29,12 +29,17 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
     ]
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领草案。飞行路线不在符卡里改道。阶段 1 关掉一条飞行入口、打开另一条已经画好的飞行入口。阶段 2 用地形把残影推向守护点，不平移格子。早苗是否可玩仍待制作人。胜负和普通关一样。",
+  "design_notes": "首领草案。飞行路线不在符卡里改道。阶段 1 关掉一条飞行入口、打开另一条已经画好的飞行入口。阶段 2 用地形把残影推向守护点，不平移格子。早苗从 ch4_02 起可放置，是提案，待文案。本章首领不通关新人。胜负和普通关一样。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

@@ -13,14 +13,16 @@
     "id": "guard.terakoya",
     "display_name": "寺子屋"
   },
-  "summary": "练习顾此失彼。两条避难路都是固定的。谁加入仍待文案。",
+  "summary": "练习顾此失彼。两条避难路都是固定的。慧音从这一关起可放置，是提案，待文案。",
   "player_feeling": "练习顾此失彼。火可以守一条路，慧音去保另一边的人。",
   "teaches": [
     "两条避难路要同时看",
     "妹红的火适合贴着一条路放",
     "扑人残影会离开主路去追村民"
   ],
-  "new_character_ids": [],
+  "new_character_ids": [
+    "chr_keine"
+  ],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
@@ -29,12 +31,15 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine"
     ]
   },
   "bosses": [],
   "wave_count": 12,
-  "design_notes": "路线固定，不在战斗中改道。魔理沙的包仍是提案，吸引规则等战斗策划，不写成会改路线的字段。谁加入仍待文案。",
+  "design_notes": "路线固定，不在战斗中改道。魔理沙的包仍是提案，吸引规则等战斗策划，不写成会改路线的字段。慧音从这一关起可放置，是提案，待文案。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

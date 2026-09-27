@@ -367,15 +367,18 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 2.0,
-      "next_wave_delay_sec": 8.0,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 7,
-          "interval_sec": 1.6,
+          "interval_sec": 3.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -383,25 +386,27 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
           "count": 7,
-          "interval_sec": 1.5,
+          "interval_sec": 3.3,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
+      ]
     },
     {
       "id": "w02",
       "wave_id": "w02",
-      "delay_sec": 8.0,
-      "next_wave_delay_sec": 7.4,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 9,
-          "interval_sec": 1.5,
+          "interval_sec": 2.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -409,24 +414,82 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
           "count": 9,
-          "interval_sec": 1.4,
+          "interval_sec": 2.5,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
+      ]
     },
     {
       "id": "w03",
       "wave_id": "w03",
-      "delay_sec": 7.4,
-      "next_wave_delay_sec": 6.8,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 11,
+          "interval_sec": 2.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 11,
+          "interval_sec": 2.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "wave_id": "w04",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "wave_id": "w05",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 15,
           "interval_sec": 1.4,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
@@ -434,77 +497,55 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
-          "count": 11,
-          "interval_sec": 1.3,
-          "delay_sec": 0,
-          "entrance_id": "entrance.east"
-        }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
-    },
-    {
-      "id": "w04",
-      "wave_id": "w04",
-      "delay_sec": 6.8,
-      "next_wave_delay_sec": 6.2,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.west",
-          "count": 13,
-          "interval_sec": 1.3,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.east",
-          "count": 13,
-          "interval_sec": 1.2,
-          "delay_sec": 0,
-          "entrance_id": "entrance.east"
-        }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
-    },
-    {
-      "id": "w05",
-      "wave_id": "w05",
-      "delay_sec": 6.2,
-      "next_wave_delay_sec": 5.6,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.west",
           "count": 15,
-          "interval_sec": 1.2,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.east",
-          "count": 15,
-          "interval_sec": 1.1,
+          "interval_sec": 1.4,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。"
+      ]
     },
     {
       "id": "w06",
       "wave_id": "w06",
-      "delay_sec": 5.6,
-      "next_wave_delay_sec": 4.9,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 17,
+          "interval_sec": 1.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 17,
+          "interval_sec": 1.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "wave_id": "w07",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 19,
           "interval_sec": 1.1,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
@@ -512,51 +553,55 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
-          "count": 17,
-          "interval_sec": 1.0,
+          "count": 19,
+          "interval_sec": 1.1,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
-    },
-    {
-      "id": "w07",
-      "wave_id": "w07",
-      "delay_sec": 4.9,
-      "next_wave_delay_sec": 4.3,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.west",
-          "count": 19,
-          "interval_sec": 1.0,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.east",
-          "count": 19,
-          "interval_sec": 0.9,
-          "delay_sec": 0,
-          "entrance_id": "entrance.east"
-        }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
+      ]
     },
     {
       "id": "w08",
       "wave_id": "w08",
-      "delay_sec": 4.3,
-      "next_wave_delay_sec": 3.7,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 21,
+          "interval_sec": 1.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 21,
+          "interval_sec": 1.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "wave_id": "w09",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 23,
           "interval_sec": 0.9,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
@@ -564,52 +609,28 @@
         {
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
-          "count": 21,
-          "interval_sec": 0.8,
+          "count": 23,
+          "interval_sec": 0.9,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
-    },
-    {
-      "id": "w09",
-      "wave_id": "w09",
-      "delay_sec": 3.7,
-      "next_wave_delay_sec": 3.1,
-      "is_boss": false,
-      "spawns": [
-        {
-          "enemy_id": "enm_shade_basic",
-          "path_id": "path.west",
-          "count": 23,
-          "interval_sec": 0.8,
-          "delay_sec": 0,
-          "entrance_id": "entrance.north"
-        },
-        {
-          "enemy_id": "enm_shade_fast",
-          "path_id": "path.east",
-          "count": 23,
-          "interval_sec": 0.7,
-          "delay_sec": 0,
-          "entrance_id": "entrance.east"
-        }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
+      ]
     },
     {
       "id": "w10",
       "wave_id": "w10",
-      "delay_sec": 3.1,
-      "next_wave_delay_sec": 2.5,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 25,
-          "interval_sec": 0.7,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -617,25 +638,27 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
           "count": 25,
-          "interval_sec": 0.6,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。"
+      ]
     },
     {
       "id": "w11",
       "wave_id": "w11",
-      "delay_sec": 2.5,
+      "delay_sec": 4.0,
       "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.west",
           "count": 27,
-          "interval_sec": 0.6,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
@@ -643,12 +666,11 @@
           "enemy_id": "enm_shade_fast",
           "path_id": "path.east",
           "count": 27,
-          "interval_sec": 0.6,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.east"
         }
-      ],
-      "note": "西门出普通残影，东门出快残影。两条路开战前就固定。快残影大约占一半。"
+      ]
     }
   ],
   "placeholders": {

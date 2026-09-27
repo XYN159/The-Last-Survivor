@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/XYN159/The-Last-Survivor/data/levels/level.schema.json",
   "title": "关卡配置",
-  "description": "《东方守幻录》单关配置。完整关的地图字段跟战斗策划的读图约定一致。威胁预算在 data/balance/level_tables/level_difficulty.csv。敌人的生命和移速不在关卡文件里。",
+  "description": "《东方守幻录》单关配置。完整关的地图字段跟战斗策划的读图约定一致。威胁预算在 data/balance/level_tables/level_difficulty.csv。敌人属性的权威来源是 data/balance/combat/stats.json 的 enemies 和 bosses，关卡文件不复制这些数字。",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -368,12 +368,20 @@
     "wave": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "wave_id", "delay_sec", "next_wave_delay_sec", "is_boss", "spawns"],
+      "required": ["id", "wave_id", "delay_sec", "next_wave_delay_sec", "duration_sec", "ends_when", "is_boss", "spawns"],
       "properties": {
         "id": {"type": "string", "pattern": "^w[0-9]{2}$"},
         "wave_id": {"type": "string", "pattern": "^w[0-9]{2}$"},
         "delay_sec": {"type": "number", "minimum": 0},
         "next_wave_delay_sec": {"type": "number", "minimum": 0},
+        "duration_sec": {
+          "const": 20,
+          "description": "这一波刷怪大约持续 20 秒。制作人已定。最后一波如果 ends_when 是 boss_defeated，20 秒只是刷怪窗口，波次要等首领被击败才结束。"
+        },
+        "ends_when": {
+          "enum": ["spawn_window", "boss_defeated"],
+          "description": "spawn_window 表示刷完并经过波间空隙就结束。boss_defeated 只用于首领关的最后一波。"
+        },
         "is_boss": {"type": "boolean"},
         "pressure": {"enum": ["minion", "boss_phase"]},
         "note": {"type": "string", "minLength": 1},
@@ -410,7 +418,8 @@
         "path_id",
         "prelude_wave_ids",
         "phases",
-        "combat_notes"
+        "combat_notes",
+        "leak"
       ],
       "properties": {
         "id": {"type": "string", "pattern": "^boss_[a-z0-9_]+$"},
@@ -440,6 +449,21 @@
           "type": "array",
           "minItems": 1,
           "items": {"type": "string", "minLength": 1}
+        },
+        "leak": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "首领走到守护点之后怎么处理。扣几条命不写在这里，只指向数值策划的 stats.json。",
+          "required": ["on_reach_guard", "then", "lives_source"],
+          "properties": {
+            "on_reach_guard": {"const": "deduct_lives_and_return_to_rift"},
+            "then": {"const": "walk_the_same_route_again"},
+            "lives_source": {
+              "type": "string",
+              "minLength": 1,
+              "description": "指向 data/balance/combat/stats.json 里该首领的 leak_damage。不要把数字抄进关卡。"
+            }
+          }
         }
       }
     },

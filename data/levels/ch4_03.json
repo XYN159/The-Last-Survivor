@@ -28,7 +28,12 @@
       "chr_reimu",
       "chr_marisa",
       "chr_cirno",
-      "chr_yukari"
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
     ]
   },
   "bosses": [],

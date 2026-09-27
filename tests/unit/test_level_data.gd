@@ -108,16 +108,18 @@ func test_difficulty_seed_records_the_open_points() -> void:
 
 func test_fast_shade_stats_are_not_in_the_level_catalog() -> void:
 	var catalog := _read_dictionary(_LEVEL_DIR + "enemy_catalog.json")
-	var conflict: Dictionary = catalog["stat_conflict"]
-	var blob := JSON.stringify(conflict)
-	assert_eq(str(conflict["id"]), "enm_shade_fast")
-	assert_true(blob.contains("2.0"))
-	assert_true(blob.contains("1.8"))
-	assert_true(blob.contains("35"))
-	assert_true(blob.contains("都不采用"))
+	var source: Dictionary = catalog["stat_source"]
+	assert_eq(str(source["path"]), "data/balance/combat/stats.json")
+	assert_eq(str(source["enemies_field"]), "enemies")
+	assert_eq(str(source["bosses_field"]), "bosses")
+	assert_false(catalog.has("stat_conflict"))
+	var blob := JSON.stringify(catalog)
+	assert_false(blob.contains("生命 35"))
+	assert_false(blob.contains("每秒 2.0"))
 	for entry in catalog["entries"]:
 		assert_false(entry.has("hp"))
 		assert_false(entry.has("move_speed"))
+		assert_false(entry.has("max_hp"))
 		assert_false(entry.has("stats"))
 
 
@@ -145,11 +147,26 @@ func test_rating_bands_use_twenty_lives() -> void:
 
 func test_character_unlocks_follow_clears() -> void:
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	var decided: Array = index["character_joins_decided"]
+	var cirno: Dictionary = {}
+	for item in decided:
+		if str(item["id"]) == "chr_cirno":
+			cirno = item
+	assert_eq(str(cirno["status"]), "decided")
+	assert_eq(str(cirno["unlock_after_clearing"]), "ch1_01")
+	assert_eq(str(cirno["first_placeable_level"]), "ch1_02")
 	var proposals: Array = index["character_join_proposals"]
-	assert_eq(str(proposals[0]["id"]), "chr_cirno")
-	assert_eq(str(proposals[0]["status"]), "pending_文案策划")
-	assert_eq(str(proposals[0]["unlock_after_clearing"]), "ch1_01")
-	assert_eq(str(proposals[0]["first_placeable_level"]), "ch1_02")
+	var meiling: Dictionary = proposals[0]
+	assert_eq(str(meiling["id"]), "chr_meiling")
+	assert_eq(str(meiling["status"]), "pending_文案策划")
+	assert_eq(str(meiling["unlock_after_clearing"]), "ch2_01")
+	var aya_locked := false
+	for item in proposals:
+		if str(item["id"]) == "chr_cirno":
+			assert_false(true, "琪露诺不再是提案")
+		if str(item["id"]) == "chr_aya":
+			aya_locked = item["unlock_after_clearing"] == null
+	assert_true(aya_locked)
 	var unlocked: Array[String] = ["chr_reimu"]
 	var previous: Array[String] = []
 	for entry in index["levels"]:
@@ -166,6 +183,54 @@ func test_character_unlocks_follow_clears() -> void:
 		previous.clear()
 		for character_id in available:
 			previous.append(str(character_id))
+
+
+func test_waves_last_about_twenty_seconds() -> void:
+	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	for entry in index["levels"]:
+		if str(entry["status"]) != "complete":
+			continue
+		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
+		var waves: Array = level["waves"]
+		var last_index := waves.size() - 1
+		for wave_index in waves.size():
+			var wave: Dictionary = waves[wave_index]
+			assert_eq(int(wave["duration_sec"]), 20, str(level["id"]))
+			assert_eq(float(wave["delay_sec"]), 4.0, str(level["id"]))
+			var boss_last := str(level["id"]) == "ch1_04" and wave_index == last_index
+			var expected := "boss_defeated" if boss_last else "spawn_window"
+			assert_eq(str(wave["ends_when"]), expected, str(wave["id"]))
+			for spawn in wave["spawns"]:
+				var count := int(spawn["count"])
+				if count <= 1:
+					continue
+				var window := float(spawn["delay_sec"])
+				window += float(count - 1) * float(spawn["interval_sec"])
+				assert_true(window >= 18.0 and window <= 22.0, str(wave["id"]))
+	var boss_level := _read_dictionary(_LEVEL_DIR + "ch1_04.json")
+	var leak: Dictionary = boss_level["bosses"][0]["leak"]
+	var source := "data/balance/combat/stats.json#/bosses/boss_cirno/leak_damage"
+	assert_eq(str(leak["lives_source"]), source)
+	assert_eq(str(leak["on_reach_guard"]), "deduct_lives_and_return_to_rift")
+	assert_false(JSON.stringify(leak).contains('"5"'))
+
+
+func test_ch1_01_fast_shades_arrive_late() -> void:
+	var level := _read_dictionary(_LEVEL_DIR + "ch1_01.json")
+	var fast_total := 0
+	var wave_index := 0
+	for wave in level["waves"]:
+		wave_index += 1
+		var fast_here := 0
+		for spawn in wave["spawns"]:
+			if str(spawn["enemy_id"]) == "enm_shade_fast":
+				fast_here += int(spawn["count"])
+		if wave_index < 8:
+			assert_eq(fast_here, 0, str(wave["id"]))
+		else:
+			assert_gt(fast_here, 0, str(wave["id"]))
+		fast_total += fast_here
+	assert_eq(fast_total, 32)
 
 
 func test_mvp_levels_only_spawn_basic_and_fast_shades() -> void:

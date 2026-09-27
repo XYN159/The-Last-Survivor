@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、第一次能放的关、通关哪一关才解锁。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 pending_producer 的角色不进可放置名单。MVP 只定灵梦、魔理沙、琪露诺、八云紫。其余角色谁加入仍待制作人和文案。",
+  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、第一次能放的关、通关哪一关才解锁。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 yes 的是制作人已定的 MVP。playable 为 pending_文案策划 的可以写进后续关卡的可放置名单，但是提案，待文案确认。playable 为 pending_producer 的角色不进可放置名单。",
   "characters": [
     {
       "id": "chr_reimu",
@@ -29,8 +29,8 @@
       "role": "slow",
       "joins_at_level": "ch1_02",
       "unlocked_by_clearing": "ch1_01",
-      "join_status": "pending_文案策划",
-      "join_note": "提案：通关 ch1_01 后加入，ch1_02 起可放置。状态 pending_文案策划。第一章首领是冰之残影，不锁放置。"
+      "join_status": "decided",
+      "join_note": "制作人已定：通关 ch1_01 后加入，ch1_02 起可放置。ch1_01 只用现有角色撑过最后三波的少量快残影。第一章首领是冰之残影，不锁放置。"
     },
     {
       "id": "chr_daiyousei",
@@ -45,22 +45,22 @@
     {
       "id": "chr_meiling",
       "display_name": "美铃",
-      "playable": "pending_producer",
+      "playable": "pending_文案策划",
       "role": "block",
-      "joins_at_level": null,
-      "unlocked_by_clearing": null,
-      "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "joins_at_level": "ch2_02",
+      "unlocked_by_clearing": "ch2_01",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：通关 ch2_01 后加入，ch2_02 起可放置。ch2_01 只用现有角色面对少量偏后的硬残影。"
     },
     {
       "id": "chr_sakuya",
       "display_name": "咲夜",
-      "playable": "pending_producer",
+      "playable": "pending_文案策划",
       "role": "armor_break",
-      "joins_at_level": null,
-      "unlocked_by_clearing": null,
-      "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "joins_at_level": "ch3_01",
+      "unlocked_by_clearing": "ch2_04",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：通关 ch2_04 后加入，ch3_01 起可放置。"
     },
     {
       "id": "chr_remilia",
@@ -75,22 +75,22 @@
     {
       "id": "chr_keine",
       "display_name": "慧音",
-      "playable": "pending_producer",
+      "playable": "pending_文案策划",
       "role": "protect",
-      "joins_at_level": null,
-      "unlocked_by_clearing": null,
-      "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "joins_at_level": "ch3_02",
+      "unlocked_by_clearing": "ch3_01",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：通关 ch3_01 后加入，ch3_02 起可放置。"
     },
     {
       "id": "chr_mokou",
       "display_name": "妹红",
-      "playable": "pending_producer",
+      "playable": "pending_文案策划",
       "role": "lane_damage",
-      "joins_at_level": null,
-      "unlocked_by_clearing": null,
-      "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "joins_at_level": "ch4_01",
+      "unlocked_by_clearing": "ch3_04",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：通关 ch3_04 后加入，ch4_01 起可放置。"
     },
     {
       "id": "chr_aya",
@@ -100,17 +100,17 @@
       "joins_at_level": null,
       "unlocked_by_clearing": null,
       "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "join_note": "还没定能不能玩，不进解锁链。若以后可玩，她占通关 ch4_01 后的反空位置，早苗改到通关 ch4_04。现在反空提案是早苗。"
     },
     {
       "id": "chr_sanae",
       "display_name": "早苗",
-      "playable": "pending_producer",
+      "playable": "pending_文案策划",
       "role": "anti_air",
-      "joins_at_level": null,
-      "unlocked_by_clearing": null,
-      "join_status": "pending_producer",
-      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+      "joins_at_level": "ch4_02",
+      "unlocked_by_clearing": "ch4_01",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：文还不可玩，所以反空默认是早苗。通关 ch4_01 后加入，ch4_02 起可放置。若文以后可玩，文占这个位置，早苗改到通关 ch4_04 后加入。"
     },
     {
       "id": "chr_yukari",

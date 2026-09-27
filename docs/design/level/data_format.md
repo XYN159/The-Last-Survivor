@@ -150,10 +150,12 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | --- | --- |
 | `id` | `w01` 这种两位编号。一关里面不能重复 |
 | `wave_id` | 和 `id` 相同。战斗读这个 |
-| `delay_sec` | 这一波开始前再等多少秒。第一波从关卡开始算。后面的波从上一波最后一只出场算起 |
+| `delay_sec` | 这一波开始前再等多少秒。制作人定波间 3 到 5 秒，关卡写 4。第一波的 4 秒是开战空隙，另外还有 10 秒布阵 |
 | `next_wave_delay_sec` | 战斗字段。等于下一波的 `delay_sec`。最后一波是 0 |
+| `duration_sec` | 固定 20。这一波刷怪大约持续 20 秒。首领关最后一波如果 `ends_when` 是 `boss_defeated`，20 秒只是刷怪窗口 |
+| `ends_when` | `spawn_window` 表示刷完并经过波间空隙就结束。`boss_defeated` 只用于首领关的最后一波 |
 | `is_boss` | 只有首领入场的那一波为真，用来播一次登场 |
-| `pressure` | 可选。`minion` 或 `boss_phase`。琪露诺关仍交替，但交替不切换符卡 |
+| `pressure` | 可选。`minion` 或 `boss_phase`。冰之残影关仍交替，但交替不切换符卡 |
 | `note` | 可选。有三选一的那一波要写上「三选一」。少于 5 波的关不要写 |
 | `spawns` | 这一波的刷怪。战斗读这个名字 |
 
@@ -164,7 +166,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `enemy_id` | 例如 `enm_shade_basic` |
 | `path_id` | 走哪条路径 |
 | `count` | 至少 1 |
-| `interval_sec` | 相邻两只相隔多少秒，必须大于 0 |
+| `interval_sec` | 相邻两只相隔多少秒，必须大于 0。一组的出场窗口（组延迟 +（数量 − 1）× 间隔）落在 18 到 22 秒 |
 | `delay_sec` | 相对这一波开始再等多少秒 |
 | `entrance_id` | 关卡多留的入口 id，必须是这张图上有的 |
 
@@ -214,6 +216,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `prelude_wave_ids` | 入场前的波。琪露诺是前 4 波。这些波不必再被阶段瓜分 |
 | `phases` | 2 到 3 个血量阶段，每个阶段一张符卡 |
 | `combat_notes` | 中文列表 |
+| `leak` | 走到守护点后扣命，回到裂缝，再走同一条路。`lives_source` 指向 `stats.json` 里的 `leak_damage`，不抄数字 |
 
 一个阶段：
 
@@ -252,9 +255,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 ## 敌人图鉴 `enemy_catalog.json`
 
-生命、移速、护甲、击破灵力、漏怪扣命的权威来源是数值策划和战斗策划的属性表。这里只留关卡编排要的字段。校验如果看见 `hp` 或 `move_speed`，会失败。
-
-快残影有一份差异记录 `stat_conflict`：数值策划是生命 35、每秒 2.0 格；战斗草案是生命为普通残影的一半、每秒 1.8 格。关卡数据两边都不采用。
+生命、护甲、击破灵力、漏怪扣命、击破充能的权威来源是数值策划的 `data/balance/combat/stats.json`，字段是 `enemies` 和 `bosses`。图鉴用 `stat_source` 指向这份表。这里只留关卡编排要的字段。校验如果看见 `hp`、`move_speed` 或抄来的属性数字，会失败。
 
 | 字段 | 含义 |
 | --- | --- |
@@ -276,7 +277,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | --- | --- |
 | `id` | `chr_` 加叙事角色 id，例如 `chr_reimu` |
 | `display_name` | 气泡名 |
-| `playable` | `yes` 可以放。`pending_producer` 还在等制作人，不能写进可放置名单 |
+| `playable` | `yes` 是已定的 MVP。`pending_文案策划` 是提案，可以写进后续关的可放置名单。`pending_producer` 还在等制作人，不能写进可放置名单 |
 | `role` | 英文短标签，例如 `slow`、`pierce`。只说明方向 |
 | `joins_at_level` | 从哪一关开始能放。忘要等终章通关，所以是 `null` |
 
@@ -294,7 +295,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `bands` | 三档。1 星是通关且剩余 1 到 9，2 星是 10 到 19，3 星只有 20 |
 | `replay` | 已通关的关可以重打，并能补星。局外奖励看难度表那两列 |
 | `leak.stored_in_level_data` | `false`。扣几条命不写在关卡里 |
-| `leak.note` | 指向数值和战斗的属性表 |
+| `leak.note` | 指向 `data/balance/combat/stats.json` 的 `enemies` 和 `bosses` |
 | `first_clear` | 普通关剩余 `11-13`，首领关 `10-11`。状态是关卡和数值已对齐，等制作人确认 |
 
 ## 这次故意不放进文件的字段

@@ -3,7 +3,7 @@
   "game_title": "东方守幻录",
   "unlock_rule": "sequential_clear",
   "stars_do_not_grant_power": true,
-  "note": "按 levels 数组的顺序解锁关卡。通关上一关才打开下一关。角色另看每一关的 unlock_character_ids：通关后才加入，下一关的可放置名单才会出现。琪露诺的加入关是提案，状态 pending_文案策划：通关 ch1_01 后加入，ch1_02 起可放置。八云紫通关 ch1_04 后加入。星级不解锁关卡，也不增加强度。已通关的关可以随时重打，局外奖励更少，缺的星还能补。",
+  "note": "按 levels 数组的顺序解锁关卡。通关上一关才打开下一关。角色另看每一关的 unlock_character_ids：通关后才加入，下一关的可放置名单才会出现。制作人已定：灵梦开局，魔理沙通关 prologue_01 后加入，琪露诺通关 ch1_01 后加入，八云紫通关 ch1_04 后加入。第二章起的加入节奏是提案，状态 pending_文案策划，见 character_join_proposals。星级不解锁关卡，也不增加强度。已通关的关可以随时重打，局外奖励更少，缺的星还能补。",
   "chapters": [
     {
       "id": "prologue",
@@ -261,12 +261,52 @@
   ],
   "character_join_proposals": [
     {
-      "id": "chr_cirno",
-      "display_name": "琪露诺",
-      "unlock_after_clearing": "ch1_01",
-      "first_placeable_level": "ch1_02",
+      "id": "chr_meiling",
+      "display_name": "美铃",
+      "unlock_after_clearing": "ch2_01",
+      "first_placeable_level": "ch2_02",
       "status": "pending_文案策划",
-      "note": "制作人 GDD 已按通关第一章第 1 关后加入来写。第一章首领是冰之残影，不锁放置。文案若改入队关卡，要同时改 unlock_character_ids。"
+      "note": "提案：第二章的挡门角色。通关 ch2_01 后加入。"
+    },
+    {
+      "id": "chr_sakuya",
+      "display_name": "咲夜",
+      "unlock_after_clearing": "ch2_04",
+      "first_placeable_level": "ch3_01",
+      "status": "pending_文案策划",
+      "note": "提案：通关第二章首领后加入。"
+    },
+    {
+      "id": "chr_keine",
+      "display_name": "慧音",
+      "unlock_after_clearing": "ch3_01",
+      "first_placeable_level": "ch3_02",
+      "status": "pending_文案策划",
+      "note": "提案：通关 ch3_01 后加入。"
+    },
+    {
+      "id": "chr_mokou",
+      "display_name": "妹红",
+      "unlock_after_clearing": "ch3_04",
+      "first_placeable_level": "ch4_01",
+      "status": "pending_文案策划",
+      "note": "提案：通关第三章首领后加入。"
+    },
+    {
+      "id": "chr_sanae",
+      "display_name": "早苗",
+      "unlock_after_clearing": "ch4_01",
+      "first_placeable_level": "ch4_02",
+      "status": "pending_文案策划",
+      "note": "提案：文还不可玩，反空默认是早苗，通关 ch4_01 后加入。若文可玩，文占这个位置，早苗改到通关 ch4_04。"
+    },
+    {
+      "id": "chr_aya",
+      "display_name": "文",
+      "unlock_after_clearing": null,
+      "first_placeable_level": null,
+      "status": "pending_文案策划",
+      "note": "还不可玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，早苗改到通关 ch4_04。"
     }
   ],
   "replay": {
@@ -274,5 +314,37 @@
     "reduced_meta_reward": true,
     "can_earn_missing_stars": true,
     "reward_table": "data/balance/level_tables/level_difficulty.csv"
-  }
+  },
+  "character_joins_decided": [
+    {
+      "id": "chr_reimu",
+      "display_name": "灵梦",
+      "unlock_after_clearing": null,
+      "first_placeable_level": "prologue_01",
+      "status": "decided"
+    },
+    {
+      "id": "chr_marisa",
+      "display_name": "魔理沙",
+      "unlock_after_clearing": "prologue_01",
+      "first_placeable_level": "prologue_02",
+      "status": "decided"
+    },
+    {
+      "id": "chr_cirno",
+      "display_name": "琪露诺",
+      "unlock_after_clearing": "ch1_01",
+      "first_placeable_level": "ch1_02",
+      "status": "decided",
+      "note": "通关 ch1_01 后加入。ch1_01 只用现有角色。ch1_02 起教减速。"
+    },
+    {
+      "id": "chr_yukari",
+      "display_name": "紫",
+      "unlock_after_clearing": "ch1_04",
+      "first_placeable_level": "ch2_01",
+      "status": "decided",
+      "note": "通关 ch1_04 后加入。MVP 七关的首通名单里没有她。"
+    }
+  ]
 }

@@ -362,12 +362,12 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
     if level_id == "ch1_01":
         for index, wave in enumerate(level["waves"], start=1):
             has_fast = any(spawn["enemy_id"] == fast for spawn in wave["spawns"])
-            if index < 6 and has_fast:
-                problems.append("教学关的快残影出现在前半")
-            if index >= 6 and not has_fast:
-                problems.append(f"{wave['id']} 后半应该有快残影")
-        if total_threat and not 0.18 <= swift_threat / total_threat <= 0.22:
-            problems.append(f"教学关快残影威胁占比 {swift_threat / total_threat:.3f} 不在两成附近")
+            if index < 8 and has_fast:
+                problems.append("教学关的快残影不该在最后三波之前出现")
+            if index >= 8 and not has_fast:
+                problems.append(f"{wave['id']} 最后三波应该有少量快残影")
+        if total_threat and not 0.08 <= swift_threat / total_threat <= 0.12:
+            problems.append(f"教学关快残影威胁占比 {swift_threat / total_threat:.3f} 不在一成附近")
     if level_id == "ch1_02":
         for wave in level["waves"]:
             kinds = {spawn["enemy_id"] for spawn in wave["spawns"]}
@@ -395,9 +395,9 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
     if level_id == "ch1_04":
         boss = level["bosses"][0]
         if boss["enters_at_wave_id"] != "w05":
-            problems.append("琪露诺应该在第 5 波入场")
+            problems.append("冰之残影应该在第 5 波入场")
         if boss["prelude_wave_ids"] != ["w01", "w02", "w03", "w04"]:
-            problems.append("琪露诺的前奏应该是前 4 波")
+            problems.append("冰之残影的前奏应该是前 4 波")
         for index, wave in enumerate(level["waves"], start=1):
             expected_pressure = "minion" if index <= 4 or index % 2 == 0 else "boss_phase"
             if wave.get("pressure") != expected_pressure:
@@ -419,14 +419,44 @@ def timing_problems(level: dict) -> list[str]:
         problems.append("布阵或波间秒数不是战斗草案的默认值")
     if prologue and "combat_timing_note" not in level:
         problems.append("序章要注明充能和等待是战斗草案，不是数值定案")
+    waves = level["waves"]
+    for index, wave in enumerate(waves):
+        last = index == len(waves) - 1
+        if wave.get("duration_sec") != 20:
+            problems.append(f"{wave['id']} 的刷怪时长应该是 20 秒")
+        if wave.get("delay_sec") != 4:
+            problems.append(f"{wave['id']} 的波间空隙应该是 4 秒")
+        boss_last = last and level["id"] == "ch1_04"
+        expected_end = "boss_defeated" if boss_last else "spawn_window"
+        if wave.get("ends_when") != expected_end:
+            problems.append(f"{wave['id']} 的结束条件应该是 {expected_end}")
+        for spawn in wave["spawns"]:
+            count = spawn["count"]
+            if count <= 1:
+                continue
+            end = spawn["delay_sec"] + (count - 1) * spawn["interval_sec"]
+            if not 18 <= end <= 22:
+                problems.append(f"{wave['id']} 的刷怪窗口 {end:.1f} 秒不在 18 到 22 秒")
+    if level["id"] == "ch1_04":
+        leak = level["bosses"][0].get("leak", {})
+        if leak.get("on_reach_guard") != "deduct_lives_and_return_to_rift":
+            problems.append("冰之残影走到守护点后要扣命并回到裂缝")
+        if leak.get("then") != "walk_the_same_route_again":
+            problems.append("冰之残影扣命后要再走同一条路")
+        source = leak.get("lives_source", "")
+        if source != "data/balance/combat/stats.json#/bosses/boss_cirno/leak_damage":
+            problems.append("冰之残影的扣命要指向 stats.json，不要把数字写进关卡")
+        if any(character.isdigit() for character in json.dumps({key: leak[key] for key in leak if key != "lives_source"})):
+            problems.append("冰之残影的漏怪说明里不要抄扣命数字")
     return problems
 
 
 def roster_problems(level: dict, playable: dict[str, str]) -> list[str]:
     problems: list[str] = []
     available = level["params"]["available_character_ids"]
+    allowed_playable = {"yes", "pending_文案策划"}
     for character_id in available:
-        if playable.get(character_id) != "yes":
+        if playable.get(character_id) not in allowed_playable:
             problems.append(f"可放置名单里有未定案或未知角色 {character_id}")
     for character_id in level["new_character_ids"]:
         if character_id not in available:
@@ -579,8 +609,9 @@ def rating_problems(rating: dict) -> list[str]:
     leak = rating.get("leak", {})
     if leak.get("stored_in_level_data") is not False:
         problems.append("漏怪扣命不应该写进关卡数据")
-    if "权威" not in leak.get("note", "") or "lives_on_leak" in leak.get("note", ""):
-        problems.append("漏怪说明要指向数值和战斗的属性表，不要在关卡里再抄一份")
+    leak_note = leak.get("note", "")
+    if "权威" not in leak_note or "lives_on_leak" in leak_note or "stats.json" not in leak_note:
+        problems.append("漏怪说明要指向 data/balance/combat/stats.json，不要在关卡里再抄一份")
     first = rating.get("first_clear", {})
     if first.get("normal_lives_remaining") != "11-13" or first.get("boss_lives_remaining") != "10-11":
         problems.append("首通剩余生命应该是普通关 11-13、首领关 10-11")
@@ -598,12 +629,32 @@ def index_problems(index: dict, levels: dict[str, dict]) -> list[str]:
         problems.append("解锁规则不是顺序通关")
     if index.get("starting_character_ids") != STARTERS:
         problems.append("开局角色应该只有灵梦")
-    proposals = index.get("character_join_proposals", [])
-    cirno = next((item for item in proposals if item.get("id") == "chr_cirno"), None)
-    if cirno is None or cirno.get("status") != "pending_文案策划":
-        problems.append("琪露诺的加入关要标成 pending_文案策划")
+    decided = {item.get("id"): item for item in index.get("character_joins_decided", [])}
+    cirno = decided.get("chr_cirno")
+    if cirno is None or cirno.get("status") != "decided":
+        problems.append("琪露诺的加入关要标成制作人已定")
     if cirno and (cirno.get("unlock_after_clearing") != "ch1_01" or cirno.get("first_placeable_level") != "ch1_02"):
-        problems.append("琪露诺的提案应该是通关 ch1_01 后加入，ch1_02 起可放置")
+        problems.append("琪露诺应该是通关 ch1_01 后加入，ch1_02 起可放置")
+    proposals = index.get("character_join_proposals", [])
+    if any(item.get("id") == "chr_cirno" for item in proposals):
+        problems.append("琪露诺不再是待文案的提案")
+    expected_proposals = {
+        "chr_meiling": ("ch2_01", "ch2_02"),
+        "chr_sakuya": ("ch2_04", "ch3_01"),
+        "chr_keine": ("ch3_01", "ch3_02"),
+        "chr_mokou": ("ch3_04", "ch4_01"),
+        "chr_sanae": ("ch4_01", "ch4_02"),
+    }
+    by_proposal = {item.get("id"): item for item in proposals}
+    for character_id, (unlock_after, first_level) in expected_proposals.items():
+        item = by_proposal.get(character_id)
+        if item is None or item.get("status") != "pending_文案策划":
+            problems.append(f"{character_id} 的加入要标成 pending_文案策划")
+        elif item.get("unlock_after_clearing") != unlock_after or item.get("first_placeable_level") != first_level:
+            problems.append(f"{character_id} 的加入关不对")
+    aya = by_proposal.get("chr_aya")
+    if aya is None or aya.get("unlock_after_clearing") is not None or aya.get("first_placeable_level") is not None:
+        problems.append("文还不可玩，不进解锁链")
     replay = index.get("replay", {})
     if replay.get("cleared_levels_anytime") is not True or replay.get("can_earn_missing_stars") is not True:
         problems.append("索引要写明已通关的关可以重打并补星")
@@ -646,14 +697,19 @@ def schema_errors(validator: Draft202012Validator, level: dict) -> list[str]:
 def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
     problems: list[str] = []
     note = catalog.get("_owner_note", "")
-    if "权威" not in note:
-        problems.append("图鉴要写明属性的权威来源不是这份关卡文件")
-    conflict = catalog.get("stat_conflict", {})
-    blob = json.dumps(conflict, ensure_ascii=False)
-    if conflict.get("id") != "enm_shade_fast" or "2.0" not in blob or "1.8" not in blob or "35" not in blob:
-        problems.append("图鉴要记下快残影在数值稿和战斗稿之间的生命、移速差异")
-    if "不采用" not in blob and "都不采用" not in blob:
-        problems.append("图鉴要写明关卡不采用任何一边的快残影生命和移速")
+    if "权威" not in note or "stats.json" not in note:
+        problems.append("图鉴要写明属性的权威来源是 stats.json，不是这份关卡文件")
+    if "stat_conflict" in catalog:
+        problems.append("图鉴不要再记快残影的生命和移速差异")
+    source = catalog.get("stat_source", {})
+    if source.get("path") != "data/balance/combat/stats.json":
+        problems.append("图鉴的 stat_source 要指向 data/balance/combat/stats.json")
+    if source.get("enemies_field") != "enemies" or source.get("bosses_field") != "bosses":
+        problems.append("图鉴要指向 stats.json 的 enemies 和 bosses")
+    blob = json.dumps(catalog, ensure_ascii=False)
+    for phrase in ("生命 35", "每秒 2.0", "每秒 1.8"):
+        if phrase in blob:
+            problems.append("图鉴不要复制敌人的生命或移速数字")
     by_id: dict[str, dict] = {}
     for entry in catalog.get("entries", []):
         enemy_id = entry["id"]
@@ -690,11 +746,18 @@ def roster_file_problems(roster: dict) -> list[str]:
     problems: list[str] = []
     if "不在本文件" not in roster.get("_owner_note", ""):
         problems.append("角色名单要写明属性不在这份文件里")
-    expected = {
-        "chr_reimu": ("yes", "prologue_01", None),
-        "chr_marisa": ("yes", "prologue_02", "prologue_01"),
-        "chr_cirno": ("yes", "ch1_02", "ch1_01"),
-        "chr_yukari": ("yes", "ch2_01", "ch1_04"),
+    decided = {
+        "chr_reimu": ("yes", "prologue_01", None, "decided"),
+        "chr_marisa": ("yes", "prologue_02", "prologue_01", "decided"),
+        "chr_cirno": ("yes", "ch1_02", "ch1_01", "decided"),
+        "chr_yukari": ("yes", "ch2_01", "ch1_04", "decided"),
+    }
+    proposed = {
+        "chr_meiling": ("ch2_02", "ch2_01"),
+        "chr_sakuya": ("ch3_01", "ch2_04"),
+        "chr_keine": ("ch3_02", "ch3_01"),
+        "chr_mokou": ("ch4_01", "ch3_04"),
+        "chr_sanae": ("ch4_02", "ch4_01"),
     }
     seen = set()
     for character in roster.get("characters", []):
@@ -702,17 +765,23 @@ def roster_file_problems(roster: dict) -> list[str]:
         seen.add(character_id)
         if "spirit_power_cost" in character or "hp" in character:
             problems.append(f"{character_id} 不应该再写消耗或生命")
-        if character_id in expected:
-            playable, joins_at, unlocked_by = expected[character_id]
+        if character_id in decided:
+            playable, joins_at, unlocked_by, join_status = decided[character_id]
             if character.get("playable") != playable or character.get("joins_at_level") != joins_at:
                 problems.append(f"{character_id} 的可玩状态或加入关不对")
             if character.get("unlocked_by_clearing") != unlocked_by:
                 problems.append(f"{character_id} 的解锁关不对")
-            if character_id == "chr_cirno" and character.get("join_status") != "pending_文案策划":
-                problems.append("琪露诺的加入关要标成 pending_文案策划")
+            if character.get("join_status") != join_status:
+                problems.append(f"{character_id} 的加入状态应该是 {join_status}")
+        elif character_id in proposed:
+            joins_at, unlocked_by = proposed[character_id]
+            if character.get("playable") != "pending_文案策划" or character.get("join_status") != "pending_文案策划":
+                problems.append(f"{character_id} 是提案，要标成 pending_文案策划")
+            if character.get("joins_at_level") != joins_at or character.get("unlocked_by_clearing") != unlocked_by:
+                problems.append(f"{character_id} 的加入关不对")
         elif character.get("playable") != "pending_producer" or character.get("joins_at_level") is not None:
-            problems.append(f"{character_id} 不是 MVP，不应该写成已加入")
-    for character_id in expected:
+            problems.append(f"{character_id} 还不可玩，不应该写进解锁链")
+    for character_id in (*decided, *proposed):
         if character_id not in seen:
             problems.append(f"角色名单缺少 {character_id}")
     return problems

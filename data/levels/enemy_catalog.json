@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "_owner_note": "生命、移速、护甲、击破灵力、漏怪扣命的权威来源是数值策划和战斗策划的属性表。本文件只保留关卡编排要用的 id、显示名、首次出场关和威胁点。关卡校验只读威胁点，不读生命和移速。",
-  "stat_conflict": {
-    "id": "enm_shade_fast",
-    "numbers_designer": "生命 35，移速每秒 2.0 格",
-    "combat_draft": "生命是普通残影的一半，移速每秒 1.8 格",
-    "level_data": "两边都不采用。本文件不写生命，也不写移速。"
+  "_owner_note": "生命、护甲、击破灵力、漏怪扣命、击破充能的权威来源是数值策划的 data/balance/combat/stats.json，字段是 enemies 和 bosses。本文件只保留关卡编排要用的 id、显示名、首次出场关和威胁点。关卡校验只读威胁点，不复制属性数字。",
+  "stat_source": {
+    "path": "data/balance/combat/stats.json",
+    "enemies_field": "enemies",
+    "bosses_field": "bosses",
+    "note": "属性以这份表为准。关卡文件和图鉴都不复制生命、护甲、移速或漏怪扣命。"
   },
   "entries": [
     {
@@ -22,7 +22,7 @@
       "introduced_in": "ch1_01",
       "threat_points": 1,
       "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点仍是 1。生命和移速见文件顶部的 stat_conflict，关卡不依赖任何一边。第一章第 2 关用它教 st_slow。"
+      "note": "预算用的威胁点仍是 1。生命和漏怪扣命见 stat_source，不在这里抄。第一章第 1 关最后三波少量出现，第 2 关用它教 st_slow。"
     },
     {
       "id": "enm_shade_armored",
@@ -66,7 +66,7 @@
       "display_name": "冰之残影",
       "introduced_in": "ch1_04",
       "threat_points": null,
-      "note": "不占波次预算。显示名是冰之残影，原型是琪露诺。生命、移速、护甲在数值和战斗的属性表，不在这里。"
+      "note": "不占波次预算。显示名是冰之残影：雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人。属性见 stat_source 的 bosses，不在这里抄。"
     },
     {
       "id": "boss_meiling",

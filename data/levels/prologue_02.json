@@ -176,74 +176,82 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 2.0,
-      "next_wave_delay_sec": 8.0,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 14,
-          "interval_sec": 1.6,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
+      ]
     },
     {
       "id": "w02",
       "wave_id": "w02",
-      "delay_sec": 8.0,
-      "next_wave_delay_sec": 7.2,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 18,
-          "interval_sec": 1.5,
+          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
+      ]
     },
     {
       "id": "w03",
       "wave_id": "w03",
-      "delay_sec": 7.2,
-      "next_wave_delay_sec": 6.4,
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 22,
-          "interval_sec": 1.4,
+          "interval_sec": 1.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
+      ]
     },
     {
       "id": "w04",
       "wave_id": "w04",
-      "delay_sec": 6.4,
+      "delay_sec": 4.0,
       "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
       "is_boss": false,
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
           "count": 26,
-          "interval_sec": 1.2,
+          "interval_sec": 0.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
-      ],
-      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
+      ]
     }
   ],
   "placeholders": {
