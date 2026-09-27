@@ -7,15 +7,14 @@
       "display_name": "琪露诺",
       "character_id": "char.cirno",
       "blocks_character_id": "char.cirno",
-      "enters_at_wave_id": "w06",
+      "enters_at_wave_id": "w05",
       "entrance_id": "entrance.north",
       "path_id": "path.main",
       "prelude_wave_ids": [
         "w01",
         "w02",
         "w03",
-        "w04",
-        "w05"
+        "w04"
       ],
       "phases": [
         {
@@ -24,6 +23,7 @@
           "spell_card_id": "spell.cirno.icicle_fall",
           "spell_card_name": "冰符「冰瀑」",
           "wave_ids": [
+            "w05",
             "w06",
             "w07",
             "w08",
@@ -158,7 +158,7 @@
         }
       ],
       "combat_notes": [
-        "琪露诺沿 path.main 前进，从 w06 入场，一直走到决斗结束。她不是残影。",
+        "琪露诺沿 path.main 前进，从 w05 入场，一直走到决斗结束。她不是残影。",
         "叙事希望冰瀑也会冻住贴着冰面的角色。冻不冻塔由战斗策划定，关卡这边先保证冰面在路线上。",
         "完美冻结必须让残影也停住一会儿，否则台词「你到底帮哪边」没有对应的事发生。",
         "首领漏到守护点是否直接失败，等数值策划。建议是直接失败。"
@@ -166,6 +166,7 @@
     }
   ],
   "id": "ch1_04",
+  "difficulty_id": "ch1_04",
   "status": "complete",
   "chapter_id": "ch1",
   "index_in_chapter": 4,
@@ -332,61 +333,204 @@
     {
       "id": "w01",
       "delay_sec": 2.0,
+      "pressure": "minion",
+      "note": "小怪波。琪露诺还没入场。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 6,
-          "interval_sec": 1.2,
+          "count": 14,
+          "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 1.5,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
         }
-      ],
-      "note": "出场前奏。琪露诺还没宣言，雾已经散了。"
+      ]
     },
     {
       "id": "w02",
-      "delay_sec": 5.0,
+      "delay_sec": 8.0,
+      "pressure": "minion",
+      "note": "小怪波。琪露诺还没入场。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 6,
-          "interval_sec": 1.1,
+          "count": 19,
+          "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 1.4,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
         }
       ]
     },
     {
       "id": "w03",
-      "delay_sec": 5.0,
+      "delay_sec": 7.6,
+      "pressure": "minion",
+      "note": "小怪波。琪露诺还没入场。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 1.05,
+          "count": 23,
+          "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 1,
-          "interval_sec": 1.0,
+          "count": 3,
+          "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 1.5
+          "delay_sec": 0.8
         }
       ]
     },
     {
       "id": "w04",
-      "delay_sec": 4.5,
+      "delay_sec": 7.2,
+      "pressure": "minion",
+      "note": "小怪波。琪露诺还没入场。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
+          "count": 28,
+          "interval_sec": 1.4,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 1.3,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 6.7,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。琪露诺入场，冰瀑开始。这一阶段只有这一张符卡。本波结束后弹出三选一，三张里选一张。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 17,
+          "interval_sec": 1.3,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 11,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.4
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "delay_sec": 6.3,
+      "pressure": "minion",
+      "note": "小怪波。符卡还在，这一波不加码，给玩家喘一口气。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 36,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 4,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "delay_sec": 5.9,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的疾走更多。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 23,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 13,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.4
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 5.5,
+      "pressure": "minion",
+      "note": "小怪波。符卡还在，这一波不加码，给玩家喘一口气。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 45,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
           "count": 5,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 5.0,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的疾走更多。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 28,
           "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -394,199 +538,95 @@
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 1,
-          "interval_sec": 0.95,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 1.2
-        }
-      ]
-    },
-    {
-      "id": "w05",
-      "delay_sec": 4.5,
-      "groups": [
-        {
-          "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.95,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
-        },
-        {
-          "enemy_id": "remnant.swift_toy",
-          "count": 2,
+          "count": 16,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 1.0
-        }
-      ]
-    },
-    {
-      "id": "w06",
-      "delay_sec": 4.0,
-      "groups": [
-        {
-          "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
-        },
-        {
-          "enemy_id": "remnant.swift_toy",
-          "count": 2,
-          "interval_sec": 0.85,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
-        }
-      ],
-      "note": "冰瀑开始。右边一整列变成冰，冰上的残影更快。"
-    },
-    {
-      "id": "w07",
-      "delay_sec": 4.0,
-      "groups": [
-        {
-          "enemy_id": "remnant.faded_toy",
-          "count": 4,
-          "interval_sec": 0.85,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
-        },
-        {
-          "enemy_id": "remnant.swift_toy",
-          "count": 2,
-          "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
-        }
-      ]
-    },
-    {
-      "id": "w08",
-      "delay_sec": 3.5,
-      "groups": [
-        {
-          "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
-        },
-        {
-          "enemy_id": "remnant.swift_toy",
-          "count": 2,
-          "interval_sec": 0.75,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.6
-        }
-      ]
-    },
-    {
-      "id": "w09",
-      "delay_sec": 3.5,
-      "groups": [
-        {
-          "enemy_id": "remnant.faded_toy",
-          "count": 4,
-          "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
-        },
-        {
-          "enemy_id": "remnant.swift_toy",
-          "count": 3,
-          "interval_sec": 0.75,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.6
+          "delay_sec": 0.4
         }
       ]
     },
     {
       "id": "w10",
-      "delay_sec": 3.5,
+      "delay_sec": 4.6,
+      "pressure": "minion",
+      "note": "小怪波。符卡还在，这一波不加码，给玩家喘一口气。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.75,
+          "count": 53,
+          "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 3,
-          "interval_sec": 0.7,
+          "count": 6,
+          "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 0.5
+          "delay_sec": 0.8
         }
       ]
     },
     {
       "id": "w11",
-      "delay_sec": 3.0,
+      "delay_sec": 4.2,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。完美冻结开始。这一阶段也只有这一张符卡。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.75,
+          "count": 32,
+          "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 2,
-          "interval_sec": 0.7,
+          "count": 19,
+          "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 0.5
+          "delay_sec": 0.4
         }
-      ],
-      "note": "完美冻结。冰面扩大，先短暂冻住残影，再变得更快。"
+      ]
     },
     {
       "id": "w12",
-      "delay_sec": 3.0,
+      "delay_sec": 3.8,
+      "pressure": "minion",
+      "note": "小怪波。符卡还在，这一波不加码，给玩家喘一口气。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.7,
+          "count": 61,
+          "interval_sec": 0.8,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 3,
-          "interval_sec": 0.65,
+          "count": 7,
+          "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 0.5
+          "delay_sec": 0.8
         }
       ]
     },
     {
       "id": "w13",
-      "delay_sec": 3.0,
+      "delay_sec": 3.3,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的疾走更多。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
+          "count": 37,
           "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -594,8 +634,8 @@
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 3,
-          "interval_sec": 0.65,
+          "count": 22,
+          "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0.4
@@ -604,33 +644,37 @@
     },
     {
       "id": "w14",
-      "delay_sec": 2.5,
+      "delay_sec": 2.9,
+      "pressure": "minion",
+      "note": "小怪波。符卡还在，这一波不加码，给玩家喘一口气。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.65,
+          "count": 68,
+          "interval_sec": 0.7,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 3,
+          "count": 9,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.8
         }
       ]
     },
     {
       "id": "w15",
       "delay_sec": 2.5,
+      "pressure": "boss_phase",
+      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的疾走更多。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
+          "count": 41,
           "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -638,14 +682,13 @@
         },
         {
           "enemy_id": "remnant.swift_toy",
-          "count": 3,
-          "interval_sec": 0.55,
+          "count": 25,
+          "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0.4
         }
-      ],
-      "note": "最后一波。冰面还在。"
+      ]
     }
   ],
   "placeholders": {
@@ -654,7 +697,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "threat_budget": 150,
-    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

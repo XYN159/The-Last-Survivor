@@ -2,12 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/XYN159/The-Last-Survivor/data/levels/level.schema.json",
   "title": "关卡配置",
-  "description": "《东方守幻录》单关配置。完整关含 7×12 地图和波次；草案关只有元数据。威胁值、灵力和地图特效倍率都是占位。",
+  "description": "《东方守幻录》单关配置。完整关含 7×12 地图和波次；草案关只有元数据。威胁预算、生命倍率和三选一在 data/balance/level_difficulty.json。灵力和地图特效倍率仍是占位。",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "id",
+    "difficulty_id",
     "status",
     "chapter_id",
     "index_in_chapter",
@@ -31,6 +32,11 @@
     "id": {
       "type": "string",
       "pattern": "^(prologue_0[1-3]|ch[1-5]_0[1-4]|final_01)$"
+    },
+    "difficulty_id": {
+      "type": "string",
+      "pattern": "^(prologue_0[1-3]|ch[1-5]_0[1-4]|final_01)$",
+      "description": "对应 data/balance/level_difficulty.json 里的同一行。必须和 id 相同。"
     },
     "status": {"enum": ["complete", "stub"]},
     "chapter_id": {"enum": ["prologue", "ch1", "ch2", "ch3", "ch4", "ch5", "final"]},
@@ -290,6 +296,7 @@
       "properties": {
         "id": {"type": "string", "pattern": "^w[0-9]{2}$"},
         "delay_sec": {"type": "number", "minimum": 0},
+        "pressure": {"enum": ["minion", "boss_phase"]},
         "note": {"type": "string", "minLength": 1},
         "groups": {
           "type": "array",
@@ -315,7 +322,8 @@
         "interval_sec": {"type": "number", "exclusiveMinimum": 0},
         "entrance_id": {"type": "string", "minLength": 1},
         "path_id": {"type": "string", "minLength": 1},
-        "delay_sec": {"type": "number", "minimum": 0}
+        "delay_sec": {"type": "number", "minimum": 0},
+        "elite": {"type": "boolean"}
       }
     },
     "boss": {
@@ -403,7 +411,7 @@
     "placeholders": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["_placeholder", "align_with", "threat_budget", "note"],
+      "required": ["_placeholder", "align_with", "note"],
       "properties": {
         "_placeholder": {"const": true},
         "align_with": {
@@ -412,7 +420,6 @@
           "uniqueItems": true,
           "items": {"enum": ["数值策划", "战斗策划"]}
         },
-        "threat_budget": {"type": "integer", "minimum": 1},
         "note": {"type": "string", "minLength": 1}
       }
     }

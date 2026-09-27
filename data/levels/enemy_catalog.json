@@ -2,7 +2,7 @@
   "schema_version": 1,
   "_placeholder": true,
   "move_speed_unit": "cells_per_second",
-  "note": "图鉴里每一个 threat、hp、move_speed、armor 都是占位。已完成关卡：预算 = 各波 count × threat，再加 bosses 里每个首领的 threat 一次。草案关：threat_budget 是整关占位，不要把图鉴里的首领威胁再加一次。",
+  "note": "图鉴里每一个 threat、hp、move_speed、armor 都是占位。一关有多重，看 data/balance/level_difficulty.json，不要把首领的 threat 再加进波次预算。首领强弱用那一关的 hp_multiplier 去乘图鉴生命，等数值策划写成正式公式。",
   "entries": [
     {
       "id": "remnant.faded_toy",

@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "_owner": "数值策划",
+  "_placeholder": true,
+  "note": "这张表归数值策划。关卡 JSON 只保留地图、路线、每波出什么和出场时间，用 difficulty_id 来对这一行。系数和生命倍率都是占位，方便先把曲线形状定下来。这里用 JSON 而不是 CSV，是因为仓库里的平衡文件本来就是 JSON，而且「第 5、10、15 波后三选一」是一串数，CSV 不好写。",
+  "formula": {
+    "wave_index_starts_at": 1,
+    "per_wave_threat": "10 + 4 * wave_index",
+    "scaled_wave_threat": "(10 + 4 * wave_index) * threat_budget_coef，再四舍五入到整数",
+    "rounding": "half_up_by_percent",
+    "rounding_note": "用系数的百分数做整数运算：(基础威胁 × 百分数 + 50) / 100。避免 0.85 这种小数乘出来差 0.0001。",
+    "hp_multiplier": "1 + 0.15 * (level_number - 1)",
+    "hp_note": "生命倍率只随关卡序号上升，新章第 1 关不会因为「章节回落」而下降。回落靠系数。",
+    "buff_every_waves": 5,
+    "buff_pick_count": 3,
+    "coef_by_role": {
+      "teaching": 0.85,
+      "practice": 1.0,
+      "test": 1.15,
+      "boss": 1.3
+    },
+    "first_clear_lives_remaining": 10
+  },
+  "alignment_open": [
+    {
+      "id": "hp_is_monotonic",
+      "note": "生命倍率 1 + 0.15 × (关卡序号 − 1) 一路上升，不会在新章第 1 关掉下来。章节首领是高峰、下一章第 1 关变松，靠的是这一行的 threat_budget_coef：首领 1.3，章节第 1 关 0.85。生命本身不负责这次回落。"
+    },
+    {
+      "id": "half_lives_sits_on_star_boundary",
+      "numbers_target_lives_remaining": 10,
+      "level_design_proposal_lives_remaining": "11-13",
+      "note": "数值策划希望首通大约剩下一半生命。20 的一半是 10。星级里 1 到 9 是 1 星，10 到 17 是 2 星。10 正好踩在交界上，再漏一只就掉到 1 星。关卡策划建议首通目标改成剩余 11 到 13，让第一次打过稳稳落在 2 星里面。这行还没定，表里先记数值策划的 10。"
+    }
+  ],
+  "levels": {
+    "prologue_01": {
+      "level_number": 1,
+      "role": "teaching",
+      "wave_count": 8,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 1.0,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36
+      ],
+      "threat_budget_total": 191
+    },
+    "prologue_02": {
+      "level_number": 2,
+      "role": "practice",
+      "wave_count": 9,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 1.15,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46
+      ],
+      "threat_budget_total": 270
+    },
+    "prologue_03": {
+      "level_number": 3,
+      "role": "test",
+      "wave_count": 10,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 1.3,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58
+      ],
+      "threat_budget_total": 369
+    },
+    "ch1_01": {
+      "level_number": 4,
+      "role": "teaching",
+      "wave_count": 10,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 1.45,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36,
+        39,
+        43
+      ],
+      "threat_budget_total": 273
+    },
+    "ch1_02": {
+      "level_number": 5,
+      "role": "practice",
+      "wave_count": 11,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 1.6,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50,
+        54
+      ],
+      "threat_budget_total": 374
+    },
+    "ch1_03": {
+      "level_number": 6,
+      "role": "test",
+      "wave_count": 12,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 1.75,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58,
+        62,
+        67
+      ],
+      "threat_budget_total": 498
+    },
+    "ch1_04": {
+      "level_number": 7,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 1.9,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    },
+    "ch2_01": {
+      "level_number": 8,
+      "role": "teaching",
+      "wave_count": 8,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 2.05,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36
+      ],
+      "threat_budget_total": 191
+    },
+    "ch2_02": {
+      "level_number": 9,
+      "role": "practice",
+      "wave_count": 10,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 2.2,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50
+      ],
+      "threat_budget_total": 320
+    },
+    "ch2_03": {
+      "level_number": 10,
+      "role": "test",
+      "wave_count": 12,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 2.35,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58,
+        62,
+        67
+      ],
+      "threat_budget_total": 498
+    },
+    "ch2_04": {
+      "level_number": 11,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 2.5,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    },
+    "ch3_01": {
+      "level_number": 12,
+      "role": "teaching",
+      "wave_count": 8,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 2.65,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36
+      ],
+      "threat_budget_total": 191
+    },
+    "ch3_02": {
+      "level_number": 13,
+      "role": "practice",
+      "wave_count": 10,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 2.8,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50
+      ],
+      "threat_budget_total": 320
+    },
+    "ch3_03": {
+      "level_number": 14,
+      "role": "test",
+      "wave_count": 12,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 2.95,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58,
+        62,
+        67
+      ],
+      "threat_budget_total": 498
+    },
+    "ch3_04": {
+      "level_number": 15,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 3.1,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    },
+    "ch4_01": {
+      "level_number": 16,
+      "role": "teaching",
+      "wave_count": 8,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 3.25,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36
+      ],
+      "threat_budget_total": 191
+    },
+    "ch4_02": {
+      "level_number": 17,
+      "role": "practice",
+      "wave_count": 10,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 3.4,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50
+      ],
+      "threat_budget_total": 320
+    },
+    "ch4_03": {
+      "level_number": 18,
+      "role": "test",
+      "wave_count": 12,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 3.55,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58,
+        62,
+        67
+      ],
+      "threat_budget_total": 498
+    },
+    "ch4_04": {
+      "level_number": 19,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 3.7,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    },
+    "ch5_01": {
+      "level_number": 20,
+      "role": "teaching",
+      "wave_count": 8,
+      "threat_budget_coef": 0.85,
+      "hp_multiplier": 3.85,
+      "buff_after_waves": [
+        5
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        12,
+        15,
+        19,
+        22,
+        26,
+        29,
+        32,
+        36
+      ],
+      "threat_budget_total": 191
+    },
+    "ch5_02": {
+      "level_number": 21,
+      "role": "practice",
+      "wave_count": 10,
+      "threat_budget_coef": 1.0,
+      "hp_multiplier": 4.0,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50
+      ],
+      "threat_budget_total": 320
+    },
+    "ch5_03": {
+      "level_number": 22,
+      "role": "test",
+      "wave_count": 12,
+      "threat_budget_coef": 1.15,
+      "hp_multiplier": 4.15,
+      "buff_after_waves": [
+        5,
+        10
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        16,
+        21,
+        25,
+        30,
+        35,
+        39,
+        44,
+        48,
+        53,
+        58,
+        62,
+        67
+      ],
+      "threat_budget_total": 498
+    },
+    "ch5_04": {
+      "level_number": 23,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 4.3,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    },
+    "final_01": {
+      "level_number": 24,
+      "role": "boss",
+      "wave_count": 15,
+      "threat_budget_coef": 1.3,
+      "hp_multiplier": 4.45,
+      "buff_after_waves": [
+        5,
+        10,
+        15
+      ],
+      "buff_pick_count": 3,
+      "wave_threat_budgets": [
+        18,
+        23,
+        29,
+        34,
+        39,
+        44,
+        49,
+        55,
+        60,
+        65,
+        70,
+        75,
+        81,
+        86,
+        91
+      ],
+      "threat_budget_total": 819
+    }
+  }
+}

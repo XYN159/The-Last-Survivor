@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "id": "ch4_04",
+  "difficulty_id": "ch4_04",
   "status": "stub",
   "chapter_id": "ch4",
   "index_in_chapter": 4,
@@ -43,7 +44,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "threat_budget": 360,
-    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

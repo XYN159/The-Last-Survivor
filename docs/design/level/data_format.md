@@ -15,6 +15,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `enemy_catalog.json` | 残影和首领的 id、占位威胁、占位属性 |
 | `character_roster.json` | 角色 id、能不能放、占位灵力消耗 |
 | `rating.json` | 星级区间。全游戏共用，不写进每一关 |
+| `data/balance/level_difficulty.json` | 数值策划的难度表。波数、威胁系数、生命倍率、三选一。不在 `data/levels/` 里 |
 
 导出过滤器已经是 `data/*`。按现有架构说明，它连子目录里的 JSON 一起打进包。加载器接上之前，玩家还不会看见这些关。
 
@@ -30,6 +31,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | --- | --- |
 | `schema_version` | 现在固定是 1。以后改字段就加版本，不偷偷改旧文件的意思 |
 | `id` | 关卡 id。只能是 `prologue_01` 到 `prologue_03`、`ch1_01` 到 `ch5_04`、`final_01` |
+| `difficulty_id` | 难度表里的同一行。必须和 `id` 相同。这一关多重，去那一行看，不写在关卡文件里 |
 | `status` | `complete` 表示地图和波次都有。`stub` 表示只有说明 |
 | `chapter_id` | `prologue`、`ch1` 到 `ch5`、`final` |
 | `index_in_chapter` | 这一章里的第几关，从 1 数 |
@@ -49,10 +51,9 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `params.available_character_ids` | 这一关可以放置的角色。新角色必须在里面。正在和玩家决斗的角色不能在里面 |
 | `modifiers` | 全图生效的修正，例如浓雾。没有就是空数组 |
 | `bosses` | 首领。普通关和草案关都是空数组。画完的首领关才有内容 |
-| `placeholders._placeholder` | 固定 `true`。提醒读文件的人：威胁和灵力还没定案 |
+| `placeholders._placeholder` | 固定 `true`。提醒读文件的人：起始灵力和地图倍率还没定案 |
 | `placeholders.align_with` | 要找谁对齐。现在是「数值策划」和「战斗策划」 |
-| `placeholders.threat_budget` | 这一关的占位威胁预算 |
-| `placeholders.note` | 用中文写明哪些数是占位 |
+| `placeholders.note` | 用中文写明哪些数是占位。威胁预算不要再写在这里 |
 
 `route_type` 的取值：
 
@@ -125,7 +126,8 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | --- | --- |
 | `id` | `w01` 这种两位编号。一关里面不能重复 |
 | `delay_sec` | 这一波开始前再等多少秒。第一波从关卡开始算。后面的波从上一波最后一只出场算起 |
-| `note` | 可选。给读数据的人看的中文，例如「第一只疾走玩具」 |
+| `pressure` | 可选。`minion` 是小怪波，`boss_phase` 是符卡加压波。现在只有琪露诺那关在用，两种交替 |
+| `note` | 可选。给读数据的人看的中文。三选一那一波要写上「三选一」 |
 | `groups` | 这一波里的一组或多组残影 |
 
 一组 `groups`：
@@ -138,10 +140,39 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | `entrance_id` | 从哪个入口出来。必须是这张图上有的入口 |
 | `path_id` | 走哪条路径。必须是这张图上有的路径 |
 | `delay_sec` | 相对这一波开始，这一组再等多少秒。和波本身的 `delay_sec` 不是同一个数 |
+| `elite` | 可选。`true` 表示这一组是精英压力。第一章第 3 关后半的疾走用了它。不是新的敌人 id |
 
-画完的关：所有组的 `count × 该敌人的 threat` 加起来，再加 `bosses` 里每个首领的 threat 一次，必须等于 `placeholders.threat_budget`。
+画完的关：每一波的 `count × 该敌人的 threat` 加起来，必须等于难度表里这一波的 `wave_threat_budgets`。不要把首领的 threat 再加进去。首领强弱用那一关的 `hp_multiplier`。
 
-普通关和教学关的波数是 8 到 12。首领关是 14 到 16。现在的首领关是 15。
+普通关和教学关的波数是 8 到 12。首领关是 14 到 16。序章现在是 8、9、10。第一章是 10、11、12，首领 15。
+
+## 难度表 `data/balance/level_difficulty.json`
+
+这张表归数值策划。仓库里的平衡文件本来就是 JSON，三选一又是一串波次，所以没有写成 CSV。
+
+| 字段 | 含义 |
+| --- | --- |
+| `_owner` | 固定「数值策划」 |
+| `_placeholder` | 固定 `true`。系数和倍率还没定案 |
+| `formula` | 用中文和算式写明威胁、生命倍率、四舍五入和三选一怎么来 |
+| `alignment_open` | 还没和关卡策划关死的点。现在有两条：生命倍率只升不降；一半生命踩在 1 星和 2 星的交界上 |
+| `levels` | 以关卡 id 为键。顺序和 `index.json` 一样 |
+
+`levels` 里的一行：
+
+| 字段 | 含义 |
+| --- | --- |
+| `level_number` | 解锁顺序，从 1 到 24。生命倍率用它 |
+| `role` | `teaching`、`practice`、`test`、`boss`。决定系数 |
+| `wave_count` | 这一关几波。画完的关必须和 `waves` 的长度一样 |
+| `threat_budget_coef` | 威胁系数。教学 0.85，练习 1.0，试炼 1.15，首领 1.3 |
+| `hp_multiplier` | `1 + 0.15 × (level_number − 1)`。只升不降 |
+| `buff_after_waves` | 哪些波结束之后弹出三选一。只含 5、10、15 里这一关打得到的 |
+| `buff_pick_count` | 固定 3。三张里选一张 |
+| `wave_threat_budgets` | 每一波四舍五入之后的威胁。由公式算出来，校验会重算一遍 |
+| `threat_budget_total` | 上面那一串的和 |
+
+四舍五入不用小数直接乘。系数先看成百分数，例如 0.85 是 85。第 n 波的预算是 `( (10 + 4 × n) × 百分数 + 50 ) / 100`，只取整数。这样 0.85 不会因为二进制小数差 0.0001。
 
 ## 修正 `modifiers`
 
@@ -178,7 +209,7 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 | `blocks_character_id` | 决斗期间不能放置的角色。现在和 `character_id` 是同一个。这个角色不能出现在 `available_character_ids` 里 |
 | `enters_at_wave_id` | 从哪一波走进来 |
 | `entrance_id`、`path_id` | 从哪进、走哪条路 |
-| `prelude_wave_ids` | 符卡之前的波。可以是空的。琪露诺关用了前 5 波当出场，这 5 波没有符卡 |
+| `prelude_wave_ids` | 符卡之前的波。可以是空的。琪露诺关用了前 4 波当出场，这 4 波没有符卡 |
 | `phases` | 2 到 3 个阶段。每个阶段一张符卡 |
 | `combat_notes` | 中文列表。写给战斗策划、还没做成规则的事 |
 
@@ -301,6 +332,6 @@ grid 里的每一个 `P` 都必须被至少一条路径走过。路径和路径�
 python3 tools/validate_levels.py
 ```
 
-它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续并且只走路线格，好位置贴着路线，波次威胁等于预算，新章第 1 关的预算低于上一章最后一关，星级区间是上面那三档。
+它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续并且只走路线格，好位置贴着路线，每一波威胁等于难度表，新章第 1 关的威胁合计低于上一章最后一关，三选一落在第 5、10、15 波，星级区间是上面那三档。
 
 Godot 测试 `tests/unit/test_level_data.gd` 再查一遍地图、路径、威胁和星级，不查 schema 文本。CI 的 lint 跑 Python 校验，test 跑 Godot 测试。

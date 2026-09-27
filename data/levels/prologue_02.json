@@ -3,6 +3,7 @@
   "modifiers": [],
   "bosses": [],
   "id": "prologue_02",
+  "difficulty_id": "prologue_02",
   "status": "complete",
   "chapter_id": "prologue",
   "index_in_chapter": 2,
@@ -161,27 +162,28 @@
   "waves": [
     {
       "id": "w01",
-      "delay_sec": 1.5,
+      "delay_sec": 2.0,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 3,
-          "interval_sec": 1.4,
+          "count": 14,
+          "interval_sec": 1.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
         }
-      ],
-      "note": "魔理沙从这一关开始就能放。让残影在直路上排成一列。"
+      ]
     },
     {
       "id": "w02",
-      "delay_sec": 7.0,
+      "delay_sec": 8.0,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 3,
-          "interval_sec": 1.3,
+          "count": 18,
+          "interval_sec": 1.5,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -190,12 +192,13 @@
     },
     {
       "id": "w03",
-      "delay_sec": 7.0,
+      "delay_sec": 7.2,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 4,
-          "interval_sec": 1.2,
+          "count": 22,
+          "interval_sec": 1.4,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -204,12 +207,13 @@
     },
     {
       "id": "w04",
-      "delay_sec": 6.0,
+      "delay_sec": 6.4,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 4,
-          "interval_sec": 1.1,
+          "count": 26,
+          "interval_sec": 1.2,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -218,12 +222,13 @@
     },
     {
       "id": "w05",
-      "delay_sec": 6.0,
+      "delay_sec": 5.6,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。本波结束后弹出三选一，三张里选一张。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 1.0,
+          "count": 30,
+          "interval_sec": 1.1,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -232,12 +237,13 @@
     },
     {
       "id": "w06",
-      "delay_sec": 5.0,
+      "delay_sec": 4.9,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 5,
-          "interval_sec": 0.95,
+          "count": 34,
+          "interval_sec": 1.0,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -246,11 +252,12 @@
     },
     {
       "id": "w07",
-      "delay_sec": 5.0,
+      "delay_sec": 4.1,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 6,
+          "count": 38,
           "interval_sec": 0.9,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
@@ -260,12 +267,28 @@
     },
     {
       "id": "w08",
-      "delay_sec": 5.0,
+      "delay_sec": 3.3,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
       "groups": [
         {
           "enemy_id": "remnant.faded_toy",
-          "count": 6,
-          "interval_sec": 0.8,
+          "count": 42,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 2.5,
+      "note": "弯进长直路。这一关是练习，仍然只有褪色玩具。",
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 46,
+          "interval_sec": 0.6,
           "entrance_id": "entrance.north",
           "path_id": "path.main",
           "delay_sec": 0
@@ -279,7 +302,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "threat_budget": 36,
-    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "起始灵力仍是占位。波数、威胁系数、生命倍率和三选一在 data/balance/level_difficulty.json，用本关的 difficulty_id 去对。关卡文件不再写威胁预算。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
   }
 }

@@ -3,6 +3,7 @@ extends GutTest
 ## 关卡 JSON 的几何和威胁。schema 由 tools/validate_levels.py 检查，两边规则要保持一致。
 
 const _LEVEL_DIR := "res://data/levels/"
+const _DIFFICULTY_PATH := "res://data/balance/level_difficulty.json"
 const _COLUMNS := 7
 const _ROWS := 12
 
@@ -24,28 +25,37 @@ func test_index_unlocks_twenty_four_levels_in_order() -> void:
 
 func test_complete_levels_have_valid_maps_and_threats() -> void:
 	var threats := _threats()
+	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
+	var rows: Dictionary = difficulty["levels"]
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
 	for entry in index["levels"]:
 		if str(entry["status"]) != "complete":
 			continue
 		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
 		var problems := _map_problems(level)
-		problems.append_array(_threat_problems(level, threats))
+		problems.append_array(_threat_problems(level, threats, rows[str(level["id"])]))
 		assert_eq(problems.size(), 0, _join(problems))
 
 
 func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
+	var rows: Dictionary = difficulty["levels"]
 	var order: Array[String] = []
 	var grouped := {}
+	var hp_grouped := {}
 	for entry in index["levels"]:
-		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
-		var chapter := str(level["chapter_id"])
+		var level_id := str(entry["id"])
+		var row: Dictionary = rows[level_id]
+		var chapter := str(entry["chapter_id"])
 		if not grouped.has(chapter):
 			order.append(chapter)
 			grouped[chapter] = []
-		grouped[chapter].append(int(level["placeholders"]["threat_budget"]))
+			hp_grouped[chapter] = []
+		grouped[chapter].append(int(row["threat_budget_total"]))
+		hp_grouped[chapter].append(float(row["hp_multiplier"]))
 	var previous_peak := 0
+	var previous_hp := 0.0
 	var previous_chapter := ""
 	for chapter in order:
 		var budgets: Array = grouped[chapter]
@@ -57,9 +67,23 @@ func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 		if previous_peak > 0 and chapter != "final":
 			assert_lt(int(budgets[0]), previous_peak, chapter + " vs " + previous_chapter)
 		if chapter == "final":
-			assert_gt(int(budgets[0]), previous_peak)
+			assert_gte(int(budgets[0]), previous_peak)
+			assert_gt(float(hp_grouped[chapter][0]), previous_hp)
 		previous_peak = int(budgets[budgets.size() - 1])
+		var hp_row: Array = hp_grouped[chapter]
+		previous_hp = float(hp_row[hp_row.size() - 1])
 		previous_chapter = chapter
+
+
+func test_difficulty_table_keeps_the_two_open_points() -> void:
+	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
+	var ids: Array[String] = []
+	for item in difficulty["alignment_open"]:
+		ids.append(str(item["id"]))
+	assert_true(ids.has("hp_is_monotonic"))
+	assert_true(ids.has("half_lives_sits_on_star_boundary"))
+	assert_eq(int(difficulty["formula"]["first_clear_lives_remaining"]), 10)
+	assert_eq(str(difficulty["_owner"]), "数值策划")
 
 
 func test_rating_bands_use_twenty_lives() -> void:
@@ -164,24 +188,31 @@ func _map_problems(level: Dictionary) -> PackedStringArray:
 	return problems
 
 
-func _threat_problems(level: Dictionary, threats: Dictionary) -> PackedStringArray:
+func _threat_problems(level: Dictionary, threats: Dictionary, row: Dictionary) -> PackedStringArray:
 	var problems: PackedStringArray = []
-	var total := 0
-	for wave in level["waves"]:
+	var budgets: Array = row["wave_threat_budgets"]
+	var waves: Array = level["waves"]
+	if waves.size() != budgets.size():
+		problems.append("%s 波次数和难度表不一致" % str(level["id"]))
+		return problems
+	if str(level["difficulty_id"]) != str(level["id"]):
+		problems.append("%s 的难度行没有指向自己" % str(level["id"]))
+	for index in waves.size():
+		var wave: Dictionary = waves[index]
+		var total := 0
 		for spawn in wave["groups"]:
 			var enemy_id := str(spawn["enemy_id"])
 			if not threats.has(enemy_id):
 				problems.append("缺少敌人 " + enemy_id)
 			else:
 				total += int(spawn["count"]) * int(threats[enemy_id])
-	for boss in level["bosses"]:
-		var boss_id := str(boss["id"])
-		if not threats.has(boss_id):
-			problems.append("缺少首领 " + boss_id)
-		else:
-			total += int(threats[boss_id])
-	if total != int(level["placeholders"]["threat_budget"]):
-		problems.append("%s 威胁 %d 和预算不一致" % [str(level["id"]), total])
+		if total != int(budgets[index]):
+			problems.append(
+				(
+					"%s %s 威胁 %d 不是 %d"
+					% [str(level["id"]), str(wave["id"]), total, int(budgets[index])]
+				)
+			)
 	return problems
 
 
