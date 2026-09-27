@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "ch3_04",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 4,
+  "display_name": "历史与火焰",
+  "display_name_key": "level.ch3_04.name",
+  "kind": "boss",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "慧音和妹红作为首领。三张符卡分别藏路、烧一条路、让两条路一起烧。",
+  "player_feeling": "激烈，但符卡看得懂：路被藏起来、被点着、然后两边一起着。",
+  "teaches": [
+    "一张符卡改一条路的状态",
+    "这一关不能放慧音和妹红"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 320,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 15,
+  "design_notes": "首领草案，3 个阶段。本关不能放 char.keine 和 char.mokou。阶段 1：虚史「幻想乡传说」（spell.keine.legend_of_gensokyo），一条路被藏起，残影挤到另一条。阶段 2：不死「火鸟 -凤翼天翔-」（spell.mokou.phoenix_wings），一条路着火，走上去的残影移速 ×1.2（占位），掉血由战斗策划定。阶段 3：「凤凰再诞」（spell.mokou.phoenix_rebirth），两条路一起着火，只留下汇合前的窄口。转世「一条归桥」（spell.keine.modoribashi）留作慧音的可玩符卡，不占阶段。叙事是双首领决斗，和「角色已在 L1、L2 加入」叠在一起：平时能用，决斗关暂时不能用。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 280,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

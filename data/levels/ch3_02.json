@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "ch3_02",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 2,
+  "display_name": "两条避难路",
+  "display_name_key": "level.ch3_02.name",
+  "kind": "normal",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "妹红加入。两条路都有村民和残影，新旧敌人混在一起。",
+  "player_feeling": "练习顾此失彼。火可以守一条路，慧音去保另一边的人。",
+  "teaches": [
+    "两条避难路要同时看",
+    "妹红的火适合贴着一条路放",
+    "扑人残影会离开主路去追村民"
+  ],
+  "new_character_ids": [
+    "char.mokou"
+  ],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 380,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 10,
+  "design_notes": "魔理沙的包：提案前 4 波残影优先走向魔理沙附近的格子，第 5 波剧情揭晓后取消。吸引规则等战斗策划，这次不写成字段。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 165,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

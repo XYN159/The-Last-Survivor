@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "ch2_03",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 3,
+  "display_name": "钟楼之下",
+  "display_name_key": "level.ch2_03.name",
+  "kind": "normal",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "第二章最难的普通关。两个门同时来人，旧电器比前面多。",
+  "player_feeling": "手忙，但还打得动。挡门和破甲要同时用。",
+  "teaches": [
+    "两个入口都会施压",
+    "不能把所有人都堆在一个门",
+    "硬目标漏过会很痛"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 240,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "起始灵力故意不够把五个人同时放满，逼玩家选位置。回复规则仍未定。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 145,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

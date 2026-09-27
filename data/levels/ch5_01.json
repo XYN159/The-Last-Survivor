@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "ch5_01",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 1,
+  "display_name": "缝隙的入口",
+  "display_name_key": "level.ch5_01.name",
+  "kind": "normal",
+  "route_type": "moving",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "紫加入。遗忘之影很少，路线只在后半挪一次，而且挪得很短。",
+  "player_feeling": "比守矢首领关松。新东西一次只来一样：先是看不见的残影，路只轻轻动一下。",
+  "teaches": [
+    "有的残影需要特殊手段才打得准",
+    "路线会在战斗中改，但这一关只改一次",
+    "紫能把残影送回起点，路一变就用得上"
+  ],
+  "new_character_ids": [
+    "char.yukari"
+  ],
+  "new_enemy_ids": [
+    "remnant.forgotten_shade"
+  ],
+  "params": {
+    "starting_spirit_power": 480,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae",
+      "char.yukari"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 8,
+  "design_notes": "隐形的现形规则等战斗策划。若文不可玩，需要另一套现形（提案：紫的隙间照出她们，或被打中一次后现形）。路线移动正式做图时用 path_shifts，这次只在备注里约定：全章 L1 只移动一次，避免比第四章首领还难。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 200,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

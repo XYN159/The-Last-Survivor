@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "ch4_01",
+  "status": "stub",
+  "chapter_id": "ch4",
+  "index_in_chapter": 1,
+  "display_name": "山腰的风",
+  "display_name_key": "level.ch4_01.name",
+  "kind": "normal",
+  "route_type": "flying",
+  "guard_point": {
+    "id": "guard.moriya_shrine",
+    "display_name": "守矢神社"
+  },
+  "summary": "早苗加入。地面一条路，天上一条短的飞行路，飞屑只来很少。",
+  "player_feeling": "比第三章首领关松。先看懂「地上的人打不到天上」。",
+  "teaches": [
+    "飞行残影不走地面路线",
+    "覆盖两条路的格子往往更远，射程不够就打空",
+    "早苗的范围用来补飞行路"
+  ],
+  "new_character_ids": [
+    "char.sanae"
+  ],
+  "new_enemy_ids": [
+    "remnant.flying_scrap"
+  ],
+  "params": {
+    "starting_spirit_power": 400,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 8,
+  "design_notes": "飞行路线正式做图时，path.kind 用 flying，允许经过障碍格。这次没有格子。好位置要做成取舍：贴地路打得着地面、够不着飞行；站在两路之间的格子两头都沾一点，但雾或射程短时会两头落空。射命丸文是否可玩仍等制作人。当前反空课由早苗承担。若文可玩，建议下一关加入，id 用 char.aya。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 160,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

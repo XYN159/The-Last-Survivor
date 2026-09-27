@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "modifiers": [],
+  "bosses": [],
+  "id": "prologue_02",
+  "status": "complete",
+  "chapter_id": "prologue",
+  "index_in_chapter": 2,
+  "display_name": "直路的尽头",
+  "display_name_key": "level.prologue_02.name",
+  "kind": "tutorial",
+  "route_type": "curve",
+  "guard_point": {
+    "id": "guard.hakurei_offering_box",
+    "display_name": "赛钱箱"
+  },
+  "summary": "魔理沙加入。先拐一下，再走一条长直路，让直线穿透打得值。",
+  "player_feeling": "痛快。看见一列残影被一起打穿。",
+  "teaches": [
+    "魔理沙的攻击沿直线穿透",
+    "长直路的尽头比拐角更适合她",
+    "灵梦仍负责拐角和漏过来的零散残影"
+  ],
+  "new_character_ids": [
+    "char.marisa"
+  ],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 140,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "grid": [
+      "#P#####",
+      "#P....#",
+      "#P.####",
+      "#PPP..#",
+      "##.P..#",
+      "###P..#",
+      "###P..#",
+      "###P..#",
+      "###P..#",
+      "#..P..#",
+      "#..P.##",
+      "###P###"
+    ],
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 1,
+        "row": 0
+      }
+    ],
+    "guard_cell": {
+      "col": 3,
+      "row": 11
+    },
+    "paths": [
+      {
+        "id": "path.main",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 1,
+            "row": 0
+          },
+          {
+            "col": 1,
+            "row": 1
+          },
+          {
+            "col": 1,
+            "row": 2
+          },
+          {
+            "col": 1,
+            "row": 3
+          },
+          {
+            "col": 2,
+            "row": 3
+          },
+          {
+            "col": 3,
+            "row": 3
+          },
+          {
+            "col": 3,
+            "row": 4
+          },
+          {
+            "col": 3,
+            "row": 5
+          },
+          {
+            "col": 3,
+            "row": 6
+          },
+          {
+            "col": 3,
+            "row": 7
+          },
+          {
+            "col": 3,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 10
+          },
+          {
+            "col": 3,
+            "row": 11
+          }
+        ]
+      }
+    ],
+    "good_spots": [
+      {
+        "id": "spot.corner",
+        "col": 4,
+        "row": 3,
+        "label": "拐角",
+        "why": "残影从横段拐进直路时会挤在这一格旁边。灵梦放这里，能打到转弯的那一小团。"
+      },
+      {
+        "id": "spot.straight_start",
+        "col": 2,
+        "row": 4,
+        "label": "直路起点",
+        "why": "长直路刚开始的左侧。能罩住往下走的一列，但打不到上面的横段。"
+      },
+      {
+        "id": "spot.straight_mid",
+        "col": 4,
+        "row": 6,
+        "label": "直路中段",
+        "why": "贴着最长的那一列。适合补第二座灵梦，让直路上一直有人打。"
+      },
+      {
+        "id": "spot.straight_end",
+        "col": 2,
+        "row": 10,
+        "label": "直路尽头",
+        "why": "长直路靠近赛钱箱的一侧。魔理沙放这里，朝上能贯穿这一整列。这是这一关要教会的那一格。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "delay_sec": 1.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.4,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ],
+      "note": "魔理沙从这一关开始就能放。让残影在直路上排成一列。"
+    },
+    {
+      "id": "w02",
+      "delay_sec": 7.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.3,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "delay_sec": 7.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 36,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

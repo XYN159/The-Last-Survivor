@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "modifiers": [],
+  "bosses": [],
+  "id": "prologue_03",
+  "status": "complete",
+  "chapter_id": "prologue",
+  "index_in_chapter": 3,
+  "display_name": "弯过院子",
+  "display_name_key": "level.prologue_03.name",
+  "kind": "tutorial",
+  "route_type": "curve",
+  "guard_point": {
+    "id": "guard.hakurei_offering_box",
+    "display_name": "赛钱箱"
+  },
+  "summary": "用灵梦和魔理沙守一条弯路。这是序章最难的一关，但仍然没有首领。",
+  "player_feeling": "要自己选位置了。拐角和直路不是同一格的事。",
+  "teaches": [
+    "弯路上，拐角适合范围和单体，长直段适合穿透",
+    "守住全部波次才算过关",
+    "漏过几只也不会立刻结束，生命还有富余"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 130,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "grid": [
+      "##P####",
+      "#.P...#",
+      "#.P####",
+      "#.PPPP#",
+      "#...#P#",
+      "#...#P.",
+      "###.#P#",
+      "#..PPP#",
+      "#..P#.#",
+      "#..P..#",
+      "##.P..#",
+      "###P###"
+    ],
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 2,
+        "row": 0
+      }
+    ],
+    "guard_cell": {
+      "col": 3,
+      "row": 11
+    },
+    "paths": [
+      {
+        "id": "path.main",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 2,
+            "row": 0
+          },
+          {
+            "col": 2,
+            "row": 1
+          },
+          {
+            "col": 2,
+            "row": 2
+          },
+          {
+            "col": 2,
+            "row": 3
+          },
+          {
+            "col": 3,
+            "row": 3
+          },
+          {
+            "col": 4,
+            "row": 3
+          },
+          {
+            "col": 5,
+            "row": 3
+          },
+          {
+            "col": 5,
+            "row": 4
+          },
+          {
+            "col": 5,
+            "row": 5
+          },
+          {
+            "col": 5,
+            "row": 6
+          },
+          {
+            "col": 5,
+            "row": 7
+          },
+          {
+            "col": 4,
+            "row": 7
+          },
+          {
+            "col": 3,
+            "row": 7
+          },
+          {
+            "col": 3,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 10
+          },
+          {
+            "col": 3,
+            "row": 11
+          }
+        ]
+      }
+    ],
+    "good_spots": [
+      {
+        "id": "spot.opening",
+        "col": 1,
+        "row": 1,
+        "label": "第一段直路",
+        "why": "贴着入口下来的短直路。能先刮掉第一批，但右边那一列完全打不到。"
+      },
+      {
+        "id": "spot.right_column",
+        "col": 6,
+        "row": 5,
+        "label": "右侧长列",
+        "why": "贴着右边从上走到下的那一列，是这张图最长的直段。魔理沙放这里最值。"
+      },
+      {
+        "id": "spot.second_corner",
+        "col": 2,
+        "row": 7,
+        "label": "第二个拐角",
+        "why": "残影从右边拐回中间时会挤在这里。灵梦放拐角，能打到转弯的一团。"
+      },
+      {
+        "id": "spot.final_straight",
+        "col": 4,
+        "row": 9,
+        "label": "最后一段",
+        "why": "汇回中间之后、赛钱箱之前。用来补漏，不适合作为唯一的输出点，因为上面的弯道它够不着。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "delay_sec": 1.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.3,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ],
+      "note": "序章最密的一关。没有新角色，要自己把两个人放到弯路上。"
+    },
+    {
+      "id": "w02",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.25,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.05,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 7,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 52,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

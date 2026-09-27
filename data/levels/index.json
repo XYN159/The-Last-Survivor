@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "game_title": "东方守幻录",
+  "unlock_rule": "sequential_clear",
+  "stars_do_not_grant_power": true,
+  "note": "按 levels 数组的顺序解锁。通关上一关才打开下一关。星级不解锁关卡，也不增加强度。",
+  "chapters": [
+    {
+      "id": "prologue",
+      "display_name": "序章 神社的裂缝",
+      "location": "博丽神社",
+      "guard_point_name": "赛钱箱",
+      "level_ids": [
+        "prologue_01",
+        "prologue_02",
+        "prologue_03"
+      ]
+    },
+    {
+      "id": "ch1",
+      "display_name": "第一章 雾之湖",
+      "location": "雾之湖",
+      "guard_point_name": "冰雕青蛙",
+      "level_ids": [
+        "ch1_01",
+        "ch1_02",
+        "ch1_03",
+        "ch1_04"
+      ]
+    },
+    {
+      "id": "ch2",
+      "display_name": "第二章 红魔馆",
+      "location": "红魔馆",
+      "guard_point_name": "钟楼大钟",
+      "level_ids": [
+        "ch2_01",
+        "ch2_02",
+        "ch2_03",
+        "ch2_04"
+      ]
+    },
+    {
+      "id": "ch3",
+      "display_name": "第三章 人间之里",
+      "location": "人间之里",
+      "guard_point_name": "寺子屋",
+      "level_ids": [
+        "ch3_01",
+        "ch3_02",
+        "ch3_03",
+        "ch3_04"
+      ]
+    },
+    {
+      "id": "ch4",
+      "display_name": "第四章 妖怪之山",
+      "location": "妖怪之山",
+      "guard_point_name": "守矢神社",
+      "level_ids": [
+        "ch4_01",
+        "ch4_02",
+        "ch4_03",
+        "ch4_04"
+      ]
+    },
+    {
+      "id": "ch5",
+      "display_name": "第五章 结界的尽头",
+      "location": "结界的缝隙",
+      "guard_point_name": "结界的结点",
+      "level_ids": [
+        "ch5_01",
+        "ch5_02",
+        "ch5_03",
+        "ch5_04"
+      ]
+    },
+    {
+      "id": "final",
+      "display_name": "终章 被遗忘者",
+      "location": "缝隙深处",
+      "guard_point_name": "缝隙里的鸟居",
+      "level_ids": [
+        "final_01"
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "id": "prologue_01",
+      "file": "prologue_01.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": null
+    },
+    {
+      "id": "prologue_02",
+      "file": "prologue_02.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": "prologue_01"
+    },
+    {
+      "id": "prologue_03",
+      "file": "prologue_03.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": "prologue_02"
+    },
+    {
+      "id": "ch1_01",
+      "file": "ch1_01.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "prologue_03"
+    },
+    {
+      "id": "ch1_02",
+      "file": "ch1_02.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_01"
+    },
+    {
+      "id": "ch1_03",
+      "file": "ch1_03.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_02"
+    },
+    {
+      "id": "ch1_04",
+      "file": "ch1_04.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_03"
+    },
+    {
+      "id": "ch2_01",
+      "file": "ch2_01.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch1_04"
+    },
+    {
+      "id": "ch2_02",
+      "file": "ch2_02.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_01"
+    },
+    {
+      "id": "ch2_03",
+      "file": "ch2_03.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_02"
+    },
+    {
+      "id": "ch2_04",
+      "file": "ch2_04.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_03"
+    },
+    {
+      "id": "ch3_01",
+      "file": "ch3_01.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch2_04"
+    },
+    {
+      "id": "ch3_02",
+      "file": "ch3_02.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_01"
+    },
+    {
+      "id": "ch3_03",
+      "file": "ch3_03.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_02"
+    },
+    {
+      "id": "ch3_04",
+      "file": "ch3_04.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_03"
+    },
+    {
+      "id": "ch4_01",
+      "file": "ch4_01.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch3_04"
+    },
+    {
+      "id": "ch4_02",
+      "file": "ch4_02.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_01"
+    },
+    {
+      "id": "ch4_03",
+      "file": "ch4_03.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_02"
+    },
+    {
+      "id": "ch4_04",
+      "file": "ch4_04.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_03"
+    },
+    {
+      "id": "ch5_01",
+      "file": "ch5_01.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch4_04"
+    },
+    {
+      "id": "ch5_02",
+      "file": "ch5_02.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_01"
+    },
+    {
+      "id": "ch5_03",
+      "file": "ch5_03.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_02"
+    },
+    {
+      "id": "ch5_04",
+      "file": "ch5_04.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_03"
+    },
+    {
+      "id": "final_01",
+      "file": "final_01.json",
+      "status": "stub",
+      "chapter_id": "final",
+      "unlock_after": "ch5_04"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "ch5_02",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 2,
+  "display_name": "会移动的路",
+  "display_name_key": "level.ch5_02.name",
+  "kind": "normal",
+  "route_type": "moving",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "堆积体会裂开。路线移动两次。遗忘之影和前面的敌人混在一起。",
+  "player_feeling": "练习。裂开和改道叠在一起，但每次移动都有预告的空档。",
+  "teaches": [
+    "堆积体倒下会裂成小残影",
+    "路线移动前要留人在新路旁边"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "remnant.pile"
+  ],
+  "params": {
+    "starting_spirit_power": 460,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae",
+      "char.yukari"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 10,
+  "design_notes": "分裂出的孩子用 remnant.faded_toy，数量见敌人图鉴的 splits_into。威胁是否含孩子等数值策划。预告空档的秒数等战斗策划，关卡只要求「不要突然改」。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 270,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

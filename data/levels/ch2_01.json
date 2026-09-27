@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "ch2_01",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 1,
+  "display_name": "红魔馆正门",
+  "display_name_key": "level.ch2_01.name",
+  "kind": "normal",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "美铃加入。正门和侧门都有路，侧门只漏几只，先学会把她放在门口挡旧电器。",
+  "player_feeling": "比琪露诺那关松。新东西是「挡得住」，不是更凶的一波。",
+  "teaches": [
+    "美铃能挡住路上的残影",
+    "旧电器又慢又硬，先挡再打",
+    "第二个入口这关几乎不施压"
+  ],
+  "new_character_ids": [
+    "char.meiling"
+  ],
+  "new_enemy_ids": [
+    "remnant.old_appliance"
+  ],
+  "params": {
+    "starting_spirit_power": 220,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 8,
+  "design_notes": "双入口从这里开始，但侧门波次要很少，避免和挡门课抢注意力。美铃的符卡决斗不做成完整首领关：她在本关后段加入，下一关起可以放置。若制作人希望美铃也有首领阶段，用图鉴里的 boss.meiling，不要新造 id。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 80,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

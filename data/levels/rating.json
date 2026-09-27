@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "max_lives": 20,
+  "defeat_lives": 0,
+  "stars_do_not_grant_power": true,
+  "stars_grant": [
+    "cosmetics",
+    "codex_stories"
+  ],
+  "hard_mode": "later",
+  "bands": [
+    {
+      "stars": 1,
+      "lives_min": 1,
+      "lives_max": 9
+    },
+    {
+      "stars": 2,
+      "lives_min": 10,
+      "lives_max": 17
+    },
+    {
+      "stars": 3,
+      "lives_min": 18,
+      "lives_max": 20
+    }
+  ],
+  "leak": {
+    "_placeholder": true,
+    "lives_cost_per_remnant": 1,
+    "note": "漏过一只残影扣 1 命，是占位。精英和首领漏过扣多少，等数值策划。扣到 0 即失败，没有星。星级不提供任何强度。"
+  }
+}

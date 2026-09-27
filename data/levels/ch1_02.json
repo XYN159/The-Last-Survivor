@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "modifiers": [
+    {
+      "id": "mist",
+      "display_name": "浓雾",
+      "effects": [
+        {
+          "id": "attack_range_multiplier",
+          "value": 0.75,
+          "_placeholder": true,
+          "note": "雾比上一关浓。0.75 是占位倍率。"
+        }
+      ]
+    }
+  ],
+  "bosses": [],
+  "id": "ch1_02",
+  "status": "complete",
+  "chapter_id": "ch1",
+  "index_in_chapter": 2,
+  "display_name": "雾里的弯道",
+  "display_name_key": "level.ch1_02.name",
+  "kind": "normal",
+  "route_type": "curve",
+  "guard_point": {
+    "id": "guard.misty_lake_frogs",
+    "display_name": "冰雕青蛙"
+  },
+  "summary": "没有新角色。弯路更长，雾更浓，两种残影混在一起。",
+  "player_feeling": "练习。规则没变，但要自己把减速放到长直段上。",
+  "teaches": [
+    "旧残影和新残影会同一波出现",
+    "雾更浓时，好位置更要贴路",
+    "长弯道要分段放人，不能只守入口"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 160,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "grid": [
+      "#P#####",
+      "#P....#",
+      "#P####.",
+      "#PPPPP#",
+      "#..#.P#",
+      "#....P#",
+      "#....P#",
+      "#....P.",
+      "#.PPPP#",
+      "#.P...#",
+      "#.P...#",
+      "##P####"
+    ],
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 1,
+        "row": 0
+      }
+    ],
+    "guard_cell": {
+      "col": 2,
+      "row": 11
+    },
+    "paths": [
+      {
+        "id": "path.main",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 1,
+            "row": 0
+          },
+          {
+            "col": 1,
+            "row": 1
+          },
+          {
+            "col": 1,
+            "row": 2
+          },
+          {
+            "col": 1,
+            "row": 3
+          },
+          {
+            "col": 2,
+            "row": 3
+          },
+          {
+            "col": 3,
+            "row": 3
+          },
+          {
+            "col": 4,
+            "row": 3
+          },
+          {
+            "col": 5,
+            "row": 3
+          },
+          {
+            "col": 5,
+            "row": 4
+          },
+          {
+            "col": 5,
+            "row": 5
+          },
+          {
+            "col": 5,
+            "row": 6
+          },
+          {
+            "col": 5,
+            "row": 7
+          },
+          {
+            "col": 5,
+            "row": 8
+          },
+          {
+            "col": 4,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 8
+          },
+          {
+            "col": 2,
+            "row": 8
+          },
+          {
+            "col": 2,
+            "row": 9
+          },
+          {
+            "col": 2,
+            "row": 10
+          },
+          {
+            "col": 2,
+            "row": 11
+          }
+        ]
+      }
+    ],
+    "good_spots": [
+      {
+        "id": "spot.upper",
+        "col": 2,
+        "row": 1,
+        "label": "上段直路",
+        "why": "雾比上一关更浓，这一格仍然贴着入口直路，打得到刚下来的残影。"
+      },
+      {
+        "id": "spot.right_top",
+        "col": 4,
+        "row": 4,
+        "label": "右列起点",
+        "why": "残影拐上右边长列的第一格。减速放这里，后面整列都会变慢。"
+      },
+      {
+        "id": "spot.right_mid",
+        "col": 4,
+        "row": 6,
+        "label": "右列中段",
+        "why": "贴着这张图最长的直段。魔理沙打这一列，琪露诺不必挪下来。"
+      },
+      {
+        "id": "spot.before_guard",
+        "col": 3,
+        "row": 10,
+        "label": "青蛙前",
+        "why": "最后一段很短。用来补已经漏过弯道的疾走玩具，不当主阵地。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "delay_sec": 1.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.3,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.15,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.5
+        }
+      ],
+      "note": "褪色玩具和疾走玩具开始混在同一波里。"
+    },
+    {
+      "id": "w04",
+      "delay_sec": 5.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.2
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 5.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.05,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.0
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.0
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.6
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.6
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 70,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

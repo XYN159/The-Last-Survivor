@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "ch5_03",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 3,
+  "display_name": "结点之前",
+  "display_name_key": "level.ch5_03.name",
+  "kind": "normal",
+  "route_type": "moving",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "第五章最难的普通关。隐形、分裂、移动路线叠在一起，结界之渣开始成群出现。",
+  "player_feeling": "综合考试。没有新角色，要把前面的手段一起用。",
+  "teaches": [
+    "结界之渣会让旁边的空地暂时不能放人",
+    "好位置可能在战斗中失效，要有备用格"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "remnant.barrier_dreg"
+  ],
+  "params": {
+    "starting_spirit_power": 400,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae",
+      "char.yukari"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "结界之渣褪色格子的范围等战斗策划。关卡要求：好位置旁边留一格备用空地，褪色后还有地方放。这一关比 L1、L2 难，仍然要低于第五章首领。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 340,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

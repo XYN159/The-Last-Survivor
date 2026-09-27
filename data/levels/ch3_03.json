@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "ch3_03",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 3,
+  "display_name": "村里的试炼",
+  "display_name_key": "level.ch3_03.name",
+  "kind": "normal",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "第三章最难的普通关。两条路和村民一起挨打，没有新角色。",
+  "player_feeling": "忙，而且会心疼漏掉的村民。仍然应该守得住。",
+  "teaches": [
+    "保护目标和守护点要一起算",
+    "汇合前的空档最容易漏人"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 300,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "起始灵力不够把所有人放满。村民褪色上限仍用上一关的占位，等制作人定是失败还是只影响星级。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 210,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

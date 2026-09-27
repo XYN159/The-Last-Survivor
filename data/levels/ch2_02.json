@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "ch2_02",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 2,
+  "display_name": "馆内长廊",
+  "display_name_key": "level.ch2_02.name",
+  "kind": "normal",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "咲夜加入，用来打穿旧电器的护甲。两个入口都开始有敌人，新旧残影混在一起。",
+  "player_feeling": "练习。知道该挡谁、该让咲夜打谁。",
+  "teaches": [
+    "咲夜打单个硬目标",
+    "旧电器和前面的残影混波",
+    "馆内路线以后可以在中途被拉长"
+  ],
+  "new_character_ids": [
+    "char.sakuya"
+  ],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 320,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 10,
+  "design_notes": "叙事要求馆内比外面大，某波之后走廊被拉长。正式做图时加 path 的中途改道，这次草案只有这句话。拉长的具体格子等战斗和关卡一起定，不提前写死。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 110,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "_placeholder": true,
+  "move_speed_unit": "cells_per_second",
+  "note": "图鉴里每一个 threat、hp、move_speed、armor 都是占位。已完成关卡：预算 = 各波 count × threat，再加 bosses 里每个首领的 threat 一次。草案关：threat_budget 是整关占位，不要把图鉴里的首领威胁再加一次。",
+  "entries": [
+    {
+      "id": "remnant.faded_toy",
+      "display_name": "褪色玩具",
+      "category": "remnant",
+      "proposal": false,
+      "introduced_in": "prologue_01",
+      "threat": 1,
+      "stats": {
+        "hp": 30,
+        "move_speed": 0.9,
+        "armor": 0
+      },
+      "tags": [
+        "small",
+        "ground"
+      ],
+      "note": "叙事种类。又小又成群。move_speed 的单位提案是每秒走几格。全部 stats 和 threat 都是占位。"
+    },
+    {
+      "id": "remnant.swift_toy",
+      "display_name": "疾走玩具",
+      "category": "remnant",
+      "proposal": true,
+      "introduced_in": "ch1_01",
+      "threat": 2,
+      "stats": {
+        "hp": 24,
+        "move_speed": 1.6,
+        "armor": 0
+      },
+      "tags": [
+        "fast",
+        "ground"
+      ],
+      "note": "提案。叙事里的褪色玩具已经又小又快。这里再拆一个更快的 id，专门给减速教学。若战斗策划认为不需要新 id，可以并回褪色玩具，只改速度。"
+    },
+    {
+      "id": "remnant.old_appliance",
+      "display_name": "旧电器",
+      "category": "remnant",
+      "proposal": false,
+      "introduced_in": "ch2_01",
+      "threat": 4,
+      "stats": {
+        "hp": 140,
+        "move_speed": 0.55,
+        "armor": 8
+      },
+      "tags": [
+        "armored",
+        "ground"
+      ],
+      "note": "叙事种类。慢、硬。护甲数值是占位。"
+    },
+    {
+      "id": "remnant.village_seeker",
+      "display_name": "扑人残影",
+      "category": "remnant",
+      "proposal": true,
+      "introduced_in": "ch3_01",
+      "threat": 2,
+      "stats": {
+        "hp": 36,
+        "move_speed": 1.15,
+        "armor": 0
+      },
+      "tags": [
+        "targets_escort",
+        "ground"
+      ],
+      "note": "提案。叙事没有单独起名，只说残影会扑向村民。若战斗策划愿意，可以做成褪色玩具的行为标签，而不是新 id。"
+    },
+    {
+      "id": "remnant.flying_scrap",
+      "display_name": "飞屑",
+      "category": "remnant",
+      "proposal": true,
+      "introduced_in": "ch4_01",
+      "threat": 3,
+      "stats": {
+        "hp": 40,
+        "move_speed": 1.25,
+        "armor": 0
+      },
+      "tags": [
+        "flying"
+      ],
+      "note": "提案。叙事五种残影里没有单独的飞行种。制作人要求第四章教反空，所以先给一个飞行 id。"
+    },
+    {
+      "id": "remnant.forgotten_shade",
+      "display_name": "遗忘之影",
+      "category": "remnant",
+      "proposal": false,
+      "introduced_in": "ch5_01",
+      "threat": 3,
+      "stats": {
+        "hp": 45,
+        "move_speed": 1.05,
+        "armor": 0
+      },
+      "tags": [
+        "stealth",
+        "ground"
+      ],
+      "note": "叙事种类，半透明。叙事初稿把大量出现放在第四章，本框架按制作人的「第五章隐形」放到第五章。见总览里的待确认项。"
+    },
+    {
+      "id": "remnant.pile",
+      "display_name": "堆积体",
+      "category": "remnant",
+      "proposal": false,
+      "introduced_in": "ch5_02",
+      "threat": 6,
+      "stats": {
+        "hp": 220,
+        "move_speed": 0.6,
+        "armor": 2
+      },
+      "tags": [
+        "elite",
+        "splits"
+      ],
+      "splits_into": {
+        "enemy_id": "remnant.faded_toy",
+        "count": 2
+      },
+      "note": "叙事种类。会分裂。当前 threat 只算本体，分裂出来的小残影另算不加进这只的威胁。是否改成含孩子，等数值策划。"
+    },
+    {
+      "id": "remnant.barrier_dreg",
+      "display_name": "结界之渣",
+      "category": "remnant",
+      "proposal": false,
+      "introduced_in": "ch5_03",
+      "threat": 5,
+      "stats": {
+        "hp": 90,
+        "move_speed": 1.0,
+        "armor": 1
+      },
+      "tags": [
+        "elite",
+        "fades_cells"
+      ],
+      "note": "叙事种类。靠近时周围可放置格暂时褪色。具体格数等战斗策划。第五章 L3 才成群出现。"
+    },
+    {
+      "id": "boss.cirno",
+      "display_name": "琪露诺",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch1_04",
+      "threat": 15,
+      "stats": {
+        "hp": 600,
+        "move_speed": 0.7,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "第一章首领。威胁和生命都是占位。已完成关卡的预算包含这一次，不要在波次里再加一只。"
+    },
+    {
+      "id": "boss.sakuya",
+      "display_name": "咲夜",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch2_04",
+      "threat": 18,
+      "stats": {
+        "hp": 800,
+        "move_speed": 0.75,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "草案首领。第二章首领关还没做地图，这个威胁不要加进 stub 的预算里。stub 预算已经是整关占位。"
+    },
+    {
+      "id": "boss.keine",
+      "display_name": "慧音",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch3_04",
+      "threat": 16,
+      "stats": {
+        "hp": 700,
+        "move_speed": 0.65,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "草案首领。和妹红同关。stub 预算未拆开。"
+    },
+    {
+      "id": "boss.mokou",
+      "display_name": "妹红",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch3_04",
+      "threat": 18,
+      "stats": {
+        "hp": 750,
+        "move_speed": 0.7,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "草案首领。stub 预算未拆开。"
+    },
+    {
+      "id": "boss.sanae",
+      "display_name": "早苗",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch4_04",
+      "threat": 20,
+      "stats": {
+        "hp": 900,
+        "move_speed": 0.8,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "草案首领。stub 预算未拆开。"
+    },
+    {
+      "id": "boss.yukari",
+      "display_name": "紫",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "ch5_04",
+      "threat": 24,
+      "stats": {
+        "hp": 1100,
+        "move_speed": 0.7,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "草案首领。stub 预算未拆开。"
+    },
+    {
+      "id": "boss.wasure",
+      "display_name": "忘",
+      "category": "boss",
+      "proposal": false,
+      "introduced_in": "final_01",
+      "threat": 30,
+      "stats": {
+        "hp": 1500,
+        "move_speed": 0.6,
+        "armor": 0
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "终章首领。正式名未定，id 用叙事稿的 char.wasure / boss.wasure。stub 预算未拆开。"
+    },
+    {
+      "id": "boss.meiling",
+      "display_name": "美铃",
+      "category": "boss",
+      "proposal": true,
+      "introduced_in": null,
+      "threat": 16,
+      "stats": {
+        "hp": 700,
+        "move_speed": 0.6,
+        "armor": 4
+      },
+      "tags": [
+        "boss"
+      ],
+      "note": "提案 id。叙事有美铃决斗，但本框架的第二章首领关暂定只有咲夜。若制作人要美铃也做首领阶段，用这个 id，不要新造名字。"
+    }
+  ]
+}

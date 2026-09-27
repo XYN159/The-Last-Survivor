@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "ch4_03",
+  "status": "stub",
+  "chapter_id": "ch4",
+  "index_in_chapter": 3,
+  "display_name": "山顶试炼",
+  "display_name_key": "level.ch4_03.name",
+  "kind": "normal",
+  "route_type": "flying",
+  "guard_point": {
+    "id": "guard.moriya_shrine",
+    "display_name": "守矢神社"
+  },
+  "summary": "第四章最难的普通关。飞行路有两段，地面路也不空。",
+  "player_feeling": "忙着抬头。漏掉的飞屑会直接摸到神社。",
+  "teaches": [
+    "反空要占格子，地面也会因此变空",
+    "射程和位置是同一道题"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 340,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "两个飞行入口可以在正式地图里做成两个 flying path。威胁预算已按「比上一关更难、比首领关更轻」留好。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 280,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

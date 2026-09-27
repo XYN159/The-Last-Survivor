@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "ch5_04",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 4,
+  "display_name": "紫的神隐",
+  "display_name_key": "level.ch5_04.name",
+  "kind": "boss",
+  "route_type": "moving",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "紫作为首领。神隐把两段路对调，四重结界再封掉四格空地。",
+  "player_feeling": "最难的普通章首领。路和可放的格子一起变，但每次只变一件事。",
+  "teaches": [
+    "符卡可以交换路线",
+    "符卡可以把空地临时变成障碍",
+    "这一关不能放紫"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 440,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling",
+      "char.sakuya",
+      "char.keine",
+      "char.mokou",
+      "char.sanae"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 15,
+  "design_notes": "首领草案，2 个阶段。本关不能放 char.yukari。阶段 1：罔两「八云紫的神隐」（spell.yukari.spiriting_away），两段路线对调，原来的好位置对着另一条路。阶段 2：境符「四重结界」（spell.yukari.quadruple_barrier），四格空地变成障碍，路线绕开它们。战斗侧的「把塔换位置」和关卡侧的「把路对调」可以同时存在，等战斗策划决定做哪一层，避免两个效果抢同一张牌。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 430,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

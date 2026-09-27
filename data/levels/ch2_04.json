@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "ch2_04",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 4,
+  "display_name": "女仆长的时间",
+  "display_name_key": "level.ch2_04.name",
+  "kind": "boss",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "咲夜作为首领。两张符卡改地图：飞刀把走廊拉直，停时之后把一段路拉长。",
+  "player_feeling": "赶，但看得到路在变。美铃留在玩家这边挡门。",
+  "teaches": [
+    "符卡会改路线形状",
+    "停时是战斗效果，拉长路是关卡效果"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 260,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno",
+      "char.meiling"
+    ]
+  },
+  "modifiers": [],
+  "bosses": [],
+  "wave_count": 15,
+  "design_notes": "首领草案，2 个阶段，本关不能放咲夜。阶段 1：幻符「杀人玩偶」（spell.sakuya.killing_doll），一条走廊被飞刀削成更长的直路。阶段 2：幻世「世界」（spell.sakuya.the_world），残影短暂停住；时间恢复后，叙事里的「馆内被拉长」落成插入的新路线格。美铃的彩符「彩光乱舞」「极彩台风」留作她的可玩符卡，不占首领阶段。这和叙事「先美铃、后咲夜两场决斗」不一致，要制作人定。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 210,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "modifiers": [
+    {
+      "id": "mist",
+      "display_name": "浓雾",
+      "effects": [
+        {
+          "id": "attack_range_multiplier",
+          "value": 0.65,
+          "_placeholder": true,
+          "note": "这一章最浓的雾。0.65 是占位倍率。"
+        }
+      ]
+    }
+  ],
+  "bosses": [],
+  "id": "ch1_03",
+  "status": "complete",
+  "chapter_id": "ch1",
+  "index_in_chapter": 3,
+  "display_name": "分叉的湖岸",
+  "display_name_key": "level.ch1_03.name",
+  "kind": "normal",
+  "route_type": "fork_merge",
+  "guard_point": {
+    "id": "guard.misty_lake_frogs",
+    "display_name": "冰雕青蛙"
+  },
+  "summary": "第一章最难的普通关。一条路分成左右两股再汇合，雾也最浓。",
+  "player_feeling": "两边不能只守一边。汇合点是用来补漏的，不是用来偷懒的。",
+  "teaches": [
+    "分叉前的格子能打到所有残影",
+    "分叉中间有障碍时，一座角色打不到两边",
+    "汇合后可以补漏，但不能代替两边的人"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 140,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa",
+      "char.cirno"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "grid": [
+      "###P###",
+      "#..P..#",
+      "#PPPPP#",
+      "#P.#.P#",
+      "#P.#.P#",
+      "#P.#.P#",
+      "#P.#.P#",
+      "#P.#.P#",
+      "#PPPPP#",
+      "#..P..#",
+      "#..P..#",
+      "###P###"
+    ],
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 3,
+        "row": 0
+      }
+    ],
+    "guard_cell": {
+      "col": 3,
+      "row": 11
+    },
+    "paths": [
+      {
+        "id": "path.left",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 3,
+            "row": 0
+          },
+          {
+            "col": 3,
+            "row": 1
+          },
+          {
+            "col": 3,
+            "row": 2
+          },
+          {
+            "col": 2,
+            "row": 2
+          },
+          {
+            "col": 1,
+            "row": 2
+          },
+          {
+            "col": 1,
+            "row": 3
+          },
+          {
+            "col": 1,
+            "row": 4
+          },
+          {
+            "col": 1,
+            "row": 5
+          },
+          {
+            "col": 1,
+            "row": 6
+          },
+          {
+            "col": 1,
+            "row": 7
+          },
+          {
+            "col": 1,
+            "row": 8
+          },
+          {
+            "col": 2,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 10
+          },
+          {
+            "col": 3,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "id": "path.right",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 3,
+            "row": 0
+          },
+          {
+            "col": 3,
+            "row": 1
+          },
+          {
+            "col": 3,
+            "row": 2
+          },
+          {
+            "col": 4,
+            "row": 2
+          },
+          {
+            "col": 5,
+            "row": 2
+          },
+          {
+            "col": 5,
+            "row": 3
+          },
+          {
+            "col": 5,
+            "row": 4
+          },
+          {
+            "col": 5,
+            "row": 5
+          },
+          {
+            "col": 5,
+            "row": 6
+          },
+          {
+            "col": 5,
+            "row": 7
+          },
+          {
+            "col": 5,
+            "row": 8
+          },
+          {
+            "col": 4,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 8
+          },
+          {
+            "col": 3,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 10
+          },
+          {
+            "col": 3,
+            "row": 11
+          }
+        ]
+      }
+    ],
+    "good_spots": [
+      {
+        "id": "spot.before_fork",
+        "col": 2,
+        "row": 1,
+        "label": "分叉之前",
+        "why": "左右还没分开。放在这里的角色打得到每一只残影。雾很浓，所以必须贴着这格，不能站到更外面。"
+      },
+      {
+        "id": "spot.left_only",
+        "col": 2,
+        "row": 4,
+        "label": "只贴左路",
+        "why": "中间是障碍，这一格打不到右路。左路要有自己的人。"
+      },
+      {
+        "id": "spot.right_only",
+        "col": 4,
+        "row": 4,
+        "label": "只贴右路",
+        "why": "和左路那格对称，只覆盖右路。两边都空着，就会有一侧直接漏到汇合点。"
+      },
+      {
+        "id": "spot.after_merge",
+        "col": 4,
+        "row": 9,
+        "label": "汇合之后",
+        "why": "两路已经并回一条。这里一个人能补两边漏下来的残影，是这张图后半的主阵地。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "delay_sec": 1.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        }
+      ],
+      "note": "先只走左路，让玩家看见分叉。"
+    },
+    {
+      "id": "w02",
+      "delay_sec": 6.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.15,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        }
+      ],
+      "note": "下一波改走右路。"
+    },
+    {
+      "id": "w03",
+      "delay_sec": 5.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 1.2
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "delay_sec": 5.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 3,
+          "interval_sec": 1.05,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 1.2
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0.8
+        }
+      ],
+      "note": "玩具走左路，疾走玩具走右路。"
+    },
+    {
+      "id": "w06",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0.6
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0.6
+        }
+      ]
+    },
+    {
+      "id": "w11",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 4,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.left",
+          "delay_sec": 0.5
+        }
+      ]
+    },
+    {
+      "id": "w12",
+      "delay_sec": 3.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 4,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.right",
+          "delay_sec": 0.5
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 96,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}

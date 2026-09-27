@@ -1,0 +1,660 @@
+{
+  "schema_version": 1,
+  "modifiers": [],
+  "bosses": [
+    {
+      "id": "boss.cirno",
+      "display_name": "琪露诺",
+      "character_id": "char.cirno",
+      "blocks_character_id": "char.cirno",
+      "enters_at_wave_id": "w06",
+      "entrance_id": "entrance.north",
+      "path_id": "path.main",
+      "prelude_wave_ids": [
+        "w01",
+        "w02",
+        "w03",
+        "w04",
+        "w05"
+      ],
+      "phases": [
+        {
+          "id": "phase_1",
+          "display_name": "冰瀑",
+          "spell_card_id": "spell.cirno.icicle_fall",
+          "spell_card_name": "冰符「冰瀑」",
+          "wave_ids": [
+            "w06",
+            "w07",
+            "w08",
+            "w09",
+            "w10"
+          ],
+          "map_changes": [
+            {
+              "id": "ice_column",
+              "label": "右边一整列结冰",
+              "cells": [
+                {
+                  "col": 5,
+                  "row": 4
+                },
+                {
+                  "col": 5,
+                  "row": 5
+                },
+                {
+                  "col": 5,
+                  "row": 6
+                },
+                {
+                  "col": 5,
+                  "row": 7
+                },
+                {
+                  "col": 5,
+                  "row": 8
+                },
+                {
+                  "col": 5,
+                  "row": 9
+                }
+              ],
+              "terrain": "ice",
+              "replaces_previous": true,
+              "effects": [
+                {
+                  "id": "enemy_speed_multiplier",
+                  "value": 1.4,
+                  "_placeholder": true,
+                  "note": "走在这些格子上的残影，移速乘以 1.4。倍率等数值策划。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase_2",
+          "display_name": "完美冻结",
+          "spell_card_id": "spell.cirno.perfect_freeze",
+          "spell_card_name": "冻符「完美冻结」",
+          "wave_ids": [
+            "w11",
+            "w12",
+            "w13",
+            "w14",
+            "w15"
+          ],
+          "map_changes": [
+            {
+              "id": "ice_expanded",
+              "label": "冰面扩到青蛙前面",
+              "cells": [
+                {
+                  "col": 3,
+                  "row": 4
+                },
+                {
+                  "col": 4,
+                  "row": 4
+                },
+                {
+                  "col": 5,
+                  "row": 4
+                },
+                {
+                  "col": 5,
+                  "row": 5
+                },
+                {
+                  "col": 5,
+                  "row": 6
+                },
+                {
+                  "col": 5,
+                  "row": 7
+                },
+                {
+                  "col": 5,
+                  "row": 8
+                },
+                {
+                  "col": 5,
+                  "row": 9
+                },
+                {
+                  "col": 4,
+                  "row": 9
+                },
+                {
+                  "col": 3,
+                  "row": 9
+                },
+                {
+                  "col": 3,
+                  "row": 10
+                }
+              ],
+              "terrain": "ice",
+              "replaces_previous": true,
+              "effects": [
+                {
+                  "id": "enemy_speed_multiplier",
+                  "value": 0,
+                  "duration_sec": 3,
+                  "_placeholder": true,
+                  "note": "宣言后冰面上的残影先停住。秒数等数值策划。这是「你到底帮哪边」的那几秒。"
+                },
+                {
+                  "id": "enemy_speed_multiplier",
+                  "value": 1.5,
+                  "starts_after_sec": 3,
+                  "_placeholder": true,
+                  "note": "停住结束后冰还在，残影变得更快。1.5 是占位。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "combat_notes": [
+        "琪露诺沿 path.main 前进，从 w06 入场，一直走到决斗结束。她不是残影。",
+        "叙事希望冰瀑也会冻住贴着冰面的角色。冻不冻塔由战斗策划定，关卡这边先保证冰面在路线上。",
+        "完美冻结必须让残影也停住一会儿，否则台词「你到底帮哪边」没有对应的事发生。",
+        "首领漏到守护点是否直接失败，等数值策划。建议是直接失败。"
+      ]
+    }
+  ],
+  "id": "ch1_04",
+  "status": "complete",
+  "chapter_id": "ch1",
+  "index_in_chapter": 4,
+  "display_name": "完美冻结",
+  "display_name_key": "level.ch1_04.name",
+  "kind": "boss",
+  "route_type": "curve",
+  "guard_point": {
+    "id": "guard.misty_lake_frogs",
+    "display_name": "冰雕青蛙"
+  },
+  "summary": "和琪露诺符卡决斗。两张符卡把一段路冻成冰，冰上的残影更快。",
+  "player_feeling": "热闹、赶，还有一点好笑。雾散开了，看得清哪几格在结冰。",
+  "teaches": [
+    "首领会沿路线走进来，并宣言符卡",
+    "符卡会改地图，而不只是放一段动画",
+    "冰面会让残影变快，所以输出要放在冰面旁边或冰面之前",
+    "这一关不能放置琪露诺"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "char.reimu",
+      "char.marisa"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "grid": [
+      "###P###",
+      "#..P..#",
+      "#..P..#",
+      "#..P..#",
+      "#..PPP#",
+      "#....P#",
+      "#....P#",
+      "#.#..P#",
+      "#.#..P#",
+      "#.#PPP#",
+      "#..P..#",
+      "###P###"
+    ],
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 3,
+        "row": 0
+      }
+    ],
+    "guard_cell": {
+      "col": 3,
+      "row": 11
+    },
+    "paths": [
+      {
+        "id": "path.main",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          {
+            "col": 3,
+            "row": 0
+          },
+          {
+            "col": 3,
+            "row": 1
+          },
+          {
+            "col": 3,
+            "row": 2
+          },
+          {
+            "col": 3,
+            "row": 3
+          },
+          {
+            "col": 3,
+            "row": 4
+          },
+          {
+            "col": 4,
+            "row": 4
+          },
+          {
+            "col": 5,
+            "row": 4
+          },
+          {
+            "col": 5,
+            "row": 5
+          },
+          {
+            "col": 5,
+            "row": 6
+          },
+          {
+            "col": 5,
+            "row": 7
+          },
+          {
+            "col": 5,
+            "row": 8
+          },
+          {
+            "col": 5,
+            "row": 9
+          },
+          {
+            "col": 4,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 9
+          },
+          {
+            "col": 3,
+            "row": 10
+          },
+          {
+            "col": 3,
+            "row": 11
+          }
+        ]
+      }
+    ],
+    "good_spots": [
+      {
+        "id": "spot.above_ice",
+        "col": 2,
+        "row": 1,
+        "label": "冰面之上",
+        "why": "符卡结冰从 r4 才开始。这一格始终不在冰上，输出稳定。灵梦适合留在这里。"
+      },
+      {
+        "id": "spot.ice_column",
+        "col": 4,
+        "row": 5,
+        "label": "冰列旁边",
+        "why": "贴着会被冻成冰的那一整列。魔理沙放这里，冰上排成一列的残影会被穿透。这一关不能放琪露诺。"
+      },
+      {
+        "id": "spot.ice_lower",
+        "col": 4,
+        "row": 8,
+        "label": "冰列下段",
+        "why": "同一条冰列的下半。上半如果被符卡冻住角色，下半还能补枪。"
+      },
+      {
+        "id": "spot.last_step",
+        "col": 4,
+        "row": 10,
+        "label": "最后一步",
+        "why": "完美冻结会把这一格旁边的路也变成冰。它会从稳守变成快漏，所以不能只有这一格有人。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "delay_sec": 2.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 1.2,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ],
+      "note": "出场前奏。琪露诺还没宣言，雾已经散了。"
+    },
+    {
+      "id": "w02",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 6,
+          "interval_sec": 1.1,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "delay_sec": 5.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.05,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.5
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 1.0,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 1,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.2
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "delay_sec": 4.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.95,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 1.0
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.9,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ],
+      "note": "冰瀑开始。右边一整列变成冰，冰上的残影更快。"
+    },
+    {
+      "id": "w07",
+      "delay_sec": 4.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.85,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "delay_sec": 3.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.6
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "delay_sec": 3.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 4,
+          "interval_sec": 0.8,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.6
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "delay_sec": 3.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.5
+        }
+      ]
+    },
+    {
+      "id": "w11",
+      "delay_sec": 3.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.75,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 2,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.5
+        }
+      ],
+      "note": "完美冻结。冰面扩大，先短暂冻住残影，再变得更快。"
+    },
+    {
+      "id": "w12",
+      "delay_sec": 3.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.65,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.5
+        }
+      ]
+    },
+    {
+      "id": "w13",
+      "delay_sec": 3.0,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.7,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.65,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.4
+        }
+      ]
+    },
+    {
+      "id": "w14",
+      "delay_sec": 2.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.65,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.6,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.4
+        }
+      ]
+    },
+    {
+      "id": "w15",
+      "delay_sec": 2.5,
+      "groups": [
+        {
+          "enemy_id": "remnant.faded_toy",
+          "count": 5,
+          "interval_sec": 0.6,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0
+        },
+        {
+          "enemy_id": "remnant.swift_toy",
+          "count": 3,
+          "interval_sec": 0.55,
+          "entrance_id": "entrance.north",
+          "path_id": "path.main",
+          "delay_sec": 0.4
+        }
+      ],
+      "note": "最后一波。冰面还在。"
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "threat_budget": 150,
+    "note": "威胁预算、起始灵力、敌人属性、雾的射程倍率和冰面速度都是占位，必须和数值策划对齐后才能当平衡。击破后回复多少灵力，本文件不写。残影怎么移动、符卡怎么结算，等战斗策划。"
+  }
+}
