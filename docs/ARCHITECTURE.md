@@ -117,7 +117,7 @@ Android 预设在 `export_presets.cfg`，预设名是 `Android`。
 
 ## 工程里的旧名字（以后再改代码）
 
-这些还是旧项目名，这次不改配置：
+GitHub 仓库名是 **touhou-forgotten-defense**。改名在仓库设置里由你自己操作。下面这些仍是工程和安装包里的旧名字，这次不改配置：
 
 - `project.godot` 里的游戏名仍是 `The Last Survivor`，描述仍是「竖屏安卓生存策略游戏」。
 - `export_presets.cfg` 里的安装包显示名仍是 `The Last Survivor`，包名仍是 `com.xyn159.thelastsurvivor`。

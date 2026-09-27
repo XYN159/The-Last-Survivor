@@ -1,8 +1,8 @@
 # 东方守幻录
 
-GitHub 仓库名仍是 **The Last Survivor**。那是以前的名字，暂时不改。游戏暂定名是《东方守幻录》。
+GitHub 仓库名是 **touhou-forgotten-defense**（`XYN159/touhou-forgotten-defense`）。游戏暂定名是《东方守幻录》。改名由你在 GitHub 仓库设置里自己操作。
 
-[![CI](https://github.com/XYN159/The-Last-Survivor/actions/workflows/ci.yml/badge.svg)](https://github.com/XYN159/The-Last-Survivor/actions/workflows/ci.yml)
+[![CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml/badge.svg)](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)
 
 东方 Project 的同人游戏，个人制作，免费，放在 GitHub 上，不商业化。原作权利归上海爱丽丝幻乐团 / ZUN。本作与官方无关。二次创作遵守 [ZUN 的二次创作指南](https://touhou-project.news/guideline/)（2024 年 5 月 31 日更新）。
 
@@ -27,10 +27,10 @@ GitHub 仓库名仍是 **The Last Survivor**。那是以前的名字，暂时不
 
 每次向 `main` 推送、以及每个拉取请求，GitHub Actions 都会检查代码、跑测试，并打出一个调试版 APK。
 
-1. 打开 [Actions](https://github.com/XYN159/The-Last-Survivor/actions/workflows/ci.yml)。
+1. 打开 [Actions](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)。
 2. 点开一次成功的 **CI** 运行。
-3. 在页面底部的 **Artifacts** 里下载 `the-last-survivor-android-debug`。
-4. 解压得到 `the-last-survivor-debug.apk`，传到手机上安装。
+3. 在页面底部的 **Artifacts** 里下载 `the-last-survivor-android-debug`。这个文件名还写在 CI 里，这次不改。
+4. 解压得到 `the-last-survivor-debug.apk`，传到手机上安装。文件名同样还是旧的。
 
 这个 APK 用的是调试证书，只能自己安装试用，不能上传到 Google Play。手机上安装调试包的步骤也写在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。
 

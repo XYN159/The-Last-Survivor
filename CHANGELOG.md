@@ -6,7 +6,7 @@
 
 ### 变更
 
-- 玩法方向改为东方 Project 同人竖屏塔防，暂定名《东方守幻录》。重写了 `docs/GDD.md` 和 `docs/ROADMAP.md`。旧的末日车道、加人、基地建筑和 SLG 设定作废。仓库名 The Last Survivor 暂时不改。场景和 `data/` 这次没动。
+- 玩法方向改为东方 Project 同人竖屏塔防，暂定名《东方守幻录》。重写了 `docs/GDD.md` 和 `docs/ROADMAP.md`。旧的末日车道、加人、基地建筑和 SLG 设定作废。GitHub 仓库名定为 touhou-forgotten-defense，由制作人在仓库设置里改名。场景、`data/` 和工程里的旧显示名这次没动。
 - 制作人拍板四条规则：角色只能放预设格子；从 MVP 起一关可以有多条固定路线，中途不变；打完最后一波时基地还有生命算赢，生命归零算输；输了可以从当前波重来或整关重打，中途退出不给奖励。塔防原型需要按波记下局内状态。
 - 局外养成定为每个角色各自 1 到 20 级。过关发放一种通用局外资源，玩家自己决定花在哪个角色身上。资源名称、每级加成和消耗、每关给多少仍待定，不写数字。
 - 新角色定为跟着剧情解锁，打过指定关卡后加入，不花资源、不靠星星。八云紫在第一章 Boss 关通关后加入，算进 MVP。MVP 可用角色为灵梦、魔理沙、琪露诺、八云紫。其他角色在哪关加入仍待定。
@@ -25,4 +25,4 @@
 - 加入 Cursor 工作区配置（推荐 godot-tools、语言服务器端口 6005、从编辑器启动游戏），并写好每天并排改游戏的说明 `docs/DEV_LOOP.md`。
 - 把 Cursor 里的 Godot 路径改成这台 Windows 电脑上的 `D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe`。
 
-[Unreleased]: https://github.com/XYN159/The-Last-Survivor/compare/main...HEAD
+[Unreleased]: https://github.com/XYN159/touhou-forgotten-defense/compare/main...HEAD

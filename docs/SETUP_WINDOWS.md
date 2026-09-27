@@ -50,8 +50,8 @@ Godot 不需要安装到系统里，这个 exe 就是编辑器。Cursor 里写�
 
 ```bash
 cd /c/Users/你的用户名/Documents
-git clone https://github.com/XYN159/The-Last-Survivor.git
-cd The-Last-Survivor
+git clone https://github.com/XYN159/touhou-forgotten-defense.git
+cd touhou-forgotten-defense
 ```
 
 克隆完成后，`assets/fonts/NotoSansSC-Regular.ttf` 应该是一个大约 7MB 的字体文件，而不是几行 `version https://git-lfs.github.com/spec/v1` 文本。如果是文本，执行 `git lfs pull`。
@@ -79,7 +79,7 @@ git pull origin main
 1. 打开 Godot。如果它还停在项目列表，选 **导入**，找到仓库里的 `project.godot`。
 2. 第一次导入会扫资源，等它结束。
 3. 按 `F5`，或点右上角的播放按钮。
-4. 应该看到深色标题 **The Last Survivor**、中文副标题「最后的幸存者」，以及 **开始** 按钮。这个标题是旧名字留下的占位。游戏暂定名已经改为《东方守幻录》，画面要等以后的程序改动才会换。仓库名也暂时不改。
+4. 应该看到深色标题 **The Last Survivor**、中文副标题「最后的幸存者」，以及 **开始** 按钮。这个标题是工程里还没改的旧显示名。游戏暂定名是《东方守幻录》，GitHub 仓库名是 **touhou-forgotten-defense**。画面上的标题要等以后的程序改动才会换。
 5. 点 **开始**，进入「战斗车道」。画面中间有一条竖道和两道色块，并显示 **小队人数：1**。这条车道是旧玩法的占位，**玩法已作废**。你现在仍会看到它，用来确认工程能打开。新玩法见 [`docs/GDD.md`](GDD.md)，不要按这条车道继续做。
 6. 点 **返回**，回到标题。
 
@@ -91,8 +91,8 @@ git pull origin main
 
 1. 用浏览器打开仓库的 **Actions**。
 2. 左侧选 **CI**，点开一次绿色的运行。
-3. 拉到页面底部，下载名为 `the-last-survivor-android-debug` 的 Artifact。
-4. 解压，得到 `the-last-survivor-debug.apk`。
+3. 拉到页面底部，下载名为 `the-last-survivor-android-debug` 的 Artifact。这个文件名还写在 CI 里，这次不改。
+4. 解压，得到 `the-last-survivor-debug.apk`。文件名同样还是旧的。
 5. 用数据线或微信文件传输助手把 APK 拷到手机。
 6. 在手机上点开 APK。如果系统拦截，到设置里允许浏览器或文件管理器「安装未知应用」，然后再点一次。
 7. 安装后打开，应看到和编辑器里一样的标题画面。点「开始」和「返回」确认。

@@ -8,7 +8,7 @@
 
 玩家在竖屏画面里，把东方角色放到预设格子上，守住一个目标，挡住一波波残影；每打完 5 波就从三个强化里选一个；打完再在关外慢慢变强，并解锁新角色和故事。
 
-仓库在 GitHub 上的名字仍是 **The Last Survivor**。那是以前的名字，暂时不改。游戏暂定名用《东方守幻录》。打开工程时，标题画面上可能还写着旧名字，那是程序还没改，不代表玩法还是旧的。
+GitHub 仓库名是 **touhou-forgotten-defense**（`XYN159/touhou-forgotten-defense`）。游戏暂定名用《东方守幻录》。改名由你在 GitHub 仓库设置里自己操作。打开工程时，标题画面上可能还写着旧名字 The Last Survivor，那是程序还没改，不代表仓库名还是旧的。
 
 ## 这是谁的作品
 
@@ -138,9 +138,9 @@
 - 剧情大纲：`docs/design/narrative/story_outline.md`
 - 角色：`docs/design/narrative/characters.md`
 
-这些文件在 PR #2（分支 `docs/touhou-narrative-draft`）里，还没有合并进 `main`。合并前请打开这个 PR 阅读：<https://github.com/XYN159/The-Last-Survivor/pull/2>
+这些文件在 PR #2（分支 `docs/touhou-narrative-draft`）里，还没有合并进 `main`。合并前请打开这个 PR 阅读：<https://github.com/XYN159/touhou-forgotten-defense/pull/2>
 
-可以直接点开分支上的大纲：<https://github.com/XYN159/The-Last-Survivor/blob/docs/touhou-narrative-draft/docs/design/narrative/story_outline.md>
+可以直接点开分支上的大纲：<https://github.com/XYN159/touhou-forgotten-defense/blob/docs/touhou-narrative-draft/docs/design/narrative/story_outline.md>
 
 本文件不复制那份稿子，也不合并那个 PR。
 
