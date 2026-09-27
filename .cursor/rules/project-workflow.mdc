@@ -1,5 +1,5 @@
 ---
-description: The Last Survivor 仓库的协作和实现约定
+description: 东方守幻录（仓库名仍是 The Last Survivor）的协作和实现约定
 alwaysApply: true
 ---
 
@@ -14,6 +14,6 @@ alwaysApply: true
 - 补测试。界面改动附截图。遵循 `docs/CODING_STYLE.md`。
 - 重要技术决定写入 `docs/adr/`。
 - 平衡数字放在 `data/balance/`。不要提交密钥或 keystore。不要修改 `addons/gut/`。
-- 多人与服务器不在当前范围。Godot 版本以 `godot-version.txt` 为准。
+- 多人、账号和服务器明确不做，见 `docs/GDD.md`。Godot 版本以 `godot-version.txt` 为准。
 - 日常循环见 `docs/DEV_LOOP.md`。本机 Agent 的改动同样留在功能分支上，经 PR 合并。
 - `docs/GDD.md` 中「待你补充」的设定不要擅自写成定案。
