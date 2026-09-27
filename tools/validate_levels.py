@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import sys
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -16,16 +17,15 @@ from jsonschema.exceptions import ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 LEVEL_DIR = ROOT / "data" / "levels"
-BALANCE_PATH = ROOT / "data" / "balance" / "level_difficulty.json"
+BALANCE_PATH = ROOT / "data" / "balance" / "level_tables" / "level_difficulty.csv"
 SCHEMA_PATH = LEVEL_DIR / "level.schema.json"
-CONFIRMED_ENEMIES = {
-    "shade_small": {"hp": 60, "move_speed": 1.0, "armor": 0, "spirit_on_kill": 5, "lives_on_leak": 1, "threat": 1},
-    "shade_fast": {"hp": 35, "move_speed": 2.0, "armor": 0, "spirit_on_kill": 5, "lives_on_leak": 1, "threat": 1},
-    "shade_hard": {"hp": 200, "move_speed": 0.6, "armor": 10, "spirit_on_kill": 15, "lives_on_leak": 2, "threat": 4},
-    "boss_ch1": {"hp": 3000, "move_speed": 0.4, "armor": 5, "spirit_on_kill": 100, "lives_on_leak": 10, "threat": None},
+BUDGET_THREATS = {
+    "enm_shade_basic": 1,
+    "enm_shade_fast": 1,
+    "enm_shade_armored": 4,
+    "boss_cirno": None,
 }
 KNOWN_TOTALS = {8: 224, 9: 270, 10: 320, 11: 374, 12: 432, 15: 630}
-
 EXPECTED_COUNTS = {
     "prologue": 3,
     "ch1": 4,
@@ -37,6 +37,8 @@ EXPECTED_COUNTS = {
 }
 CHAPTER_ORDER = list(EXPECTED_COUNTS)
 ORTHOGONAL = ((1, 0), (-1, 0), (0, 1), (0, -1))
+ROUTE = {"P", "S", "G"}
+STAT_KEYS = {"hp", "move_speed", "armor", "spirit_on_kill", "lives_on_leak", "stats"}
 
 
 def load_json(path: Path):
@@ -44,6 +46,42 @@ def load_json(path: Path):
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
         raise SystemExit(f"{path}: 不是合法 JSON：{error}") from error
+
+
+def scaled_budget(wave_index: int, coef: Decimal) -> int:
+    raw = Decimal(10 + 4 * wave_index) * coef
+    return int(raw.quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+
+def load_difficulty(path: Path) -> dict:
+    comments = []
+    header = None
+    levels = {}
+    order = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        if not raw.strip():
+            continue
+        if raw.startswith("#"):
+            comments.append(raw[1:].strip())
+            continue
+        parts = raw.split(",")
+        if header is None:
+            header = parts
+            continue
+        row = dict(zip(header, parts))
+        coef = Decimal(row["threat_budget_coef"])
+        wave_count = int(row["wave_count"])
+        budgets = [scaled_budget(index, coef) for index in range(1, wave_count + 1)]
+        row["wave_count"] = wave_count
+        row["level_index"] = int(row["level_index"])
+        row["hp_multiplier"] = row["hp_multiplier"]
+        row["buff_after_waves"] = [int(item) for item in row["reward_buff_after_waves"].split(";") if item]
+        row["buff_pick_count"] = int(row["reward_buff_pick_count"])
+        row["wave_threat_budgets"] = budgets
+        row["threat_budget_total"] = sum(budgets)
+        levels[row["level_id"]] = row
+        order.append(row["level_id"])
+    return {"comments": "\n".join(comments), "levels": levels, "order": order}
 
 
 def cell_char(grid: list[str], col: int, row: int) -> str | None:
@@ -55,64 +93,115 @@ def cell_char(grid: list[str], col: int, row: int) -> str | None:
 def geometry_problems(level: dict) -> list[str]:
     problems: list[str] = []
     level_map = level["map"]
-    grid = level_map["grid"]
+    grid = level_map["cells"]
     if len(grid) != 12 or any(len(row) != 7 for row in grid):
         problems.append("地图不是 7 列 × 12 行")
         return problems
     entrances = {item["id"]: (item["col"], item["row"]) for item in level_map["entrances"]}
-    guard = (level_map["guard_cell"]["col"], level_map["guard_cell"]["row"])
-    if cell_char(grid, guard[0], guard[1]) != "P":
-        problems.append("守护点不在路线格上")
+    guard = tuple(level_map["guard"]["cell"])
+    if cell_char(grid, guard[0], guard[1]) != "G":
+        problems.append("守护点不是 G")
+    if level_map["guard"]["id"] != level["guard_point"]["id"]:
+        problems.append("地图上的守护点和关卡守护点不是同一个")
     covered: set[tuple[int, int]] = set()
     path_ids = set()
+    parsed_paths = []
     for path in level_map["paths"]:
-        path_ids.add(path["id"])
+        path_ids.add(path["path_id"])
+        if path["id"] != path["path_id"]:
+            problems.append(f"{path['path_id']} 的 id 和 path_id 不一致")
+        cells = [tuple(item) for item in path["cells"]]
+        parsed_paths.append((path, cells))
+    starts = {cells[0] for _path, cells in parsed_paths if cells}
+    for path, cells in parsed_paths:
         if path["entrance_id"] not in entrances:
-            problems.append(f"{path['id']} 的入口不存在")
-        cells = [(item["col"], item["row"]) for item in path["cells"]]
+            problems.append(f"{path['path_id']} 的入口不存在")
         if not cells:
-            problems.append(f"{path['id']} 是空的")
+            problems.append(f"{path['path_id']} 是空的")
             continue
         if path["entrance_id"] in entrances and cells[0] != entrances[path["entrance_id"]]:
-            problems.append(f"{path['id']} 没有从入口出发")
+            problems.append(f"{path['path_id']} 没有从入口出发")
         if cells[-1] != guard:
-            problems.append(f"{path['id']} 没有走到守护点")
+            problems.append(f"{path['path_id']} 没有走到守护点")
         previous = None
         for col, row in cells:
             char = cell_char(grid, col, row)
-            if char != "P":
-                problems.append(f"{path['id']} 经过了非路线格 ({col},{row})")
+            if (col, row) == guard:
+                expected = "G"
+            elif (col, row) in starts:
+                expected = "S"
+            else:
+                expected = "P"
+            if char != expected:
+                problems.append(f"{path['path_id']} 在 ({col},{row}) 应是 {expected}，实际是 {char}")
             if previous is not None:
                 delta = abs(col - previous[0]) + abs(row - previous[1])
                 if delta != 1:
-                    problems.append(f"{path['id']} 在 ({previous[0]},{previous[1]}) 到 ({col},{row}) 不连续")
+                    problems.append(f"{path['path_id']} 在 ({previous[0]},{previous[1]}) 到 ({col},{row}) 不连续")
             previous = (col, row)
             covered.add((col, row))
     for row, line in enumerate(grid):
         for col, char in enumerate(line):
             if char == "P" and (col, row) not in covered:
                 problems.append(f"路线格 ({col},{row}) 没有任何一条路径走过")
+            if char == "S" and (col, row) not in starts:
+                problems.append(f"裂缝 ({col},{row}) 不是任何路线的起点")
     for spot in level_map["good_spots"]:
         col, row = spot["col"], spot["row"]
         if cell_char(grid, col, row) != ".":
             problems.append(f"好位置 {spot['id']} 不是空地")
             continue
-        adjacent = False
-        for offset_col, offset_row in ORTHOGONAL:
-            if cell_char(grid, col + offset_col, row + offset_row) == "P":
-                adjacent = True
+        adjacent = any(cell_char(grid, col + dx, row + dy) in ROUTE for dx, dy in ORTHOGONAL)
         if not adjacent:
             problems.append(f"好位置 {spot['id']} 没有贴着路线")
+    enters = level["bosses"][0]["enters_at_wave_id"] if level["bosses"] else None
     wave_ids = []
-    for wave in level["waves"]:
+    for index, wave in enumerate(level["waves"]):
         wave_ids.append(wave["id"])
-        for spawn in wave["groups"]:
+        if wave["wave_id"] != wave["id"]:
+            problems.append(f"{wave['id']} 的 wave_id 不一致")
+        if wave["is_boss"] != (wave["id"] == enters):
+            problems.append(f"{wave['id']} 的 is_boss 应该只在首领入场那一波为真")
+        if index + 1 < len(level["waves"]):
+            expected_gap = level["waves"][index + 1]["delay_sec"]
+            if wave["next_wave_delay_sec"] != expected_gap:
+                problems.append(f"{wave['id']} 的 next_wave_delay_sec 没有等于下一波的 delay_sec")
+        elif wave["next_wave_delay_sec"] != 0:
+            problems.append(f"{wave['id']} 是最后一波，next_wave_delay_sec 应该是 0")
+        for spawn in wave["spawns"]:
             if spawn["entrance_id"] not in entrances:
                 problems.append(f"{wave['id']} 使用了不存在的入口")
             if spawn["path_id"] not in path_ids:
                 problems.append(f"{wave['id']} 使用了不存在的路径")
     if len(wave_ids) != len(set(wave_ids)):
         problems.append("波次 id 重复")
+    problems.extend(terrain_problems(level, set(wave_ids)))
+    return problems
+
+
+def terrain_problems(level: dict, wave_ids: set[str]) -> list[str]:
+    problems: list[str] = []
+    grid = level["map"]["cells"]
+    for effect in level["map"]["terrain"]:
+        start = effect["start"]
+        if start != "level_start":
+            number = int(start.split("_", 1)[1])
+            if f"w{number:02d}" not in wave_ids:
+                problems.append(f"{effect['terrain_id']} 的 {start} 没有对应波次")
+        if effect["duration_sec"] != -1 and effect["duration_sec"] <= 0:
+            problems.append(f"{effect['terrain_id']} 的持续时间不对")
+        cells = effect.get("cells", [])
+        for col, row in cells:
+            char = cell_char(grid, col, row)
+            if char is None:
+                problems.append(f"{effect['terrain_id']} 盖到了地图外")
+                continue
+            if effect["terrain_id"] == "ter_ice" and char not in ROUTE:
+                problems.append(f"冰面 ({col},{row}) 不在路线上")
+            if effect["terrain_id"] == "ter_icicle" and char == ".":
+                continue
+            if effect["terrain_id"] == "ter_icicle" and char != ".":
+                problems.append(f"冰柱 ({col},{row}) 必须在可放置格")
     return problems
 
 
@@ -120,25 +209,19 @@ def boss_problems(level: dict) -> list[str]:
     problems: list[str] = []
     wave_ids = [wave["id"] for wave in level["waves"]]
     wave_set = set(wave_ids)
-    claimed: list[str] = []
+    path_ids = {path["path_id"] for path in level["map"]["paths"]}
     for boss in level["bosses"]:
         if boss["blocks_character_id"] in level["params"]["available_character_ids"]:
             problems.append(f"{boss['id']} 决斗时仍然可以放置")
         if boss["enters_at_wave_id"] not in wave_set:
             problems.append(f"{boss['id']} 的入场波次不存在")
-        claimed.extend(boss["prelude_wave_ids"])
-        for phase in boss["phases"]:
-            claimed.extend(phase["wave_ids"])
-            for change in phase["map_changes"]:
-                for cell in change["cells"]:
-                    char = cell_char(level["map"]["grid"], cell["col"], cell["row"])
-                    if char != "P":
-                        problems.append(f"{change['id']} 改到了非路线格 ({cell['col']},{cell['row']})")
-    if level["bosses"]:
-        if len(claimed) != len(set(claimed)):
-            problems.append("首领阶段的波次有重叠")
-        if set(claimed) != wave_set:
-            problems.append("前奏和符卡阶段没有刚好盖住全部波次")
+        if boss["path_id"] not in path_ids:
+            problems.append(f"{boss['id']} 的路线不存在")
+        prelude = boss["prelude_wave_ids"]
+        if len(prelude) != len(set(prelude)) or not set(prelude) <= wave_set:
+            problems.append(f"{boss['id']} 的前奏波次无效")
+        if boss["id"] == "boss_cirno":
+            problems.extend(cirno_problems(level, boss))
     kind = level["kind"]
     count = len(wave_ids)
     if kind in ("boss", "final_boss") and not 14 <= count <= 16:
@@ -148,13 +231,63 @@ def boss_problems(level: dict) -> list[str]:
     return problems
 
 
+def cirno_problems(level: dict, boss: dict) -> list[str]:
+    problems: list[str] = []
+    phases = boss["phases"]
+    expected = [
+        ("phase_1", 1.0, 0.66, "sc_boss_cirno_icicle_fall", "boss_cirno_p1_icicles"),
+        ("phase_2", 0.66, 0.33, "sc_boss_cirno_perfect_freeze", "boss_cirno_p2_area"),
+        ("phase_3", 0.33, 0.0, "sc_boss_cirno_diamond_blizzard", "boss_cirno_p3_ice"),
+    ]
+    if len(phases) != 3:
+        return ["琪露诺应该有 3 个血量阶段"]
+    cell_sets = level["map"]["cell_sets"]
+    grid = level["map"]["cells"]
+    good = {(spot["col"], spot["row"]) for spot in level["map"]["good_spots"]}
+    route = {tuple(cell) for path in level["map"]["paths"] for cell in path["cells"]}
+    for phase, (phase_id, start, end, spell_id, cells_ref) in zip(phases, expected):
+        if phase["id"] != phase_id or phase["spell_card_id"] != spell_id or phase["cells_ref"] != cells_ref:
+            problems.append(f"{phase_id} 的符卡或格子集合不对")
+        if round(phase["hp_ratio_start"], 2) != start or round(phase["hp_ratio_end"], 2) != end:
+            problems.append(f"{phase_id} 的血量区间不是 {start} 到 {end}")
+        if cells_ref not in cell_sets:
+            problems.append(f"缺少格子集合 {cells_ref}")
+    icicles = cell_sets.get("boss_cirno_p1_icicles")
+    if isinstance(icicles, list):
+        if not 3 <= len(icicles) <= 5:
+            problems.append("冰瀑落点应该是 3 到 5 格")
+        for col, row in icicles:
+            if cell_char(grid, col, row) != ".":
+                problems.append(f"冰柱 ({col},{row}) 不在可放置格")
+            near = (col, row) in good or any((col + dx, row + dy) in good for dx, dy in ORTHOGONAL)
+            if not near:
+                problems.append(f"冰柱 ({col},{row}) 没有靠近好位置")
+    area = cell_sets.get("boss_cirno_p2_area")
+    if not isinstance(area, dict) or area.get("mode") != "radius_around_boss" or area.get("radius_cells") != 2.5:
+        problems.append("完美冻结应该写成跟着首领、半径 2.5 格，而不是写死的格子")
+    ice = cell_sets.get("boss_cirno_p3_ice")
+    if isinstance(ice, list):
+        if len(ice) != 10:
+            problems.append("钻石风暴应该是 10 个路线格")
+        for col, row in ice:
+            if (col, row) not in route or cell_char(grid, col, row) != "P":
+                problems.append(f"冰面 ({col},{row}) 不是普通路线格")
+    if phases[0].get("terrain_id") != "ter_icicle" or phases[0].get("duration_sec") != 12:
+        problems.append("冰瀑应引用 ter_icicle，持续 12 秒")
+    if phases[0].get("status_on_character") != "st_freeze":
+        problems.append("冰瀑落在角色身上应引用 st_freeze")
+    if phases[2].get("terrain_id") != "ter_ice" or phases[2].get("duration_sec") != -1:
+        problems.append("钻石风暴应把格子变成一直存在的 ter_ice")
+    return problems
+
+
 def wave_threat(wave: dict, threats: dict[str, int]) -> tuple[int, list[str]]:
     total = 0
     problems: list[str] = []
-    for spawn in wave["groups"]:
+    for spawn in wave["spawns"]:
         enemy_id = spawn["enemy_id"]
         if enemy_id not in threats:
-            problems.append(f"波次使用了图鉴里没有的敌人 {enemy_id}")
+            problems.append(f"波次使用了图鉴里没有威胁点的敌人 {enemy_id}")
             continue
         total += spawn["count"] * threats[enemy_id]
     return total, problems
@@ -170,9 +303,6 @@ def threat_problems(level: dict, threats: dict[str, int], budgets: list[int], ca
         problems.extend(missing)
         if total != budget:
             problems.append(f"{wave['id']} 的威胁 {total} 不是难度表里的 {budget}")
-        for spawn in wave["groups"]:
-            if spawn["enemy_id"] not in threats:
-                problems.append(f"{wave['id']} 使用了没有威胁点的敌人 {spawn['enemy_id']}")
     for boss in level["bosses"]:
         if boss["id"] not in catalog_ids:
             problems.append(f"图鉴里没有首领 {boss['id']}")
@@ -187,23 +317,26 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
     offers = set(row["buff_after_waves"])
     swift_threat = 0
     total_threat = 0
+    basic = "enm_shade_basic"
+    fast = "enm_shade_fast"
+    armored = "enm_shade_armored"
     for index, wave in enumerate(level["waves"], start=1):
         note = wave.get("note", "")
         if (index in offers) != ("三选一" in note):
             problems.append(f"{wave['id']} 的备注没有和三选一时机对上")
-        for spawn in wave["groups"]:
+        for spawn in wave["spawns"]:
             enemy_id = spawn["enemy_id"]
             if enemy_id not in threats:
                 continue
             threat = spawn["count"] * threats[enemy_id]
             total_threat += threat
-            if enemy_id == "shade_fast":
+            if enemy_id == fast:
                 swift_threat += threat
-            if enemy_id == "shade_hard" and level_id != "ch1_03":
+            if enemy_id == armored and level_id != "ch1_03":
                 problems.append(f"{level_id} 不该出现硬残影")
     if level_id == "ch1_01":
         for index, wave in enumerate(level["waves"], start=1):
-            has_fast = any(spawn["enemy_id"] == "shade_fast" for spawn in wave["groups"])
+            has_fast = any(spawn["enemy_id"] == fast for spawn in wave["spawns"])
             if index < 6 and has_fast:
                 problems.append("教学关的快残影出现在前半")
             if index >= 6 and not has_fast:
@@ -212,19 +345,19 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
             problems.append(f"教学关快残影威胁占比 {swift_threat / total_threat:.3f} 不在两成附近")
     if level_id == "ch1_02":
         for wave in level["waves"]:
-            kinds = {spawn["enemy_id"] for spawn in wave["groups"]}
-            if kinds != {"shade_small", "shade_fast"}:
-                problems.append(f"{wave['id']} 没有把小残影和快残影混在同一波")
+            kinds = {spawn["enemy_id"] for spawn in wave["spawns"]}
+            if kinds != {basic, fast}:
+                problems.append(f"{wave['id']} 没有把普通残影和快残影混在同一波")
         if total_threat and not 0.45 <= swift_threat / total_threat <= 0.55:
             problems.append(f"练习关快残影占比 {swift_threat / total_threat:.3f} 不在一半附近")
     if level_id == "ch1_03":
         hard_count = 0
         for index, wave in enumerate(level["waves"], start=1):
-            delays = [spawn["delay_sec"] for spawn in wave["groups"]]
-            paths = {spawn["path_id"] for spawn in wave["groups"]}
-            if len(wave["groups"]) < 2 or any(delay != 0 for delay in delays) or len(paths) < 2:
+            delays = [spawn["delay_sec"] for spawn in wave["spawns"]]
+            paths = {spawn["path_id"] for spawn in wave["spawns"]}
+            if len(wave["spawns"]) < 2 or any(delay != 0 for delay in delays) or len(paths) < 2:
                 problems.append(f"{wave['id']} 没有左右同时出场")
-            hard_here = sum(spawn["count"] for spawn in wave["groups"] if spawn["enemy_id"] == "shade_hard")
+            hard_here = sum(spawn["count"] for spawn in wave["spawns"] if spawn["enemy_id"] == armored)
             hard_count += hard_here
             if index >= 10 and hard_here != 1:
                 problems.append(f"{wave['id']} 应该正好有 1 只硬残影")
@@ -236,9 +369,9 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
         for index, wave in enumerate(level["waves"], start=1):
             if index < 6:
                 continue
-            paths = {spawn["path_id"] for spawn in wave["groups"]}
-            delays = [spawn["delay_sec"] for spawn in wave["groups"]]
-            if len(wave["groups"]) < 2 or paths != {"path.main"} or any(delay != 0 for delay in delays):
+            paths = {spawn["path_id"] for spawn in wave["spawns"]}
+            delays = [spawn["delay_sec"] for spawn in wave["spawns"]]
+            if len(wave["spawns"]) < 2 or paths != {"path.main"} or any(delay != 0 for delay in delays):
                 problems.append(f"{wave['id']} 后半应该两组同时走同一条路")
     if level_id == "ch1_04":
         boss = level["bosses"][0]
@@ -247,16 +380,30 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
         if boss["prelude_wave_ids"] != ["w01", "w02", "w03", "w04"]:
             problems.append("琪露诺的前奏应该是前 4 波")
         for index, wave in enumerate(level["waves"], start=1):
-            expected = "minion" if index <= 4 or index % 2 == 0 else "boss_phase"
-            if wave.get("pressure") != expected:
-                problems.append(f"{wave['id']} 的压力应该是 {expected}")
+            expected_pressure = "minion" if index <= 4 or index % 2 == 0 else "boss_phase"
+            if wave.get("pressure") != expected_pressure:
+                problems.append(f"{wave['id']} 的压力应该是 {expected_pressure}")
         spell_ids = [phase["spell_card_id"] for phase in boss["phases"]]
         if len(spell_ids) != len(set(spell_ids)):
             problems.append("一个阶段一张符卡，不能重复")
     return problems
 
 
-def roster_problems(level: dict, playable: dict[str, str], costs: dict[str, int]) -> list[str]:
+def timing_problems(level: dict) -> list[str]:
+    problems: list[str] = []
+    prologue = level["chapter_id"] == "prologue"
+    if level["spell_charge_mult"] != (2.0 if prologue else 1.0):
+        problems.append("符卡充能倍率和战斗草案的建议不一致")
+    if level["deploy_wait_for_player"] is not prologue:
+        problems.append("只有序章应该等玩家放完再开始倒计时")
+    if level["intermission_sec"] != 4 or level["deploy_time_sec"] != 10:
+        problems.append("布阵或波间秒数不是战斗草案的默认值")
+    if prologue and "combat_timing_note" not in level:
+        problems.append("序章要注明充能和等待是战斗草案，不是数值定案")
+    return problems
+
+
+def roster_problems(level: dict, playable: dict[str, str]) -> list[str]:
     problems: list[str] = []
     available = level["params"]["available_character_ids"]
     for character_id in available:
@@ -265,14 +412,11 @@ def roster_problems(level: dict, playable: dict[str, str], costs: dict[str, int]
     for character_id in level["new_character_ids"]:
         if character_id not in available:
             problems.append(f"新角色 {character_id} 不在可放置名单里")
-    known_costs = [costs[character_id] for character_id in available if character_id in costs]
     if level["params"]["starting_spirit_power"] != 150:
         problems.append("开局灵力已确认是 150")
-    if known_costs and level["params"]["starting_spirit_power"] < min(known_costs):
-        problems.append("起始灵力不够放置最便宜的角色")
     for enemy_id in level["new_enemy_ids"]:
-        if not enemy_id.startswith(("remnant.", "boss.", "shade_", "boss_")):
-            problems.append(f"新敌人 id 不像已有格式：{enemy_id}")
+        if not enemy_id.startswith(("enm_", "boss_")):
+            problems.append(f"新敌人 id 不是战斗侧的命名：{enemy_id}")
     return problems
 
 
@@ -286,35 +430,18 @@ def role_for(level: dict) -> str:
     return "test"
 
 
-def base_budget(wave_index: int) -> int:
-    return 10 + 4 * wave_index
-
-
 def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
     problems: list[str] = []
-    if difficulty.get("_owner") != "数值策划":
-        problems.append("难度表必须标明归数值策划")
-    confirmed = difficulty.get("confirmed", {})
-    if confirmed.get("starting_spirit_power") != 150 or confirmed.get("spirit_per_wave_survived") != 20:
-        problems.append("开局灵力应该是 150，每活过一波加 20")
-    if confirmed.get("lives") != 20 or confirmed.get("buff_every_waves") != 5 or confirmed.get("buff_pick_count") != 3:
-        problems.append("生命、三选一间隔或张数和已确认的规则不一致")
-    if confirmed.get("boss_does_not_consume_wave_budget") is not True:
-        problems.append("首领必须单独出场，不占那一波的预算")
-    known = confirmed.get("known_totals", {})
-    for wave_count, total in KNOWN_TOTALS.items():
-        if int(known.get(str(wave_count), -1)) != total:
-            problems.append(f"{wave_count} 波的合计应该是 {total}")
-        expected = sum(base_budget(index) for index in range(1, wave_count + 1))
-        if expected != total:
-            problems.append(f"{wave_count} 波的公式合计不是 {total}")
+    comments = difficulty.get("comments", "")
+    if "owner: 数值策划" not in comments or "status: seed" not in comments:
+        problems.append("难度表要标明归数值策划，并且当前是种子")
+    for phrase in ("(10 + 4 × wave_index) × threat_budget_coef", "1.3", "0.85", "11-13", "10-11", "制作人"):
+        if phrase not in comments:
+            problems.append(f"难度表注释缺少：{phrase}")
     rows = difficulty.get("levels")
     if not isinstance(rows, dict):
-        return problems + ["难度表缺少 levels"]
-    open_ids = [item.get("id") for item in difficulty.get("alignment_open", [])]
-    if "threat_budget_coef_pending" not in open_ids or "half_lives_sits_on_star_boundary" not in open_ids:
-        problems.append("难度表要记下：系数仍是提议，以及一半生命踩在星级交界上")
-    if list(rows) != [level["id"] for level in order]:
+        return problems + ["难度表缺少数据行"]
+    if difficulty.get("order") != [level["id"] for level in order]:
         problems.append("难度表的关卡顺序和索引不一致")
         return problems
     previous_hp = 0
@@ -322,15 +449,17 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
         row = rows[level["id"]]
         if level.get("difficulty_id") != level["id"]:
             problems.append(f"{level['id']} 的 difficulty_id 没有指向自己")
-        if row.get("level_number") != number:
+        if row.get("chapter") != level["chapter_id"]:
+            problems.append(f"{level['id']} 的章节列不对")
+        if row.get("level_index") != number:
             problems.append(f"{level['id']} 的关卡序号不是 {number}")
         role = role_for(level)
-        if row.get("role") != role:
+        if row.get("level_role") != role:
             problems.append(f"{level['id']} 的难度角色应该是 {role}")
-        if row.get("threat_budget_coef") != 1 or row.get("threat_budget_coef_status") != "proposal":
-            problems.append(f"{level['id']} 的威胁系数应该是提议中的 1.0")
+        if row.get("threat_budget_coef") != "1.0":
+            problems.append(f"{level['id']} 的威胁系数种子应该是 1.0")
         expected_hp = 100 + 15 * (number - 1)
-        got_hp = int(round(float(row["hp_multiplier"]) * 100))
+        got_hp = int((Decimal(row["hp_multiplier"]) * 100).quantize(Decimal("1")))
         if got_hp != expected_hp:
             problems.append(f"{level['id']} 的生命倍率不是 {expected_hp / 100}")
         if got_hp <= previous_hp:
@@ -342,11 +471,16 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
         expected_offers = [wave for wave in (5, 10, 15) if wave <= wave_count]
         if row.get("buff_after_waves") != expected_offers or row.get("buff_pick_count") != 3:
             problems.append(f"{level['id']} 的三选一不是每 5 波一次、三张里选一张")
-        expected_budgets = [base_budget(index) for index in range(1, wave_count + 1)]
+        if row.get("reward_spirit_start") != "150" or row.get("reward_spirit_per_wave") != "20":
+            problems.append(f"{level['id']} 的灵力奖励不是 150 / 20")
+        expected_lives = "10-11" if role == "boss" else "11-13"
+        if row.get("expected_first_clear_lives") != expected_lives:
+            problems.append(f"{level['id']} 的首通剩余生命应该是 {expected_lives}")
+        expected_budgets = [scaled_budget(index, Decimal("1.0")) for index in range(1, wave_count + 1)]
         if row.get("wave_threat_budgets") != expected_budgets:
-            problems.append(f"{level['id']} 的分波预算不是 10 + 4 × 波次")
-        if row.get("threat_budget_total") != sum(expected_budgets):
-            problems.append(f"{level['id']} 的威胁合计不是各波之和")
+            problems.append(f"{level['id']} 的分波预算不是 (10 + 4 × 波次) × 1.0")
+        if wave_count in KNOWN_TOTALS and row.get("threat_budget_total") != KNOWN_TOTALS[wave_count]:
+            problems.append(f"{level['id']} 的威胁合计不是 {KNOWN_TOTALS[wave_count]}")
     return problems
 
 
@@ -366,8 +500,6 @@ def curve_problems(levels: list[dict], rows: dict) -> list[str]:
                 problems.append(f"{chapter_id} 的威胁合计没有逐关上升：{budgets}")
                 break
         if previous_peak is not None and chapter_id != "final":
-            # 序章没有首领。第一章第 1 关和序章第 3 关都是 10 波，合计可以相同。
-            # 有首领的章，下一章第 1 关必须更低，因为波数从 15 掉下来。
             previous_is_boss = previous_id is not None and previous_id.endswith("_04")
             too_high = budgets[0] > previous_peak or (previous_is_boss and budgets[0] >= previous_peak)
             if too_high:
@@ -375,11 +507,11 @@ def curve_problems(levels: list[dict], rows: dict) -> list[str]:
                     f"{chapter_levels[0]['id']} 的合计 {budgets[0]} 相对上一章最后一关 {previous_id} 的 {previous_peak} 没有松下来"
                 )
         if chapter_id == "final" and previous_peak is not None:
-            final_hp = rows[chapter_levels[0]["id"]]["hp_multiplier"]
+            final_hp = Decimal(rows[chapter_levels[0]["id"]]["hp_multiplier"])
             if budgets[0] < previous_peak or final_hp <= previous_hp:
                 problems.append("终章的威胁合计或生命倍率没有站在第五章首领之上")
         previous_peak = budgets[-1]
-        previous_hp = rows[chapter_levels[-1]["id"]]["hp_multiplier"]
+        previous_hp = Decimal(rows[chapter_levels[-1]["id"]]["hp_multiplier"])
         previous_id = chapter_levels[-1]["id"]
     return problems
 
@@ -398,10 +530,15 @@ def rating_problems(rating: dict) -> list[str]:
     if got != expected:
         problems.append(f"星级区间不对：{got}")
     leak = rating.get("leak", {})
-    if leak.get("_placeholder") is not False:
-        problems.append("已确认敌人的漏怪扣命不再是占位")
-    if "lives_on_leak" not in leak.get("note", ""):
-        problems.append("漏怪扣命要指向敌人图鉴里的 lives_on_leak")
+    if leak.get("stored_in_level_data") is not False:
+        problems.append("漏怪扣命不应该写进关卡数据")
+    if "权威" not in leak.get("note", "") or "lives_on_leak" in leak.get("note", ""):
+        problems.append("漏怪说明要指向数值和战斗的属性表，不要在关卡里再抄一份")
+    first = rating.get("first_clear", {})
+    if first.get("normal_lives_remaining") != "11-13" or first.get("boss_lives_remaining") != "10-11":
+        problems.append("首通剩余生命应该是普通关 11-13、首领关 10-11")
+    if first.get("status") != "agreed_by_level_and_numbers_pending_producer":
+        problems.append("首通目标要标明：关卡和数值已对齐，等制作人确认")
     return problems
 
 
@@ -450,36 +587,55 @@ def schema_errors(validator: Draft202012Validator, level: dict) -> list[str]:
 
 def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
     problems: list[str] = []
-    if catalog.get("_placeholder") is not False:
-        problems.append("图鉴里已有确认条目，不要再把整份标成占位")
+    note = catalog.get("_owner_note", "")
+    if "权威" not in note:
+        problems.append("图鉴要写明属性的权威来源不是这份关卡文件")
+    conflict = catalog.get("stat_conflict", {})
+    blob = json.dumps(conflict, ensure_ascii=False)
+    if conflict.get("id") != "enm_shade_fast" or "2.0" not in blob or "1.8" not in blob or "35" not in blob:
+        problems.append("图鉴要记下快残影在数值稿和战斗稿之间的生命、移速差异")
+    if "不采用" not in blob and "都不采用" not in blob:
+        problems.append("图鉴要写明关卡不采用任何一边的快残影生命和移速")
     by_id: dict[str, dict] = {}
     for entry in catalog.get("entries", []):
         enemy_id = entry["id"]
         if enemy_id in by_id:
             problems.append(f"敌人 id 重复：{enemy_id}")
         by_id[enemy_id] = entry
-        expected = CONFIRMED_ENEMIES.get(enemy_id)
-        stats = entry.get("stats", {})
-        if expected is not None:
-            if entry.get("confirmed") is not True:
-                problems.append(f"{enemy_id} 应该标成已确认")
-            for key, value in expected.items():
-                if key == "threat":
-                    if entry.get("threat") != value:
-                        problems.append(f"{enemy_id} 的威胁点不是 {value}")
-                    continue
-                if stats.get(key) != value:
-                    problems.append(f"{enemy_id} 的 {key} 不是已确认的 {value}")
+        if STAT_KEYS & set(entry):
+            problems.append(f"{enemy_id} 不应该再抄生命、移速或护甲")
+        expected = BUDGET_THREATS.get(enemy_id, "missing")
+        if expected != "missing":
+            if entry.get("threat_points") != expected:
+                problems.append(f"{enemy_id} 的威胁点不是 {expected}")
+            if expected is not None and entry.get("threat_points_status") != "confirmed_for_budget":
+                problems.append(f"{enemy_id} 的威胁点应该标成只用于预算")
+        elif enemy_id.startswith("boss_"):
+            if entry.get("threat_points") is not None:
+                problems.append(f"{enemy_id} 是预留首领，威胁点应为空")
         else:
-            if entry.get("confirmed") is True:
-                problems.append(f"{enemy_id} 还没被制作人确认")
-            threat = entry.get("threat")
+            if entry.get("threat_points_status") != "level_design_placeholder":
+                problems.append(f"{enemy_id} 的威胁点还没定，要标成占位")
+            threat = entry.get("threat_points")
             if not isinstance(threat, int) or threat <= 0:
                 problems.append(f"{enemy_id} 的占位威胁不是正数")
-    for enemy_id in CONFIRMED_ENEMIES:
+    for enemy_id in BUDGET_THREATS:
         if enemy_id not in by_id:
-            problems.append(f"缺少已确认敌人 {enemy_id}")
+            problems.append(f"缺少敌人 {enemy_id}")
+    for enemy_id in ("enm_shade_phantom", "enm_shade_heap", "enm_shade_rift"):
+        if enemy_id not in by_id:
+            problems.append(f"缺少预留敌人 {enemy_id}")
     return problems, by_id
+
+
+def roster_file_problems(roster: dict) -> list[str]:
+    problems: list[str] = []
+    if "不在本文件" not in roster.get("_owner_note", ""):
+        problems.append("角色名单要写明属性不在这份文件里")
+    for character in roster.get("characters", []):
+        if "spirit_power_cost" in character or "hp" in character:
+            problems.append(f"{character.get('id')} 不应该再写消耗或生命")
+    return problems
 
 
 def stub_wave_problems(level: dict) -> list[str]:
@@ -497,12 +653,15 @@ def main() -> int:
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
     index = load_json(LEVEL_DIR / "index.json")
-    difficulty = load_json(BALANCE_PATH)
+    difficulty = load_difficulty(BALANCE_PATH)
     catalog = load_json(LEVEL_DIR / "enemy_catalog.json")
     roster = load_json(LEVEL_DIR / "character_roster.json")
     rating = load_json(LEVEL_DIR / "rating.json")
-    if not roster.get("_placeholder"):
-        print("角色放置消耗还没确认，名单必须标成占位", file=sys.stderr)
+    roster_errors = roster_file_problems(roster)
+    if roster_errors:
+        print("角色名单:", file=sys.stderr)
+        for problem in roster_errors:
+            print(f"  - {problem}", file=sys.stderr)
         return 1
     catalog_errors, catalog_ids = catalog_problems(catalog)
     if catalog_errors:
@@ -511,15 +670,11 @@ def main() -> int:
             print(f"  - {problem}", file=sys.stderr)
         return 1
     threats = {
-        enemy_id: entry["threat"]
+        enemy_id: entry["threat_points"]
         for enemy_id, entry in catalog_ids.items()
-        if entry.get("threat") is not None
+        if entry.get("threat_points") is not None
     }
-    playable = {}
-    costs = {}
-    for character in roster["characters"]:
-        playable[character["id"]] = character["playable"]
-        costs[character["id"]] = character["spirit_power_cost"]
+    playable = {character["id"]: character["playable"] for character in roster["characters"]}
     levels = {}
     failed = False
     for entry in index["levels"]:
@@ -534,6 +689,7 @@ def main() -> int:
         if level["status"] == "complete":
             problems.extend(geometry_problems(level))
             problems.extend(boss_problems(level))
+            problems.extend(timing_problems(level))
             row = difficulty.get("levels", {}).get(level["id"], {})
             budgets = row.get("wave_threat_budgets", [])
             problems.extend(threat_problems(level, threats, budgets, set(catalog_ids)))
@@ -541,7 +697,7 @@ def main() -> int:
                 problems.extend(composition_problems(level, threats, row))
         else:
             problems.extend(stub_wave_problems(level))
-        problems.extend(roster_problems(level, playable, costs))
+        problems.extend(roster_problems(level, playable))
         if level["placeholders"].get("_placeholder") is not True:
             problems.append("缺少占位标记")
         if problems:

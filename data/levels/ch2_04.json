@@ -25,13 +25,12 @@
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa",
-      "char.cirno",
-      "char.meiling"
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_meiling"
     ]
   },
-  "modifiers": [],
   "bosses": [],
   "wave_count": 15,
   "design_notes": "首领草案，2 个阶段，本关不能放咲夜。阶段 1：幻符「杀人玩偶」（spell.sakuya.killing_doll），一条走廊被飞刀削成更长的直路。阶段 2：幻世「世界」（spell.sakuya.the_world），残影短暂停住；时间恢复后，叙事里的「馆内被拉长」落成插入的新路线格。美铃的彩符「彩光乱舞」「极彩台风」留作她的可玩符卡，不占首领阶段。这和叙事「先美铃、后咲夜两场决斗」不一致，要制作人定。",
@@ -41,6 +40,6 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   }
 }

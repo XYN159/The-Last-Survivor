@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "modifiers": [],
   "bosses": [],
   "id": "prologue_02",
   "difficulty_id": "prologue_02",
@@ -23,35 +22,42 @@
     "灵梦仍负责拐角和漏过来的零散残影"
   ],
   "new_character_ids": [
-    "char.marisa"
+    "chr_marisa"
   ],
   "new_enemy_ids": [],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa"
+      "chr_reimu",
+      "chr_marisa"
     ]
   },
   "map": {
     "columns": 7,
     "rows": 12,
     "origin": "row_0_is_north",
-    "grid": [
-      "#P#####",
-      "#P....#",
-      "#P.####",
-      "#PPP..#",
-      "##.P..#",
-      "###P..#",
-      "###P..#",
-      "###P..#",
-      "###P..#",
-      "#..P..#",
-      "#..P.##",
-      "###P###"
+    "cells": [
+      "BSBBBBB",
+      "BP....B",
+      "BP.BBBB",
+      "BPPP..B",
+      "BB.P..B",
+      "BBBP..B",
+      "BBBP..B",
+      "BBBP..B",
+      "BBBP..B",
+      "B..P..B",
+      "B..P.BB",
+      "BBBGBBB"
     ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
     "entrances": [
       {
         "id": "entrance.north",
@@ -59,75 +65,82 @@
         "row": 0
       }
     ],
-    "guard_cell": {
-      "col": 3,
-      "row": 11
+    "guard": {
+      "cell": [
+        3,
+        11
+      ],
+      "id": "guard.hakurei_offering_box",
+      "display_name": "赛钱箱"
     },
     "paths": [
       {
+        "path_id": "path.main",
         "id": "path.main",
         "entrance_id": "entrance.north",
         "kind": "ground",
         "cells": [
-          {
-            "col": 1,
-            "row": 0
-          },
-          {
-            "col": 1,
-            "row": 1
-          },
-          {
-            "col": 1,
-            "row": 2
-          },
-          {
-            "col": 1,
-            "row": 3
-          },
-          {
-            "col": 2,
-            "row": 3
-          },
-          {
-            "col": 3,
-            "row": 3
-          },
-          {
-            "col": 3,
-            "row": 4
-          },
-          {
-            "col": 3,
-            "row": 5
-          },
-          {
-            "col": 3,
-            "row": 6
-          },
-          {
-            "col": 3,
-            "row": 7
-          },
-          {
-            "col": 3,
-            "row": 8
-          },
-          {
-            "col": 3,
-            "row": 9
-          },
-          {
-            "col": 3,
-            "row": 10
-          },
-          {
-            "col": 3,
-            "row": 11
-          }
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            11
+          ]
         ]
       }
     ],
+    "terrain": [],
+    "cell_sets": {},
     "good_spots": [
       {
         "id": "spot.corner",
@@ -162,138 +175,165 @@
   "waves": [
     {
       "id": "w01",
+      "wave_id": "w01",
       "delay_sec": 2.0,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 8.0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 14,
           "interval_sec": 1.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w02",
+      "wave_id": "w02",
       "delay_sec": 8.0,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 7.2,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 18,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w03",
+      "wave_id": "w03",
       "delay_sec": 7.2,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 6.4,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 22,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w04",
+      "wave_id": "w04",
       "delay_sec": 6.4,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 5.6,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 26,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w05",
+      "wave_id": "w05",
       "delay_sec": 5.6,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 4.9,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 30,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
+      "wave_id": "w06",
       "delay_sec": 4.9,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 4.1,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 34,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w07",
+      "wave_id": "w07",
       "delay_sec": 4.1,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 3.3,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 38,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w08",
+      "wave_id": "w08",
       "delay_sec": 3.3,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 2.5,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 42,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     },
     {
       "id": "w09",
+      "wave_id": "w09",
       "delay_sec": 2.5,
-      "note": "弯进长直路。这一关是练习，仍然只有小残影。",
-      "groups": [
+      "next_wave_delay_sec": 0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 46,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "弯进长直路。这一关是练习，仍然只有普通残影。"
     }
   ],
   "placeholders": {
@@ -302,6 +342,12 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
-  }
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "spell_energy_start": 0,
+  "spell_charge_mult": 2.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": true,
+  "intermission_sec": 4,
+  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。"
 }

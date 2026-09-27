@@ -1,334 +1,121 @@
 {
   "schema_version": 1,
-  "_placeholder": false,
-  "move_speed_unit": "cells_per_second",
-  "note": "shade_small、shade_fast、shade_hard、boss_ch1 的第 1 关基础属性已由制作人确认。生命会再乘难度表里的 hp_multiplier。其余残影和首领仍未确认，每条 confirmed 为 false。移速单位是每秒走几格。",
+  "_owner_note": "生命、移速、护甲、击破灵力、漏怪扣命的权威来源是数值策划和战斗策划的属性表。本文件只保留关卡编排要用的 id、显示名、首次出场关和威胁点。关卡校验只读威胁点，不读生命和移速。",
+  "stat_conflict": {
+    "id": "enm_shade_fast",
+    "numbers_designer": "生命 35，移速每秒 2.0 格",
+    "combat_draft": "生命是普通残影的一半，移速每秒 1.8 格",
+    "level_data": "两边都不采用。本文件不写生命，也不写移速。"
+  },
   "entries": [
     {
-      "id": "shade_small",
-      "display_name": "小残影",
-      "category": "remnant",
-      "confirmed": true,
-      "proposal": false,
+      "id": "enm_shade_basic",
+      "display_name": "普通残影",
       "introduced_in": "prologue_01",
-      "threat": 1,
-      "stats": {
-        "hp": 60,
-        "move_speed": 1.0,
-        "armor": 0,
-        "spirit_on_kill": 5,
-        "lives_on_leak": 1
-      },
-      "tags": [
-        "small",
-        "ground"
-      ],
-      "note": "已确认。第 1 关基础属性。后面关卡的生命再乘那一关的 hp_multiplier。"
+      "threat_points": 1,
+      "threat_points_status": "confirmed_for_budget",
+      "note": "预算用的威胁点。曾用 id shade_small。生命和移速不在这里。"
     },
     {
-      "id": "shade_fast",
+      "id": "enm_shade_fast",
       "display_name": "快残影",
-      "category": "remnant",
-      "confirmed": true,
-      "proposal": false,
       "introduced_in": "ch1_01",
-      "threat": 1,
-      "stats": {
-        "hp": 35,
-        "move_speed": 2.0,
-        "armor": 0,
-        "spirit_on_kill": 5,
-        "lives_on_leak": 1
-      },
-      "tags": [
-        "fast",
-        "ground"
-      ],
-      "note": "已确认。血更少、走得更快，威胁仍是 1。第一章用来教减速。"
+      "threat_points": 1,
+      "threat_points_status": "confirmed_for_budget",
+      "note": "预算用的威胁点仍是 1。生命和移速见文件顶部的 stat_conflict，关卡不依赖任何一边。第一章用它教 st_slow。"
     },
     {
-      "id": "shade_hard",
+      "id": "enm_shade_armored",
       "display_name": "硬残影",
-      "category": "remnant",
-      "confirmed": true,
-      "proposal": false,
       "introduced_in": "ch1_03",
-      "threat": 4,
-      "stats": {
-        "hp": 200,
-        "move_speed": 0.6,
-        "armor": 10,
-        "spirit_on_kill": 15,
-        "lives_on_leak": 2
-      },
-      "tags": [
-        "armored",
-        "ground"
-      ],
-      "note": "已确认。主题上属于第二章。第一章只在第 3 关最后三波各预告 1 只，正式教学留到第二章。"
+      "threat_points": 4,
+      "threat_points_status": "confirmed_for_budget",
+      "note": "预算用的威胁点是 4。战斗稿亦称旧电器。第二章用同一个 id，不再另造一条护甲。第一章只在第 3 关最后三波各预告 1 只。"
     },
     {
-      "id": "boss_ch1",
-      "display_name": "琪露诺",
-      "category": "boss",
-      "confirmed": true,
-      "proposal": false,
-      "introduced_in": "ch1_04",
-      "threat": null,
-      "stats": {
-        "hp": 3000,
-        "move_speed": 0.4,
-        "armor": 5,
-        "spirit_on_kill": 100,
-        "lives_on_leak": 10
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "已确认的是第 1 关基础生命、移速、护甲、击破灵力和漏怪扣命。威胁点还没定。她单独出场，不占用那一波的预算。角色 id 仍是 char.cirno。"
-    },
-    {
-      "id": "remnant.old_appliance",
-      "display_name": "旧电器",
-      "category": "remnant",
-      "proposal": false,
-      "introduced_in": "ch2_01",
-      "threat": 4,
-      "stats": {
-        "hp": 140,
-        "move_speed": 0.55,
-        "armor": 8
-      },
-      "tags": [
-        "armored",
-        "ground"
-      ],
-      "note": "未确认。叙事种类。慢、硬。护甲数值是占位。",
-      "confirmed": false
-    },
-    {
-      "id": "remnant.village_seeker",
-      "display_name": "扑人残影",
-      "category": "remnant",
-      "proposal": true,
-      "introduced_in": "ch3_01",
-      "threat": 2,
-      "stats": {
-        "hp": 36,
-        "move_speed": 1.15,
-        "armor": 0
-      },
-      "tags": [
-        "targets_escort",
-        "ground"
-      ],
-      "note": "未确认。提案。叙事没有单独起名，只说残影会扑向村民。若战斗策划愿意，可以做成褪色玩具的行为标签，而不是新 id。",
-      "confirmed": false
-    },
-    {
-      "id": "remnant.flying_scrap",
-      "display_name": "飞屑",
-      "category": "remnant",
-      "proposal": true,
-      "introduced_in": "ch4_01",
-      "threat": 3,
-      "stats": {
-        "hp": 40,
-        "move_speed": 1.25,
-        "armor": 0
-      },
-      "tags": [
-        "flying"
-      ],
-      "note": "未确认。提案。叙事五种残影里没有单独的飞行种。制作人要求第四章教反空，所以先给一个飞行 id。",
-      "confirmed": false
-    },
-    {
-      "id": "remnant.forgotten_shade",
+      "id": "enm_shade_phantom",
       "display_name": "遗忘之影",
-      "category": "remnant",
-      "proposal": false,
       "introduced_in": "ch5_01",
-      "threat": 3,
-      "stats": {
-        "hp": 45,
-        "move_speed": 1.05,
-        "armor": 0
-      },
-      "tags": [
-        "stealth",
-        "ground"
-      ],
-      "note": "未确认。叙事种类，半透明。叙事初稿把大量出现放在第四章，本框架按制作人的「第五章隐形」放到第五章。见总览里的待确认项。",
-      "confirmed": false
+      "threat_points": 3,
+      "threat_points_status": "level_design_placeholder",
+      "note": "预留。第五章隐形。威胁点还没定，3 只是占位，不能拿去当已确认预算。"
     },
     {
-      "id": "remnant.pile",
+      "id": "enm_shade_heap",
       "display_name": "堆积体",
-      "category": "remnant",
-      "proposal": false,
       "introduced_in": "ch5_02",
-      "threat": 6,
-      "stats": {
-        "hp": 220,
-        "move_speed": 0.6,
-        "armor": 2
-      },
-      "tags": [
-        "elite",
-        "splits"
-      ],
+      "threat_points": 6,
+      "threat_points_status": "level_design_placeholder",
       "splits_into": {
-        "enemy_id": "shade_small",
-        "count": 2
+        "enemy_id": "enm_shade_fast",
+        "count": 3,
+        "source": "combat_draft"
       },
-      "note": "未确认。分裂出的孩子暂用已确认的 shade_small。孩子算不算进这只的威胁，还没定。",
-      "confirmed": false
+      "note": "预留。战斗草案是死亡分裂出 3 个快残影。关卡旧稿曾写 2 个普通残影。孩子算不算进威胁还没定。"
     },
     {
-      "id": "remnant.barrier_dreg",
+      "id": "enm_shade_rift",
       "display_name": "结界之渣",
-      "category": "remnant",
-      "proposal": false,
       "introduced_in": "ch5_03",
-      "threat": 5,
-      "stats": {
-        "hp": 90,
-        "move_speed": 1.0,
-        "armor": 1
-      },
-      "tags": [
-        "elite",
-        "fades_cells"
-      ],
-      "note": "未确认。叙事种类。靠近时周围可放置格暂时褪色。具体格数等战斗策划。第五章 L3 才成群出现。",
-      "confirmed": false
+      "threat_points": 5,
+      "threat_points_status": "level_design_placeholder",
+      "note": "预留。第五章成群出现，周围可放置格褪色。威胁点还没定。"
     },
     {
-      "id": "boss.sakuya",
-      "display_name": "咲夜",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch2_04",
-      "threat": 18,
-      "stats": {
-        "hp": 800,
-        "move_speed": 0.75,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。草案首领。第二章首领关还没做地图，这个威胁不要加进 stub 的预算里。stub 预算已经是整关占位。",
-      "confirmed": false
+      "id": "boss_cirno",
+      "display_name": "琪露诺",
+      "introduced_in": "ch1_04",
+      "threat_points": null,
+      "note": "不占波次预算。生命、移速、护甲在数值和战斗的属性表，不在这里。"
     },
     {
-      "id": "boss.keine",
-      "display_name": "慧音",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch3_04",
-      "threat": 16,
-      "stats": {
-        "hp": 700,
-        "move_speed": 0.65,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。草案首领。和妹红同关。stub 预算未拆开。",
-      "confirmed": false
-    },
-    {
-      "id": "boss.mokou",
-      "display_name": "妹红",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch3_04",
-      "threat": 18,
-      "stats": {
-        "hp": 750,
-        "move_speed": 0.7,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。草案首领。stub 预算未拆开。",
-      "confirmed": false
-    },
-    {
-      "id": "boss.sanae",
-      "display_name": "早苗",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch4_04",
-      "threat": 20,
-      "stats": {
-        "hp": 900,
-        "move_speed": 0.8,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。草案首领。stub 预算未拆开。",
-      "confirmed": false
-    },
-    {
-      "id": "boss.yukari",
-      "display_name": "紫",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "ch5_04",
-      "threat": 24,
-      "stats": {
-        "hp": 1100,
-        "move_speed": 0.7,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。草案首领。stub 预算未拆开。",
-      "confirmed": false
-    },
-    {
-      "id": "boss.wasure",
-      "display_name": "忘",
-      "category": "boss",
-      "proposal": false,
-      "introduced_in": "final_01",
-      "threat": 30,
-      "stats": {
-        "hp": 1500,
-        "move_speed": 0.6,
-        "armor": 0
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。终章首领。正式名未定，id 用叙事稿的 char.wasure / boss.wasure。stub 预算未拆开。",
-      "confirmed": false
-    },
-    {
-      "id": "boss.meiling",
+      "id": "boss_meiling",
       "display_name": "美铃",
-      "category": "boss",
-      "proposal": true,
       "introduced_in": null,
-      "threat": 16,
-      "stats": {
-        "hp": 700,
-        "move_speed": 0.6,
-        "armor": 4
-      },
-      "tags": [
-        "boss"
-      ],
-      "note": "未确认。提案 id。叙事有美铃决斗，但本框架的第二章首领关暂定只有咲夜。若制作人要美铃也做首领阶段，用这个 id，不要新造名字。",
-      "confirmed": false
+      "threat_points": null,
+      "note": "仅预留命名。本框架的第二章首领关暂定只有咲夜。属性未定义。"
+    },
+    {
+      "id": "boss_sakuya",
+      "display_name": "咲夜",
+      "introduced_in": "ch2_04",
+      "threat_points": null,
+      "note": "仅预留命名。属性未定义，不进草案关的波次预算。"
+    },
+    {
+      "id": "boss_keine",
+      "display_name": "慧音",
+      "introduced_in": "ch3_04",
+      "threat_points": null,
+      "note": "仅预留命名。属性未定义。"
+    },
+    {
+      "id": "boss_mokou",
+      "display_name": "妹红",
+      "introduced_in": "ch3_04",
+      "threat_points": null,
+      "note": "仅预留命名。属性未定义。"
+    },
+    {
+      "id": "boss_sanae",
+      "display_name": "早苗",
+      "introduced_in": "ch4_04",
+      "threat_points": null,
+      "note": "仅预留命名。属性未定义。"
+    },
+    {
+      "id": "boss_yukari",
+      "display_name": "紫",
+      "introduced_in": "ch5_04",
+      "threat_points": null,
+      "note": "仅预留命名。属性未定义。"
+    },
+    {
+      "id": "boss_wasure",
+      "display_name": "忘",
+      "introduced_in": "final_01",
+      "threat_points": null,
+      "note": "仅预留命名。正式名未定。属性未定义。"
     }
   ]
 }

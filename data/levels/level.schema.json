@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/XYN159/The-Last-Survivor/data/levels/level.schema.json",
   "title": "关卡配置",
-  "description": "《东方守幻录》单关配置。完整关含 7×12 地图和波次；草案关只有元数据。威胁预算、生命倍率和三选一在 data/balance/level_difficulty.json。灵力和地图特效倍率仍是占位。",
+  "description": "《东方守幻录》单关配置。完整关的地图字段跟战斗策划的读图约定一致。威胁预算在 data/balance/level_tables/level_difficulty.csv。敌人的生命和移速不在关卡文件里。",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -23,7 +23,6 @@
     "new_character_ids",
     "new_enemy_ids",
     "params",
-    "modifiers",
     "bosses",
     "placeholders"
   ],
@@ -36,7 +35,7 @@
     "difficulty_id": {
       "type": "string",
       "pattern": "^(prologue_0[1-3]|ch[1-5]_0[1-4]|final_01)$",
-      "description": "对应 data/balance/level_difficulty.json 里的同一行。必须和 id 相同。"
+      "description": "对应 data/balance/level_tables/level_difficulty.csv 里的同一行。必须和 id 相同。"
     },
     "status": {"enum": ["complete", "stub"]},
     "chapter_id": {"enum": ["prologue", "ch1", "ch2", "ch3", "ch4", "ch5", "final"]},
@@ -66,18 +65,14 @@
     "new_character_ids": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
     },
     "new_enemy_ids": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"type": "string", "pattern": "^(enm|boss)_[a-z0-9_]+$"}
     },
     "params": {"$ref": "#/$defs/params"},
-    "modifiers": {
-      "type": "array",
-      "items": {"$ref": "#/$defs/modifier"}
-    },
     "bosses": {
       "type": "array",
       "items": {"$ref": "#/$defs/boss"}
@@ -90,7 +85,13 @@
       "items": {"$ref": "#/$defs/wave"}
     },
     "wave_count": {"type": "integer", "minimum": 8, "maximum": 16},
-    "design_notes": {"type": "string", "minLength": 1}
+    "design_notes": {"type": "string", "minLength": 1},
+    "spell_energy_start": {"type": "number", "minimum": 0, "maximum": 100},
+    "spell_charge_mult": {"type": "number", "exclusiveMinimum": 0},
+    "deploy_time_sec": {"const": 10},
+    "deploy_wait_for_player": {"type": "boolean"},
+    "intermission_sec": {"type": "number", "minimum": 3, "maximum": 5},
+    "combat_timing_note": {"type": "string", "minLength": 1}
   },
   "allOf": [
     {
@@ -99,7 +100,15 @@
         "required": ["status"]
       },
       "then": {
-        "required": ["map", "waves"],
+        "required": [
+          "map",
+          "waves",
+          "spell_energy_start",
+          "spell_charge_mult",
+          "deploy_time_sec",
+          "deploy_wait_for_player",
+          "intermission_sec"
+        ],
         "properties": {
           "wave_count": false,
           "design_notes": false
@@ -170,45 +179,19 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 1}
+          "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
         }
       }
     },
-    "effect": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "value", "_placeholder"],
-      "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "value": {"type": "number"},
-        "duration_sec": {"type": "number", "minimum": 0},
-        "starts_after_sec": {"type": "number", "minimum": 0},
-        "_placeholder": {"const": true},
-        "note": {"type": "string", "minLength": 1}
-      }
-    },
-    "modifier": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "display_name", "effects"],
-      "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "display_name": {"type": "string", "minLength": 1},
-        "effects": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/effect"}
-        }
-      }
-    },
-    "cell": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["col", "row"],
-      "properties": {
-        "col": {"type": "integer", "minimum": 0, "maximum": 6},
-        "row": {"type": "integer", "minimum": 0, "maximum": 11}
-      }
+    "coord": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "integer", "minimum": 0, "maximum": 6},
+        {"type": "integer", "minimum": 0, "maximum": 11}
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
     },
     "map": {
       "type": "object",
@@ -217,21 +200,36 @@
         "columns",
         "rows",
         "origin",
-        "grid",
+        "cells",
+        "cell_legend",
         "entrances",
-        "guard_cell",
+        "guard",
         "paths",
+        "terrain",
+        "cell_sets",
         "good_spots"
       ],
       "properties": {
         "columns": {"const": 7},
         "rows": {"const": 12},
         "origin": {"const": "row_0_is_north"},
-        "grid": {
+        "cells": {
           "type": "array",
           "minItems": 12,
           "maxItems": 12,
-          "items": {"type": "string", "pattern": "^[.#P]{7}$"}
+          "items": {"type": "string", "pattern": "^[P.BSG]{7}$"}
+        },
+        "cell_legend": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["P", ".", "B", "S", "G"],
+          "properties": {
+            "P": {"const": "path"},
+            ".": {"const": "placeable"},
+            "B": {"const": "blocked"},
+            "S": {"const": "spawn"},
+            "G": {"const": "guard"}
+          }
         },
         "entrances": {
           "type": "array",
@@ -247,11 +245,37 @@
             }
           }
         },
-        "guard_cell": {"$ref": "#/$defs/cell"},
+        "guard": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cell", "id", "display_name"],
+          "properties": {
+            "cell": {"$ref": "#/$defs/coord"},
+            "id": {"type": "string", "pattern": "^guard\\.[a-z0-9_]+$"},
+            "display_name": {"type": "string", "minLength": 1}
+          }
+        },
         "paths": {
           "type": "array",
           "minItems": 1,
           "items": {"$ref": "#/$defs/path"}
+        },
+        "terrain": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/terrain"}
+        },
+        "cell_sets": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {"$ref": "#/$defs/coord"}
+              },
+              {"$ref": "#/$defs/bossRadius"}
+            ]
+          }
         },
         "good_spots": {
           "type": "array",
@@ -264,17 +288,60 @@
     "path": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "entrance_id", "kind", "cells"],
+      "required": ["path_id", "id", "entrance_id", "kind", "cells"],
       "properties": {
+        "path_id": {"type": "string", "pattern": "^path\\.[a-z0-9_]+$"},
         "id": {"type": "string", "pattern": "^path\\.[a-z0-9_]+$"},
         "entrance_id": {"type": "string", "minLength": 1},
         "kind": {"enum": ["ground", "flying"]},
         "cells": {
           "type": "array",
           "minItems": 2,
-          "uniqueItems": true,
-          "items": {"$ref": "#/$defs/cell"}
+          "items": {"$ref": "#/$defs/coord"}
         }
+      }
+    },
+    "terrain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terrain_id", "start", "duration_sec"],
+      "properties": {
+        "terrain_id": {"enum": ["ter_ice", "ter_icicle", "ter_fog", "ter_barrier"]},
+        "cells": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/coord"}
+        },
+        "rect": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 1},
+            {"type": "integer", "minimum": 1}
+          ],
+          "items": false,
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "start": {"type": "string", "pattern": "^(level_start|wave_[1-9][0-9]*)$"},
+        "duration_sec": {"type": "number"},
+        "note": {"type": "string", "minLength": 1}
+      },
+      "oneOf": [
+        {"required": ["cells"], "not": {"required": ["rect"]}},
+        {"required": ["rect"], "not": {"required": ["cells"]}}
+      ]
+    },
+    "bossRadius": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "radius_cells", "follows", "note"],
+      "properties": {
+        "mode": {"const": "radius_around_boss"},
+        "radius_cells": {"const": 2.5},
+        "follows": {"const": "boss_position"},
+        "note": {"type": "string", "minLength": 1}
       }
     },
     "goodSpot": {
@@ -292,38 +359,33 @@
     "wave": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "delay_sec", "groups"],
+      "required": ["id", "wave_id", "delay_sec", "next_wave_delay_sec", "is_boss", "spawns"],
       "properties": {
         "id": {"type": "string", "pattern": "^w[0-9]{2}$"},
+        "wave_id": {"type": "string", "pattern": "^w[0-9]{2}$"},
         "delay_sec": {"type": "number", "minimum": 0},
+        "next_wave_delay_sec": {"type": "number", "minimum": 0},
+        "is_boss": {"type": "boolean"},
         "pressure": {"enum": ["minion", "boss_phase"]},
         "note": {"type": "string", "minLength": 1},
-        "groups": {
+        "spawns": {
           "type": "array",
           "minItems": 1,
-          "items": {"$ref": "#/$defs/spawnGroup"}
+          "items": {"$ref": "#/$defs/spawn"}
         }
       }
     },
-    "spawnGroup": {
+    "spawn": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "enemy_id",
-        "count",
-        "interval_sec",
-        "entrance_id",
-        "path_id",
-        "delay_sec"
-      ],
+      "required": ["enemy_id", "path_id", "count", "interval_sec", "delay_sec", "entrance_id"],
       "properties": {
-        "enemy_id": {"type": "string", "minLength": 1},
+        "enemy_id": {"type": "string", "pattern": "^enm_[a-z0-9_]+$"},
+        "path_id": {"type": "string", "minLength": 1},
         "count": {"type": "integer", "minimum": 1},
         "interval_sec": {"type": "number", "exclusiveMinimum": 0},
-        "entrance_id": {"type": "string", "minLength": 1},
-        "path_id": {"type": "string", "minLength": 1},
         "delay_sec": {"type": "number", "minimum": 0},
-        "elite": {"type": "boolean"}
+        "entrance_id": {"type": "string", "minLength": 1}
       }
     },
     "boss": {
@@ -342,10 +404,10 @@
         "combat_notes"
       ],
       "properties": {
-        "id": {"type": "string", "pattern": "^boss[._][a-z0-9_]+$"},
+        "id": {"type": "string", "pattern": "^boss_[a-z0-9_]+$"},
         "display_name": {"type": "string", "minLength": 1},
-        "character_id": {"type": "string", "minLength": 1},
-        "blocks_character_id": {"type": "string", "minLength": 1},
+        "character_id": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"},
+        "blocks_character_id": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"},
         "enters_at_wave_id": {"type": "string", "minLength": 1},
         "entrance_id": {"type": "string", "minLength": 1},
         "path_id": {"type": "string", "minLength": 1},
@@ -369,43 +431,28 @@
     "phase": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "display_name", "spell_card_id", "spell_card_name", "wave_ids", "map_changes"],
+      "required": [
+        "id",
+        "display_name",
+        "spell_card_id",
+        "spell_card_name",
+        "hp_ratio_start",
+        "hp_ratio_end",
+        "cells_ref"
+      ],
       "properties": {
         "id": {"type": "string", "pattern": "^phase_[1-3]$"},
         "display_name": {"type": "string", "minLength": 1},
-        "spell_card_id": {"type": "string", "pattern": "^spell\\.[a-z0-9_.]+$"},
+        "spell_card_id": {"type": "string", "pattern": "^sc_[a-z0-9_]+$"},
         "spell_card_name": {"type": "string", "minLength": 1},
-        "wave_ids": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"type": "string", "minLength": 1}
-        },
-        "map_changes": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/mapChange"}
-        }
-      }
-    },
-    "mapChange": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "label", "cells", "terrain", "replaces_previous", "effects"],
-      "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "label": {"type": "string", "minLength": 1},
-        "cells": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/cell"}
-        },
-        "terrain": {"enum": ["ice"]},
-        "replaces_previous": {"type": "boolean"},
-        "effects": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/effect"}
-        }
+        "hp_ratio_start": {"type": "number", "minimum": 0, "maximum": 1},
+        "hp_ratio_end": {"type": "number", "minimum": 0, "maximum": 1},
+        "cells_ref": {"type": "string", "minLength": 1},
+        "terrain_id": {"enum": ["ter_ice", "ter_icicle", "ter_fog", "ter_barrier"]},
+        "duration_sec": {"type": "number"},
+        "status_on_character": {"type": "string", "pattern": "^st_[a-z0-9_]+$"},
+        "status_on_shade": {"type": "string", "pattern": "^st_[a-z0-9_]+$"},
+        "note": {"type": "string", "minLength": 1}
       }
     },
     "placeholders": {

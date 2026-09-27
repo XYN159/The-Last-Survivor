@@ -1,12 +1,11 @@
 {
   "schema_version": 1,
-  "modifiers": [],
   "bosses": [
     {
-      "id": "boss_ch1",
+      "id": "boss_cirno",
       "display_name": "琪露诺",
-      "character_id": "char.cirno",
-      "blocks_character_id": "char.cirno",
+      "character_id": "chr_cirno",
+      "blocks_character_id": "chr_cirno",
       "enters_at_wave_id": "w05",
       "entrance_id": "entrance.north",
       "path_id": "path.main",
@@ -20,148 +19,46 @@
         {
           "id": "phase_1",
           "display_name": "冰瀑",
-          "spell_card_id": "spell.cirno.icicle_fall",
+          "spell_card_id": "sc_boss_cirno_icicle_fall",
           "spell_card_name": "冰符「冰瀑」",
-          "wave_ids": [
-            "w05",
-            "w06",
-            "w07",
-            "w08",
-            "w09",
-            "w10"
-          ],
-          "map_changes": [
-            {
-              "id": "ice_column",
-              "label": "右边一整列结冰",
-              "cells": [
-                {
-                  "col": 5,
-                  "row": 4
-                },
-                {
-                  "col": 5,
-                  "row": 5
-                },
-                {
-                  "col": 5,
-                  "row": 6
-                },
-                {
-                  "col": 5,
-                  "row": 7
-                },
-                {
-                  "col": 5,
-                  "row": 8
-                },
-                {
-                  "col": 5,
-                  "row": 9
-                }
-              ],
-              "terrain": "ice",
-              "replaces_previous": true,
-              "effects": [
-                {
-                  "id": "enemy_speed_multiplier",
-                  "value": 1.4,
-                  "_placeholder": true,
-                  "note": "走在这些格子上的残影，移速乘以 1.4。倍率等数值策划。"
-                }
-              ]
-            }
-          ]
+          "hp_ratio_start": 1.0,
+          "hp_ratio_end": 0.66,
+          "cells_ref": "boss_cirno_p1_icicles",
+          "terrain_id": "ter_icicle",
+          "duration_sec": 12,
+          "status_on_character": "st_freeze",
+          "note": "100% 到 66% 血。落点用格子集合。空格变成冰柱 12 秒并挡住直线；格上有角色则改为冻结。秒数是战斗规则。"
         },
         {
           "id": "phase_2",
           "display_name": "完美冻结",
-          "spell_card_id": "spell.cirno.perfect_freeze",
+          "spell_card_id": "sc_boss_cirno_perfect_freeze",
           "spell_card_name": "冻符「完美冻结」",
-          "wave_ids": [
-            "w11",
-            "w12",
-            "w13",
-            "w14",
-            "w15"
-          ],
-          "map_changes": [
-            {
-              "id": "ice_expanded",
-              "label": "冰面扩到青蛙前面",
-              "cells": [
-                {
-                  "col": 3,
-                  "row": 4
-                },
-                {
-                  "col": 4,
-                  "row": 4
-                },
-                {
-                  "col": 5,
-                  "row": 4
-                },
-                {
-                  "col": 5,
-                  "row": 5
-                },
-                {
-                  "col": 5,
-                  "row": 6
-                },
-                {
-                  "col": 5,
-                  "row": 7
-                },
-                {
-                  "col": 5,
-                  "row": 8
-                },
-                {
-                  "col": 5,
-                  "row": 9
-                },
-                {
-                  "col": 4,
-                  "row": 9
-                },
-                {
-                  "col": 3,
-                  "row": 9
-                },
-                {
-                  "col": 3,
-                  "row": 10
-                }
-              ],
-              "terrain": "ice",
-              "replaces_previous": true,
-              "effects": [
-                {
-                  "id": "enemy_speed_multiplier",
-                  "value": 0,
-                  "duration_sec": 3,
-                  "_placeholder": true,
-                  "note": "宣言后冰面上的残影先停住。秒数等数值策划。这是「你到底帮哪边」的那几秒。"
-                },
-                {
-                  "id": "enemy_speed_multiplier",
-                  "value": 1.5,
-                  "starts_after_sec": 3,
-                  "_placeholder": true,
-                  "note": "停住结束后冰还在，残影变得更快。1.5 是占位。"
-                }
-              ]
-            }
-          ]
+          "hp_ratio_start": 0.66,
+          "hp_ratio_end": 0.33,
+          "cells_ref": "boss_cirno_p2_area",
+          "status_on_character": "st_freeze",
+          "status_on_shade": "st_freeze",
+          "note": "66% 到 33% 血。范围跟着琪露诺走，半径 2.5 格，见 cell_sets 里的对象，不是写死的格子。"
+        },
+        {
+          "id": "phase_3",
+          "display_name": "钻石风暴",
+          "spell_card_id": "sc_boss_cirno_diamond_blizzard",
+          "spell_card_name": "雪符「钻石风暴」",
+          "hp_ratio_start": 0.33,
+          "hp_ratio_end": 0.0,
+          "cells_ref": "boss_cirno_p3_ice",
+          "terrain_id": "ter_ice",
+          "duration_sec": -1,
+          "note": "33% 到 0%。这 10 格是靠近守护点的固定路线，不随她每步重算。格子变成冰面后，敌人移速 ×1.5，直到她被击败。倍率是地形规则。"
         }
       ],
       "combat_notes": [
-        "琪露诺沿 path.main 前进，从 w05 入场，一直走到决斗结束。她不是残影。",
-        "叙事希望冰瀑也会冻住贴着冰面的角色。冻不冻塔由战斗策划定，关卡这边先保证冰面在路线上。",
-        "完美冻结必须让残影也停住一会儿，否则台词「你到底帮哪边」没有对应的事发生。",
-        "首领漏到守护点是否直接失败，等数值策划。建议是直接失败。"
+        "琪露诺从 w05 沿 path.main 入场，一直走到决斗结束。只有入场那一波 is_boss 为真，避免每波都重播登场。",
+        "三张符卡按 100%、66%、33% 血量切换。波次仍交替加压，但加压不切换符卡。",
+        "冰瀑落在四个推荐位和竖路旁边多一格，玩家要改放到拐角内侧。完美冻结不写死格子。",
+        "第三张是战斗稿新增的雪符「钻石风暴」。文案 key 仍要补。关卡只提供格子集合。"
       ]
     }
   ],
@@ -178,12 +75,12 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "和琪露诺符卡决斗。两张符卡把一段路冻成冰，冰上的残影更快。",
+  "summary": "和琪露诺符卡决斗。血量到 66% 和 33% 时换符卡。冰柱占住几个好位置，最后一段路结冰。",
   "player_feeling": "热闹、赶，还有一点好笑。雾散开了，看得清哪几格在结冰。",
   "teaches": [
     "首领会沿路线走进来，并宣言符卡",
-    "符卡会改地图，而不只是放一段动画",
-    "冰面会让残影变快，所以输出要放在冰面旁边或冰面之前",
+    "符卡按血量换，会改地图，而不只是放一段动画",
+    "冰柱会占住好位置并挡住直线，冰面会让残影变快",
     "这一关不能放置琪露诺"
   ],
   "new_character_ids": [],
@@ -192,28 +89,35 @@
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa"
+      "chr_reimu",
+      "chr_marisa"
     ]
   },
   "map": {
     "columns": 7,
     "rows": 12,
     "origin": "row_0_is_north",
-    "grid": [
-      "###P###",
-      "#..P..#",
-      "#..P..#",
-      "#..P..#",
-      "#..PPP#",
-      "#....P#",
-      "#....P#",
-      "#.#..P#",
-      "#.#..P#",
-      "#.#PPP#",
-      "#..P..#",
-      "###P###"
+    "cells": [
+      "BBBSBBB",
+      "B..P..B",
+      "B..P..B",
+      "B..P..B",
+      "B..PPPB",
+      "B....PB",
+      "B....PB",
+      "B.B..PB",
+      "B.B..PB",
+      "B.BPPPB",
+      "B..P..B",
+      "BBBGBBB"
     ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
     "entrances": [
       {
         "id": "entrance.north",
@@ -221,474 +125,604 @@
         "row": 0
       }
     ],
-    "guard_cell": {
-      "col": 3,
-      "row": 11
+    "guard": {
+      "cell": [
+        3,
+        11
+      ],
+      "id": "guard.misty_lake_frogs",
+      "display_name": "冰雕青蛙"
     },
     "paths": [
       {
+        "path_id": "path.main",
         "id": "path.main",
         "entrance_id": "entrance.north",
         "kind": "ground",
         "cells": [
-          {
-            "col": 3,
-            "row": 0
-          },
-          {
-            "col": 3,
-            "row": 1
-          },
-          {
-            "col": 3,
-            "row": 2
-          },
-          {
-            "col": 3,
-            "row": 3
-          },
-          {
-            "col": 3,
-            "row": 4
-          },
-          {
-            "col": 4,
-            "row": 4
-          },
-          {
-            "col": 5,
-            "row": 4
-          },
-          {
-            "col": 5,
-            "row": 5
-          },
-          {
-            "col": 5,
-            "row": 6
-          },
-          {
-            "col": 5,
-            "row": 7
-          },
-          {
-            "col": 5,
-            "row": 8
-          },
-          {
-            "col": 5,
-            "row": 9
-          },
-          {
-            "col": 4,
-            "row": 9
-          },
-          {
-            "col": 3,
-            "row": 9
-          },
-          {
-            "col": 3,
-            "row": 10
-          },
-          {
-            "col": 3,
-            "row": 11
-          }
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            4,
+            9
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            11
+          ]
         ]
       }
     ],
+    "terrain": [],
+    "cell_sets": {
+      "boss_cirno_p1_icicles": [
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          4,
+          10
+        ]
+      ],
+      "boss_cirno_p2_area": {
+        "mode": "radius_around_boss",
+        "radius_cells": 2.5,
+        "follows": "boss_position",
+        "note": "琪露诺沿路线走，冻结圈跟着她的当前位置，半径 2.5 格。这里不写死格子。战斗侧如果只认格子数组，应忽略这个对象，并使用同一条半径规则。"
+      },
+      "boss_cirno_p3_ice": [
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          4,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          3,
+          10
+        ]
+      ]
+    },
     "good_spots": [
       {
         "id": "spot.above_ice",
         "col": 2,
         "row": 1,
-        "label": "冰面之上",
-        "why": "符卡结冰从 r4 才开始。这一格始终不在冰上，输出稳定。灵梦适合留在这里。"
+        "label": "靠入口",
+        "why": "入场前很稳。冰瀑会在这一格落下冰柱 12 秒，人要挪开，直线也会被挡住。"
       },
       {
         "id": "spot.ice_column",
         "col": 4,
         "row": 5,
-        "label": "冰列旁边",
-        "why": "贴着会被冻成冰的那一整列。魔理沙放这里，冰上排成一列的残影会被穿透。这一关不能放琪露诺。"
+        "label": "竖路旁边",
+        "why": "贴着右边那条竖路，魔理沙的直线从这里伸出去。冰瀑会占住这一格，射线被切断。"
       },
       {
         "id": "spot.ice_lower",
         "col": 4,
         "row": 8,
-        "label": "冰列下段",
-        "why": "同一条冰列的下半。上半如果被符卡冻住角色，下半还能补枪。"
+        "label": "竖路下段",
+        "why": "同一条竖路的下半。它也会被冰柱占住，不能当成上段被封之后的备位。"
+      },
+      {
+        "id": "spot.inside_turn",
+        "col": 3,
+        "row": 8,
+        "label": "拐角内侧",
+        "why": "贴着即将结冰的下转弯，而且不在冰瀑的落点里。其他推荐位会被冰柱占住，改放这里。"
       },
       {
         "id": "spot.last_step",
         "col": 4,
         "row": 10,
         "label": "最后一步",
-        "why": "完美冻结会把这一格旁边的路也变成冰。它会从稳守变成快漏，所以不能只有这一格有人。"
+        "why": "贴着守护点前的路。冰瀑会占住它。第三阶段旁边那 10 格路线变成冰面，残影在上面更快。"
       }
     ]
   },
   "waves": [
     {
       "id": "w01",
+      "wave_id": "w01",
       "delay_sec": 2.0,
-      "pressure": "minion",
-      "note": "小怪波。琪露诺还没入场。她不占这一波的预算。",
-      "groups": [
+      "next_wave_delay_sec": 8.0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 11,
           "interval_sec": 1.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 3,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
     },
     {
       "id": "w02",
+      "wave_id": "w02",
       "delay_sec": 8.0,
-      "pressure": "minion",
-      "note": "小怪波。琪露诺还没入场。她不占这一波的预算。",
-      "groups": [
+      "next_wave_delay_sec": 7.6,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 14,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 4,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
     },
     {
       "id": "w03",
+      "wave_id": "w03",
       "delay_sec": 7.6,
-      "pressure": "minion",
-      "note": "小怪波。琪露诺还没入场。她不占这一波的预算。",
-      "groups": [
+      "next_wave_delay_sec": 7.2,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 18,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 4,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
     },
     {
       "id": "w04",
+      "wave_id": "w04",
       "delay_sec": 7.2,
-      "pressure": "minion",
-      "note": "小怪波。琪露诺还没入场。她不占这一波的预算。",
-      "groups": [
+      "next_wave_delay_sec": 6.7,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 21,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 5,
           "interval_sec": 1.3,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "前奏。琪露诺还没入场。她不占这一波的预算。"
     },
     {
       "id": "w05",
+      "wave_id": "w05",
       "delay_sec": 6.7,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。琪露诺入场，冰瀑开始。这一阶段只有这一张符卡。首领不占预算。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 6.3,
+      "is_boss": true,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 13,
           "interval_sec": 1.3,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 17,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "琪露诺入场。符卡按血量切换，不按波次切。首领不占预算。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
+      "wave_id": "w06",
       "delay_sec": 6.3,
-      "pressure": "minion",
-      "note": "小怪波。符卡还在，这一波不加码。",
-      "groups": [
+      "next_wave_delay_sec": 5.9,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 27,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 7,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "小怪波。符卡仍按血量，这一波不加码。"
     },
     {
       "id": "w07",
+      "wave_id": "w07",
       "delay_sec": 5.9,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的快残影更多。",
-      "groups": [
+      "next_wave_delay_sec": 5.5,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 17,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 21,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "加压波。快残影更多。符卡仍按血量。"
     },
     {
       "id": "w08",
+      "wave_id": "w08",
       "delay_sec": 5.5,
-      "pressure": "minion",
-      "note": "小怪波。符卡还在，这一波不加码。",
-      "groups": [
+      "next_wave_delay_sec": 5.0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 34,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 8,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "小怪波。符卡仍按血量，这一波不加码。"
     },
     {
       "id": "w09",
+      "wave_id": "w09",
       "delay_sec": 5.0,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的快残影更多。",
-      "groups": [
+      "next_wave_delay_sec": 4.6,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 21,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 25,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "加压波。快残影更多。符卡仍按血量。"
     },
     {
       "id": "w10",
+      "wave_id": "w10",
       "delay_sec": 4.6,
-      "pressure": "minion",
-      "note": "小怪波。符卡还在，这一波不加码。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 4.2,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 40,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 10,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "小怪波。符卡仍按血量，这一波不加码。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w11",
+      "wave_id": "w11",
       "delay_sec": 4.2,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。完美冻结开始。这一阶段也只有这一张符卡。",
-      "groups": [
+      "next_wave_delay_sec": 3.8,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 24,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 30,
           "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "加压波。快残影更多。符卡仍按血量。"
     },
     {
       "id": "w12",
+      "wave_id": "w12",
       "delay_sec": 3.8,
-      "pressure": "minion",
-      "note": "小怪波。符卡还在，这一波不加码。",
-      "groups": [
+      "next_wave_delay_sec": 3.3,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 46,
           "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 12,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "小怪波。符卡仍按血量，这一波不加码。"
     },
     {
       "id": "w13",
+      "wave_id": "w13",
       "delay_sec": 3.3,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的快残影更多。",
-      "groups": [
+      "next_wave_delay_sec": 2.9,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 28,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 34,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "加压波。快残影更多。符卡仍按血量。"
     },
     {
       "id": "w14",
+      "wave_id": "w14",
       "delay_sec": 2.9,
-      "pressure": "minion",
-      "note": "小怪波。符卡还在，这一波不加码。",
-      "groups": [
+      "next_wave_delay_sec": 2.5,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 53,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 13,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "minion",
+      "note": "小怪波。符卡仍按血量，这一波不加码。"
     },
     {
       "id": "w15",
+      "wave_id": "w15",
       "delay_sec": 2.5,
-      "pressure": "boss_phase",
-      "note": "符卡加压波。符卡还是这一阶段那一张，这一波的快残影更多。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 31,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 39,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.4
+          "delay_sec": 0.4,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "pressure": "boss_phase",
+      "note": "加压波。快残影更多。符卡仍按血量。本波结束后弹出三选一，三张里选一张。"
     }
   ],
   "placeholders": {
@@ -697,6 +731,11 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
-  }
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "spell_energy_start": 0,
+  "spell_charge_mult": 1.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": false,
+  "intermission_sec": 4
 }

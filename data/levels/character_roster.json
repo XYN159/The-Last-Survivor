@@ -1,109 +1,95 @@
 {
   "schema_version": 1,
-  "_placeholder": true,
-  "note": "角色 id 沿用叙事稿的文本 key（char.reimu 这一组）。spirit_power_cost 全部是占位，等数值策划。playable 为 pending_producer 的角色不进关卡可放置名单。忘在终章通关后才解锁，所以 joins_at_level 为空，正式关卡里也不能放她。",
+  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、在哪一关加入。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 pending_producer 的角色不进可放置名单。忘在终章通关后才解锁，所以 joins_at_level 为空。",
   "characters": [
     {
-      "id": "char.reimu",
+      "id": "chr_reimu",
       "display_name": "灵梦",
       "playable": "yes",
-      "spirit_power_cost": 50,
       "role": "single_target",
       "joins_at_level": "prologue_01"
     },
     {
-      "id": "char.marisa",
+      "id": "chr_marisa",
       "display_name": "魔理沙",
       "playable": "yes",
-      "spirit_power_cost": 70,
       "role": "pierce",
       "joins_at_level": "prologue_02"
     },
     {
-      "id": "char.cirno",
+      "id": "chr_cirno",
       "display_name": "琪露诺",
       "playable": "yes",
-      "spirit_power_cost": 40,
       "role": "slow",
       "joins_at_level": "ch1_01"
     },
     {
-      "id": "char.daiyousei",
+      "id": "chr_daiyousei",
       "display_name": "大妖精",
       "playable": "pending_producer",
-      "spirit_power_cost": 45,
       "role": "support",
       "joins_at_level": null
     },
     {
-      "id": "char.meiling",
+      "id": "chr_meiling",
       "display_name": "美铃",
       "playable": "yes",
-      "spirit_power_cost": 60,
       "role": "block",
       "joins_at_level": "ch2_01"
     },
     {
-      "id": "char.sakuya",
+      "id": "chr_sakuya",
       "display_name": "咲夜",
       "playable": "yes",
-      "spirit_power_cost": 80,
       "role": "armor_break",
       "joins_at_level": "ch2_02"
     },
     {
-      "id": "char.remilia",
+      "id": "chr_remilia",
       "display_name": "蕾米莉亚",
       "playable": "pending_producer",
-      "spirit_power_cost": 100,
       "role": "burst",
       "joins_at_level": null
     },
     {
-      "id": "char.keine",
+      "id": "chr_keine",
       "display_name": "慧音",
       "playable": "yes",
-      "spirit_power_cost": 55,
       "role": "protect",
       "joins_at_level": "ch3_01"
     },
     {
-      "id": "char.mokou",
+      "id": "chr_mokou",
       "display_name": "妹红",
       "playable": "yes",
-      "spirit_power_cost": 75,
       "role": "lane_damage",
       "joins_at_level": "ch3_02"
     },
     {
-      "id": "char.aya",
+      "id": "chr_aya",
       "display_name": "文",
       "playable": "pending_producer",
-      "spirit_power_cost": 65,
       "role": "reveal",
       "joins_at_level": null
     },
     {
-      "id": "char.sanae",
+      "id": "chr_sanae",
       "display_name": "早苗",
       "playable": "yes",
-      "spirit_power_cost": 70,
       "role": "anti_air",
       "joins_at_level": "ch4_01"
     },
     {
-      "id": "char.yukari",
+      "id": "chr_yukari",
       "display_name": "紫",
       "playable": "yes",
-      "spirit_power_cost": 90,
       "role": "control",
       "joins_at_level": "ch5_01"
     },
     {
-      "id": "char.wasure",
+      "id": "chr_wasure",
       "display_name": "忘",
       "playable": "yes",
-      "spirit_power_cost": 80,
       "role": "convert",
       "joins_at_level": null
     }

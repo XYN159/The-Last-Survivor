@@ -3,7 +3,7 @@ extends GutTest
 ## 关卡 JSON 的几何和威胁。schema 由 tools/validate_levels.py 检查，两边规则要保持一致。
 
 const _LEVEL_DIR := "res://data/levels/"
-const _DIFFICULTY_PATH := "res://data/balance/level_difficulty.json"
+const _DIFFICULTY_PATH := "res://data/balance/level_tables/level_difficulty.csv"
 const _COLUMNS := 7
 const _ROWS := 12
 
@@ -26,8 +26,7 @@ func test_index_unlocks_twenty_four_levels_in_order() -> void:
 
 func test_complete_levels_have_valid_maps_and_threats() -> void:
 	var threats := _threats()
-	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
-	var rows: Dictionary = difficulty["levels"]
+	var rows := _read_difficulty()
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
 	for entry in index["levels"]:
 		if str(entry["status"]) != "complete":
@@ -40,8 +39,7 @@ func test_complete_levels_have_valid_maps_and_threats() -> void:
 
 func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
-	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
-	var rows: Dictionary = difficulty["levels"]
+	var rows := _read_difficulty()
 	var order: Array[String] = []
 	var grouped := {}
 	var hp_grouped := {}
@@ -53,7 +51,7 @@ func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 			order.append(chapter)
 			grouped[chapter] = []
 			hp_grouped[chapter] = []
-		grouped[chapter].append(int(row["threat_budget_total"]))
+		grouped[chapter].append(_budget_total(int(row["wave_count"])))
 		hp_grouped[chapter].append(float(row["hp_multiplier"]))
 	var previous_peak := 0
 	var previous_hp := 0.0
@@ -79,17 +77,39 @@ func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 		previous_chapter = chapter
 
 
-func test_difficulty_table_keeps_the_two_open_points() -> void:
-	var difficulty := _read_dictionary(_DIFFICULTY_PATH)
-	var ids: Array[String] = []
-	for item in difficulty["alignment_open"]:
-		ids.append(str(item["id"]))
-	assert_true(ids.has("threat_budget_coef_pending"))
-	assert_true(ids.has("half_lives_sits_on_star_boundary"))
-	assert_eq(int(difficulty["confirmed"]["starting_spirit_power"]), 150)
-	assert_eq(int(difficulty["confirmed"]["spirit_per_wave_survived"]), 20)
-	assert_eq(float(difficulty["levels"]["prologue_01"]["threat_budget_coef"]), 1.0)
-	assert_eq(str(difficulty["_owner"]), "数值策划")
+func test_difficulty_seed_records_the_open_points() -> void:
+	var file := FileAccess.open(_DIFFICULTY_PATH, FileAccess.READ)
+	assert_not_null(file, _DIFFICULTY_PATH)
+	var text := file.get_as_text()
+	assert_true(text.contains("owner: 数值策划"))
+	assert_true(text.contains("status: seed"))
+	assert_true(text.contains("(10 + 4 × wave_index) × threat_budget_coef"))
+	assert_true(text.contains("1.3"))
+	assert_true(text.contains("0.85"))
+	assert_true(text.contains("11-13"))
+	assert_true(text.contains("10-11"))
+	assert_true(text.contains("制作人"))
+	var rows := _read_difficulty()
+	assert_eq(str(rows["prologue_01"]["threat_budget_coef"]), "1.0")
+	assert_eq(str(rows["ch1_04"]["expected_first_clear_lives"]), "10-11")
+	assert_eq(str(rows["ch1_01"]["expected_first_clear_lives"]), "11-13")
+	assert_eq(str(rows["prologue_01"]["reward_spirit_start"]), "150")
+	assert_eq(str(rows["prologue_01"]["reward_spirit_per_wave"]), "20")
+
+
+func test_fast_shade_stats_are_not_in_the_level_catalog() -> void:
+	var catalog := _read_dictionary(_LEVEL_DIR + "enemy_catalog.json")
+	var conflict: Dictionary = catalog["stat_conflict"]
+	var blob := JSON.stringify(conflict)
+	assert_eq(str(conflict["id"]), "enm_shade_fast")
+	assert_true(blob.contains("2.0"))
+	assert_true(blob.contains("1.8"))
+	assert_true(blob.contains("35"))
+	assert_true(blob.contains("都不采用"))
+	for entry in catalog["entries"]:
+		assert_false(entry.has("hp"))
+		assert_false(entry.has("move_speed"))
+		assert_false(entry.has("stats"))
 
 
 func test_rating_bands_use_twenty_lives() -> void:
@@ -105,6 +125,9 @@ func test_rating_bands_use_twenty_lives() -> void:
 	assert_eq(int(bands[1]["lives_max"]), 17)
 	assert_eq(int(bands[2]["lives_min"]), 18)
 	assert_eq(int(bands[2]["lives_max"]), 20)
+	assert_false(bool(rating["leak"]["stored_in_level_data"]))
+	assert_eq(str(rating["first_clear"]["normal_lives_remaining"]), "11-13")
+	assert_eq(str(rating["first_clear"]["boss_lives_remaining"]), "10-11")
 
 
 func _read_dictionary(path: String) -> Dictionary:
@@ -122,20 +145,47 @@ func _read_dictionary(path: String) -> Dictionary:
 	return {}
 
 
+func _read_difficulty() -> Dictionary:
+	var file := FileAccess.open(_DIFFICULTY_PATH, FileAccess.READ)
+	assert_not_null(file, _DIFFICULTY_PATH)
+	var header: PackedStringArray = PackedStringArray()
+	var rows := {}
+	while file != null and not file.eof_reached():
+		var line := file.get_line().strip_edges()
+		if line.is_empty() or line.begins_with("#"):
+			continue
+		var parts := line.split(",")
+		if header.is_empty():
+			header = parts
+			continue
+		var row := {}
+		for column in header.size():
+			row[header[column]] = parts[column]
+		rows[str(row["level_id"])] = row
+	return rows
+
+
+func _budget_total(wave_count: int) -> int:
+	var total := 0
+	for wave_index in range(1, wave_count + 1):
+		total += 10 + 4 * wave_index
+	return total
+
+
 func _threats() -> Dictionary:
 	var catalog := _read_dictionary(_LEVEL_DIR + "enemy_catalog.json")
 	var threats := {}
 	for entry in catalog["entries"]:
-		if entry["threat"] == null:
+		if entry["threat_points"] == null:
 			continue
-		threats[str(entry["id"])] = int(entry["threat"])
+		threats[str(entry["id"])] = int(entry["threat_points"])
 	return threats
 
 
 func _map_problems(level: Dictionary) -> PackedStringArray:
 	var problems: PackedStringArray = []
 	var level_map: Dictionary = level["map"]
-	var grid: Array = level_map["grid"]
+	var grid: Array = level_map["cells"]
 	if grid.size() != _ROWS:
 		problems.append("%s 行数不是 12" % str(level["id"]))
 		return problems
@@ -143,41 +193,52 @@ func _map_problems(level: Dictionary) -> PackedStringArray:
 		if str(row).length() != _COLUMNS:
 			problems.append("%s 有一行不是 7 列" % str(level["id"]))
 			return problems
-	var guard: Dictionary = level_map["guard_cell"]
-	var guard_col := int(guard["col"])
-	var guard_row := int(guard["row"])
-	if _cell(grid, guard_col, guard_row) != "P":
-		problems.append("%s 守护点不在路线上" % str(level["id"]))
+	var guard_cell: Array = level_map["guard"]["cell"]
+	var guard_col := int(guard_cell[0])
+	var guard_row := int(guard_cell[1])
+	if _cell(grid, guard_col, guard_row) != "G":
+		problems.append("%s 守护点不是 G" % str(level["id"]))
 	var entrances := {}
 	for entrance in level_map["entrances"]:
 		entrances[str(entrance["id"])] = Vector2i(int(entrance["col"]), int(entrance["row"]))
-	var covered := {}
-	var path_ids := {}
+	var starts := {}
+	var parsed: Array = []
 	for path in level_map["paths"]:
-		path_ids[str(path["id"])] = true
+		var cells: Array = path["cells"]
+		parsed.append(path)
+		if not cells.is_empty():
+			var first: Array = cells[0]
+			starts["%d,%d" % [int(first[0]), int(first[1])]] = true
+	var covered := {}
+	for path in parsed:
 		var cells: Array = path["cells"]
 		var previous := Vector2i(-99, -99)
 		var index := 0
 		for cell in cells:
-			var here := Vector2i(int(cell["col"]), int(cell["row"]))
-			if _cell(grid, here.x, here.y) != "P":
-				problems.append("%s 路径踩到非路线" % str(path["id"]))
+			var here := Vector2i(int(cell[0]), int(cell[1]))
+			var expected := "P"
+			if here.x == guard_col and here.y == guard_row:
+				expected = "G"
+			elif starts.has("%d,%d" % [here.x, here.y]):
+				expected = "S"
+			if _cell(grid, here.x, here.y) != expected:
+				problems.append("%s 路径字符不对" % str(path["path_id"]))
 			if index > 0 and absi(here.x - previous.x) + absi(here.y - previous.y) != 1:
-				problems.append("%s 路径不连续" % str(path["id"]))
+				problems.append("%s 路径不连续" % str(path["path_id"]))
 			previous = here
 			covered["%d,%d" % [here.x, here.y]] = true
 			index += 1
 		if cells.is_empty():
-			problems.append("%s 路径是空的" % str(path["id"]))
+			problems.append("%s 路径是空的" % str(path["path_id"]))
 		else:
-			var first: Dictionary = cells[0]
-			var start := Vector2i(int(first["col"]), int(first["row"]))
+			var first_cell: Array = cells[0]
+			var start := Vector2i(int(first_cell[0]), int(first_cell[1]))
 			var entrance_id := str(path["entrance_id"])
 			if not entrances.has(entrance_id) or entrances[entrance_id] != start:
-				problems.append("%s 没有从入口出发" % str(path["id"]))
-			var last: Dictionary = cells[cells.size() - 1]
-			if int(last["col"]) != guard_col or int(last["row"]) != guard_row:
-				problems.append("%s 没有走到守护点" % str(path["id"]))
+				problems.append("%s 没有从入口出发" % str(path["path_id"]))
+			var last: Array = cells[cells.size() - 1]
+			if int(last[0]) != guard_col or int(last[1]) != guard_row:
+				problems.append("%s 没有走到守护点" % str(path["path_id"]))
 	for row_index in grid.size():
 		var line := str(grid[row_index])
 		for col_index in line.length():
@@ -191,46 +252,50 @@ func _map_problems(level: Dictionary) -> PackedStringArray:
 		var row := int(spot["row"])
 		if _cell(grid, col, row) != ".":
 			problems.append("%s 好位置不是空地" % str(spot["id"]))
-		elif not _touches_path(grid, col, row):
+		elif not _touches_route(grid, col, row):
 			problems.append("%s 好位置没有贴着路线" % str(spot["id"]))
 	return problems
 
 
 func _threat_problems(level: Dictionary, threats: Dictionary, row: Dictionary) -> PackedStringArray:
 	var problems: PackedStringArray = []
-	var budgets: Array = row["wave_threat_budgets"]
+	var wave_count := int(row["wave_count"])
 	var waves: Array = level["waves"]
-	if waves.size() != budgets.size():
+	if waves.size() != wave_count:
 		problems.append("%s 波次数和难度表不一致" % str(level["id"]))
 		return problems
 	if str(level["difficulty_id"]) != str(level["id"]):
 		problems.append("%s 的难度行没有指向自己" % str(level["id"]))
+	if str(row["threat_budget_coef"]) != "1.0":
+		problems.append("%s 的系数种子不是 1.0" % str(level["id"]))
 	for index in waves.size():
 		var wave: Dictionary = waves[index]
 		var total := 0
-		for spawn in wave["groups"]:
+		for spawn in wave["spawns"]:
 			var enemy_id := str(spawn["enemy_id"])
 			if not threats.has(enemy_id):
 				problems.append("缺少敌人 " + enemy_id)
 			else:
 				total += int(spawn["count"]) * int(threats[enemy_id])
-		if total != int(budgets[index]):
+		var budget := 10 + 4 * (index + 1)
+		if total != budget:
 			problems.append(
-				(
-					"%s %s 威胁 %d 不是 %d"
-					% [str(level["id"]), str(wave["id"]), total, int(budgets[index])]
-				)
+				"%s %s 威胁 %d 不是 %d" % [str(level["id"]), str(wave["id"]), total, budget]
 			)
 	return problems
 
 
-func _touches_path(grid: Array, col: int, row: int) -> bool:
-	return (
-		_cell(grid, col + 1, row) == "P"
-		or _cell(grid, col - 1, row) == "P"
-		or _cell(grid, col, row + 1) == "P"
-		or _cell(grid, col, row - 1) == "P"
-	)
+func _touches_route(grid: Array, col: int, row: int) -> bool:
+	var neighbors := [
+		_cell(grid, col + 1, row),
+		_cell(grid, col - 1, row),
+		_cell(grid, col, row + 1),
+		_cell(grid, col, row - 1),
+	]
+	for neighbor in neighbors:
+		if neighbor == "P" or neighbor == "S" or neighbor == "G":
+			return true
+	return false
 
 
 func _cell(grid: Array, col: int, row: int) -> String:

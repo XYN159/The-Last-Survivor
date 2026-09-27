@@ -25,23 +25,22 @@
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa",
-      "char.cirno",
-      "char.meiling",
-      "char.sakuya"
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_meiling",
+      "chr_sakuya"
     ]
   },
-  "modifiers": [],
   "bosses": [],
   "wave_count": 15,
-  "design_notes": "首领草案，3 个阶段。本关不能放 char.keine 和 char.mokou。阶段 1：虚史「幻想乡传说」（spell.keine.legend_of_gensokyo），一条路被藏起，残影挤到另一条。阶段 2：不死「火鸟 -凤翼天翔-」（spell.mokou.phoenix_wings），一条路着火，走上去的残影移速 ×1.2（占位），掉血由战斗策划定。阶段 3：「凤凰再诞」（spell.mokou.phoenix_rebirth），两条路一起着火，只留下汇合前的窄口。转世「一条归桥」（spell.keine.modoribashi）留作慧音的可玩符卡，不占阶段。叙事是双首领决斗，和「角色已在 L1、L2 加入」叠在一起：平时能用，决斗关暂时不能用。",
+  "design_notes": "首领草案，3 个阶段。本关不能放 chr_keine 和 chr_mokou。阶段 1：虚史「幻想乡传说」（spell.keine.legend_of_gensokyo），一条路被藏起，残影挤到另一条。阶段 2：不死「火鸟 -凤翼天翔-」（spell.mokou.phoenix_wings），一条路着火，走上去的残影移速 ×1.2（占位），掉血由战斗策划定。阶段 3：「凤凰再诞」（spell.mokou.phoenix_rebirth），两条路一起着火，只留下汇合前的窄口。转世「一条归桥」（spell.keine.modoribashi）留作慧音的可玩符卡，不占阶段。叙事是双首领决斗，和「角色已在 L1、L2 加入」叠在一起：平时能用，决斗关暂时不能用。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   }
 }

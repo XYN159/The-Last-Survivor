@@ -1,19 +1,5 @@
 {
   "schema_version": 1,
-  "modifiers": [
-    {
-      "id": "mist",
-      "display_name": "浓雾",
-      "effects": [
-        {
-          "id": "attack_range_multiplier",
-          "value": 0.75,
-          "_placeholder": true,
-          "note": "雾比上一关浓。0.75 是占位倍率。"
-        }
-      ]
-    }
-  ],
   "bosses": [],
   "id": "ch1_02",
   "difficulty_id": "ch1_02",
@@ -41,29 +27,36 @@
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa",
-      "char.cirno"
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno"
     ]
   },
   "map": {
     "columns": 7,
     "rows": 12,
     "origin": "row_0_is_north",
-    "grid": [
-      "#P#####",
-      "#P....#",
-      "#P####.",
-      "#PPPPP#",
-      "#..#.P#",
-      "#....P#",
-      "#....P#",
-      "#....P.",
-      "#.PPPP#",
-      "#.P...#",
-      "#.P...#",
-      "##P####"
+    "cells": [
+      "BSBBBBB",
+      "BP....B",
+      "BPBBBB.",
+      "BPPPPPB",
+      "B..B.PB",
+      "B....PB",
+      "B....PB",
+      "B....P.",
+      "B.PPPPB",
+      "B.P...B",
+      "B.P...B",
+      "BBGBBBB"
     ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
     "entrances": [
       {
         "id": "entrance.north",
@@ -71,95 +64,187 @@
         "row": 0
       }
     ],
-    "guard_cell": {
-      "col": 2,
-      "row": 11
+    "guard": {
+      "cell": [
+        2,
+        11
+      ],
+      "id": "guard.misty_lake_frogs",
+      "display_name": "冰雕青蛙"
     },
     "paths": [
       {
+        "path_id": "path.main",
         "id": "path.main",
         "entrance_id": "entrance.north",
         "kind": "ground",
         "cells": [
-          {
-            "col": 1,
-            "row": 0
-          },
-          {
-            "col": 1,
-            "row": 1
-          },
-          {
-            "col": 1,
-            "row": 2
-          },
-          {
-            "col": 1,
-            "row": 3
-          },
-          {
-            "col": 2,
-            "row": 3
-          },
-          {
-            "col": 3,
-            "row": 3
-          },
-          {
-            "col": 4,
-            "row": 3
-          },
-          {
-            "col": 5,
-            "row": 3
-          },
-          {
-            "col": 5,
-            "row": 4
-          },
-          {
-            "col": 5,
-            "row": 5
-          },
-          {
-            "col": 5,
-            "row": 6
-          },
-          {
-            "col": 5,
-            "row": 7
-          },
-          {
-            "col": 5,
-            "row": 8
-          },
-          {
-            "col": 4,
-            "row": 8
-          },
-          {
-            "col": 3,
-            "row": 8
-          },
-          {
-            "col": 2,
-            "row": 8
-          },
-          {
-            "col": 2,
-            "row": 9
-          },
-          {
-            "col": 2,
-            "row": 10
-          },
-          {
-            "col": 2,
-            "row": 11
-          }
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ]
         ]
       }
     ],
+    "terrain": [
+      {
+        "terrain_id": "ter_fog",
+        "cells": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ]
+        ],
+        "start": "wave_2",
+        "duration_sec": -1,
+        "note": "第 2 波起整条路线盖上浓雾，对应「雾变浓了」。效果是射程减 1，不是旧的倍率。"
+      }
+    ],
+    "cell_sets": {},
     "good_spots": [
       {
         "id": "spot.upper",
@@ -194,256 +279,289 @@
   "waves": [
     {
       "id": "w01",
+      "wave_id": "w01",
       "delay_sec": 2.0,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 8.0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 7,
           "interval_sec": 1.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 7,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w02",
+      "wave_id": "w02",
       "delay_sec": 8.0,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 7.4,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 9,
           "interval_sec": 1.5,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 9,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w03",
+      "wave_id": "w03",
       "delay_sec": 7.4,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 6.8,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 11,
           "interval_sec": 1.4,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 11,
           "interval_sec": 1.3,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w04",
+      "wave_id": "w04",
       "delay_sec": 6.8,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 6.2,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 13,
           "interval_sec": 1.3,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 13,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w05",
+      "wave_id": "w05",
       "delay_sec": 6.2,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 5.6,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 15,
           "interval_sec": 1.2,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 15,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w06",
+      "wave_id": "w06",
       "delay_sec": 5.6,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 4.9,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 17,
           "interval_sec": 1.1,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 17,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w07",
+      "wave_id": "w07",
       "delay_sec": 4.9,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 4.3,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 19,
           "interval_sec": 1.0,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 19,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w08",
+      "wave_id": "w08",
       "delay_sec": 4.3,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 3.7,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 21,
           "interval_sec": 0.9,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 21,
           "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w09",
+      "wave_id": "w09",
       "delay_sec": 3.7,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 3.1,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 23,
           "interval_sec": 0.8,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 23,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     },
     {
       "id": "w10",
+      "wave_id": "w10",
       "delay_sec": 3.1,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。",
-      "groups": [
+      "next_wave_delay_sec": 2.5,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 25,
           "interval_sec": 0.7,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 25,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。本波结束后弹出三选一，三张里选一张。"
     },
     {
       "id": "w11",
+      "wave_id": "w11",
       "delay_sec": 2.5,
-      "note": "小残影和快残影混在同一波。快残影大约占一半，前后都有。",
-      "groups": [
+      "next_wave_delay_sec": 0,
+      "is_boss": false,
+      "spawns": [
         {
-          "enemy_id": "shade_small",
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
           "count": 27,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
         },
         {
-          "enemy_id": "shade_fast",
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
           "count": 27,
           "interval_sec": 0.6,
-          "entrance_id": "entrance.north",
-          "path_id": "path.main",
-          "delay_sec": 0.8
+          "delay_sec": 0.8,
+          "entrance_id": "entrance.north"
         }
-      ]
+      ],
+      "note": "普通残影和快残影混在同一波。快残影大约占一半，前后都有。"
     }
   ],
   "placeholders": {
@@ -452,6 +570,11 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
-  }
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "spell_energy_start": 0,
+  "spell_charge_mult": 1.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": false,
+  "intermission_sec": 4
 }

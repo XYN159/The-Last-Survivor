@@ -26,7 +26,13 @@
     }
   ],
   "leak": {
-    "_placeholder": false,
-    "note": "漏怪扣命写在敌人图鉴的 lives_on_leak，按种类算，不是全局一只扣 1。已确认：小残影和快残影扣 1，硬残影扣 2，第一章首领扣 10。还没确认的敌人不要沿用旧规则。扣到 0 即失败，没有星。"
+    "stored_in_level_data": false,
+    "note": "漏几条命的权威数字在数值策划和战斗策划的属性表，不写进关卡图鉴。关卡只保留威胁点，用来对预算。扣到 0 即失败，没有星。"
+  },
+  "first_clear": {
+    "normal_lives_remaining": "11-13",
+    "boss_lives_remaining": "10-11",
+    "status": "agreed_by_level_and_numbers_pending_producer",
+    "note": "关卡和数值已经对齐到这个区间，还等制作人确认。10 仍是 2 星的起点，首领目标的下沿贴着这条线。"
   }
 }

@@ -16,38 +16,37 @@
   "summary": "堆积体会裂开。路线移动两次。遗忘之影和前面的敌人混在一起。",
   "player_feeling": "练习。裂开和改道叠在一起，但每次移动都有预告的空档。",
   "teaches": [
-    "堆积体倒下会裂成小残影",
+    "堆积体倒下会裂成普通残影",
     "路线移动前要留人在新路旁边"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
-    "remnant.pile"
+    "enm_shade_heap"
   ],
   "params": {
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa",
-      "char.cirno",
-      "char.meiling",
-      "char.sakuya",
-      "char.keine",
-      "char.mokou",
-      "char.sanae",
-      "char.yukari"
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae",
+      "chr_yukari"
     ]
   },
-  "modifiers": [],
   "bosses": [],
   "wave_count": 10,
-  "design_notes": "分裂出的孩子用 shade_small，数量见敌人图鉴的 splits_into。威胁是否含孩子等数值策划。预告空档的秒数等战斗策划，关卡只要求「不要突然改」。",
+  "design_notes": "战斗草案：死亡分裂出 3 个 enm_shade_fast，见敌人图鉴的 splits_into。关卡旧稿曾写 2 个普通残影。孩子算不算进威胁还没定。预告空档的秒数等战斗策划，关卡只要求「不要突然改」。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   }
 }

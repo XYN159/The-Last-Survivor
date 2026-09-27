@@ -26,27 +26,26 @@
     "starting_spirit_power": 150,
     "lives": 20,
     "available_character_ids": [
-      "char.reimu",
-      "char.marisa",
-      "char.cirno",
-      "char.meiling",
-      "char.sakuya",
-      "char.keine",
-      "char.mokou",
-      "char.sanae",
-      "char.yukari"
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae",
+      "chr_yukari"
     ]
   },
-  "modifiers": [],
   "bosses": [],
   "wave_count": 15,
-  "design_notes": "全篇威胁最高的一关。不套用「新章第一关要比上一章首领轻松」，因为终章本身就是首领。3 个阶段，恰好对上叙事的三张原创符卡。阶段 1：拾遗「无人认领的失物招领处」（spell.wasure.lost_and_found），若干空地变成失物堆，被击散的残影会从这些格子再出现。再出现的规则等战斗策划。阶段 2：忘却「谁也记不起的歌」（spell.wasure.forgotten_song），一段路线反向，残影走回去再折返。阶段 3：终符「百代的归处」（spell.wasure.final），打开一条直通鸟居的新路，各入口同时加压。忘的正式名字未定。显示名先用「忘」，id 保持 boss.wasure / char.wasure。",
+  "design_notes": "全篇威胁最高的一关。不套用「新章第一关要比上一章首领轻松」，因为终章本身就是首领。3 个阶段，恰好对上叙事的三张原创符卡。阶段 1：拾遗「无人认领的失物招领处」（sc_lost_and_found），若干空地变成失物堆，被击散的残影会从这些格子再出现。再出现的规则等战斗策划。阶段 2：忘却「谁也记不起的歌」（sc_forgotten_song），一段路线反向，残影走回去再折返。阶段 3：终符「百代的归处」（spell.wasure.final），打开一条直通鸟居的新路，各入口同时加压。忘的正式名字未定。显示名先用「忘」，id 保持 boss_wasure / chr_wasure。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20、生命倍率和波次预算已经确认，见 data/balance/level_difficulty.json。威胁系数这一列仍是关卡策划的提议，现在全部是 1.0。浓雾和冰面的倍率还没定。残影怎么移动、符卡怎么结算，等战斗策划。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   }
 }
