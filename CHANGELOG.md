@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### 变更
+
+- 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
+- GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
+
 ### 新增
 
 - 加入美术框架文档（`docs/design/art/`）：Q 版手绘平涂画风、章节配色、敌我区分、已确认的 1080×1920 版面（每格 128、7×12、偏移 (92, 140)；长屏先扣刘海、其余高度给底栏）、Godot 导入设置、按战斗 ID 去掉 `enm_` 的命名、占位方案、多路线可读性（含延迟开启的路线）、不分稀有度的三选一卡面（新强化 / 再叠一层 / 叠到 2 层质变）、按「一章全部 3 星」组织的星星外观、MVP 资源清单（4 名角色、小残影 / 快残影 / 硬残影、首领冰之残影 `boss_cirno` 三阶段）和素材许可证登记表。只有文档，没有图片和代码改动。
@@ -13,4 +18,4 @@
 - 加入 Cursor 工作区配置（推荐 godot-tools、语言服务器端口 6005、从编辑器启动游戏），并写好每天并排改游戏的说明 `docs/DEV_LOOP.md`。
 - 把 Cursor 里的 Godot 路径改成这台 Windows 电脑上的 `D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe`。
 
-[Unreleased]: https://github.com/XYN159/Touhou-forgotten-defense/compare/main...HEAD
+[Unreleased]: https://github.com/XYN159/touhou-forgotten-defense/compare/main...HEAD
