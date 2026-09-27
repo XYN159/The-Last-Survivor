@@ -1,0 +1,64 @@
+rule_key,value,unit,status,description_zh
+start_spirit,150,spirit,confirmed,开局灵力
+wave_clear_bonus,20,spirit,confirmed,每撑过一波额外获得的灵力
+base_hp,20,hp,confirmed,基地（守护点）生命
+armor_floor_ratio,0.2,ratio,confirmed,"伤害下限：护甲后伤害 = max(攻击 − 护甲, 攻击 × 0.2)（= PR #4 rules.json 的 damage.armor_floor_ratio）"
+min_damage,1,hp,proposal,单次命中最终伤害最少 1（PR #4 流水线第 5 步），四舍五入远离 0
+budget_base,10,threat,confirmed,每波威胁预算 = (budget_base + budget_per_wave × 波次) × 本关 threat_budget_coef
+budget_per_wave,4,threat,confirmed,同上
+hp_mult_per_level,0.15,ratio,confirmed,敌人血量倍率 = 1 + 0.15 × (全局关卡序号 − 1)，线性
+upgrade_cost_1,50,spirit,confirmed,局内第 1 次升级花费
+upgrade_cost_2,100,spirit,confirmed,局内第 2 次升级花费
+upgrade_attack_pct,0.4,ratio,confirmed,每次局内升级攻击 +40%，按 1 级基础加法叠加：升 2 次 = ×1.8（不是 ×1.96）
+buff_pick_every_waves,5,wave,confirmed,每 5 波三选一，但打完最后一波直接结算、不再给。等于该关总波数的那一次去掉：10 波关只在第 5 波后（1 次），15 波关在第 5、10 波后（2 次），20 波关在第 5、10、15 波后（3 次）。序章第 1、2 关没有。最后一波之后的强化本来就不影响当关结果。PR #4 占位每 3 波，以 5 为准
+buff_offer_count,3,count,confirmed,每次给几个选项
+buff_transform_stacks,2,stack,confirmed,同一强化叠到 2 层就「质变」（制作人定，原来 3 层）
+buff_guarantee_untransformed,1,flag,confirmed,已拥有但还没质变的强化，下一次三选一保底出现其中一个（制作人定）
+meta_attack_per_level,0.08,ratio,confirmed,局外等级攻击倍率 = 1 + 0.08 × (等级 − 1)
+meta_level_max,20,level,confirmed,局外等级上限
+meta_hp_scaling,1,flag,proposal,提议：阻挡型角色（美铃）的生命也按局外等级倍率成长（1 开 0 关）
+squad_cap,8,count,proposal,提议：每关最多带 8 名角色进场（同名角色的多个副本不占名额；见 max_copies_per_character）
+blocker_redeploy_cooldown,15,sec,proposal,提议：美铃被打倒后 15 秒可重新部署，花费为部署费用的一半，局内升级保留
+wave_gap_after_clear,4,sec,proposal,一波清完（全部击败或漏过）4 秒后下一波开始（= PR #4 rules.json 的 intermission_sec）
+wave_force_next_after_spawn,12,sec,proposal,一波最后一只刷出 12 秒后，即使场上还有敌人也开始下一波
+first_wave_prep,unlimited,sec,proposal,提议：第 1 波开始前不计时，玩家摆好再点开始
+wave_spawn_window_base,16,sec,proposal,刷怪窗口 = 16 + 0.3 × 波次 秒（最多 22 秒）：按「每波约 20 秒、10 波的关约 4–5 分钟」校准（制作人口径）；本波敌人在窗口内按 √威胁点 分配间隔刷出，具体出场时机以关卡策划为准
+wave_spawn_window_per_wave,0.3,sec,proposal,同上
+wave_spawn_window_max,22,sec,proposal,同上
+boss_threat,0,threat,confirmed,Boss 不占所在波次的预算（关卡策划 PR #5 口径），stats.json 里 Boss 的 threat_points 写 0
+star_thresholds,20|10|1,hp,confirmed,星级：满生命 20/20（不漏怪）3 星；剩余生命 ≥ 10（50%）2 星；通关 1 星（最终口径，旧的 18–20 三星作废）
+proposed_start_spirit_formula,150*sqrt(hp_multiplier),spirit,proposal,【仅建议方案 B】开局灵力 = 150 × √血量倍率，取整到 10（第 1 关仍是 150）；每关的值在 level_difficulty.csv 的 proposed_start_spirit 列
+max_copies_per_character,3,count,proposal,同名角色最多放 3 个（PR #4 建议；个别角色在 characters.csv 的 max_copies 里更少：美铃 2、紫 1）
+copy_cost_increase_ratio,0.5,ratio,proposal,第 k 个同名角色的费用 = 部署费用 × (1 + 0.5 × (k − 1))：第 2 个 1.5 倍、第 3 个 2 倍（紫 1.0）
+sell_refund_ratio,0.7,ratio,proposal,卖出返还 = 这个角色已花的灵力（部署 + 升级）× 70%（文 90%），波次中也能卖
+crit_chance_default,0.05,ratio,proposal,默认暴击率 5%（咲夜、文、蕾米莉亚 10%），持续伤害不暴击
+crit_mult_default,1.8,ratio,proposal,默认暴击倍率 ×1.8（蕾米莉亚 ×2.0）。5% × 0.8 = 平均输出只多 4%，暴击主要是手感
+early_call_reward_per_sec,2,spirit/sec,proposal,提前叫波：奖励 floor(下一波剩余倒计时秒数 × 2)。按 PR #4 的 10 秒倒计时，一波最多 +20，和撑过一波的 +20 相当
+early_start_reward_per_sec,1,spirit/sec,proposal,布阵期提前开始：奖励 floor(剩余秒数 × 1)，布阵期 10 秒，最多 +10
+spell_energy_max_default,100,energy,proposal,全队共用一条能量条；满能量随「符卡使」变化（characters.csv 的 spell_energy_max，标准 100）
+spell_charge_damage_share,0.7,ratio,proposal,PR #4 规则：约 70% 能量来自造成伤害
+spell_charge_kill_share,0.3,ratio,proposal,PR #4 规则：约 30% 能量来自击杀
+spell_target_full_sec,60,sec,proposal,普通波次约 60 秒充满（满能量 100 时）
+spell_charge_per_damage_base,0.02,energy/hp,proposal,每点有效伤害充能的基准值（血量倍率 = 1 时）；每关实际值 = 基准 ÷ 血量倍率（敌人越肉，每点伤害给的能量越少，充满时间保持稳定）。由模拟校准，见 04 文档
+spell_charge_per_kill_scale,1.0,ratio,proposal,每次击杀充能 = 敌人的 charge_on_kill × 这个系数（enemies.csv）
+crisis_charge_mult,1.5,ratio,proposal,危急（有敌人进入最后 3 行，或守护点生命 ≤ 30%）时充能 ×1.5，约 40 秒充满（PR #4 规则）
+crisis_rows_from_bottom,3,row,proposal,危急判定：敌人进入最后 3 行（PR #4）
+crisis_guard_hp_ratio,0.3,ratio,proposal,危急判定：守护点生命 ≤ 30%（PR #4）
+auto_release_min_enemies,8,count,proposal,自动释放（开关打开时）：能量满，并且场上敌人 ≥ 8 或有敌人进入最后 3 行（PR #4）
+manual_release_min_enemies,6,count,proposal,模拟「合理的手动玩家」：能量满后，满足下面任一条就在 1 秒反应时间后放：有敌人进入最后 3 行或守护点生命 ≤ 30%；场上有 Boss；场上敌人 ≥ 6；满了 8 秒还没放且场上 ≥ 3 个敌人
+manual_release_wait_sec,8,sec,proposal,同上
+manual_release_reaction_sec,1,sec,proposal,同上
+caster_switch_clears_charge,1,flag,confirmed,换符卡施放者时充能清零（PR #4 已写入 stats.json 顶层，数值侧同意 = true）。模拟里的玩家只在刚放完符卡、能量 ≤ 15% 时才换人
+barrier_vulnerability_add,0.2,ratio,proposal,灵梦结界里的敌人受到伤害 +20%（易伤桶）
+burn_tick_sec,0.5,sec,proposal,灼烧每 0.5 秒一跳，持续 3 秒，不叠加（PR #4）
+boss_enter_waves_from_end,10,wave,proposal,章节 Boss 在「总波数 − 10」那一波入场（ch1_04 15 波 → 第 5 波入场，和 PR #5 一致；其他 Boss 关照此推）
+boss_on_reach_guard,leak_then_loop,rule,proposal,Boss 走到守护点：扣它的漏过伤害（琪露诺 10）后回到起点再走（PR #4 loop_to_spawn）；最后一波刷完后要打倒 Boss 才算打完。待拍板
+boss_phase_hp_ratios,0.66|0.33,ratio,proposal,Boss 在 66%、33% 血量换阶段（PR #4 bosses.json），换阶段时无敌 1.5 秒且停步
+boss_phase_invuln_sec,1.5,sec,proposal,同上（PR #4）
+ter_ice_speed_mult,1.5,ratio,confirmed,冰面 ter_ice：敌人（含 Boss）移速 ×1.5（PR #4 terrain.json；快残影在冰面上每秒 3 格）。PR #5 ch1_04 占位 1.4，以 1.5 为准
+ice_stop_on_declare_sec,2,sec,proposal,琪露诺 Boss 第 2 阶段「完美冻结」宣言时，冰面上的残影先停住 2 秒（PR #5 占位 3 秒；这里取用户确认的「完美冻结 冻 2 秒」）
+fog_min_range,1.0,cell,proposal,浓雾：角色射程 × 本关 fog_range_mult（level_difficulty.csv，暂用 PR #5 占位 0.85/0.75/0.65），最低 1 格。PR #4 rules.json 写的是「射程 −1 格」，两种写法待战斗/关卡策划统一
+spell_energy_start,0,energy,proposal,开局符卡能量（PR #4 默认 0；数值建议 30–50，待拍板，模拟按 0）
+auto_release_default_on,0,flag,confirmed,符卡自动释放是全局开关，默认关闭，局内可切换（系统策划规则 12）。模拟主结果按「合理的手动玩家」，另跑一组自动释放对照
+boss_hp_uses_level_mult,1,flag,confirmed,Boss 实战血量也乘本关 hp_multiplier（关卡策划 PR #5 confirmed：图鉴 hp 是第 1 关基础值）。模拟发现第一章 Boss 因此是 3000×1.9=5700 血，只有灵梦和魔理沙时必漏；数值建议改成 0（Boss 血量写的就是实战值），待拍板
+proposed_boss_enter_waves_from_end,5,wave,proposal,数值建议（待拍板）：Boss 改为倒数第 5 波入场（15 波的关 = 第 10 波），配合 boss_hp_uses_level_mult=0。现行（PR #5）是倒数第 10 波

@@ -1,0 +1,15 @@
+enemy_id,name_zh,narrative_alias,level_design_alias,category,hp,move_speed_cells_per_sec,armor,spirit_drop,leak_damage,threat_points,kill_charge,block_dps,flying,first_level_id,status,notes
+enm_shade_basic,小残影,褪色玩具（小）,shade_small,normal,60,1.0,0,5,1,1,0.6,8,0,prologue_01,confirmed,用户确认：60 血 / 速度 1.0 / 护甲 0 / 灵力 5 / 漏过扣 1 / 威胁 1。block_dps（被美铃挡住时每秒打她多少血）为数值提议，下同。关卡策划 PR #5 里叫 shade_small
+enm_shade_fast,快残影,褪色玩具（快）,shade_fast,normal,35,2.0,0,5,1,1,0.5,5,0,ch1_01,confirmed,用户确认：35 血 / 速度 2.0 / 灵力 5 / 漏过扣 1 / 威胁 1。冰面 ter_ice 上 ×1.5 = 每秒 3 格。PR #5 里叫 shade_fast
+enm_shade_armored,硬残影,旧电器,shade_hard,normal,200,0.6,10,15,2,4,1.2,15,0,ch2_01,confirmed,用户确认：200 血 / 速度 0.6 / 护甲 10 / 灵力 15 / 漏过扣 2 / 威胁 4（PR #4 占位护甲 8，以用户确认为准）。MVP 不出现，第二章起出现。PR #5 里叫 shade_hard
+enm_shade_heavy,重甲残影,旧电器（大型）,,normal,150,0.8,25,12,2,4,1.2,12,0,ch2_02,placeholder,数值这边新增的兵种，PR #4 里没有，ID enm_shade_heavy 为暂定，行为待战斗策划：高护甲，考验高单发角色
+enm_shade_swarm,群影,褪色玩具（成群）,,normal,25,1.2,0,2,1,0.5,0.25,3,0,ch3_01,placeholder,数值这边新增的兵种，PR #4 里没有，ID enm_shade_swarm 为暂定，行为待战斗策划：成群出现，考验范围伤害
+enm_shade_phantom,遗忘之影,遗忘之影,,normal,70,1.4,0,6,1,2,0.7,0,1,ch4_01,placeholder,对应 PR #4 的 enm_shade_phantom（遗忘之影）。PR #4 设计是「隐形，要现形才能打」，模拟里只按「阻挡型角色挡不住」近似，隐形未计入
+enm_shade_heap,堆积体,堆积体,,elite,800,0.5,8,40,5,12,2.5,25,0,ch3_01,placeholder,对应 PR #4 的 enm_shade_heap（堆积体，死亡时分裂出 3 个快残影），模拟未计入分裂；精英，参考组成里暂不出现（MVP 不出现）
+enm_shade_rift,结界之渣,结界之渣,,elite,500,0.8,15,30,3,8,2.0,20,0,ch5_01,placeholder,PR #4 预留的精英（第五章起），全部为数值提议；机制待战斗策划，模拟的参考兵种配比里暂不出现
+boss_cirno,第一章 Boss,琪露诺（决斗）,boss_ch1,boss,3000,0.4,5,100,10,0,0,50,0,ch1_04,partial,用户确认：3000 血 / 速度 0.4 / 护甲 5 / 灵力 100 / 漏过扣 10（PR #4 占位 1500 血、护甲 3、速度 0.5、漏过 5，以用户为准）。威胁点 0 = 不占波次预算（PR #5）。碰到守护点：扣 10 后回到起点再走（PR #4 loop_to_spawn + 用户确认的扣 10，待拍板）。击杀充能 0（PR #4）。第 5 波入场（PR #5）。PR #5 里叫 boss_ch1
+boss_sakuya,第二章 Boss,咲夜（决斗）,,boss,3000,0.4,5,100,10,0,0,50,0,ch2_04,partial,血量/速度/护甲/灵力/漏过扣血沿用用户确认的 Boss 模板；ID 按 boss_<角色名>，PR #5 第二章 Boss 只做咲夜的两张符卡；威胁点 0（不占预算）
+boss_keine_mokou,第三章 Boss,慧音与妹红（决斗）,,boss,3000,0.4,5,100,10,0,0,50,0,ch3_04,partial,血量/速度/护甲/灵力/漏过扣血沿用 Boss 模板；双 Boss，模拟里合成一个单位；ID 暂定 boss_keine_mokou（也可拆成 boss_keine + boss_mokou，待拍板）；威胁点 0
+boss_sanae,第四章 Boss,早苗（决斗）,,boss,3000,0.4,5,100,10,0,0,50,0,ch4_04,partial,血量/速度/护甲/灵力/漏过扣血沿用 Boss 模板；PR #5 第四章 Boss 是早苗；威胁点 0
+boss_yukari,第五章 Boss,紫（决斗）,,boss,3000,0.4,5,100,10,0,0,50,0,ch5_04,partial,血量/速度/护甲/灵力/漏过扣血沿用 Boss 模板；PR #5 第五章 Boss 是紫（这关不能放紫）；威胁点 0
+boss_wasure,忘（最终 Boss）,忘,boss.wasure,boss,4000,0.35,10,200,20,0,0,80,0,final_01,proposal,原创反派；漏过直接扣 20（等于输）；全部数值为数值提议；威胁点 0（不占预算）。PR #5 里写 boss.wasure

@@ -1,0 +1,7 @@
+level_id,squad,target,coef_confirmed,hp_confirmed,boss_loops_confirmed,hp_fix_same_coef,coef_fix,calib,hp_fix,boss_loops_fix,star2_fix,duration_min_fix
+ch1_04,reimu|marisa,11.0,0.20,-0.4,2,10.0,0.70,ok,12.4,0,80%,7.0
+ch2_04,reimu|cirno|marisa|yukari|meiling,11.0,0.30,9.4,1,19.2,0.95,ok,12.8,0,100%,8.5
+ch3_04,reimu|cirno|marisa|yukari|sakuya|meiling,10.5,0.30,7.2,1.4,20.0,0.85,ok,7.8,0,40%,8.7
+ch4_04,reimu|cirno|marisa|yukari|sakuya|meiling|keine|mokou,10.5,0.50,7.0,1.4,15.2,0.80,ok,12.2,0,80%,8.2
+ch5_04,reimu|cirno|marisa|sanae|sakuya|meiling|keine|mokou,10.5,0.20,8.6,1.2,19.2,0.70,ok,10.6,0,80%,8.0
+final_01,reimu|cirno|marisa|yukari|sanae|sakuya|meiling|keine,10.0,0.65,12.4,1.4,12.4,0.65,ok,12.4,0,80%,9.4

@@ -1,0 +1,8 @@
+level_id,story_hp,pr5_squad,pr5_meta,pr5_hp,pr5_min
+prologue_01,19.0,reimu,reimu:1,19.0,18.0
+prologue_02,17.6,reimu|marisa,reimu:1|marisa:1,17.6,17.0
+prologue_03,15.0,reimu|marisa,reimu:2|marisa:2,15.0,15.0
+ch1_01,13.0,reimu|cirno|marisa,reimu:3|cirno:2|marisa:2,18.6,17.0
+ch1_02,13.4,reimu|cirno|marisa,reimu:4|cirno:3|marisa:3,12.6,11.0
+ch1_03,10.8,reimu|cirno|marisa,reimu:4|cirno:4|marisa:4,12.2,7.0
+ch1_04,-0.4,reimu|cirno|marisa,reimu:5|cirno:5|marisa:5,-1.6,-11.0

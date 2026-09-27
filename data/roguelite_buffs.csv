@@ -1,0 +1,18 @@
+buff_id,name_zh,source,rarity,weight,max_stacks,transform_at_stacks,requires_character,stats_field,value,stats_field2,value2,sim_effect,status,description_zh
+buff_sharp_ofuda,锐利,pr4,common,14,5,,,attack_pct_per_stack,0.12,,,atk_pct,proposal,全队攻击 +12%/层（强化类，同类相加）
+buff_rapid_fire,连射,pr4,common,12,3,2,,interval_pct_per_stack,-0.08,burst_extra_attacks,1,aspd_pct,proposal,攻击间隔 −8%/层；叠到 2 层质变「三连发」：每第 5 次攻击多打 1 发（原 3 层多打 2 发，门槛降低后减半）
+buff_split_shot,分裂弹,pr4,common,10,3,2,,split_damage_ratio,0.30,starfall_sub_bullets,6,split,proposal,命中后每层多分裂 1 颗子弹，伤害 30%/颗；叠到 2 层质变「满天星」：变成 6 颗环形（建议子弹不再二次分裂，max_generation 1）
+buff_piercing_star,穿透,pr4,common,10,3,,,pierce_per_stack,1,,,pierce,proposal,弹体每层多穿透 1 个敌人
+buff_frost_frog,寒气,pr4,common,12,3,2,,freeze_chance_per_stack,0.05,shard_damage_coef,0.5,freeze_chance,proposal,普攻每层 5% 几率冻结 1 秒；叠到 2 层质变「青蛙冰雕」：冻住的敌人碎裂或死亡时对 1 格内造成 50% 并冻结 1 秒
+buff_crit_charm,会心,pr4,common,10,3,2,,crit_chance_per_stack,0.07,explosion_coef,0.4,crit_add,proposal,暴击率 +7%/层；叠到 2 层质变「必中之符」：暴击时 0.8 格小爆炸 40%
+buff_spell_battery,充能,pr4,common,10,3,2,,charge_pct_per_stack,0.12,refund_ratio_at_max,0.25,energy_pct,proposal,符卡充能 +12%/层；叠到 2 层质变「连续宣言」：放完符卡返还 25% 能量
+buff_spirit_greed,香火,pr4,common,10,3,,,spirit_per_kill_per_stack,1,,,kill_spirit_flat,proposal,每次击杀额外 +1 灵力/层
+buff_guard_mend,修补,pr4,common,8,3,2,,guard_heal_per_pick,3,leak_reduction_at_max,1,base_heal,proposal,选中时守护点回 3 点生命；叠到 2 层质变「不褪色」：每次漏怪少扣 1（最少扣 1）
+buff_great_barrier,大结界,pr4,rare,8,3,2,chr_reimu,barrier_vuln_add_at_max,0.1,,,barrier_plus,proposal,灵梦结界持续 +2 秒/层；叠到 2 层质变「常驻大结界」：灵梦射程内路线常驻结界，易伤再 +0.1
+buff_combo_fever,连击狂热,pr4,rare,6,1,,,attack_pct_per_10_combo,0.05,cap_pct,0.3,combo,proposal,每 10 连击攻击 +5%（临时类），最多 +30%
+buff_gap_eye,隙间之眼,pr4,rare,8,3,2,chr_yukari,cooldown_pct_per_stack,-0.12,,,none,proposal,紫的隙间技能冷却 −12%/层；叠到 2 层质变「隙间回廊」：一次多换 1 对
+buff_boss_slayer,退治专家,numeric,rare,4,1,,,boss_synergy_add,0.3,,,boss_dmg,proposal_new,【数值补充，行为待战斗策划认可】对 Boss 和精英伤害 +30%（联动桶）
+buff_armor_break,破魔,numeric,rare,4,2,,,armor_break_per_stack,5,,,armor_pen,proposal_new,【数值补充】无视 5 点护甲/层（对应 PR #4 流水线里预留的「破甲」）
+buff_offering_box,赛钱箱,numeric,common,8,5,,,spirit_on_pick,120,,,spirit_now,proposal_new,【数值补充】立即获得 120 灵力
+buff_upgrade_discount,修行有成,numeric,rare,4,1,,,upgrade_cost_pct,-0.3,,,upgrade_discount,proposal_new,【数值补充】局内升级花费 −30%
+buff_spell_power,符卡强化,numeric,rare,4,1,,,spell_damage_pct,0.3,,,spell_power,proposal_new,【数值补充】符卡伤害和控制时间 +30%

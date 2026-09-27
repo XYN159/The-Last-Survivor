@@ -1,0 +1,8 @@
+level_id,first_clear_hp,replay_squad,replay_meta,replay_hp,replay_star2,replay_star3,reward_2nd,replay_hp_boss_fix
+prologue_01,19.0,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,20.0,100%,100%,25,
+prologue_02,17.6,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,20.0,100%,100%,60,
+prologue_03,15.0,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,20.0,100%,100%,95,
+ch1_01,13.0,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,20.0,100%,100%,130,
+ch1_02,13.4,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,18.4,100%,20%,165,
+ch1_03,10.8,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,14.4,100%,0%,200,
+ch1_04,-0.4,reimu|cirno|marisa|yukari,reimu:8|cirno:7|marisa:7|yukari:7,0.4,0%,0%,350,17.6
