@@ -1,7 +1,7 @@
 # 伤害流水线、状态、联动判定
 
-> 状态：草案（战斗策划）。伤害公式来自数值策划的已定框架：`伤害 = max(攻击 − 护甲, 攻击 × 0.2)`。本文件只定**顺序和堆叠规则**，具体数字归数值策划。
-> 对应配置：`statuses.json`、`synergies.json`、`rules.json` 的 `damage` 段、`stats.json`（攻击、护甲、暴击等占位）。
+> 状态：草案（战斗策划）。伤害保底来自数值策划已定的全局常量，放在 `stats.json` 顶层：`armor_floor_ratio`（当前 0.2）、`min_damage`（当前 1）。公式是 `伤害 = max(攻击 − 护甲, 攻击 × armor_floor_ratio)`，取整后不少于 `min_damage`。本文件只定**顺序和堆叠规则**。除这两个常量外，攻击、护甲、暴击等数字仍归数值策划。
+> 对应配置：`statuses.json`、`synergies.json`、`rules.json` 的 `damage` 段（取整、护甲提示、倍率桶）、`stats.json`。
 
 ## 1. 术语
 
@@ -29,14 +29,14 @@
    - 持续伤害（灼烧）不暴击。
 3. **护甲**
    - 有效护甲 = `max(0, 护甲 − 破甲)`。破甲效果在这一步之前减护甲（目前草案里没有破甲来源，预留）。
-   - `D = max(A − 有效护甲, A × 0.2)`。
+   - `D = max(A − 有效护甲, A × armor_floor_ratio)`。`armor_floor_ratio` 读 `stats.json` 顶层。
    - 记下「被护甲削掉的比例」 `r = (A − D) / A`，第 ⑥ 步后用于硬残影提示。
 4. **易伤与联动倍率**
    - `易伤倍率 V = 1 + Σ易伤桶`（结界 +0.2；同一个敌人不管同时处在几个结界里，结界标记只算一次）。
    - `联动倍率 S = 1 + Σ联动桶`（冰碎 +1.0；冰火交加 +0.5；早苗特攻 +0.5……）。
    - `D2 = D × V × S`。
-   - 例子：硬残影（护甲 8）被攻击 22 的魔理沙打中，它在结界里并且被冻住：D = max(22 − 8, 4.4) = 14；V = 1.2；S = 2.0；D2 = 33.6。
-5. **取整**：`最终伤害 = max(1, 四舍五入(D2))`（四舍五入指 0.5 远离 0，对应 GDScript 的 `roundi()`）。目标处于无敌（`st_invulnerable`）时，最终伤害为 0，跳过第 6–9 步，只飘灰色「无效」（节流 0.5 秒）。
+   - 例子：硬残影（护甲 8）被攻击 22 的魔理沙打中，它在结界里并且被冻住。按已定常量 `armor_floor_ratio` = 0.2：D = max(22 − 8, 4.4) = 14；V = 1.2；S = 2.0；D2 = 33.6。
+5. **取整**：`最终伤害 = max(min_damage, 四舍五入(D2))`。`min_damage` 读 `stats.json` 顶层。四舍五入指 0.5 远离 0，对应 GDScript 的 `roundi()`。目标处于无敌（`st_invulnerable`）时，最终伤害为 0，跳过第 6–9 步，只飘灰色「无效」（节流 0.5 秒）。
 6. **扣血**：`hp -= 最终伤害`。记录「有效伤害」= `min(最终伤害, 扣血前的 hp)`，用于符卡充能，避免溢出伤害虚增能量。
    - 如果目标有 `armor_feedback` 且 `r ≥ 0.5`，发出「护甲」反馈事件（同一敌人 0.5 秒内只发一次）【战斗策划决定 4】。
    - 如果 hp ≤ 0：目标标记为死亡，**跳过第 7、8 步**，第 9 步照常执行，死亡结算留到 tick 第 ⑨ 步。
@@ -58,12 +58,12 @@ func resolve_hit(req):
     if req.can_crit and (rng.randf() < crit_chance(req.attacker) or synergy_forces_crit(req)):
         a *= crit_mult(req.attacker); heavy = true
     var armor = max(0, req.target.armor - armor_break(req.target))
-    var d = max(a - armor, a * 0.2)
+    var d = max(a - armor, a * armor_floor_ratio)
     var armor_ratio = (a - d) / a
     var v = 1.0 + sum_bucket(req, "vulnerability")
     var s = 1.0 + sum_bucket(req, "synergy")
     heavy = heavy or synergy_forces_heavy(req)
-    var final = 0 if req.target.invulnerable else max(1, roundi(d * v * s))
+    var final = 0 if req.target.invulnerable else max(min_damage, roundi(d * v * s))
     ...
 ```
 
@@ -89,7 +89,7 @@ func resolve_hit(req):
 
 ### 3.1 冻结的完整规则
 
-1. 冻结来源：琪露诺技能「冰结」、琪露诺符卡「完美冻结」、Boss 琪露诺二阶段符卡（冻住残影）、强化「寒气」的几率冻结和「青蛙冰雕」的碎片。
+1. 冻结来源：琪露诺技能「冰结」、琪露诺玩家符卡「完美冻结」、Boss 琪露诺二阶段符卡（冻住残影）、强化「寒气」的几率冻结和它 3 层「青蛙冰雕」的碎片。**MVP 里只有后两类里的两个来源**：`buff_frost_frog`（含青蛙冰雕）和 `sc_boss_cirno_perfect_freeze`。琪露诺的技能和玩家符卡要等她可放置之后才进场。
 2. 附加冻结时依次检查：目标是 Boss → 改成减速；目标有 `st_freeze_immune` 且来源没有 `ignore_immunity` → 失败；目标已冻结 → 按叠加规则延长；否则新建冻结。
 3. 冻结期间：速度 0，不被击退，攻击照样能打到它，减速等其他状态照常计时。
 4. 冻结结束（自然到期、被冰碎移除、被冰火交加融化）→ 立即获得 1.5 秒冻结免疫，防止永冻。
@@ -134,8 +134,8 @@ func resolve_hit(req):
 | 情况 | 处理 |
 | --- | --- |
 | 同一 tick 两次命中打同一个敌人，第一次已打死 | 第二次作废，不产生飘字、不充能。 |
-| 伤害算出 0.3 | 取整后最少为 1。 |
-| 护甲大于攻击 | 伤害 = 攻击 × 0.2，护甲提示一定触发（r = 0.8）。 |
+| 伤害算出 0.3 | 取整后不少于 `min_damage`（当前为 1）。 |
+| 护甲大于攻击 | 伤害 = 攻击 × `armor_floor_ratio`。当前该常量为 0.2 时，护甲提示一定触发（r = 0.8）。 |
 | 冻结中又被琪露诺减速 | 减速照常挂上并计时，冻结结束后如果还没到期就生效。 |
 | 结界标记 + 限时标记同时存在 | 引用计数为 2，数值仍然只算 +0.2。 |
 | 持续伤害打死敌人 | 算谁的击杀：施加灼烧的角色。连击、灵力照常。 |

@@ -1,10 +1,12 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "placeholder_pending_balance_design",
     "owner": "balance_design",
     "doc": "docs/design/combat/data_reference.md"
   },
+  "armor_floor_ratio": 0.2,
+  "min_damage": 1,
   "guard": {
     "max_hp": 20
   },

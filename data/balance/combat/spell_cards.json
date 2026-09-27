@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/spell_cards.md",
@@ -198,6 +198,7 @@
     {
       "id": "sc_boss_cirno_perfect_freeze",
       "owner": "boss_cirno",
+      "mvp_freeze_source": true,
       "name_key": "spell.cirno.perfect_freeze.name",
       "user": "boss",
       "mvp": true,

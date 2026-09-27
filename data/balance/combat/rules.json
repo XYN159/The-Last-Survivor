@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/core_rules.md"
@@ -86,16 +86,12 @@
     "auto_release_default_on": false,
     "auto_release_min_enemies": 8,
     "auto_release_rows_from_bottom": 3,
-    "caster_mode": "single_caster",
-    "caster_mode_options": [
-      "single_caster",
-      "single_caster_switchable",
-      "per_character"
-    ],
+    "caster_mode": "single_caster_switchable",
     "caster_switch_allowed_states": [
       "deploy",
       "intermission"
     ],
+    "caster_switch_clears_charge": true,
     "caster_absent_origin": "guard",
     "caster_unfreeze_on_cast": true,
     "auto_release_disabled_in_tutorial": true
@@ -120,8 +116,6 @@
     "cooldown_real_sec": 8.0
   },
   "damage": {
-    "armor_floor_ratio": 0.2,
-    "min_damage": 1,
     "rounding": "round_half_away_from_zero",
     "armor_feedback_ratio": 0.5,
     "armor_feedback_throttle_sec": 0.5,

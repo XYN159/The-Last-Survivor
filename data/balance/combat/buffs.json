@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/roguelite_buffs.md",
@@ -69,6 +69,7 @@
     {
       "id": "buff_frost_frog",
       "draft_name": "寒气",
+      "mvp_freeze_source": true,
       "narrative_item": "褪色的发条青蛙",
       "name_key": "buff.frost_frog.name",
       "desc_key": "buff.frost_frog.desc",

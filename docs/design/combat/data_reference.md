@@ -9,8 +9,8 @@
 
 | 文件 | 内容 | 主要归属 |
 | --- | --- | --- |
-| `rules.json` | 棋盘、tick、局内流程、选敌、移动、危急、符卡能量规则、连击、慢动作、伤害规则常量、放置、强化触发、性能上限 | 战斗 |
-| `stats.json` | 守护点生命、灵力经济、充能换算、角色/敌人/Boss 的费用攻击血量护甲掉落、技能/符卡/强化的数值系数 | **数值**（整份文件都是占位） |
+| `rules.json` | 棋盘、tick、局内流程、选敌、移动、危急、符卡能量规则、连击、慢动作、伤害取整和护甲提示、放置、强化触发、性能上限 | 战斗 |
+| `stats.json` | 伤害保底全局常量，以及守护点生命、灵力经济、充能换算、角色/敌人/Boss 的费用攻击血量护甲掉落、技能/符卡/强化的数值系数 | **数值**（`armor_floor_ratio`、`min_damage` 已定；其余占位） |
 | `characters.json` | 角色攻击方式、射程、间隔、弹道、技能、符卡、每级外观 | 战斗 |
 | `enemies.json` | 敌人移速、标签、反馈、状态机 | 战斗 |
 | `bosses.json` | Boss 阶段、符卡、控制免疫、切阶段规则 | 战斗 |
@@ -59,8 +59,9 @@
 | `spell_energy.auto_release_default_on` | 布尔 | — | 自动释放默认关 | 战斗 |
 | `spell_energy.auto_release_min_enemies` | 整数 | 只 | 自动释放条件之一：场上 ≥ 8 只 | 战斗 |
 | `spell_energy.auto_release_rows_from_bottom` | 整数 | 行 | 自动释放条件之二：有敌人进入最后 3 行 | 战斗 |
-| `spell_energy.caster_mode` | 字符串 | — | 符卡使方案：`single_caster`（A）/ `single_caster_switchable`（A+）/ `per_character`（B），待拍板 | 制作人 |
-| `spell_energy.caster_switch_allowed_states` | 数组 | — | A+ 下允许换符卡使的状态 | 战斗 |
+| `spell_energy.caster_mode` | 字符串 | — | 已定为 `single_caster_switchable`（方案 A+，2026-09-27） | 制作人 |
+| `spell_energy.caster_switch_allowed_states` | 数组 | — | 允许换符卡使的状态：`deploy`、`intermission` | 战斗 |
+| `spell_energy.caster_switch_clears_charge` | 布尔 | — | 换符卡使时能量是否清零。现为 true。草案原先没写，这一细节待数值策划确认 | 战斗/数值 |
 | `spell_energy.caster_absent_origin` | 字符串 | — | 符卡使不在场时从哪里发出（守护点） | 战斗 |
 | `spell_energy.caster_unfreeze_on_cast` | 布尔 | — | 释放时解冻被冻住的符卡使 | 战斗 |
 | `spell_cutin.first_duration_sec` / `repeat_duration_sec` | 数字 | 秒 | 1.2 / 0.6【框架】 | 战斗 |
@@ -70,25 +71,27 @@
 | `slowmo.kills_window_sec` / `kills_threshold` | 数字 / 整数 | 秒 / 只 | 0.2 秒内 8 只 | 战斗 |
 | `slowmo.spell_kills_threshold` | 整数 | 只 | 符卡击杀 5 只 | 战斗 |
 | `slowmo.duration_real_sec` / `time_mult` / `cooldown_real_sec` | 数字 | 秒 / 倍 / 秒 | 0.5 / 0.3【框架】/ 8 | 战斗 |
-| `damage.armor_floor_ratio` | 数字 | 比例 | 伤害下限 = 攻击 × 0.2（数值框架） | 数值 |
-| `damage.min_damage` | 整数 | 点 | 最少 1 | 数值 |
 | `damage.rounding` | 字符串 | — | 四舍五入（0.5 远离 0） | 战斗 |
 | `damage.armor_feedback_ratio` / `_throttle_sec` | 数字 | 比例 / 秒 | 削掉 ≥ 50% 提示「护甲」，0.5 秒一次 | 战斗 |
 | `damage.attack_mult_categories` | 数组 | — | 攻击加成的分类（同类加、异类乘） | 战斗 |
 | `damage.damage_mult_buckets` | 数组 | — | 伤害倍率桶：易伤、联动 | 战斗 |
 | `placement.place_delay_sec` | 数字 | 秒 | 放置后多久开始攻击 | 战斗 |
-| `placement.max_copies_per_character` | 整数 | 个 | 同一角色最多放几个，待拍板 | 制作人 |
-| `character_levels.max_level` | 整数 | 级 | 局内最高 3 级 | 战斗（数值可扩） |
+| `placement.max_copies_per_character` | 整数 | 个 | 同一角色最多放几个。已定为 3（2026-09-27） | 制作人 |
+| `character_levels.max_level` | 整数 | 级 | 局内最高 3 级，即每个角色升 2 次。已和数值策划对齐 | 战斗/数值 |
 | `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 每 3 波三选一 | 战斗/系统 |
 | `buff_offers.scope` | 字符串 | — | 强化作用范围 `per_level`，待拍板 | 制作人/系统 |
 | `fog.range_penalty_cells` / `min_range_cells` | 数字 | 格 | 浓雾射程 −1，最少 1 | 战斗 |
 | `performance.max_projectiles` / `max_damage_numbers` / `max_kill_orbs` | 整数 | 个 | 性能上限 300 / 40 / 60 | 程序/战斗 |
 | `rng.seeded_per_battle` | 布尔 | — | 每局一个随机种子 | 程序 |
 
-## stats.json（全部：占位，待数值策划确认）
+## stats.json
+
+顶层 `armor_floor_ratio`、`min_damage` 是已定的全局常量。其余数字仍是占位，待数值策划确认。
 
 | 字段 | 类型 | 单位 | 含义 |
 | --- | --- | --- | --- |
+| `armor_floor_ratio` | 数字 | 比例 | 护甲保底：伤害不低于攻击 × 该值。已定 0.2 |
+| `min_damage` | 整数 | 点 | 非无敌命中取整后的最少伤害。已定 1 |
 | `guard.max_hp` | 整数 | 点 | 守护点生命 |
 | `economy.starting_spirit` | 整数 | 灵力 | 开局灵力 |
 | `economy.early_call_reward_per_sec` | 数字 | 灵力/秒 | 提前叫波每剩 1 秒奖励 |
@@ -98,9 +101,9 @@
 | `characters.<id>.cost` | 整数 | 灵力 | 放置费用 |
 | `characters.<id>.upgrade_costs` | 整数数组 | 灵力 | 升到 2 级、3 级的费用 |
 | `characters.<id>.sell_refund_ratio` | 数字 | 比例 | 卖出返还已花费用的比例 |
-| `characters.<id>.copy_cost_increase_ratio` | 数字 | 比例 | 第 2、3 个同名角色的费用递增（如果允许多个） |
+| `characters.<id>.copy_cost_increase_ratio` | 数字 | 比例 | 第 2、第 3 个同名角色相对上一个的费用递增比例。已允许最多 3 个，比例仍是占位 |
 | `characters.<id>.base_attack` | 数字 | 点 | 基础攻击 |
-| `characters.<id>.level_attack_mult` | 数字数组 | 倍 | 1–3 级攻击倍率（成长曲线） |
+| `characters.<id>.level_attack_mult` | 数字数组 | 倍 | 1、2、3 级攻击倍率，共 3 项（升 2 次）。数字仍是占位 |
 | `characters.<id>.crit_chance` / `crit_mult` | 数字 | 比例 / 倍 | 暴击率、暴击倍率 |
 | `enemies.<id>.max_hp` / `armor` | 数字 | 点 | 血量、护甲 |
 | `enemies.<id>.spirit_drop` | 整数 | 灵力 | 击杀掉落灵力 |
@@ -119,7 +122,8 @@
 | `id` | 字符串 | — | `chr_<PR #2 角色 id>` | 战斗 |
 | `name_key` | 字符串 | — | 显示名文本 key（PR #2 已有） | 文案 |
 | `playable_status` | 字符串 | — | `confirmed` / `pending_producer`（PR #2 待定的三人） | 制作人 |
-| `mvp` | 布尔 | — | 是否 MVP 可玩 | 战斗 |
+| `mvp` | 布尔 | — | 是否能在 MVP 里放置。紫为 false | 战斗 |
+| `mvp_appearance` | 字符串 | — | 可选。紫为 `story_gap_peek_once`：MVP 只通过隙间探头演示一次换位 | 战斗 |
 | `role` | 字符串 | — | 定位标签，只给人看 | 战斗 |
 | `tags` | 数组 | — | 机制标签，如 `fade_immune` | 战斗 |
 | `attack.type` | 字符串 | — | 攻击类型，见 characters.md 第 3 节 | 战斗 |
@@ -190,7 +194,10 @@
 | `status_conversions[]` | 数组 | — | 状态转换：`from` 状态改成 `to` 状态，`strength` 强度，`keep_duration` 是否保留时长；`to: "none"` = 直接免疫 | 战斗 |
 | `immune_to_effects` | 数组 | — | 免疫的效果类型（隙间换位、送回） | 战斗 |
 | `affected_by_terrain` | 布尔 | — | 是否受地形影响 | 战斗 |
-| `on_reach_guard` | 字符串 | — | 到达守护点后 `loop_to_spawn`（扣血后回裂缝） | 战斗 |
+| `on_reach_guard` | 字符串 | — | 已定为 `loop_to_spawn`：扣血后回到裂缝（2026-09-27） | 战斗 |
+| `reach_guard_deals_leak_damage` | 布尔 | — | 走到守护点时是否扣 `leak_damage`。已定为 true | 战斗 |
+| `reach_guard_keeps_hp_and_phase` | 布尔 | — | 折返时是否保持当前血量和阶段。已定为 true | 战斗 |
+| `victory` | 字符串 | — | Boss 关胜利条件。已定为 `must_defeat` | 战斗 |
 | `phase_transition.clamp_hp_at_threshold` | 布尔 | — | 血量卡在阈值 | 战斗 |
 | `phase_transition.invulnerable_sec` | 数字 | 秒 | 切阶段无敌 1.5 | 战斗 |
 | `phase_transition.stop_moving_while_invulnerable` | 布尔 | — | 无敌时站定 | 战斗 |
@@ -245,6 +252,7 @@
 | `detail_level` | 字符串 | — | `full`（可直接实现）/ `outline`（概要，后续细化） |
 | `portrait` | 字符串 | — | 立绘资源名 |
 | `tags` | 数组 | — | `beam`（能打碎冰柱）、`freeze`、`map_change` 等 |
+| `mvp_freeze_source` | 布尔 | — | 可选。为 true 时，这张符卡是 MVP 冻结来源之一 |
 | `effects[].type` | 字符串 | — | 效果类型，见 spell_cards.md |
 | `effects[].*_stats_key` | 字符串 | — | 去 `stats.json` 取数值的路径 |
 | `effects[].cells_ref` | 字符串 | — | Boss 符卡引用关卡 `cell_sets` 里的格子集合名 |
@@ -263,6 +271,7 @@
 | `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案） |
 | `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
 | `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
+| `mvp_freeze_sources` | 数组 | MVP 里允许触发冰碎的冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze` |
 | `trigger.event` | 字符串 | `on_hit` / `on_gap_move` / `on_spell_cast` |
 | `trigger.check_step` | 字符串 | 在伤害流水线第几步判定 |
 | `trigger.attacker_character` / `attacker_damage_tag` / `target_has_status` | 字符串 | 条件 |
@@ -276,6 +285,7 @@
 | --- | --- | --- | --- |
 | `offer_rules.*` | — | 三选一规则 | 战斗/系统 |
 | `id` | 字符串 | `buff_<名>` | 战斗 |
+| `mvp_freeze_source` | 布尔 | 可选。为 true 时，该强化是 MVP 冻结来源之一 | 战斗 |
 | `draft_name` / `narrative_item` | 字符串 | 草案名 / 失物包装建议 | 文案/系统 |
 | `name_key` / `desc_key` | 字符串 | `buff.<名>.name` / `.desc`，待文案新增 | 文案 |
 | `category` | 字符串 | 强化类别 | 战斗 |

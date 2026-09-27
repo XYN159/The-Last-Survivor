@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
@@ -23,6 +23,9 @@
       "immune_to_effects": ["gap_swap", "send_back"],
       "affected_by_terrain": true,
       "on_reach_guard": "loop_to_spawn",
+      "reach_guard_deals_leak_damage": true,
+      "reach_guard_keeps_hp_and_phase": true,
+      "victory": "must_defeat",
       "phase_transition": {
         "clamp_hp_at_threshold": true,
         "invulnerable_sec": 1.5,

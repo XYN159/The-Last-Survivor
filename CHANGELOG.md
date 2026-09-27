@@ -7,6 +7,10 @@
 ### 新增
 
 - 加入东方同人塔防的战斗规则草案（`docs/design/combat/`）和配置表（`data/balance/combat/`）。数值仍是占位，游戏尚未读取。
+
+### 变更
+
+- 战斗草案记下制作人 2026-09-27 拍板的 5 条（符卡使方案 A+、同名角色最多 3 个、MVP 冻结来源、紫的隙间探头、Boss 折返）。伤害保底改为 `stats.json` 顶层的 `armor_floor_ratio` 和 `min_damage`。
 - 建立 Godot 4.7.2 竖屏工程，包含标题画面和占位战斗车道。
 - 加入 GDScript 格式检查、GUT 单元测试，以及调试版 Android APK 的持续集成。CI 固定在 Ubuntu 24.04 上运行。
 - 写好协作文档、玩法草案、架构说明和架构决定记录。

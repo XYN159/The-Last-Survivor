@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/synergies.md"
@@ -18,6 +18,7 @@
       "name_key": "syn.ice_shatter.name",
       "status": "confirmed_framework",
       "mvp": true,
+      "mvp_freeze_sources": ["buff_frost_frog", "sc_boss_cirno_perfect_freeze"],
       "requires": {"characters_any": ["chr_marisa"], "freeze_source": true},
       "trigger": {"event": "on_hit", "attacker_character": "chr_marisa", "target_has_status": "st_freeze", "check_step": "pipeline_4"},
       "effect": {"bucket": "synergy", "add": 1.0, "force_heavy": true, "remove_target_status": "st_freeze", "remove_at_step": "pipeline_7", "vfx": "ice_shatter", "sfx": "ice_break"}
