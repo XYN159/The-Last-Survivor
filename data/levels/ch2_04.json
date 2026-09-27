@@ -44,7 +44,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。序章三关和第一章第 1 关已按校准系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": [
     "chr_sakuya"

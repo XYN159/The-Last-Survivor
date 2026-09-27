@@ -22,7 +22,7 @@
       "introduced_in": "ch1_01",
       "threat_points": 1,
       "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点仍是 1。生命和漏怪扣命见 stat_source，不在这里抄。第一章第 1 关最后三波少量出现，第 2 关用它教 st_slow。"
+      "note": "预算用的威胁点仍是 1。生命和漏怪扣命见 stat_source，不在这里抄。第一章第 1 关从第 6 波起出现，大约占三成，第 2 关用它教 st_slow。"
     },
     {
       "id": "enm_shade_armored",

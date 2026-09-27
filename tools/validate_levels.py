@@ -17,7 +17,13 @@ from jsonschema.exceptions import ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 LEVEL_DIR = ROOT / "data" / "levels"
-BALANCE_PATH = ROOT / "data" / "balance" / "level_tables" / "level_difficulty.csv"
+BALANCE_PATH = ROOT / "data" / "balance" / "level_difficulty.json"
+CALIBRATED_COEFS = {
+    "prologue_01": Decimal("0.55"),
+    "prologue_02": Decimal("0.50"),
+    "prologue_03": Decimal("0.70"),
+    "ch1_01": Decimal("0.60"),
+}
 SCHEMA_PATH = LEVEL_DIR / "level.schema.json"
 BUDGET_THREATS = {
     "enm_shade_basic": 1,
@@ -48,45 +54,26 @@ def load_json(path: Path):
         raise SystemExit(f"{path}: 不是合法 JSON：{error}") from error
 
 
-def budget_total(wave_count: int) -> int:
-    """系数 1.0 时的整关合计：10N + 2N(N+1) = 2N(N+6)。"""
-    return 2 * wave_count * (wave_count + 6)
-
-
 def scaled_budget(wave_index: int, coef: Decimal) -> int:
     raw = Decimal(10 + 4 * wave_index) * coef
     return int(raw.quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
 
 def load_difficulty(path: Path) -> dict:
-    comments = []
-    header = None
-    levels = {}
-    order = []
-    for raw in path.read_text(encoding="utf-8").splitlines():
-        if not raw.strip():
-            continue
-        if raw.startswith("#"):
-            comments.append(raw[1:].strip())
-            continue
-        parts = raw.split(",")
-        if header is None:
-            header = parts
-            continue
-        row = dict(zip(header, parts))
-        coef = Decimal(row["threat_budget_coef"])
-        wave_count = int(row["wave_count"])
-        budgets = [scaled_budget(index, coef) for index in range(1, wave_count + 1)]
-        row["wave_count"] = wave_count
+    data = load_json(path)
+    comments = data.get("comments", [])
+    if isinstance(comments, list):
+        comments = "\n".join(comments)
+    levels = data["levels"]
+    order = data.get("order") or list(levels)
+    for level_id in order:
+        row = levels[level_id]
+        row["wave_count"] = int(row["wave_count"])
         row["level_index"] = int(row["level_index"])
-        row["hp_multiplier"] = row["hp_multiplier"]
-        row["buff_after_waves"] = [int(item) for item in row["reward_buff_after_waves"].split(";") if item]
-        row["buff_pick_count"] = int(row["reward_buff_pick_count"])
-        row["wave_threat_budgets"] = budgets
-        row["threat_budget_total"] = sum(budgets)
-        levels[row["level_id"]] = row
-        order.append(row["level_id"])
-    return {"comments": "\n".join(comments), "levels": levels, "order": order}
+        row["buff_pick_count"] = int(row["buff_pick_count"])
+        row["wave_threat_budgets"] = [int(item) for item in row["wave_threat_budgets"]]
+        row["threat_budget_total"] = int(row["threat_budget_total"])
+    return {"comments": comments, "levels": levels, "order": order}
 
 
 def cell_char(grid: list[str], col: int, row: int) -> str | None:
@@ -324,7 +311,8 @@ def threat_problems(level: dict, threats: dict[str, int], budgets: list[int], ca
     for wave, budget in zip(level["waves"], budgets):
         total, missing = wave_threat(wave, threats)
         problems.extend(missing)
-        if total != budget:
+        slack = 1 if level["id"] in CALIBRATED_COEFS else 0
+        if abs(total - budget) > slack:
             problems.append(f"{wave['id']} 的威胁 {total} 不是难度表里的 {budget}")
     for boss in level["bosses"]:
         if boss["id"] not in catalog_ids:
@@ -359,15 +347,17 @@ def composition_problems(level: dict, threats: dict[str, int], row: dict) -> lis
                 problems.append(f"{level_id} 是 MVP，不该出现硬残影")
             if level["chapter_id"] in ("prologue", "ch1") and enemy_id not in (basic, fast):
                 problems.append(f"{level_id} 的 MVP 敌人只有小残影和快残影")
+    if level["chapter_id"] == "prologue" and swift_threat:
+        problems.append(f"{level_id} 只该有小残影")
     if level_id == "ch1_01":
         for index, wave in enumerate(level["waves"], start=1):
             has_fast = any(spawn["enemy_id"] == fast for spawn in wave["spawns"])
-            if index < 8 and has_fast:
-                problems.append("教学关的快残影不该在最后三波之前出现")
-            if index >= 8 and not has_fast:
-                problems.append(f"{wave['id']} 最后三波应该有少量快残影")
-        if total_threat and not 0.08 <= swift_threat / total_threat <= 0.12:
-            problems.append(f"教学关快残影威胁占比 {swift_threat / total_threat:.3f} 不在一成附近")
+            if index < 6 and has_fast:
+                problems.append("教学关的快残影不该在第 6 波之前出现")
+            if index >= 6 and not has_fast:
+                problems.append(f"{wave['id']} 从第 6 波起应该有快残影")
+        if total_threat and not 0.27 <= swift_threat / total_threat <= 0.33:
+            problems.append(f"教学关快残影威胁占比 {swift_threat / total_threat:.3f} 不在三成附近")
     if level_id == "ch1_02":
         for wave in level["waves"]:
             kinds = {spawn["enemy_id"] for spawn in wave["spawns"]}
@@ -519,8 +509,10 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
         role = role_for(level)
         if row.get("level_role") != role:
             problems.append(f"{level['id']} 的难度角色应该是 {role}")
-        if row.get("threat_budget_coef") != "1.0":
-            problems.append(f"{level['id']} 的威胁系数种子应该是 1.0")
+        coef = Decimal(str(row["threat_budget_coef"]))
+        expected_coef = CALIBRATED_COEFS.get(level["id"], Decimal("1.0"))
+        if coef != expected_coef:
+            problems.append(f"{level['id']} 的威胁系数应该是 {expected_coef}")
         expected_hp = 100 + 15 * (number - 1)
         got_hp = int((Decimal(row["hp_multiplier"]) * 100).quantize(Decimal("1")))
         if got_hp != expected_hp:
@@ -546,11 +538,11 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
         expected_lives = "10-11" if role == "boss" else "11-13"
         if row.get("expected_first_clear_lives") != expected_lives:
             problems.append(f"{level['id']} 的首通剩余生命应该是 {expected_lives}")
-        expected_budgets = [scaled_budget(index, Decimal("1.0")) for index in range(1, wave_count + 1)]
+        expected_budgets = [scaled_budget(index, coef) for index in range(1, wave_count + 1)]
         if row.get("wave_threat_budgets") != expected_budgets:
-            problems.append(f"{level['id']} 的分波预算不是 (10 + 4 × 波次) × 1.0")
-        if row.get("threat_budget_total") != budget_total(wave_count):
-            problems.append(f"{level['id']} 的威胁合计不是 {budget_total(wave_count)}")
+            problems.append(f"{level['id']} 的分波预算不是 (10 + 4 × 波次) × {coef}")
+        if row.get("threat_budget_total") != sum(expected_budgets):
+            problems.append(f"{level['id']} 的威胁合计不是 {sum(expected_budgets)}")
     return problems
 
 

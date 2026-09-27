@@ -15,7 +15,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `enemy_catalog.json` | 关卡要用的敌人 id、显示名、首次出场、威胁点。生命和移速不在这里 |
 | `character_roster.json` | 角色 id、能不能放、从哪一关加入。放置消耗不在这里 |
 | `rating.json` | 星级区间。全游戏共用，不写进每一关 |
-| `data/balance/level_tables/level_difficulty.csv` | 数值策划的难度种子表。他们会整表替换 |
+| `data/balance/level_difficulty.json` | 数值策划的难度种子表。他们会整表替换 |
 
 导出过滤器已经是 `data/*`。按现有架构说明，它连子目录里的 JSON 一起打进包。加载器接上之前，玩家还不会看见这些关。
 
@@ -170,36 +170,37 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `delay_sec` | 相对这一波开始再等多少秒 |
 | `entrance_id` | 关卡多留的入口 id，必须是这张图上有的 |
 
-画完的关：每一波的 `count × threat_points` 必须等于 `(10 + 4 × 波次) × threat_budget_coef`。系数种子是 1.0，所以现在就是整数。首领不占预算。
+画完的关：每一波的敌人威胁要等于难度表里该波的 `wave_threat_budgets`。预算是 `round((10 + 4 × 波次) × threat_budget_coef)`。序章三关和第一章第 1 关用数值策划校准后的系数，允许和预算差 1 点。其余关系数仍是 1.0，必须刚好相等。首领不占预算。
 
 序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。制作人已定：非序章关卡每关 1 到 3 次，最后一波不弹。10 波只有第 5 波后一次。15 波是第 5、10 波后。20 波是第 5、10、15 波后。11 到 14 波同 15 波，16 波同 20 波。波数不改。
 
-## 难度表 `data/balance/level_tables/level_difficulty.csv`
+## 难度表 `data/balance/level_difficulty.json`
 
-这张表归数值策划。他们之后会整表替换。列是平的，所以这次改成 CSV，方便直接换行。文件放在 `data/balance/level_tables/`，旁边有 `.gdignore`：Godot 会把普通 `.csv` 当成翻译表导入，这个目录避开导入器。校验器和测试按文本读取。文件开头的 `#` 注释写明归属和公式。
+这张表归数值策划。权威文件在分支 `numeric/touhou-td-framework` 的同名路径。合并时先合数值 PR；本仓库这份若冲突，保留他们的版本。本副本里，序章三关和第一章第 1 关的系数与每波预算已按他们的校准写入，其余关仍是系数 1.0 的种子。校验器和测试读这份 JSON。`comments` 里写归属和公式。
 
-约定的每一波预算是 `(10 + 4 × wave_index) × threat_budget_coef`，`wave_index` 从 1 起。系数现在每一关都是 1.0，等模拟。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。系数若以后不是 1，按四舍五入到整数，再重做那一关的编组。
+约定的每一波预算是 `round((10 + 4 × wave_index) × threat_budget_coef)`，`wave_index` 从 1 起。序章系数是 0.55、0.50、0.70，第一章第 1 关是 0.60。其余关仍是 1.0。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。
 
 首通剩余生命：普通关 11 到 13，首领关大约 10 到 11。这是手感目标，还等制作人确认。它不是星级分档。2 星的占位是剩余至少 50%（10/20）。
 
 | 列 | 含义 |
 | --- | --- |
-| `level_id` | 和关卡 id 相同 |
+| `levels` 的键 | 关卡 id。对象里不再单列 `level_id` |
 | `chapter` | `prologue`、`ch1` 到 `ch5`、`final` |
 | `level_index` | 解锁顺序，1 到 24 |
 | `level_role` | `teaching`、`practice`、`test`、`boss` |
 | `wave_count` | 几波 |
-| `threat_budget_coef` | 现在全部 `1.0` |
+| `threat_budget_coef` | 序章 0.55、0.50、0.70，第一章第 1 关 0.60。其余关仍是 `1.0` |
 | `hp_multiplier` | `1 + 0.15 × (level_index − 1)`，只升不降 |
 | `reward_spirit_start` | 开局灵力 150 |
 | `reward_spirit_per_wave` | 每活过一波加 20 |
-| `reward_buff_after_waves` | 三选一的波次，用分号隔开，例如 20 波关是 `5;10;15`。最后一波不写进去。少于 5 波则空着 |
-| `reward_buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
+| `wave_threat_budgets` | 每一波的威胁预算。序章和第一章第 1 关用校准后的整数 |
+| `buff_after_waves` | 三选一的波次数组，例如 20 波关是 `[5, 10, 15]`。最后一波不写进去。少于 5 波则是空数组 |
+| `buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
 | `expected_first_clear_lives` | `11-13` 或首领的 `10-11` |
 | `reward_meta_first_clear` | 局外首通奖励。现在是 `pending_numbers`，不要发明数字 |
 | `reward_meta_replay` | 局外重打奖励。一定比首通少。现在也是 `pending_numbers` |
 
-生命 20、首领不占预算，写在文件开头的注释里，不每行重复。分波预算不存进表，校验按公式算。
+生命 20、首领不占预算，写在 `comments` 里，不每关重复。分波预算存在 `wave_threat_budgets`，校验再按公式对一遍。
 
 ## 首领 `bosses`
 

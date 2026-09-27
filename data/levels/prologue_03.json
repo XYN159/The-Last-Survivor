@@ -196,8 +196,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 14,
-          "interval_sec": 1.5,
+          "count": 10,
+          "interval_sec": 2.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -216,8 +216,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 18,
-          "interval_sec": 1.2,
+          "count": 13,
+          "interval_sec": 1.7,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -236,8 +236,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 22,
-          "interval_sec": 1.0,
+          "count": 15,
+          "interval_sec": 1.4,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -256,8 +256,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 26,
-          "interval_sec": 0.8,
+          "count": 18,
+          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -276,8 +276,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 30,
-          "interval_sec": 0.7,
+          "count": 21,
+          "interval_sec": 1.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -296,16 +296,16 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 17,
-          "interval_sec": 1.2,
+          "count": 12,
+          "interval_sec": 1.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 17,
-          "interval_sec": 1.2,
+          "count": 12,
+          "interval_sec": 1.8,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -324,16 +324,16 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 19,
-          "interval_sec": 1.1,
+          "count": 14,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 19,
-          "interval_sec": 1.1,
+          "count": 13,
+          "interval_sec": 1.7,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -352,16 +352,16 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 21,
-          "interval_sec": 1.0,
+          "count": 15,
+          "interval_sec": 1.4,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 21,
-          "interval_sec": 1.0,
+          "count": 14,
+          "interval_sec": 1.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -380,16 +380,16 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 23,
-          "interval_sec": 0.9,
+          "count": 16,
+          "interval_sec": 1.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 23,
-          "interval_sec": 0.9,
+          "count": 16,
+          "interval_sec": 1.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -408,16 +408,16 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 25,
-          "interval_sec": 0.8,
+          "count": 18,
+          "interval_sec": 1.2,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         },
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 25,
-          "interval_sec": 0.8,
+          "count": 17,
+          "interval_sec": 1.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -430,7 +430,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。序章三关和第一章第 1 关已按校准系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 2.0,

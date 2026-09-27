@@ -313,7 +313,7 @@
     "cleared_levels_anytime": true,
     "reduced_meta_reward": true,
     "can_earn_missing_stars": true,
-    "reward_table": "data/balance/level_tables/level_difficulty.csv"
+    "reward_table": "data/balance/level_difficulty.json"
   },
   "character_joins_decided": [
     {

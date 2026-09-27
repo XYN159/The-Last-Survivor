@@ -186,8 +186,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 14,
-          "interval_sec": 1.5,
+          "count": 7,
+          "interval_sec": 3.3,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -206,8 +206,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 18,
-          "interval_sec": 1.2,
+          "count": 9,
+          "interval_sec": 2.5,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -226,8 +226,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 22,
-          "interval_sec": 1.0,
+          "count": 11,
+          "interval_sec": 2.0,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -246,8 +246,8 @@
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.main",
-          "count": 26,
-          "interval_sec": 0.8,
+          "count": 13,
+          "interval_sec": 1.7,
           "delay_sec": 0,
           "entrance_id": "entrance.north"
         }
@@ -260,7 +260,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_tables/level_difficulty.csv。那张表归数值策划，当前是种子，系数全部 1.0。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。序章三关和第一章第 1 关已按校准系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 2.0,

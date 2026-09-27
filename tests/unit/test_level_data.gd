@@ -3,7 +3,7 @@ extends GutTest
 ## 关卡 JSON 的几何和威胁。schema 由 tools/validate_levels.py 检查，两边规则要保持一致。
 
 const _LEVEL_DIR := "res://data/levels/"
-const _DIFFICULTY_PATH := "res://data/balance/level_tables/level_difficulty.csv"
+const _DIFFICULTY_PATH := "res://data/balance/level_difficulty.json"
 const _COLUMNS := 7
 const _ROWS := 12
 
@@ -51,7 +51,7 @@ func test_each_new_chapter_opens_below_the_previous_peak() -> void:
 			order.append(chapter)
 			grouped[chapter] = []
 			hp_grouped[chapter] = []
-		grouped[chapter].append(_budget_total(int(row["wave_count"])))
+		grouped[chapter].append(int(row["threat_budget_total"]))
 		hp_grouped[chapter].append(float(row["hp_multiplier"]))
 	var previous_peak := 0
 	var previous_hp := 0.0
@@ -90,7 +90,11 @@ func test_difficulty_seed_records_the_open_points() -> void:
 	assert_true(text.contains("10-11"))
 	assert_true(text.contains("制作人"))
 	var rows := _read_difficulty()
-	assert_eq(str(rows["prologue_01"]["threat_budget_coef"]), "1.0")
+	assert_eq(str(rows["prologue_01"]["threat_budget_coef"]), "0.55")
+	assert_eq(str(rows["prologue_02"]["threat_budget_coef"]), "0.50")
+	assert_eq(str(rows["prologue_03"]["threat_budget_coef"]), "0.70")
+	assert_eq(str(rows["ch1_01"]["threat_budget_coef"]), "0.60")
+	assert_eq(str(rows["ch1_02"]["threat_budget_coef"]), "1.0")
 	assert_eq(str(rows["ch1_04"]["expected_first_clear_lives"]), "10-11")
 	assert_eq(str(rows["ch1_01"]["expected_first_clear_lives"]), "11-13")
 	assert_eq(str(rows["prologue_01"]["reward_spirit_start"]), "150")
@@ -101,17 +105,17 @@ func test_difficulty_seed_records_the_open_points() -> void:
 	assert_true(text.contains("1 到 3"))
 	assert_true(text.contains("20/20"))
 	assert_false(text.contains("2 到 4"))
-	assert_eq(str(rows["prologue_01"]["wave_count"]), "3")
-	assert_eq(str(rows["prologue_01"]["reward_buff_pick_count"]), "0")
-	assert_eq(str(rows["prologue_03"]["reward_buff_after_waves"]), "5")
-	assert_eq(str(rows["ch1_01"]["reward_buff_after_waves"]), "5")
-	assert_eq(str(rows["ch1_02"]["reward_buff_after_waves"]), "5;10")
-	assert_eq(str(rows["ch1_04"]["reward_buff_after_waves"]), "5;10")
-	assert_eq(str(rows["final_01"]["reward_buff_after_waves"]), "5;10;15")
-	assert_false(str(rows["final_01"]["reward_buff_after_waves"]).ends_with(";20"))
+	assert_eq(int(rows["prologue_01"]["wave_count"]), 3)
+	assert_eq(int(rows["prologue_01"]["buff_pick_count"]), 0)
+	assert_eq(_buff_text(rows["prologue_03"]), "5")
+	assert_eq(_buff_text(rows["ch1_01"]), "5")
+	assert_eq(_buff_text(rows["ch1_02"]), "5;10")
+	assert_eq(_buff_text(rows["ch1_04"]), "5;10")
+	assert_eq(_buff_text(rows["final_01"]), "5;10;15")
+	assert_false(_buff_text(rows["final_01"]).ends_with(";20"))
 	assert_eq(str(rows["ch1_01"]["reward_meta_first_clear"]), "pending_numbers")
 	assert_eq(str(rows["ch1_01"]["reward_meta_replay"]), "pending_numbers")
-	assert_eq(str(rows["final_01"]["wave_count"]), "20")
+	assert_eq(int(rows["final_01"]["wave_count"]), 20)
 
 
 func test_fast_shade_stats_are_not_in_the_level_catalog() -> void:
@@ -246,22 +250,26 @@ func test_waves_last_about_twenty_seconds() -> void:
 	assert_false(JSON.stringify(leak).contains('"5"'))
 
 
-func test_ch1_01_fast_shades_arrive_late() -> void:
+func test_ch1_01_fast_shades_start_at_wave_six() -> void:
 	var level := _read_dictionary(_LEVEL_DIR + "ch1_01.json")
 	var fast_total := 0
+	var threat_total := 0
 	var wave_index := 0
 	for wave in level["waves"]:
 		wave_index += 1
 		var fast_here := 0
 		for spawn in wave["spawns"]:
+			var count := int(spawn["count"])
+			threat_total += count
 			if str(spawn["enemy_id"]) == "enm_shade_fast":
-				fast_here += int(spawn["count"])
-		if wave_index < 8:
+				fast_here += count
+		if wave_index < 6:
 			assert_eq(fast_here, 0, str(wave["id"]))
 		else:
 			assert_gt(fast_here, 0, str(wave["id"]))
 		fast_total += fast_here
-	assert_eq(fast_total, 32)
+	assert_eq(fast_total, 58)
+	assert_eq(threat_total, 192)
 
 
 func test_mvp_levels_only_spawn_basic_and_fast_shades() -> void:
@@ -293,30 +301,16 @@ func _read_dictionary(path: String) -> Dictionary:
 
 
 func _read_difficulty() -> Dictionary:
-	var file := FileAccess.open(_DIFFICULTY_PATH, FileAccess.READ)
-	assert_not_null(file, _DIFFICULTY_PATH)
-	var header: PackedStringArray = PackedStringArray()
-	var rows := {}
-	while file != null and not file.eof_reached():
-		var line := file.get_line().strip_edges()
-		if line.is_empty() or line.begins_with("#"):
-			continue
-		var parts := line.split(",")
-		if header.is_empty():
-			header = parts
-			continue
-		var row := {}
-		for column in header.size():
-			row[header[column]] = parts[column]
-		rows[str(row["level_id"])] = row
-	return rows
+	var table := _read_dictionary(_DIFFICULTY_PATH)
+	var levels: Dictionary = table["levels"]
+	return levels
 
 
-func _budget_total(wave_count: int) -> int:
-	var total := 0
-	for wave_index in range(1, wave_count + 1):
-		total += 10 + 4 * wave_index
-	return total
+func _buff_text(row: Dictionary) -> String:
+	var parts: PackedStringArray = PackedStringArray()
+	for wave in row["buff_after_waves"]:
+		parts.append(str(int(wave)))
+	return ";".join(parts)
 
 
 func _threats() -> Dictionary:
@@ -416,8 +410,18 @@ func _threat_problems(level: Dictionary, threats: Dictionary, row: Dictionary) -
 		return problems
 	if str(level["difficulty_id"]) != str(level["id"]):
 		problems.append("%s 的难度行没有指向自己" % str(level["id"]))
-	if str(row["threat_budget_coef"]) != "1.0":
+	var calibrated := (
+		str(level["id"])
+		in [
+			"prologue_01",
+			"prologue_02",
+			"prologue_03",
+			"ch1_01",
+		]
+	)
+	if not calibrated and str(row["threat_budget_coef"]) != "1.0":
 		problems.append("%s 的系数种子不是 1.0" % str(level["id"]))
+	var budgets: Array = row["wave_threat_budgets"]
 	for index in waves.size():
 		var wave: Dictionary = waves[index]
 		var total := 0
@@ -427,8 +431,10 @@ func _threat_problems(level: Dictionary, threats: Dictionary, row: Dictionary) -
 				problems.append("缺少敌人 " + enemy_id)
 			else:
 				total += int(spawn["count"]) * int(threats[enemy_id])
-		var budget := 10 + 4 * (index + 1)
-		if total != budget:
+		var budget := int(budgets[index])
+		var gap := absi(total - budget)
+		var allowed := 1 if calibrated else 0
+		if gap > allowed:
 			problems.append(
 				"%s %s 威胁 %d 不是 %d" % [str(level["id"]), str(wave["id"]), total, budget]
 			)
