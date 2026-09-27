@@ -9,7 +9,7 @@
 # hp_multiplier: 1 + 0.15 × (level_index - 1)，level_index 是 1 到 24
 # meta_reward: 首通和重打的局外奖励分列 reward_meta_first_clear、reward_meta_replay。重打一定更少。数字未定，两列都是 pending_numbers
 # stars: 通关 1 星；剩余生命达到 50%（10/20）为 2 星，这个比例是占位，等数值确认；满命 20/20 为 3 星
-# buff: 少于 5 波没有三选一。其余每 5 波一次，但最后一波不弹。通关立刻结算，强化会被清掉。10 波只有第 5 波后一次；11 到 15 波是第 5、10 波后；16 波是第 5、10、15 波后；20 波也是这三次。系统策划稿写一关 2 到 4 次，和这个算法对不上，等系统策划和制作人
+# buff: 制作人已定：非序章关卡每关 1 到 3 次三选一，最后一波不弹。10 波 1 次（第 5 波后），15 波 2 次（第 5、10 波后），20 波 3 次（第 5、10、15 波后）。11 到 14 波同 15 波是两次，16 波同 20 波是三次。通关立刻结算，强化会被清掉。少于 5 波没有。波数不改
 # placement: 只能放在关卡预定槽位。路线开战前固定，战斗中不改几何
 level_id,chapter,level_index,level_role,wave_count,threat_budget_coef,hp_multiplier,reward_spirit_start,reward_spirit_per_wave,reward_buff_after_waves,reward_buff_pick_count,expected_first_clear_lives,reward_meta_first_clear,reward_meta_replay
 prologue_01,prologue,1,teaching,3,1.0,1.00,150,20,,0,11-13,pending_numbers,pending_numbers

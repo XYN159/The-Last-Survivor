@@ -98,6 +98,9 @@ func test_difficulty_seed_records_the_open_points() -> void:
 	assert_true(text.contains("pending_numbers"))
 	assert_true(text.contains("重打"))
 	assert_true(text.contains("50%"))
+	assert_true(text.contains("1 到 3"))
+	assert_true(text.contains("20/20"))
+	assert_false(text.contains("2 到 4"))
 	assert_eq(str(rows["prologue_01"]["wave_count"]), "3")
 	assert_eq(str(rows["prologue_01"]["reward_buff_pick_count"]), "0")
 	assert_eq(str(rows["prologue_03"]["reward_buff_after_waves"]), "5")
@@ -151,6 +154,19 @@ func test_rating_bands_use_twenty_lives() -> void:
 	assert_eq(int(bands[1]["lives_max"]), 19)
 	assert_eq(int(bands[2]["lives_min"]), 20)
 	assert_eq(int(bands[2]["lives_max"]), 20)
+	assert_eq(str(bands[2]["rule"]), "full_lives")
+	for path in [
+		"res://docs/design/level/overview.md",
+		"res://docs/design/level/data_format.md",
+		"res://docs/adr/0003-level-data-format.md",
+		"res://docs/adr/0004-preset-slots-and-fixed-routes.md",
+		"res://CHANGELOG.md",
+	]:
+		var prose := FileAccess.get_file_as_string(path)
+		assert_false(prose.contains("18–20"), path)
+		assert_false(prose.contains("18-20"), path)
+		assert_false(prose.contains("10–17"), path)
+		assert_false(prose.contains("10-17"), path)
 	assert_eq(float(rating["two_star_lives_ratio"]), 0.5)
 	assert_eq(str(rating["two_star_ratio_status"]), "pending_numbers")
 	assert_true(bool(rating["replay"]["cleared_levels_anytime"]))

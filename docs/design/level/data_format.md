@@ -172,7 +172,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 画完的关：每一波的 `count × threat_points` 必须等于 `(10 + 4 × 波次) × threat_budget_coef`。系数种子是 1.0，所以现在就是整数。首领不占预算。
 
-序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。其余关卡是 10 到 20 波，每 5 波一次三选一，但最后一波不弹。10 波只有第 5 波后一次。11 到 15 波是第 5、10 波后。16 波和 20 波是第 5、10、15 波后。
+序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。制作人已定：非序章关卡每关 1 到 3 次，最后一波不弹。10 波只有第 5 波后一次。15 波是第 5、10 波后。20 波是第 5、10、15 波后。11 到 14 波同 15 波，16 波同 20 波。波数不改。
 
 ## 难度表 `data/balance/level_tables/level_difficulty.csv`
 
@@ -293,7 +293,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `hard_mode` | `later`。这次没有困难倍率 |
 | `win`、`lose` | 最后一波结束还有命即胜，命到 0 即败。首领关相同 |
 | `two_star_lives_ratio` | 2 星要达到的剩余生命比例。现在是 `0.5`，状态 `pending_numbers` |
-| `bands` | 三档。1 星是通关且剩余 1 到 9，2 星是 10 到 19，3 星只有 20 |
+| `bands` | 三档。1 星是通关且剩余 1 到 9，2 星是 10 到 19，3 星只有满命 20/20 |
 | `replay` | 已通关的关可以重打，并能补星。局外奖励看难度表那两列 |
 | `leak.stored_in_level_data` | `false`。扣几条命不写在关卡里 |
 | `leak.note` | 指向 `data/balance/combat/stats.json` 的 `enemies` 和 `bosses` |
@@ -318,6 +318,6 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 python3 tools/validate_levels.py
 ```
 
-它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，少于 5 波没有三选一、其余每 5 波一次但最后一波不弹，可放置名单跟着 `unlock_character_ids` 走，星级区间是上面那三档。图鉴里不能再出现生命和移速。
+它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，非序章每关 1 到 3 次三选一且最后一波不弹，可放置名单跟着 `unlock_character_ids` 走，3 星只有满命 20/20。图鉴里不能再出现生命和移速。
 
 Godot 测试 `tests/unit/test_level_data.gd` 再查一遍地图、路径、威胁和星级，不查 schema 文本。CI 的 lint 跑 Python 校验，test 跑 Godot 测试。

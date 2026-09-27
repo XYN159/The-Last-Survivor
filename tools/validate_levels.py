@@ -494,9 +494,13 @@ def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
         "pending_numbers",
         "重打",
         "50%",
+        "1 到 3",
+        "20/20",
     ):
         if phrase not in comments:
             problems.append(f"难度表注释缺少：{phrase}")
+    if "2 到 4" in comments:
+        problems.append("三选一次数已由制作人定为每关 1 到 3 次，注释里不要再写 2 到 4")
     rows = difficulty.get("levels")
     if not isinstance(rows, dict):
         return problems + ["难度表缺少数据行"]
@@ -595,6 +599,9 @@ def rating_problems(rating: dict) -> list[str]:
     ]
     if got != expected:
         problems.append(f"星级区间不对：{got}")
+    full = rating.get("bands", [{}, {}, {}])[2] if len(rating.get("bands", [])) == 3 else {}
+    if full.get("rule") != "full_lives":
+        problems.append("3 星必须是满命 20/20")
     if rating.get("two_star_lives_ratio") != 0.5 or rating.get("two_star_ratio_status") != "pending_numbers":
         problems.append("2 星比例应该是占位 0.5，并标明等数值确认")
     if "50%" not in rating.get("two_star_ratio_note", ""):
