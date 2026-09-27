@@ -115,7 +115,7 @@ Boss：`sc_boss_cirno_icicle_fall`（冰符「冰瀑」）、`sc_boss_cirno_perf
 
 | # | 原问题 | 结论 |
 | --- | --- | --- |
-| 1 | 符卡按钮放谁的符卡 | 方案 A+（`spell_energy.caster_mode` = `single_caster_switchable`）。开局前选一名符卡使，底部符卡按钮绑定她的默认符卡。`deploy`（布阵期）和 `intermission`（波次空档）可以换人；`spawning` 和 `waiting` 不能换。换人时符卡能量清零（`caster_switch_clears_charge`）。草案原先没写换人后的能量，这一细节待数值策划确认 |
+| 1 | 符卡按钮放谁的符卡 | 方案 A+（`spell_energy.caster_mode` = `single_caster_switchable`）。开局前选一名符卡使，底部符卡按钮绑定她的默认符卡。`deploy`（布阵期）和 `intermission`（波次空档）可以换人；`spawning` 和 `waiting` 不能换。换人时符卡能量清零（`caster_switch_clears_charge` = true，数值策划已确认） |
 | 2 | 同一角色能不能放多个 | 最多 3 个（`placement.max_copies_per_character`）。每多放一个，费用按 `characters.<id>.copy_cost_increase_ratio` 递增。递增比例仍是占位，归数值策划 |
 | 3 | MVP 的冻结来源（冰碎要用） | 只有两个来源：强化「寒气」`buff_frost_frog`（命中有几率冻结；3 层「青蛙冰雕」的连锁冻结仍算这一条），以及琪露诺二阶段符卡 `sc_boss_cirno_perfect_freeze`。冰碎靠这两个来源触发 |
 | 4 | 紫在 MVP 里怎么出现 | 通过 PR #2 已有的「隙间探头」事件露面，演示一次隙间换位。她不是 MVP 的可放置角色。正式可放置仍在第五章 |
@@ -149,7 +149,7 @@ Boss：`sc_boss_cirno_icicle_fall`（冰符「冰瀑」）、`sc_boss_cirno_perf
 
 ### 9.1 数值策划
 
-1. `stats.json` 整份文件归数值策划，所有数字都是占位。可以改文件内部结构，但请保留 ID（`chr_*`、`enm_*`、`boss_*`、`sc_*`、`buff_*`、`skl_*`）；如果要拆分文件或改名，告诉战斗策划同步 `*_stats_key`。
+1. `stats.json` 整份文件归数值策划。快残影的 `hp`（35）和移速（2.0）已确认；`threat_points` 以及预留敌人除移速外的数字是这次补的占位；其余数字仍是占位。可以改文件内部结构，但请保留 ID（`chr_*`、`enm_*`、`boss_*`、`sc_*`、`buff_*`、`skl_*`）；如果要拆分文件或改名，告诉战斗策划同步 `*_stats_key`。
 2. 充能换算：每点有效伤害充能、每只敌人击杀充能，目标普通约 60 秒、危急约 40 秒充满（换算方法见 spell_cards.md 1.1）。
 3. 攻击成长：每个角色升 2 次（1 级到 3 级）已和数值策划对齐。`level_attack_mult` 三项、`upgrade_costs` 两项、卖出返还比例、同名角色费用递增比例 `copy_cost_increase_ratio` 的具体数字仍是占位。
 4. 暴击率和暴击倍率；重击是否需要额外倍率（目前没有）。
@@ -157,9 +157,9 @@ Boss：`sc_boss_cirno_icicle_fall`（冰符「冰瀑」）、`sc_boss_cirno_perf
 6. 灵力：开局灵力、各敌人掉落、叫波每秒奖励、提前开始每秒奖励。
 7. 技能、符卡、灼烧、强化的伤害系数和每层数值。
 8. 伤害保底已定为 `stats.json` 顶层全局常量：`armor_floor_ratio`（0.2）、`min_damage`（1）。请保留这两个键名。`rules.json` 不再重复这两项。
-9. 敌人移速是战斗草案（普通 1.0 / 快 1.8 / 硬 0.7 / 琪露诺 0.5 格/秒），如果数值需要按章节整体提速，建议加一个章节倍率而不是改基础值。
+9. 敌人移速已放进 `stats.json` 的 `enemies.<id>.move_speed_cells_per_sec`（普通 1.0 / 快 2.0 / 硬 0.7 / 琪露诺 0.5 格/秒）。快残影 2.0 已确认。如果要按章节整体提速，建议加一个章节倍率，不要改基础值。
 10. 硬残影护甲 8 配合魔理沙攻击 22、灵梦攻击 10 时，灵梦打硬残影只有 2 点（被削 80%），会频繁出「护甲」提示；这是有意的，但请确认强度。
-11. 换符卡使时能量清零（`rules.json` → `spell_energy.caster_switch_clears_charge`）。草案原先没写，已按制作人要求写成清零。这一细节仍请确认。
+11. 换符卡使时能量清零已由数值策划确认（`rules.json` → `spell_energy.caster_switch_clears_charge` = true）。请保留这个键。
 
 ### 9.2 关卡策划
 
@@ -168,7 +168,7 @@ Boss：`sc_boss_cirno_icicle_fall`（冰符「冰瀑」）、`sc_boss_cirno_perf
 3. 每波的 `next_wave_delay_sec` 决定叫波奖励的上限；空档 `intermission_sec` 只能 3–5 秒。
 4. 序章建议 `spell_charge_mult: 2.0`、`deploy_wait_for_player: true`，并有一段长直路给魔理沙。
 5. 第一章浓雾用 `ter_fog`，可以按波次出现。
-6. 路线长度建议 18–26 格：普通残影走 18–26 秒，快残影 10–14 秒，给玩家反应时间。
+6. 路线长度建议 18–26 格：按 `stats.json` 的移速，普通残影约 18–26 秒，快残影（2.0 格/秒）约 9–13 秒，给玩家反应时间。
 
 ### 9.3 文案策划
 
@@ -187,9 +187,9 @@ Boss：`sc_boss_cirno_icicle_fall`（冰符「冰瀑」）、`sc_boss_cirno_perf
 | 文件 | 内容 | 维护者 |
 | --- | --- | --- |
 | `data/balance/combat/rules.json` | 战斗规则和手感参数 | 战斗策划 |
-| `data/balance/combat/stats.json` | 全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人、Boss、经济、充能、系数的数值 | 数值策划 |
+| `data/balance/combat/stats.json` | 全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人（含 Boss）、经济、充能、系数的数值。敌人的血量、移速、护甲、掉落、漏怪、威胁、击杀充能都在 `enemies` 里 | 数值策划 |
 | `data/balance/combat/characters.json` | 角色攻击方式、技能、符卡、升级外观 | 战斗策划 |
-| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 行为 | 战斗策划 |
+| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 的行为。血量、移速等数值在 `stats.json` | 战斗策划 |
 | `data/balance/combat/statuses.json` / `terrain.json` | 状态和地形效果 | 战斗策划 |
 | `data/balance/combat/spell_cards.json` / `synergies.json` / `buffs.json` | 符卡、联动、强化 | 战斗策划 |
 | `data/balance/combat/feel.json` | 打击反馈和演出参数 | 战斗策划 |

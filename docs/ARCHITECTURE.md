@@ -81,9 +81,9 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 文件 | 内容 | 维护者 |
 | --- | --- | --- |
 | `data/balance/combat/rules.json` | 战斗规则和手感参数。伤害保底不在这里 | 战斗策划 |
-| `data/balance/combat/stats.json` | 全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人、Boss、经济、充能、系数的数值 | 数值策划 |
+| `data/balance/combat/stats.json` | 全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人（含 Boss）、经济、充能、系数的数值。敌人的血量、移速、护甲、掉落、漏怪、威胁、击杀充能都在 `enemies` 里 | 数值策划 |
 | `data/balance/combat/characters.json` | 角色攻击方式、技能、符卡、升级外观 | 战斗策划 |
-| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 行为 | 战斗策划 |
+| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 的行为。血量、移速等数值在 `stats.json` | 战斗策划 |
 | `data/balance/combat/statuses.json` / `terrain.json` | 状态和地形效果 | 战斗策划 |
 | `data/balance/combat/spell_cards.json` / `synergies.json` / `buffs.json` | 符卡、联动、强化 | 战斗策划 |
 | `data/balance/combat/feel.json` | 打击反馈和演出参数 | 战斗策划 |

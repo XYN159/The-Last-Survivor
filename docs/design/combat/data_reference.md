@@ -10,10 +10,10 @@
 | 文件 | 内容 | 主要归属 |
 | --- | --- | --- |
 | `rules.json` | 棋盘、tick、局内流程、选敌、移动、危急、符卡能量规则、连击、慢动作、伤害取整和护甲提示、放置、强化触发、性能上限 | 战斗 |
-| `stats.json` | 伤害保底全局常量，以及守护点生命、灵力经济、充能换算、角色/敌人/Boss 的费用攻击血量护甲掉落、技能/符卡/强化的数值系数 | **数值**（`armor_floor_ratio`、`min_damage` 已定；其余占位） |
+| `stats.json` | 伤害保底全局常量，以及守护点生命、灵力经济、充能换算、角色数值、敌人（含 Boss 和预留残影）的血量移速护甲掉落、技能/符卡/强化的数值系数 | **数值**（`armor_floor_ratio`、`min_damage`、快残影血量和移速已定；其余占位） |
 | `characters.json` | 角色攻击方式、射程、间隔、弹道、技能、符卡、每级外观 | 战斗 |
-| `enemies.json` | 敌人移速、标签、反馈、状态机 | 战斗 |
-| `bosses.json` | Boss 阶段、符卡、控制免疫、切阶段规则 | 战斗 |
+| `enemies.json` | 敌人标签、反馈、状态机。血量和移速不在这里 | 战斗 |
+| `bosses.json` | Boss 阶段、符卡、控制免疫、切阶段规则。移速不在这里 | 战斗 |
 | `statuses.json` | 状态效果、时长、叠加、免疫、视觉 | 战斗 |
 | `terrain.json` | 地形效果 | 战斗（关卡引用） |
 | `spell_cards.json` | 符卡效果 | 战斗 |
@@ -61,7 +61,7 @@
 | `spell_energy.auto_release_rows_from_bottom` | 整数 | 行 | 自动释放条件之二：有敌人进入最后 3 行 | 战斗 |
 | `spell_energy.caster_mode` | 字符串 | — | 已定为 `single_caster_switchable`（方案 A+，2026-09-27） | 制作人 |
 | `spell_energy.caster_switch_allowed_states` | 数组 | — | 允许换符卡使的状态：`deploy`、`intermission` | 战斗 |
-| `spell_energy.caster_switch_clears_charge` | 布尔 | — | 换符卡使时能量是否清零。现为 true。草案原先没写，这一细节待数值策划确认 | 战斗/数值 |
+| `spell_energy.caster_switch_clears_charge` | 布尔 | — | 换符卡使时能量清零。数值策划已确认为 true | 战斗/数值 |
 | `spell_energy.caster_absent_origin` | 字符串 | — | 符卡使不在场时从哪里发出（守护点） | 战斗 |
 | `spell_energy.caster_unfreeze_on_cast` | 布尔 | — | 释放时解冻被冻住的符卡使 | 战斗 |
 | `spell_cutin.first_duration_sec` / `repeat_duration_sec` | 数字 | 秒 | 1.2 / 0.6【框架】 | 战斗 |
@@ -86,7 +86,7 @@
 
 ## stats.json
 
-顶层 `armor_floor_ratio`、`min_damage` 是已定的全局常量。其余数字仍是占位，待数值策划确认。
+顶层 `armor_floor_ratio`、`min_damage` 是已定的全局常量。快残影的 `hp`（35）和 `move_speed_cells_per_sec`（2.0）也已确认。`threat_points`，以及三种预留残影除移速以外的数字，是这次补的【占位】。其余数字仍待数值策划确认。
 
 | 字段 | 类型 | 单位 | 含义 |
 | --- | --- | --- | --- |
@@ -97,7 +97,7 @@
 | `economy.early_call_reward_per_sec` | 数字 | 灵力/秒 | 提前叫波每剩 1 秒奖励 |
 | `economy.early_start_reward_per_sec` | 数字 | 灵力/秒 | 布阵期提前开始每剩 1 秒奖励 |
 | `spell_charge.per_damage` | 数字 | 能量/点伤害 | 每点有效伤害充能 |
-| `spell_charge.per_kill_default` | 数字 | 能量 | 敌人没填 `charge_on_kill` 时的默认值 |
+| `spell_charge.per_kill_default` | 数字 | 能量 | 敌人没填 `kill_charge` 时的默认值 |
 | `characters.<id>.cost` | 整数 | 灵力 | 放置费用 |
 | `characters.<id>.upgrade_costs` | 整数数组 | 灵力 | 升到 2 级、3 级的费用 |
 | `characters.<id>.sell_refund_ratio` | 数字 | 比例 | 卖出返还已花费用的比例 |
@@ -105,15 +105,19 @@
 | `characters.<id>.base_attack` | 数字 | 点 | 基础攻击 |
 | `characters.<id>.level_attack_mult` | 数字数组 | 倍 | 1、2、3 级攻击倍率，共 3 项（升 2 次）。数字仍是占位 |
 | `characters.<id>.crit_chance` / `crit_mult` | 数字 | 比例 / 倍 | 暴击率、暴击倍率 |
-| `enemies.<id>.max_hp` / `armor` | 数字 | 点 | 血量、护甲 |
-| `enemies.<id>.spirit_drop` | 整数 | 灵力 | 击杀掉落灵力 |
-| `enemies.<id>.leak_damage` | 整数 | 点 | 漏怪扣守护点多少 |
-| `enemies.<id>.charge_on_kill` | 数字 | 能量 | 击杀充能 |
-| `bosses.<id>.*` | — | — | 同上；Boss 的 `leak_damage` 是每次折返扣多少 |
+| `enemies.<id>.hp` | 数字 | 点 | 血量。快残影 35 已确认。预留三种的血量是【占位】 |
+| `enemies.<id>.move_speed_cells_per_sec` | 数字 | 格/秒 | 基础移速。从 `enemies.json` / `bosses.json` 迁来。快残影 2.0 已确认 |
+| `enemies.<id>.armor` | 数字 | 点 | 护甲。预留三种是【占位】 |
+| `enemies.<id>.spirit_drop` | 整数 | 灵力 | 击杀掉落灵力。预留三种是【占位】 |
+| `enemies.<id>.leak_damage` | 整数 | 点 | 漏到守护点扣多少。Boss 是每次折返扣多少。预留三种是【占位】 |
+| `enemies.<id>.threat_points` | 数字 | 点 | 排波用的威胁值。原表没有，全部是【占位】 |
+| `enemies.<id>.kill_charge` | 数字 | 能量 | 击杀充能。原字段名 `charge_on_kill`。预留三种是【占位】 |
 | `skills.<id>.damage_coef` | 数字 | 倍攻击 | 技能伤害系数（0 = 不造成伤害） |
 | `statuses.st_burn.tick_damage_coef` | 数字 | 倍攻击 | 灼烧每跳伤害系数 |
 | `spell_cards.<id>.*_coef` | 数字 | 倍攻击 | 符卡伤害系数（每跳 / 每颗 / 每把） |
 | `buffs.<id>.*` | 数字 | 见字段名 | 强化每层数值和质变数值 |
+
+敌人 ID 都在 `enemies` 这一个对象里，包括 `boss_cirno` 和三种预留残影（`enm_shade_phantom`、`enm_shade_heap`、`enm_shade_rift`）。`stats.json` 里不再单列 `bosses`。
 
 ## characters.json
 
@@ -173,7 +177,6 @@
 | `narrative_ref` | 字符串 | — | PR #2 的叙事对应，只给人看 | — |
 | `status` | 字符串 | — | `mvp` / `reserved`（预留） | 战斗 |
 | `tags` | 数组 | — | `shade`、`outside_object`、`armored`、`elite`、`stealth` 等 | 战斗 |
-| `move_speed_cells_per_sec` | 数字 | 格/秒 | 基础移速 | 战斗（数值可调） |
 | `attacks_units` | 布尔 | — | 是否攻击角色（残影都是否） | 战斗 |
 | `hit_radius_cells` | 数字 | 格 | 受击半径 | 战斗 |
 | `knockback_resist` | 数字 | 比例 | 击退抗性，0.5 = 击退减半 | 战斗 |
@@ -188,8 +191,7 @@
 
 | 字段 | 类型 | 单位 | 含义 | 归属 |
 | --- | --- | --- | --- | --- |
-| `id` | 字符串 | — | `boss_<角色>` | 战斗 |
-| `move_speed_cells_per_sec` | 数字 | 格/秒 | 移速 | 战斗 |
+| `id` | 字符串 | — | `boss_<角色>`。数值（含移速）在 `stats.json` 的 `enemies.<id>` | 战斗 |
 | `knockback_immune` | 布尔 | — | 免疫击退 | 战斗 |
 | `status_conversions[]` | 数组 | — | 状态转换：`from` 状态改成 `to` 状态，`strength` 强度，`keep_duration` 是否保留时长；`to: "none"` = 直接免疫 | 战斗 |
 | `immune_to_effects` | 数组 | — | 免疫的效果类型（隙间换位、送回） | 战斗 |

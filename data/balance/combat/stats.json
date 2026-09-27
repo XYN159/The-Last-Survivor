@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 2,
+    "schema_version": 3,
     "status": "placeholder_pending_balance_design",
     "owner": "balance_design",
     "doc": "docs/design/combat/data_reference.md"
@@ -35,12 +35,69 @@
     "chr_wasure":    {"cost": 90,  "upgrade_costs": [80, 130],  "sell_refund_ratio": 0.7, "copy_cost_increase_ratio": 0.5, "base_attack": 8,  "level_attack_mult": [1.0, 1.4, 1.9], "crit_chance": 0.05, "crit_mult": 1.8}
   },
   "enemies": {
-    "enm_shade_basic":    {"max_hp": 30, "armor": 0, "spirit_drop": 5,  "leak_damage": 1, "charge_on_kill": 1.0},
-    "enm_shade_fast":     {"max_hp": 15, "armor": 0, "spirit_drop": 4,  "leak_damage": 1, "charge_on_kill": 0.8},
-    "enm_shade_armored":  {"max_hp": 70, "armor": 8, "spirit_drop": 10, "leak_damage": 2, "charge_on_kill": 2.0}
-  },
-  "bosses": {
-    "boss_cirno": {"max_hp": 1500, "armor": 3, "spirit_drop": 0, "leak_damage": 5, "charge_on_kill": 0}
+    "enm_shade_basic": {
+      "hp": 30,
+      "move_speed_cells_per_sec": 1.0,
+      "armor": 0,
+      "spirit_drop": 5,
+      "leak_damage": 1,
+      "threat_points": 1,
+      "kill_charge": 1.0
+    },
+    "enm_shade_fast": {
+      "hp": 35,
+      "move_speed_cells_per_sec": 2.0,
+      "armor": 0,
+      "spirit_drop": 4,
+      "leak_damage": 1,
+      "threat_points": 2,
+      "kill_charge": 0.8
+    },
+    "enm_shade_armored": {
+      "hp": 70,
+      "move_speed_cells_per_sec": 0.7,
+      "armor": 8,
+      "spirit_drop": 10,
+      "leak_damage": 2,
+      "threat_points": 3,
+      "kill_charge": 2.0
+    },
+    "enm_shade_phantom": {
+      "hp": 25,
+      "move_speed_cells_per_sec": 1.2,
+      "armor": 0,
+      "spirit_drop": 8,
+      "leak_damage": 1,
+      "threat_points": 2,
+      "kill_charge": 1.5
+    },
+    "enm_shade_heap": {
+      "hp": 200,
+      "move_speed_cells_per_sec": 0.6,
+      "armor": 4,
+      "spirit_drop": 20,
+      "leak_damage": 3,
+      "threat_points": 8,
+      "kill_charge": 4.0
+    },
+    "enm_shade_rift": {
+      "hp": 120,
+      "move_speed_cells_per_sec": 0.8,
+      "armor": 2,
+      "spirit_drop": 15,
+      "leak_damage": 2,
+      "threat_points": 5,
+      "kill_charge": 3.0
+    },
+    "boss_cirno": {
+      "hp": 1500,
+      "move_speed_cells_per_sec": 0.5,
+      "armor": 3,
+      "spirit_drop": 0,
+      "leak_damage": 5,
+      "threat_points": 20,
+      "kill_charge": 0
+    }
   },
   "skills": {
     "skl_reimu_barrier":    {"damage_coef": 0},

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": 2,
+    "schema_version": 3,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
@@ -11,7 +11,6 @@
       "id": "boss_cirno",
       "name_key": "char.cirno.name",
       "tags": ["boss", "ice"],
-      "move_speed_cells_per_sec": 0.5,
       "hit_radius_cells": 0.45,
       "knockback_immune": true,
       "status_conversions": [
