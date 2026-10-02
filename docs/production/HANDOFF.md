@@ -12,7 +12,23 @@
 - 开发 PR 按 `ROLES.md` 第 4 节，用对应角色在 PR 下留中文评论。带界面的 PR 还要动效师审。汇总结论只有「可以合并」或「需要返工」。
 - 角色好不好看，最终由用户亲自点头。用户没点头之前，不能给角色美术 PR「可以合并」。
 - 本交接不替用户合并。下面的顺序是建议，等用户自己点合并。
-- 2026-10-02 起，聊天侧的六位策划（系统、数值、文案、关卡、战斗、美术）和游戏测试也停手。他们在 #2、#3、#4、#5、#6、#8、#9 上还没做完的修改，以及之后 PR 的策划审核和测试验收，都由这个执行制作人按 `ROLES.md` 里对应角色的身份接着做。GitHub 上这七个 PR 没有角色审核线程，只有整理员关于合入 main 和 CI 的一条说明；继续的依据是各分支上的提交和 `PLAN.md` 第 3.1 节。仍然不合并。还没定的事继续问用户。
+- 2026-10-02 起，聊天侧的六位策划和游戏测试停手。停手后的那一轮未完成修改，已由执行制作人按角色补进各 PR（提交号见第 2 节）。用户随后把这七个角色搬到 Cursor。之后的策划修改、审核和测试验收，由执行制作人分派给第 0.1 节的 agent，不再由制作人改他们的文件。仍然不合并。还没定的事继续问用户。
+
+### 0.1 策划和测试的 agent
+
+用户把下面七个角色搬到 Cursor。执行制作人统一分派：改文档、留审核评论，都发给对应的 agent。链接是 `https://cursor.com/agents/<id>`。
+
+| 角色 | `ROLES.md` | agent |
+| --- | --- | --- |
+| 系统策划 | 第 5 节 `system-designer` | [bc-d4c93e72-ea81-5a53-9645-c599dbfc658d](https://cursor.com/agents/bc-d4c93e72-ea81-5a53-9645-c599dbfc658d) |
+| 数值策划 | 第 6 节 `numeric-designer` | [bc-49c67e0a-9266-5682-9aaa-fa0d488908ff](https://cursor.com/agents/bc-49c67e0a-9266-5682-9aaa-fa0d488908ff) |
+| 文案策划 | 第 7 节 `narrative-designer` | [bc-976aafe6-cbf0-5222-878b-aecb9e0f87b8](https://cursor.com/agents/bc-976aafe6-cbf0-5222-878b-aecb9e0f87b8) |
+| 关卡策划 | 第 8 节 `level-designer` | [bc-6f15e683-ffc0-52fe-8694-75d1953fd04b](https://cursor.com/agents/bc-6f15e683-ffc0-52fe-8694-75d1953fd04b) |
+| 战斗策划 | 第 9 节 `combat-designer` | [bc-4fa5baf3-7f5f-5fae-a4c1-517e087bfbce](https://cursor.com/agents/bc-4fa5baf3-7f5f-5fae-a4c1-517e087bfbce) |
+| 美术策划 | 第 10 节 `art-designer` | [bc-f9d00968-aefa-521c-b290-c66b48800915](https://cursor.com/agents/bc-f9d00968-aefa-521c-b290-c66b48800915) |
+| 游戏测试 | 第 13 节 `qa-tester` | [bc-44ef6f13-a35e-52a3-b0c2-0db173efc126](https://cursor.com/agents/bc-44ef6f13-a35e-52a3-b0c2-0db173efc126) |
+
+动效师（第 11 节 `ui-motion-designer`）还没有单独的 agent。带界面的 PR 要审时，按 `ROLES.md` 第 11 节另开一个，评论开头「【动效师审核】」。不要把动效审派给美术策划。
 
 ## 1. 已定，不再问用户
 
@@ -193,4 +209,4 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 GitHub 整理员是 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344)。原来靠 Grok Bot 的 GitHub 触发例程叫醒，该例程已暂停。状态页过期时，由执行制作人直接给它发消息。它只维护 `docs/PR_STATUS.md`，不合并。
 
-用户还没回复的拍板见第 6 节。D-01 已定，不要再问。只有用户能合并。
+策划和测试的分派名单在第 0.1 节。动效师需要时另开。用户还没回复的拍板见第 6 节。D-01 已定，不要再问。只有用户能合并。
