@@ -34,7 +34,8 @@ copy_cost_increase_ratio,0.5,ratio,proposal,第 k 个同名角色的费用 = 部
 sell_refund_ratio,0.7,ratio,proposal,卖出返还 = 这个角色已花的灵力（部署 + 升级）× 70%（文 90%），波次中也能卖
 crit_chance_default,0.05,ratio,proposal,默认暴击率 5%（咲夜、文、蕾米莉亚 10%），持续伤害不暴击
 crit_mult_default,1.8,ratio,proposal,默认暴击倍率 ×1.8（蕾米莉亚 ×2.0）。5% × 0.8 = 平均输出只多 4%，暴击主要是手感
-early_call_reward_per_sec,2,spirit/sec,proposal,提前叫波：奖励 floor(下一波剩余倒计时秒数 × 2)。按 PR #4 的 10 秒倒计时，一波最多 +20，和撑过一波的 +20 相当
+early_call_reward_per_sec,2,spirit/sec,proposal,提前叫波：每剩余 1 秒加 2 灵力，再和 early_call_reward_cap 取较小值。功能开不开见 D-18，MVP 可以先不做叫波
+early_call_reward_cap,20,spirit,numbers_set,叫波一次最多加 20 灵力。奖励 = min(20, floor(剩余秒数 × early_call_reward_per_sec))。10 秒倒计时、每秒 2，正好顶到 20，和撑过一波的 +20 一样。这是上限，不是把叫波功能打开
 early_start_reward_per_sec,1,spirit/sec,proposal,布阵期提前开始：奖励 floor(剩余秒数 × 1)，布阵期 10 秒，最多 +10
 spell_energy_max_default,100,energy,proposal,全队共用一条能量条；满能量随「符卡使」变化（characters.csv 的 spell_energy_max，标准 100）
 spell_charge_damage_share,0.7,ratio,proposal,PR #4 规则：约 70% 能量来自造成伤害
@@ -52,7 +53,7 @@ manual_release_reaction_sec,1,sec,proposal,同上
 caster_switch_clears_charge,1,flag,confirmed,换符卡施放者时充能清零（PR #4 已写入 stats.json 顶层，数值侧同意 = true）。模拟里的玩家只在刚放完符卡、能量 ≤ 15% 时才换人
 barrier_vulnerability_add,0.2,ratio,proposal,灵梦结界里的敌人受到伤害 +20%（易伤桶）
 burn_tick_sec,0.5,sec,proposal,灼烧每 0.5 秒一跳，持续 3 秒，不叠加（PR #4）
-boss_enter_waves_from_end,10,wave,proposal,章节 Boss 在「总波数 − 10」那一波入场（ch1_04 15 波 → 第 5 波入场，和 PR #5 一致；其他 Boss 关照此推）
+boss_enter_waves_from_end,10,wave,proposal,除 ch1_04 外，章节 Boss 仍按「总波数 − 10」入场。ch1_04 不套这条偏移，D-01 直接写成第 11 波
 boss_on_reach_guard,leak_then_loop,rule,proposal,Boss 走到守护点：扣它的漏过伤害（琪露诺 10）后回到起点再走（PR #4 loop_to_spawn）；最后一波刷完后要打倒 Boss 才算打完。待拍板
 boss_phase_hp_ratios,0.66|0.33,ratio,proposal,Boss 在 66%、33% 血量换阶段（PR #4 bosses.json），换阶段时无敌 1.5 秒且停步
 boss_phase_invuln_sec,1.5,sec,proposal,同上（PR #4）
@@ -62,5 +63,5 @@ fog_min_range,1.0,cell,proposal,浓雾：目标站在雾格上时，角色射程
 fog_range_minus,1,cell,confirmed,浓雾：目标站在雾格上时射程减多少格（PR #5 terrain ter_fog 的说明「射程减 1」）
 spell_energy_start,0,energy,proposal,开局符卡能量（PR #4 默认 0；数值建议 30–50，待拍板，模拟按 0）
 auto_release_default_on,0,flag,confirmed,符卡自动释放是全局开关，默认关闭，局内可切换（系统策划规则 12）。模拟主结果按「合理的手动玩家」，另跑一组自动释放对照
-boss_hp_uses_level_mult,1,flag,confirmed,Boss 实战血量也乘本关 hp_multiplier（关卡策划 PR #5 confirmed：图鉴 hp 是第 1 关基础值）。模拟发现第一章 Boss 因此是 3000×1.9=5700 血，只有灵梦和魔理沙时必漏；数值建议改成 0（Boss 血量写的就是实战值），待拍板
-proposed_boss_enter_waves_from_end,5,wave,proposal,数值建议（待拍板）：Boss 改为倒数第 5 波入场（15 波的关 = 第 10 波），配合 boss_hp_uses_level_mult=0。现行（PR #5）是倒数第 10 波
+boss_hp_uses_level_mult,0,flag,confirmed,D-01 已定：Boss 实战血量不乘本关 hp_multiplier，表里的 hp 就是实战值。ch1_04 已按这条规则重跑并锁定系数。第 2 到 5 章首领关的系数仍是「要乘倍率」时校准的，还没重跑
+proposed_boss_enter_waves_from_end,5,wave,superseded,旧建议的偏移：总波数减这个数。15 波减 5 是第 10 波，不是第 11 波。ch1_04 不用它，D-01 写成第 11 波。其他首领关的入场波还没改

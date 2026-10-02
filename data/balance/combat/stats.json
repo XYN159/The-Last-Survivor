@@ -15,7 +15,7 @@
       "data/balance/level_difficulty.csv"
     ],
     "note_zh": "本文件由脚本从 CSV 生成，改数请改 CSV 后重跑 run_all.py 或 gen_stats_json.py，不要手改。用户已确认的值与 PR #4 占位冲突时一律以用户确认值为准（如灵梦攻击 20、硬残影护甲 10）。",
-    "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、characters.*.max_copies/attack_interval_sec/range_cells/spell_energy_max/max_hp/block_count、enemies / bosses 的 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge，敌人数值以本文件为准，enemies.json 只留 ID 和表现）、buffs.*.transform_at_stacks（叠到 2 层质变）、buff_offer（保底规则）、spell_charge.per_damage_by_level、stars 等。attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准（待战斗策划对齐）。value_status: confirmed=用户已确认，其余为数值提议或占位，待用户拍板。"
+    "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、in_battle_upgrade、economy.early_call_reward_cap、characters.*.max_copies/attack_interval_sec/range_cells/attack.{range_cells,interval_sec}/spell_energy_max/max_hp/block_count、enemies 与 bosses 的同一份 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge）。Boss 两处都有，数字相同；#4 的正式路径仍是 bosses.<id>。enemies.json 只留 ID 和表现。扁平的 attack_interval_sec / range_cells 和嵌套的 attack 是同一对数，旧的字段路径还能读。buffs.*.transform_at_stacks（叠到 2 层质变）、buff_offer（保底规则）、spell_charge.per_damage_by_level、stars 等。attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准。value_status: confirmed=用户已确认，其余为数值提议或占位，待用户拍板。"
   },
   "armor_floor_ratio": 0.2,
   "min_damage": 1,
@@ -28,6 +28,7 @@
     "starting_spirit": 150,
     "wave_clear_bonus": 20,
     "early_call_reward_per_sec": 2,
+    "early_call_reward_cap": 20,
     "early_start_reward_per_sec": 1,
     "sell_refund_ratio_default": 0.7,
     "copy_cost_increase_ratio_default": 0.5,
@@ -106,7 +107,7 @@
       0.33
     ],
     "phase_invuln_sec": 1.5,
-    "hp_uses_level_mult": true
+    "hp_uses_level_mult": false
   },
   "terrain": {
     "ter_ice": {
@@ -118,6 +119,19 @@
       "min_range_cells": 1,
       "note_zh": "目标站在雾格上时，角色射程 −1 格（最少 1 格）。雾格和从第几波开始由关卡文件的 terrain 决定（PR #5 最新分支，和 PR #4 一致）"
     }
+  },
+  "in_battle_upgrade": {
+    "max_level": 3,
+    "costs": [
+      50,
+      100
+    ],
+    "attack_mult_by_level": [
+      1.0,
+      1.4,
+      1.8
+    ],
+    "note_zh": "局内从 1 级升到 max_level。costs 是第 1 次、第 2 次升级的灵力。attack_mult_by_level 下标 0 是 1 级。和每个角色上的 upgrade_costs、level_attack_mult 相同。"
   },
   "level_scaling": {
     "enemy_hp_mult_per_level": 0.15,
@@ -151,6 +165,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1,
       "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 1
+      },
       "spell_energy_max": 100,
       "value_status": "confirmed"
     },
@@ -173,6 +191,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1.5,
       "range_cells": 4,
+      "attack": {
+        "range_cells": 4,
+        "interval_sec": 1.5
+      },
       "spell_energy_max": 100,
       "value_status": "confirmed"
     },
@@ -195,6 +217,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 0.8,
       "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 0.8
+      },
       "spell_energy_max": 90,
       "value_status": "confirmed",
       "normal_effect": {
@@ -222,6 +248,10 @@
       "crit_mult": 1,
       "attack_interval_sec": 0,
       "range_cells": 0,
+      "attack": {
+        "range_cells": 0,
+        "interval_sec": 0
+      },
       "spell_energy_max": 80,
       "value_status": "pending_producer",
       "normal_effect": {
@@ -249,6 +279,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1.2,
       "range_cells": 1,
+      "attack": {
+        "range_cells": 1,
+        "interval_sec": 1.2
+      },
       "spell_energy_max": 100,
       "value_status": "partial",
       "max_hp": 300,
@@ -273,6 +307,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 0.5,
       "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 0.5
+      },
       "spell_energy_max": 150,
       "value_status": "confirmed"
     },
@@ -295,6 +333,10 @@
       "crit_mult": 2,
       "attack_interval_sec": 2.5,
       "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 2.5
+      },
       "spell_energy_max": 130,
       "value_status": "pending_producer"
     },
@@ -317,6 +359,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1,
       "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 1
+      },
       "spell_energy_max": 110,
       "value_status": "placeholder"
     },
@@ -339,6 +385,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1,
       "range_cells": 2,
+      "attack": {
+        "range_cells": 2,
+        "interval_sec": 1
+      },
       "spell_energy_max": 110,
       "value_status": "placeholder",
       "normal_effect": {
@@ -366,6 +416,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 0.6,
       "range_cells": 3.5,
+      "attack": {
+        "range_cells": 3.5,
+        "interval_sec": 0.6
+      },
       "spell_energy_max": 110,
       "value_status": "placeholder",
       "normal_effect": {
@@ -393,6 +447,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1.3,
       "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 1.3
+      },
       "spell_energy_max": 110,
       "value_status": "placeholder",
       "normal_effect": {
@@ -420,6 +478,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1.5,
       "range_cells": 3.5,
+      "attack": {
+        "range_cells": 3.5,
+        "interval_sec": 1.5
+      },
       "spell_energy_max": 150,
       "value_status": "proposal"
     },
@@ -442,6 +504,10 @@
       "crit_mult": 1.8,
       "attack_interval_sec": 1.3,
       "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 1.3
+      },
       "spell_energy_max": 120,
       "value_status": "proposal"
     }
@@ -541,6 +607,78 @@
       "first_level_id": "ch5_01",
       "value_status": "placeholder",
       "block_dps": 20
+    },
+    "boss_cirno": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch1_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch2_sakuya_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch2_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch3_mokou_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch3_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch4_sanae_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch4_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch5_gatekeeper": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch5_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_wasure": {
+      "hp": 4000,
+      "move_speed_cells_per_sec": 0.35,
+      "armor": 10,
+      "spirit_drop": 200,
+      "leak_damage": 20,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "final_01",
+      "value_status": "proposal",
+      "block_dps": 80
     }
   },
   "bosses": {

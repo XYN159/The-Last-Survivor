@@ -81,7 +81,10 @@ def main():
             "chapter": L["chapter"], "level_index": int(L["level_index"]),
             "level_role": pr5_role(L), "wave_count": n,
             "threat_budget_coef": f"{coef:.2f}",
-            "threat_budget_coef_status": "locked_level_design_confirmed" if lid in C.FIX_COEF else "numbers_calibrated",
+            "threat_budget_coef_status": (
+                "locked_d01" if lid == "ch1_04" else
+                "locked_level_design_confirmed" if lid in C.FIX_COEF else
+                "numbers_calibrated"),
             "hp_multiplier": f'{float(L["hp_multiplier"]):.2f}',
             "reward_spirit_start": str(int(num(L.get("start_spirit"), 150))), "reward_spirit_per_wave": str(int(R["wave_clear_bonus"])),
             "buff_after_waves": [int(x) for x in L["buff_pick_waves"].split("|") if x],
@@ -105,10 +108,18 @@ def main():
         if L.get("boss_wave"):
             d["boss_id"] = L["boss_enemy_id"]
             d["boss_enters_wave"] = int(L["boss_wave"])
+            if lid == "ch1_04":
+                d["boss_enters_wave_if_boss_fix"] = 11
+                d["boss_hp_scaled_by_level_if_boss_fix"] = False
+                d["boss_fix_status"] = "applied_d01_wave_11_no_hp_mult"
+            else:
+                d["boss_enters_wave_if_boss_fix"] = int(L["wave_count"]) - int(R.get("proposed_boss_enter_waves_from_end", 5))
+                d["boss_hp_scaled_by_level_if_boss_fix"] = False
+                d["boss_fix_status"] = "not_retuned"
             if L.get("threat_budget_coef_boss_fix"):
                 d["threat_budget_coef_if_boss_fix"] = num(L["threat_budget_coef_boss_fix"])
                 d["sim_lives_if_boss_fix"] = num(L["sim_hp_boss_fix"])
-                if (num(L["sim_hp_first_clear"], 0) or 0) < (num(L["target_hp_first_clear"], 0) or 0) - 1:
+                if lid not in C.FIX_COEF and (num(L["sim_hp_first_clear"], 0) or 0) < (num(L["target_hp_first_clear"], 0) or 0) - 1:
                     d["threat_budget_coef_status"] = "numbers_calibrated_target_unreachable_under_current_boss_rules"
         if L.get("extra_spawns"):
             spawns = [x.split(":") for x in L["extra_spawns"].split(";") if x.strip()]
@@ -120,10 +131,15 @@ def main():
         if L.get("threat_budget_coef_no_armored"):
             d["variant_without_armored"] = dict(threat_budget_coef=num(L["threat_budget_coef_no_armored"]),
                                                 note="对照参考：只有小残影和快残影时的系数")
-        if lid in C.FIX_COEF:
+        if lid == "ch1_03":
             d["threat_budget_coef_lock"] = dict(
                 by="关卡策划（PR #5 cursor/design-level-framework-01a3，f2212be）",
                 note="手动锁定，tools/numeric/config.py 的 FIX_COEF；run_all.py --calibrate 不会改写。自动校准会给 0.77。")
+        elif lid == "ch1_04":
+            d["threat_budget_coef_lock"] = dict(
+                by="数值策划（D-01：第 11 波登场，血量不乘倍率）",
+                note="允许 0.70–0.74。0.74 的平滑期望剩余 11.9，是区间里仍不低于目标 11 减 0.5 的最大系数。"
+                     "5 个种子平均剩余 10.0，最差种子 -9，两星 60%。run_all.py --calibrate 不会改写。")
         if L.get("unlock_characters"):
             d["unlock_characters"] = L["unlock_characters"].split("|")
         if L.get("banned_characters"):
@@ -138,10 +154,8 @@ def main():
             "owner: 数值策划",
             "status: numbers_calibrated（tools/numeric/gen_level_json.py 从 data/balance/level_difficulty.csv 生成，不再是种子）",
             "formula: 每一波预算 = (10 + 4 × wave_index) × threat_budget_coef，wave_index 从 1 起，四舍五入（0.5 进位）",
-            "coef: 24 关都按模拟校准；ch1_03 按关卡策划确认锁定 0.75（config.FIX_COEF）。首领关按现行规则校准，"
-            "如果制作人采纳数值建议的首领修正，改用各关的 threat_budget_coef_if_boss_fix（ch1_04 = "
-            + next((f'{float(L["threat_budget_coef_boss_fix"]):.2f}' for L in levels if L["level_id"] == "ch1_04"
-                    and L.get("threat_budget_coef_boss_fix")), "—") + "）",
+            "coef: 24 关都按模拟校准；ch1_03 按关卡策划确认锁定 0.75，ch1_04 按 D-01 锁定 0.74（config.FIX_COEF）。"
+            "ch1_04 第 11 波登场、Boss 血量不乘倍率。其他首领关还没按这条规则重跑",
             "first_clear: 普通关剩余 11-13 条命，首领关 10-11（expected_first_clear_lives）；数值校准目标见 target_lives_first_clear，等制作人确认",
             "lives: 20",
             "boss_does_not_consume_wave_budget: true",
@@ -165,11 +179,11 @@ def main():
                         "紫通关 ch1_04 后加入。MVP 7 关按关卡策划 PR #5 最新分支的地图、预定槽位、逐波编组（个数 × 系数）和浓雾模拟。",
             },
             "boss_fix": {
-                "status": "numbers_proposal_pending_producer",
-                "note": "按现行规则（Boss 血量 3000 × 本关倍率、倒数第 10 波入场、碰到守护点扣 10 后回起点）模拟里 Boss 至少漏过 1–2 次，"
-                        "Boss 关达不到目标。数值建议：Boss 血量写的就是实战值（不乘倍率），并改为倒数第 5 波入场；"
-                        "采用后请用各关的 threat_budget_coef_if_boss_fix。",
-                "enter_waves_from_end": int(R.get("proposed_boss_enter_waves_from_end", 5)),
+                "status": "applied_for_ch1_04_only",
+                "note": "D-01 已定：Boss 血量不乘倍率。ch1_04 第 11 波入场，系数锁定 0.74。"
+                        "旧建议「总波数 − 5」会把 15 波关放在第 10 波，没有采用。"
+                        "第 2 到 5 章首领关的系数仍是旧规则下的校准值，boss_fix_status 为 not_retuned。",
+                "ch1_04_enter_wave": 11,
                 "boss_hp_uses_level_mult": False,
             },
             "stars": {"rule": "满生命 20/20 = 3 星；剩余 ≥10 = 2 星；通关 = 1 星", "gives_resources": False},
@@ -178,7 +192,7 @@ def main():
             {"id": "table_path", "note": "PR #5 最新分支（f2212be）已把难度表放回 data/balance/level_difficulty.json（种子：MVP 七关第二轮系数，其余 1.0），"
                                          "并删掉了 data/balance/level_tables/。本文件就是正式输出；tools/numeric/output/level_tables_level_difficulty.csv 只作参考。"
                                          "PR #5 的 tools/validate_levels.py 和 tests/unit/test_level_data.gd 里写死了种子系数和「status: seed」，合并后需要关卡策划按本表更新。"},
-            {"id": "boss_rules", "note": "见 proposal.boss_fix，待制作人拍板。PR #5 首领关目标写约 10–11 条命，本表 ch1_04 用 11。"},
+            {"id": "boss_rules", "note": "ch1_04 已按 D-01 写成第 11 波、血量不乘倍率、系数 0.74。其他首领关还没重跑。漏一次扣多少仍见 bosses.<id>.leak_damage。"},
             {"id": "enemy_ids", "note": "PR #5 敌人图鉴有 pouncer / flying，没有本表第三章起用的 heavy / swarm；第二章起的编组等关卡策划出稿后再对齐。"},
             {"id": "mvp_enemies", "note": "制作人定：MVP 敌人 = 小残影、快残影，加 ch1_03 少量硬残影（第 6–11 波各 1 只、第 12 波左右各 1 只，共 8 只）；其他 MVP 关不出硬残影。PR #5 f2212be 的 ch1_03 已按系数 0.75 补上这 8 只，排法一致。"},
             {"id": "boss_cirno_phases", "note": "ch1_04 冰瀑挡直线、完美冻结的秒数和次数是模拟假设（冻结 2 秒、宣言时一次），等战斗策划定。"},

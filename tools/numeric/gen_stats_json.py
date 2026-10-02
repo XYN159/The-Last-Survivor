@@ -46,6 +46,7 @@ def main():
             "crit_mult": n(c["crit_mult"]),
             "attack_interval_sec": n(c["attack_interval"]),
             "range_cells": n(c["range"]),
+            "attack": {"range_cells": n(c["range"]), "interval_sec": n(c["attack_interval"])},
             "spell_energy_max": n(c["spell_energy_max"]),
             "value_status": c["status"],
         }
@@ -68,7 +69,9 @@ def main():
         if float(e.get("block_dps") or 0) > 0:
             extra["block_dps"] = n(e["block_dps"])
         d.update(extra)
-        (boss_out if e["category"] == "boss" else en_out)[e["enemy_id"]] = d
+        en_out[e["enemy_id"]] = d
+        if e["category"] == "boss":
+            boss_out[e["enemy_id"]] = d
 
     sections: dict = {"skills": {}, "statuses": {}, "synergies": {}, "spell_cards": {}}
     for r in coef_rows:
@@ -104,10 +107,13 @@ def main():
             "note_zh": "本文件由脚本从 CSV 生成，改数请改 CSV 后重跑 run_all.py 或 gen_stats_json.py，不要手改。"
                        "用户已确认的值与 PR #4 占位冲突时一律以用户确认值为准（如灵梦攻击 20、硬残影护甲 10）。",
             "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、"
-                               "characters.*.max_copies/attack_interval_sec/range_cells/spell_energy_max/max_hp/block_count、"
-                               "enemies / bosses 的 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge，敌人数值以本文件为准，enemies.json 只留 ID 和表现）、"
+                               "in_battle_upgrade、economy.early_call_reward_cap、"
+                               "characters.*.max_copies/attack_interval_sec/range_cells/attack.{range_cells,interval_sec}/spell_energy_max/max_hp/block_count、"
+                               "enemies 与 bosses 的同一份 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge）。"
+                               "Boss 两处都有，数字相同；#4 的正式路径仍是 bosses.<id>。enemies.json 只留 ID 和表现。"
+                               "扁平的 attack_interval_sec / range_cells 和嵌套的 attack 是同一对数，旧的字段路径还能读。"
                                "buffs.*.transform_at_stacks（叠到 2 层质变）、buff_offer（保底规则）、spell_charge.per_damage_by_level、stars 等。"
-                               "attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准（待战斗策划对齐）。"
+                               "attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准。"
                                "value_status: confirmed=用户已确认，其余为数值提议或占位，待用户拍板。",
         },
         "armor_floor_ratio": n(R["armor_floor_ratio"]),
@@ -119,6 +125,7 @@ def main():
             "starting_spirit": n(R["start_spirit"]),
             "wave_clear_bonus": n(R["wave_clear_bonus"]),
             "early_call_reward_per_sec": n(R["early_call_reward_per_sec"]),
+            "early_call_reward_cap": n(R["early_call_reward_cap"]),
             "early_start_reward_per_sec": n(R["early_start_reward_per_sec"]),
             "sell_refund_ratio_default": n(R["sell_refund_ratio"]),
             "copy_cost_increase_ratio_default": n(R["copy_cost_increase_ratio"]),
@@ -156,6 +163,12 @@ def main():
         "terrain": {"ter_ice": {"move_speed_mult": n(R["ter_ice_speed_mult"]), "stop_on_declare_sec": n(R["ice_stop_on_declare_sec"])},
                     "ter_fog": {"range_minus_cells": n(R.get("fog_range_minus", 1)), "min_range_cells": n(R["fog_min_range"]),
                                 "note_zh": "目标站在雾格上时，角色射程 −1 格（最少 1 格）。雾格和从第几波开始由关卡文件的 terrain 决定（PR #5 最新分支，和 PR #4 一致）"}},
+        "in_battle_upgrade": {
+            "max_level": 1 + len(up),
+            "costs": up,
+            "attack_mult_by_level": lvl_mult,
+            "note_zh": "局内从 1 级升到 max_level。costs 是第 1 次、第 2 次升级的灵力。attack_mult_by_level 下标 0 是 1 级。和每个角色上的 upgrade_costs、level_attack_mult 相同。",
+        },
         "level_scaling": {
             "enemy_hp_mult_per_level": n(R["hp_mult_per_level"]),
             "wave_budget_base": n(R["budget_base"]),

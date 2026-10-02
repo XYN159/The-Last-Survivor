@@ -6,6 +6,7 @@
 
 ### 变更
 
+- ch1_04 系数锁定为 0.74。Boss 第 11 波登场，血量不乘关卡倍率。叫波奖励一次最多 20。灵梦默认符卡写成梦符「封魔阵」。`stats.json` 补上嵌套的攻击字段、局内升级、Boss 在 `enemies` 里的一份副本。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

@@ -119,12 +119,16 @@ def star_share(res, k):
 
 
 def boss_fix(level, rules):
-    """数值建议的 Boss 方案（待拍板）：Boss 血量写的就是实战值（不乘关卡血量倍率），并改为倒数第 5 波入场。
+    """Boss 血量不乘关卡倍率。ch1_04 按 D-01 在第 11 波入场。
+    其他首领关仍用旧建议的偏移（总波数 − proposed_boss_enter_waves_from_end，15 波会落到第 10 波），那不是第 11 波。
     返回 (改过的关卡, 规则覆盖)。非 Boss 关原样返回。"""
     if not level.get("boss_wave"):
         return level, {}
     L = dict(level)
-    L["boss_wave"] = str(int(L["wave_count"]) - int(rules.get("proposed_boss_enter_waves_from_end", 5)))
+    if L.get("level_id") == "ch1_04":
+        L["boss_wave"] = "11"
+    else:
+        L["boss_wave"] = str(int(L["wave_count"]) - int(rules.get("proposed_boss_enter_waves_from_end", 5)))
     return L, {"boss_hp_uses_level_mult": 0}
 
 
