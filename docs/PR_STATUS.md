@@ -19,12 +19,13 @@
 7. **PR #8** 数值表。先于关卡表。和 #4 冲突时，`data/balance/combat/stats.json` 以 #8 为准（#8 的描述里约定了）。和 #5 冲突时，`data/balance/level_difficulty.json` 以 #8 为准（两边的描述都这么写）。第一章首领入场仍待拍板，最好先定再合，否则这两张表还要再改。
 8. **PR #5** 关卡表。放在数值表后面。它和 #3 都会改 `docs/GDD.md`：#3 是整份总纲重写，#5 是在更早的总纲上补关卡句子。合并时不要用 #5 的总纲覆盖 #3。
 
-本页所在的整理 PR 只改这份清单和更新日志，可以随时合，不插入上面的顺序。
+**PR #10** 就是本页。它只改这份清单和更新日志，可以随时合，不插入上面的顺序。
 
 ## 开着的 PR
 
 | PR | 一句话 | 状态 | 更新日志 | CI |
 | --- | --- | --- | --- | --- |
+| [#10](https://github.com/XYN159/Touhou-forgotten-defense/pull/10) | 维护本页：开着的 PR、状态和推荐合并顺序。草稿。 | CI/工程，待审核。从最新 `main` 拉出。 | 已更新 | 见下方打包说明 |
 | [#7](https://github.com/XYN159/Touhou-forgotten-defense/pull/7) | 补上调试 APK 路径少写的 `}`，并让 lint 检查 shell 语法。 | CI/工程，待审核。已在最新 `main` 上。 | 已更新 | `lint`、`test`、`export-android` 都通过 |
 | [#9](https://github.com/XYN159/Touhou-forgotten-defense/pull/9) | 写测试计划、MVP 验收和关卡模拟方案，并列出设计稿之间对不上的地方。草稿。 | 测试，待审核。已在最新 `main` 上。 | 按描述故意未改 | `export-android` 失败，另外两项通过 |
 | [#3](https://github.com/XYN159/Touhou-forgotten-defense/pull/3) | 把总纲和路线图改成竖屏塔防，并记下已经拍板的规则。 | 设计文档，待审核。已合入最新 `main`。 | 已更新 | `export-android` 失败，另外两项通过 |
