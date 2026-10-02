@@ -31,7 +31,7 @@
 | 符卡宣言 | Spell Card Declaration | 角色喊出符卡名并发动 | 首领在决斗中宣言符卡时显示符卡名 |
 | 符卡决斗 | Spell Card Duel | 每章的首领关，对手沿路线前进、分阶段宣言符卡 | 可简称“决斗”。不写“BOSS 战”“对决”（界面上若需要英文可用 Duel） |
 | 塔 / 角色塔 | Tower / Character Tower | 放置在地图上的角色，自动攻击残影 | 面向玩家的文本里说“角色”，不说“塔”（“把魔理沙放在……”，而不是“建造魔理沙塔”）。“塔”只在策划文档和代码里用 |
-| 放置 | Deploy / Place | 把角色放到可放置的格子上 | 不写“建造”“召唤”“部署”。操作**待定**。推荐先点格子，再点角色头像。教学已按这个写，定了再微调 |
+| 放置 | Deploy / Place | 把角色放到可放置的格子上 | 不写“建造”“召唤”“部署”，也不写“拖动”“拖到”。操作**已定**：先点格子，再点角色头像 |
 | 可放置格子 | Placement Tile | 能放置角色的格子 | 教学里说“发光的格子” |
 | 路线 | Path | 残影从裂缝走向守护点的道路 | 不写“车道”“兵线”（“车道”是旧项目用词）。战斗中不改格子。可以有另一条事先画好的路，到某一波才开始出怪。不写“路会移动” |
 | 守护点 | Guard Point | 每关要守护的原作地点里的具体目标（如赛钱箱） | 不写“基地”“大本营”“水晶” |
@@ -91,15 +91,15 @@
 
 ## 敌人名
 
-玩家看见的名字以这一表为准，统一叫「某某残影」。key 里的 id 用战斗 id：路上的残影去掉 `enm_` 前缀，首领用完整战斗 id。标了暂定或暂名的，定稿前不要写成已经定案。
+玩家看见的名字以这一表为准，统一叫「某某残影」。路上敌人的文本 key 去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。标了暂定或暂名的，定稿前不要写成已经定案。
 
 | 名字 | 文本 key | 说明 |
 | --- | --- | --- |
 | 小残影 | `enemy.shade_basic.name` | 战斗 id `enm_shade_basic`。MVP 基础敌人。战斗草案里曾写“普通残影”，玩家文本用“小残影” |
 | 快残影 | `enemy.shade_fast.name` | 战斗 id `enm_shade_fast`。第一章新敌人。战斗草案里的外观叫法“褪色玩具”不要写进玩家文本 |
 | 硬残影 | `enemy.shade_armored.name` | 战斗 id `enm_shade_armored`。`ch1_03` 正式登场，这一关出 8 只。第二章起成为常见敌人。有护甲 |
-| 扑人残影 | `enemy.shade_pouncer.name` | **暂定。** 关卡 id `enm_shade_pouncer`。战斗表里还没有。第三章，会攻击村民 |
-| 飞行残影 | `enemy.shade_flying.name` | 关卡 id `enm_shade_flying`。战斗表里还没有。第四章。旧草案里的“飞屑”不要写进玩家文本 |
+| 扑人残影 | `enemy.shade_pouncer.name` | **暂定。** 战斗 id `enm_shade_pouncer`。不在 MVP。第三章，会攻击村民 |
+| 飞行残影 | `enemy.shade_flying.name` | 战斗 id `enm_shade_flying`。不在 MVP。第四章。旧草案里的“飞屑”不要写进玩家文本 |
 | 遗忘残影 | `enemy.shade_phantom.name` | **暂定。** 战斗 id `enm_shade_phantom`。原暂名“遗忘之影”。第五章，隐身 |
 | 堆积残影 | `enemy.shade_heap.name` | **暂定。** 战斗 id `enm_shade_heap`。原暂名“堆积体”。第五章，会分裂 |
 | 结界残影 | `enemy.shade_rift.name` | **暂定。** 战斗 id `enm_shade_rift`。原名“结界之渣”。第五章，靠近时周围格子褪色 |

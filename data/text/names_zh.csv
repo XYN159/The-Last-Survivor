@@ -71,8 +71,8 @@ state.yukari_halffaded.desc,隙间半合，袖口褪了色。人还是鲜艳的�
 enemy.shade_basic.name,小残影,战斗 id：enm_shade_basic。MVP 基础敌人
 enemy.shade_fast.name,快残影,战斗 id：enm_shade_fast。第一章新敌人
 enemy.shade_armored.name,硬残影,战斗 id：enm_shade_armored。ch1_03 正式登场，这一关出 8 只
-enemy.shade_pouncer.name,扑人残影,暂定。关卡 id：enm_shade_pouncer。战斗表还没有这条。第三章，会攻击村民
-enemy.shade_flying.name,飞行残影,关卡 id：enm_shade_flying。战斗表还没有这条。第四章
+enemy.shade_pouncer.name,扑人残影,暂定。战斗 id：enm_shade_pouncer。不在 MVP。第三章，会攻击村民
+enemy.shade_flying.name,飞行残影,战斗 id：enm_shade_flying。不在 MVP。第四章
 enemy.shade_phantom.name,遗忘残影,暂定。战斗 id：enm_shade_phantom。原暂名是遗忘之影。第五章，隐身
 enemy.shade_heap.name,堆积残影,暂定。战斗 id：enm_shade_heap。原暂名是堆积体。第五章，会分裂
 enemy.shade_rift.name,结界残影,暂定。战斗 id：enm_shade_rift。原名是结界之渣。第五章，靠近时周围格子褪色
