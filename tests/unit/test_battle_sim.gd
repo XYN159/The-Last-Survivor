@@ -142,13 +142,45 @@ func test_two_paths_move_apart() -> void:
 	assert_gt(absf(float(enemies[0].x) - float(enemies[1].x)), 1.0)
 
 
-func test_scripted_opening_clears_the_prototype_level() -> void:
+func test_prologue_first_wave_delay_follows_the_file() -> void:
+	var catalog := CombatCatalog.load_default()
+	var first: Dictionary = catalog.level().waves[0]
+	var delay := CombatCatalog.read_float(first.get("delay_sec"), -1.0)
+	var deploy := float(catalog.tuning().deploy_time_sec)
+	var sim := BattleSim.from_catalog(catalog)
+	var ticks := 0
+	while str(sim.view_state().phase) == BattleSim.PHASE_DEPLOY and ticks < 5000:
+		sim.tick()
+		ticks += 1
+	assert_almost_eq(float(ticks) / 60.0, deploy + delay, 0.05)
+	assert_eq(sim.view_state().phase, BattleSim.PHASE_SPAWNING)
+	assert_gt(sim.view_state().enemies.size(), 0)
+	assert_eq(str(sim.view_state().enemies[0].enemy_id), str(first.spawns[0].enemy_id))
+
+
+func test_prologue_01_only_allows_reimu() -> void:
+	var sim := BattleSim.from_catalog(CombatCatalog.load_default())
+	var roster: Array = sim.view_state().roster
+	assert_eq(roster.size(), 1)
+	assert_eq(str(roster[0].id), "chr_reimu")
+	assert_eq(str(roster[0].display_name), "灵梦")
+	assert_false(sim.place("chr_marisa", 2, 4))
+	assert_false(sim.place("chr_reimu", 3, 4))
+	assert_true(sim.place("chr_reimu", 2, 4))
+
+
+func test_reimu_opening_clears_prologue_01() -> void:
 	var catalog := CombatCatalog.load_default()
 	var sim := BattleSim.from_catalog(catalog)
 	sim.set_seed(1)
-	for opening_v in catalog.level().get("suggested_opening", []):
+	var placed := 0
+	for opening_v in catalog.opening_placements():
 		var opening: Dictionary = opening_v
-		assert_true(sim.place(str(opening.character_id), int(opening.col), int(opening.row)))
+		if sim.place(str(opening.character_id), int(opening.col), int(opening.row)):
+			placed += 1
+	assert_gt(placed, 0)
+	for unit_v in sim.view_state().units:
+		assert_eq(str(unit_v.character_id), "chr_reimu")
 	var state := _run(sim, 300000)
 	assert_eq(
 		state.outcome, BattleSim.PHASE_VICTORY, "生命 %s 波次 %s" % [state.guard_hp, state.wave_index]
@@ -156,7 +188,7 @@ func test_scripted_opening_clears_the_prototype_level() -> void:
 	assert_gt(int(state.guard_hp), 0)
 
 
-func test_ignoring_the_cracks_loses_the_prototype_level() -> void:
+func test_ignoring_the_road_loses_prologue_01() -> void:
 	var sim := BattleSim.from_catalog(CombatCatalog.load_default())
 	var state := _run(sim, 300000)
 	assert_eq(state.outcome, BattleSim.PHASE_DEFEAT)

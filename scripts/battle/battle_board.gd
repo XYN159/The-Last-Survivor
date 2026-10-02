@@ -421,7 +421,7 @@ func _capture_sequence() -> void:
 
 
 func _place_opening() -> void:
-	for opening_v in _catalog.level().get("suggested_opening", []):
+	for opening_v in _catalog.opening_placements():
 		if typeof(opening_v) != TYPE_DICTIONARY:
 			continue
 		var opening: Dictionary = opening_v

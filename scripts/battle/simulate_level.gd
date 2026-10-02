@@ -1,13 +1,13 @@
 extends SceneTree
 
-## 无头跑完原型关。摆放用关卡里的 suggested_opening，一直 tick 到胜负。
+## 无头跑完当前关卡。没有 suggested_opening 时，按槽位离路线中段的远近放人。
 
 
 func _init() -> void:
 	var catalog := CombatCatalog.load_default()
 	var sim := BattleSim.from_catalog(catalog)
 	sim.set_seed(1)
-	for opening_v in catalog.level().get("suggested_opening", []):
+	for opening_v in catalog.opening_placements():
 		_try_place(sim, opening_v)
 	var ticks := 0
 	while str(sim.view_state().outcome) == "" and ticks < 300000:

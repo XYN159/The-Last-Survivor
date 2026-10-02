@@ -11,7 +11,8 @@ assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
 data/balance/        数值 JSON。调平衡改这里
-data/prototype/      塔防原型用的关卡和数值。正式表合并前先读这里
+data/levels/         可玩关卡。标题的「开始」读 prologue_01.json
+data/prototype/      塔防原型的战斗数值。正式表合并前，角色和敌人仍读这里
 scenes/main/         标题等流程场景
 scenes/battle/       可玩的塔防棋盘，以及还留着的旧车道画面
 scenes/ui/           以后可复用的界面碎片（目前还没有）
@@ -37,7 +38,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
-| `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」 |
+| `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」。开始进入序章第一关 |
 | `scenes/battle/battle_board.tscn` | `scripts/battle/battle_board.gd` | 可玩的塔防棋盘。按钮和结算在这里，规则不在这里 |
 | `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧车道占位。标题已经不进这里 |
 
@@ -85,8 +86,10 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `combat/characters.json` | 灵梦、魔理沙怎么打 |
 | `combat/enemies.json` | 小残影、快残影的体型和击退 |
 | `combat/feel.json` | 闪白和伤害数字 |
-| `levels/prototype_01.json` | 这一关的地图和三波怪 |
-| `level_difficulty.json` | 开局 150 灵力，每波再加 20 |
+| `levels/prototype_01.json` | 上一版双路试关，标题已经不读它 |
+| `level_difficulty.json` | 开局 150 灵力，每波再加 20。`prologue_01` 这一行是临时的 |
+
+标题的「开始」读 `data/levels/prologue_01.json`：一条直路、三波小残影，只能放灵梦。地图、路线、波次和出怪编组都在这个文件里。血量、攻击和费用仍从 `data/prototype/combat/` 读。`level_difficulty.json` 里 `prologue_01` 的血量倍率和每波灵力是临时值，等 #8 合并后再换成正式表。
 
 `CombatCatalog` 负责读这些文件。`USE_OFFICIAL_TABLES` 现在是 `false`。把它改成 `true` 之前，#4（`rules.json`、`characters.json`、`enemies.json`、`feel.json`）、#5（`data/levels`）和 #8（`stats.json`、`level_difficulty.json`）都要先合并。只合了其中一份就打开，会缺文件。开关打开后，缺文件或缺关键字段会 `push_error`，不再悄悄用默认值。关键字段是攻击、费用、射程、间隔、血量、移速、护甲、漏怪伤害、血量倍率。
 

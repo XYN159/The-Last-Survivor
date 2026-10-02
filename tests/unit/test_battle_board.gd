@@ -3,7 +3,7 @@ extends GutTest
 const BATTLE_SCENE := preload("res://scenes/battle/battle_board.tscn")
 
 
-func test_battle_board_shows_spirit_life_and_both_characters() -> void:
+func test_battle_board_shows_spirit_life_and_only_reimu() -> void:
 	var board := BATTLE_SCENE.instantiate()
 	add_child_autofree(board)
 	var spirit := board.get_node("%SpiritLabel") as Label
@@ -13,7 +13,9 @@ func test_battle_board_shows_spirit_life_and_both_characters() -> void:
 	assert_eq(life.text, "生命 20/20")
 	assert_eq(wave.text, "布阵 10 秒")
 	var bar := board.get_node("%CharacterBar") as HBoxContainer
-	assert_eq(bar.get_child_count(), 2)
+	assert_eq(bar.get_child_count(), 1)
+	var button := bar.get_child(0) as Button
+	assert_eq(button.text, "灵梦\n50")
 	var call_button := board.get_node("%CallButton") as Button
 	assert_eq(call_button.text, "开始 +10")
 	var hint := board.get_node("%HintLabel") as Label

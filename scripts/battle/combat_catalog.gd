@@ -2,24 +2,26 @@ class_name CombatCatalog
 extends RefCounted
 
 ## 战斗表和关卡的读取。
-## 原型表在 data/prototype。USE_OFFICIAL_TABLES 保持 false，
-## 直到下面三份都合并进 main 再打开：
+## 可玩关卡是 data/levels/prologue_01.json（关卡设计 #5）。
+## 角色、敌人、规则仍在 data/prototype，因为 #4 和 #8 还没合并。
+## 这一关的难度行也先写在 data/prototype/level_difficulty.json，并标成临时。
+## USE_OFFICIAL_TABLES 保持 false。三份正式表都进 main 之后再打开：
 ## #4 的 rules.json、characters.json、enemies.json、feel.json，
 ## #5 的 data/levels，#8 的 stats.json 和 level_difficulty.json。
-## 只合了其中一份就打开，会缺文件。
 ## 开关打开时，缺文件或缺关键字段用 push_error，不要悄悄填默认值。
 ## 关键字段：攻击、费用、射程、间隔、血量、移速、护甲、漏怪伤害、血量倍率。
 ## 正式难度表的 hp_multiplier 是字符串，用 read_float，不要用 read_int。
 ## 射程和间隔先认 stats 里嵌套的 attack.range_cells、attack.interval_sec，
 ## 再认扁平的 range_cells、attack_interval_sec，最后才用 characters.json。
 ## 同名上限先认每个角色自己的 max_copies，没有再用规则里的全局值。
-## deploy_wait_for_player 留到切正式序章之前再读。原型关用不上。
+## prologue_01 写了 deploy_wait_for_player。这一刀仍用现有倒计时：
+## 布阵秒数走完，再按文件读第 1 波的 delay_sec。
 
 const USE_OFFICIAL_TABLES := false
 
 const _PROTOTYPE_ROOTS := {
 	"combat_dir": "res://data/prototype/combat",
-	"level_path": "res://data/prototype/levels/prototype_01.json",
+	"level_path": "res://data/levels/prologue_01.json",
 	"difficulty_path": "res://data/prototype/level_difficulty.json",
 }
 const _OFFICIAL_ROOTS := {
@@ -176,6 +178,32 @@ func tuning() -> Dictionary:
 
 func level() -> Dictionary:
 	return _level
+
+
+## 无头试跑和截图用。没有 suggested_opening 时，把允许的第一个角色放到离路线中段近的槽位。
+func opening_placements() -> Array:
+	var listed: Array = _level.get("suggested_opening", [])
+	if not listed.is_empty():
+		return listed
+	var params: Dictionary = _level.get("params", {})
+	var ids: Array = params.get("available_character_ids", [])
+	if ids.is_empty():
+		return []
+	var character_id := str(ids[0])
+	var placements: Array = []
+	for slot_v in _slots_near_path_middle(_dictionary_copy(_level.get("map", {}))):
+		var slot: Dictionary = slot_v
+		(
+			placements
+			. append(
+				{
+					"character_id": character_id,
+					"col": int(slot.get("col", -1)),
+					"row": int(slot.get("row", -1)),
+				}
+			)
+		)
+	return placements
 
 
 func feel() -> Dictionary:
@@ -399,6 +427,46 @@ func _enemy_gaps(enemy_id: String, gaps: PackedStringArray) -> void:
 		gaps.append("%s 缺少护甲 armor" % enemy_id)
 	if not stats.has("leak_damage"):
 		gaps.append("%s 缺少漏怪伤害 leak_damage" % enemy_id)
+
+
+func _slots_near_path_middle(map: Dictionary) -> Array:
+	var anchor := _path_middle(map)
+	var ordered: Array = []
+	for slot_v in map.get("slots", []):
+		if typeof(slot_v) != TYPE_DICTIONARY:
+			continue
+		var slot: Dictionary = slot_v
+		var distance := _cell_distance(int(slot.get("col", 0)), int(slot.get("row", 0)), anchor)
+		var index := ordered.size()
+		while index > 0:
+			var previous: Dictionary = ordered[index - 1]
+			var previous_distance := _cell_distance(
+				int(previous.get("col", 0)), int(previous.get("row", 0)), anchor
+			)
+			if previous_distance <= distance:
+				break
+			index -= 1
+		ordered.insert(index, slot)
+	return ordered
+
+
+func _path_middle(map: Dictionary) -> Vector2:
+	for path_v in map.get("paths", []):
+		if typeof(path_v) != TYPE_DICTIONARY:
+			continue
+		var cells: Array = (path_v as Dictionary).get("cells", [])
+		if cells.is_empty():
+			continue
+		var point_v: Variant = cells[int(cells.size() / 2)]
+		if typeof(point_v) != TYPE_ARRAY or (point_v as Array).size() < 2:
+			continue
+		var point: Array = point_v
+		return Vector2(float(point[0]), float(point[1]))
+	return Vector2.ZERO
+
+
+func _cell_distance(col: int, row: int, anchor: Vector2) -> float:
+	return Vector2(float(col), float(row)).distance_to(anchor)
 
 
 func _dictionary_copy(value: Variant) -> Dictionary:

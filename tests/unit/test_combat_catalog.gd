@@ -104,10 +104,15 @@ func test_reimu_and_marisa_keep_their_attack_types() -> void:
 	assert_almost_eq(float(marisa.stats.base_attack), 22.0, 0.001)
 
 
-func test_both_paths_stay_on_the_map_and_end_at_the_guard() -> void:
+func test_prologue_01_loads_with_one_path_to_the_guard() -> void:
 	var level := CombatCatalog.load_default().level()
 	var cells: Array = level.map.cells
-	assert_eq(level.map.paths.size(), 2)
+	assert_eq(str(level.id), "prologue_01")
+	assert_eq(str(level.display_name), "神社的直路")
+	assert_eq(level.params.available_character_ids, ["chr_reimu"])
+	assert_eq(level.waves.size(), 3)
+	assert_eq(CombatCatalog.read_float(level.waves[0].delay_sec, -1.0), 0.0)
+	assert_eq(level.map.paths.size(), 1)
 	for path_v in level.map.paths:
 		var path: Dictionary = path_v
 		var points: Array = path.cells
