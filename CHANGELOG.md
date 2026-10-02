@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### 修复
+
+- 补回 `ci/export_android_debug.sh` 里默认 APK 路径漏掉的 `}`。改名时这一处没闭合，`export-android` 在解析脚本时就退出，产不出 `touhou-forgotten-defense-debug.apk`。
+- `./ci/lint.sh` 会对 `ci/*.sh` 做 `bash -n`，避免同类语法错误留到导出步骤才暴露。
+
 ### 变更
 
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。

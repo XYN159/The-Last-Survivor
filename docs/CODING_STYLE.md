@@ -1,6 +1,6 @@
 # GDScript 写法
 
-格式和静态检查用 gdtoolkit 4.5.0（`gdformat` / `gdlint`）。配置是仓库根目录的 `gdformatrc` 和 `.gdlintrc`。提交前 CI 会跑 `./ci/lint.sh`。
+格式和静态检查用 gdtoolkit 4.5.0（`gdformat` / `gdlint`）。配置是仓库根目录的 `gdformatrc` 和 `.gdlintrc`。提交前 CI 会跑 `./ci/lint.sh`。同一条命令也会用 `bash -n` 检查 `ci/` 里的 shell 脚本语法。
 
 ## 类型
 

@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APK_PATH="${1:-${ROOT}/build/android/touhou-forgotten-defense-debug.apk"
+APK_PATH="${1:-${ROOT}/build/android/touhou-forgotten-defense-debug.apk}"
 SDK_PATH="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 JAVA_PATH="${JAVA_HOME:-}"
 KEYSTORE_PATH="${RUNNER_TEMP:-/tmp}/touhou-forgotten-defense-debug.keystore"
