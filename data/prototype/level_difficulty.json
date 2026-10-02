@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "prototype",
+  "comments": {
+    "reward_spirit_start": "开局灵力。正式表在 data/balance/level_difficulty.json，和关卡 params.starting_spirit_power 对齐。",
+    "reward_spirit_per_wave": "每活过一波加的灵力。原型在这一波的怪全部刷出、且守护点还活着时发放。"
+  },
+  "levels": {
+    "prototype_01": {
+      "chapter": "prototype",
+      "level_index": 0,
+      "level_role": "teaching",
+      "wave_count": 3,
+      "reward_spirit_start": 150,
+      "reward_spirit_per_wave": 20,
+      "buff_after_waves": [],
+      "buff_pick_count": 0
+    }
+  }
+}

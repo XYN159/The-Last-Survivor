@@ -1,6 +1,6 @@
 extends Control
 
-## 标题画面。开始按钮进入占位场景，用来确认场景切换。塔防原型会换掉那个场景。
+## 标题画面。开始按钮进入塔防原型。
 
 @onready var _start_button: Button = %StartButton
 @onready var _version_label: Label = %VersionLabel
@@ -13,4 +13,4 @@ func _ready() -> void:
 
 
 func _on_start_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/battle/battle_lane.tscn")
+	get_tree().change_scene_to_file("res://scenes/battle/battle_board.tscn")

@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "bosses": [],
+  "id": "prototype_01",
+  "difficulty_id": "prototype_01",
+  "status": "complete",
+  "chapter_id": "prototype",
+  "index_in_chapter": 1,
+  "display_name": "两条裂缝",
+  "display_name_key": "level.prototype_01.name",
+  "kind": "tutorial",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.hakurei_offering_box",
+    "display_name": "赛钱箱"
+  },
+  "summary": "左右两条路同时来残影。灵梦看左路，魔理沙看右路。",
+  "player_feeling": "两条路都要顾，放下去就会自己打。",
+  "teaches": [
+    "残影沿路线走向守护点",
+    "只能放在预定槽位上",
+    "角色会自动攻击"
+  ],
+  "new_character_ids": ["chr_reimu", "chr_marisa"],
+  "new_enemy_ids": ["enm_shade_basic", "enm_shade_fast"],
+  "unlock_character_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": ["chr_reimu", "chr_marisa"],
+    "reward_spirit_per_wave": 20
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "cells": [
+      "BSBBBSB",
+      "BP.B.PB",
+      "BPBBBPB",
+      "BPBBBPB",
+      "BP.B.PB",
+      "BPBBBPB",
+      "BPBBBPB",
+      ".PBBBP.",
+      "BPPPPPB",
+      "BBBPBBB",
+      "BBBPBBB",
+      "BBBGBBB"
+    ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
+    "entrances": [
+      {"id": "entrance.left", "col": 1, "row": 0},
+      {"id": "entrance.right", "col": 5, "row": 0}
+    ],
+    "guard": {
+      "cell": [3, 11],
+      "id": "guard.hakurei_offering_box",
+      "display_name": "赛钱箱"
+    },
+    "paths": [
+      {
+        "path_id": "path.left",
+        "id": "path.left",
+        "entrance_id": "entrance.left",
+        "kind": "ground",
+        "cells": [
+          [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7],
+          [1, 8], [2, 8], [3, 8], [3, 9], [3, 10], [3, 11]
+        ]
+      },
+      {
+        "path_id": "path.right",
+        "id": "path.right",
+        "entrance_id": "entrance.right",
+        "kind": "ground",
+        "cells": [
+          [5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7],
+          [5, 8], [4, 8], [3, 8], [3, 9], [3, 10], [3, 11]
+        ]
+      }
+    ],
+    "terrain": [],
+    "cell_sets": {},
+    "slots": [
+      {"id": "slot.early_left", "col": 2, "row": 1, "label": "左路入口", "why": "靠左裂缝，射程短时很快就打不到下面。"},
+      {"id": "slot.early_right", "col": 4, "row": 1, "label": "右路入口", "why": "靠右裂缝，适合看清快残影从哪进来。"},
+      {"id": "slot.mid_left", "col": 2, "row": 4, "label": "左路中段", "why": "贴着左路直段，灵梦放这里上下都能打到。"},
+      {"id": "slot.mid_right", "col": 4, "row": 4, "label": "右路中段", "why": "贴着右路直段，魔理沙的直线能贯穿这一段。"},
+      {"id": "slot.late_left", "col": 0, "row": 7, "label": "汇合前左", "why": "靠近两路汇合前的左路。"},
+      {"id": "slot.late_right", "col": 6, "row": 7, "label": "汇合前右", "why": "靠近两路汇合前的右路。"}
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "wave_id": "w01",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "左路小残影，间隔拉开。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.left",
+          "count": 6,
+          "interval_sec": 3.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.left"
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "wave_id": "w02",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "右路快残影。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.right",
+          "count": 5,
+          "interval_sec": 4.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.right"
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "wave_id": "w03",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "两条路一起走。什么都不放的话，漏怪会把生命扣光。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.left",
+          "count": 6,
+          "interval_sec": 3.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.left"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.right",
+          "count": 5,
+          "interval_sec": 4.0,
+          "delay_sec": 1.0,
+          "entrance_id": "entrance.right"
+        }
+      ]
+    }
+  ],
+  "spell_energy_start": 0,
+  "spell_charge_mult": 1.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": false,
+  "intermission_sec": 4,
+  "suggested_opening": [
+    {"character_id": "chr_reimu", "col": 2, "row": 4},
+    {"character_id": "chr_marisa", "col": 4, "row": 4}
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": ["数值策划", "战斗策划"],
+    "note": "这是可玩原型的一关，不是正式 24 关里的某一关。开局灵力 150、每波 20、生命 20。敌人的生命和移速抄战斗数值表里已有的小残影、快残影。suggested_opening 只给无头试跑用，正式关卡没有这个字段。"
+  }
+}

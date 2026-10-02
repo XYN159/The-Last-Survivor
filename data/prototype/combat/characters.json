@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "schema_version": 3,
+    "status": "prototype",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/characters.md"
+  },
+  "characters": [
+    {
+      "id": "chr_reimu",
+      "name_key": "char.reimu.name",
+      "display_name": "灵梦",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "role": "homing_single",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_cells": 2.5,
+        "interval_sec": 0.8,
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": false,
+        "damage_tags": ["ofuda"],
+        "projectile": {
+          "speed_cells_per_sec": 7.0,
+          "turn_deg_per_sec": 540,
+          "lifetime_sec": 1.5,
+          "hit_radius_cells": 0.25,
+          "retarget_radius_cells": 1.5,
+          "pierce": 0
+        }
+      },
+      "levels": [
+        {
+          "level": 1,
+          "visual": {"sprite_variant": "reimu_lv1", "scale": 1.0},
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {"sprite_variant": "reimu_lv2", "scale": 1.0},
+          "behavior_mods": [{"op": "set", "path": "attack.count", "value": 2}]
+        },
+        {
+          "level": 3,
+          "visual": {"sprite_variant": "reimu_lv3", "scale": 1.05},
+          "behavior_mods": [{"op": "set", "path": "attack.count", "value": 3}]
+        }
+      ]
+    },
+    {
+      "id": "chr_marisa",
+      "name_key": "char.marisa.name",
+      "display_name": "魔理沙",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "role": "line_pierce_burst",
+      "tags": [],
+      "attack": {
+        "type": "instant_line",
+        "range_cells": 3.5,
+        "interval_sec": 1.6,
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "line_length": "range",
+        "line_width_cells": 0.5,
+        "max_targets": 0,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": true,
+        "damage_tags": ["magic", "marisa"],
+        "beam_visual_sec": 0.15
+      },
+      "levels": [
+        {
+          "level": 1,
+          "visual": {"sprite_variant": "marisa_lv1", "scale": 1.0},
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {"sprite_variant": "marisa_lv2", "scale": 1.0},
+          "behavior_mods": [{"op": "set", "path": "attack.line_width_cells", "value": 0.7}]
+        },
+        {
+          "level": 3,
+          "visual": {"sprite_variant": "marisa_lv3", "scale": 1.05},
+          "behavior_mods": [
+            {"op": "set", "path": "attack.line_width_cells", "value": 0.9},
+            {"op": "set", "path": "attack.end_star_burst_radius_cells", "value": 0.8}
+          ]
+        }
+      ]
+    }
+  ]
+}

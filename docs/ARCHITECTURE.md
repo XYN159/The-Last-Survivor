@@ -11,12 +11,13 @@ assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
 data/balance/        数值 JSON。调平衡改这里
+data/prototype/      塔防原型用的关卡和数值。正式表合并前先读这里
 scenes/main/         标题等流程场景
-scenes/battle/       占位战斗场景（旧车道画面，暂不改名）
+scenes/battle/       可玩的塔防棋盘，以及还留着的旧车道画面
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
-scripts/balance/     数值配置的读取和计算
-scripts/battle/      战斗场景脚本
+scripts/balance/     旧车道数值的读取和计算
+scripts/battle/      塔防规则（不画画面）和棋盘画面
 scripts/main/        标题场景脚本
 scripts/save/        存档读写
 tests/unit/          GUT 测试，文件名以 test_ 开头
@@ -37,7 +38,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
 | `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」 |
-| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧占位画面和「返回」。逻辑先留着 |
+| `scenes/battle/battle_board.tscn` | `scripts/battle/battle_board.gd` | 可玩的塔防棋盘。按钮和结算在这里，规则不在这里 |
+| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧车道占位。标题已经不进这里 |
 
 场景脚本不写 `class_name`，用节点路径和 `%唯一名` 找按钮。纯数据类才写 `class_name`，例如 `BalanceConfig` 和 `SaveGame`，这样测试和其他脚本都能直接用类型。
 
@@ -73,6 +75,22 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `starting_supplies` | 开局物资 | 0 |
 
 `BalanceConfig` 负责读取和计算，例如 `squad_size_after_gates()`。场景脚本只问 `GameState` 要结果，不自己解析 JSON。
+
+塔防原型的数字不写在上面那张旧表里。它们在 `data/prototype/`：
+
+| 文件 | 作用 |
+| --- | --- |
+| `combat/rules.json` | 棋盘像素、tick、布阵和波间 |
+| `combat/stats.json` | 攻击、费用、敌人生命和移速 |
+| `combat/characters.json` | 灵梦、魔理沙怎么打 |
+| `combat/enemies.json` | 小残影、快残影的体型和击退 |
+| `combat/feel.json` | 闪白和伤害数字 |
+| `levels/prototype_01.json` | 这一关的地图和三波怪 |
+| `level_difficulty.json` | 开局 150 灵力，每波再加 20 |
+
+`CombatCatalog` 负责读这些文件。`USE_OFFICIAL_TABLES` 现在是 `false`。等战斗表和关卡表合并进 main 之后，把它改成 `true`，加载器会改去读 `data/balance/combat/`、`data/levels/prologue_01.json` 和 `data/balance/level_difficulty.json`。字段名已经按那两套表来写。
+
+一局怎么打在 `BattleSim` 里，不在场景脚本里。画面每帧问它要快照。无头试跑是 `scripts/battle/simulate_level.gd`。
 
 新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*`。
 

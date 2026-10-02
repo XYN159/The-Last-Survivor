@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "schema_version": 3,
+    "status": "prototype",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/enemies_and_bosses.md",
+    "stats_file": "data/balance/combat/stats.json"
+  },
+  "enemies": [
+    {
+      "id": "enm_shade_basic",
+      "name_key": "enemy.shade_basic.name",
+      "display_name": "小残影",
+      "narrative_ref": "残影（通用，褪色杂物）",
+      "status": "mvp",
+      "tags": ["shade"],
+      "attacks_units": false,
+      "hit_radius_cells": 0.3,
+      "knockback_resist": 0.0,
+      "armor_feedback": false,
+      "immunities": [],
+      "visual": {"sprite": "shade_basic", "scale": 1.0, "color": "#8E97A8"}
+    },
+    {
+      "id": "enm_shade_fast",
+      "name_key": "enemy.shade_fast.name",
+      "display_name": "快残影",
+      "narrative_ref": "褪色玩具",
+      "status": "mvp",
+      "tags": ["shade", "outside_object", "fast"],
+      "attacks_units": false,
+      "hit_radius_cells": 0.25,
+      "knockback_resist": 0.0,
+      "armor_feedback": false,
+      "immunities": [],
+      "visual": {"sprite": "shade_toy", "scale": 0.8, "color": "#5EC8E6"}
+    }
+  ]
+}
