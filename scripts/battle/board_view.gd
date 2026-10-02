@@ -1,26 +1,20 @@
 extends Control
 
-## 棋盘上的色块。格子尺寸来自配置，不在这里写死。
+## 序章庭院上的角色与战斗反馈。背景和静态光效都使用重绘素材。
 
 signal cell_pressed(col: int, row: int)
 
-const _COLOR_BLOCKED := Color("#24302C")
-const _COLOR_PATH := Color("#C4B49A")
-const _COLOR_PLACE := Color("#E6D39A")
-const _COLOR_SPAWN := Color("#6B4C9A")
-const _COLOR_GUARD := Color("#C23B4A")
-const _COLOR_REIMU := Color("#E24B4B")
-const _COLOR_REIMU_INNER := Color("#F4F0E6")
-const _COLOR_MARISA := Color("#F0C14A")
-const _COLOR_MARISA_INNER := Color("#1A1420")
-const _COLOR_BASIC := Color("#8E97A8")
-const _COLOR_FAST := Color("#5EC8E6")
-const _COLOR_SHOT := Color("#FFF6E8")
-const _COLOR_BEAM := Color("#FFE14A")
+const _REIMU_TEXTURE := preload("res://assets/art/prologue_01/reimu_token.png")
+const _PLACE_TEXTURE := preload("res://assets/art/prologue_01/yin_yang_blue.png")
+const _SELECT_TEXTURE := preload("res://assets/art/prologue_01/yin_yang_gold.png")
+const _UNIT_RING_TEXTURE := preload("res://assets/art/prologue_01/ofuda_ring.png")
+const _RANGE_TEXTURE := preload("res://assets/art/prologue_01/petal_ward.png")
+const _SHOT_TEXTURE := preload("res://assets/art/prologue_01/spirit_shot.png")
+const _HIT_TEXTURE := preload("res://assets/art/prologue_01/hit_burst.png")
+const _ENEMY_TEXTURE := preload("res://assets/art/prologue_01/shade_enemy.png")
 
 var _columns: int = 7
 var _rows: int = 12
-var _cell: int = 128
 var _cells: Array = []
 var _state: Dictionary = {}
 var _selected_col: int = -1
@@ -45,7 +39,6 @@ func setup(catalog: CombatCatalog) -> void:
 	var layout := catalog.board()
 	_columns = int(layout.columns)
 	_rows = int(layout.rows)
-	_cell = int(layout.cell_size)
 	var map: Dictionary = catalog.level().get("map", {})
 	_cells = map.get("cells", [])
 	var feel := catalog.feel()
@@ -89,18 +82,24 @@ func _gui_input(event: InputEvent) -> void:
 	var mouse := event as InputEventMouseButton
 	if mouse == null or not mouse.pressed:
 		return
-	if mouse.button_index != MOUSE_BUTTON_LEFT or _cell <= 0:
+	if mouse.button_index != MOUSE_BUTTON_LEFT:
 		return
-	var col := int(mouse.position.x / float(_cell))
-	var row := int(mouse.position.y / float(_cell))
-	if col < 0 or row < 0 or col >= _columns or row >= _rows:
+	var nearest := Vector2i(-1, -1)
+	var nearest_distance := 86.0
+	for row in _rows:
+		for col in _columns:
+			var distance := mouse.position.distance_to(_cell_center(col, row))
+			if distance < nearest_distance:
+				nearest = Vector2i(col, row)
+				nearest_distance = distance
+	if nearest.x < 0:
 		return
-	cell_pressed.emit(col, row)
+	cell_pressed.emit(nearest.x, nearest.y)
 	accept_event()
 
 
 func _draw() -> void:
-	_draw_cells()
+	_draw_stage_markers()
 	_draw_range()
 	_draw_units()
 	_draw_enemies()
@@ -108,17 +107,31 @@ func _draw() -> void:
 	_draw_beams()
 
 
-func _draw_cells() -> void:
+func _draw_stage_markers() -> void:
 	for row in _rows:
 		for col in _columns:
 			var mark := _mark(col, row)
-			var rect := Rect2(col * _cell, row * _cell, _cell, _cell)
-			draw_rect(rect, _cell_color(mark))
-			if mark == "." and col == _selected_col and row == _selected_row:
-				draw_rect(rect.grow(-10), Color(1, 0.95, 0.55, 0.45))
-			draw_rect(rect, Color(0, 0, 0, 0.28), false, 2.0)
-			if mark == "G":
-				_draw_guard(rect)
+			var center := _cell_center(col, row)
+			if mark == ".":
+				var texture := (
+					_SELECT_TEXTURE if col == _selected_col and row == _selected_row else _PLACE_TEXTURE
+				)
+				var tint := Color.WHITE if texture == _SELECT_TEXTURE else Color(0.75, 0.9, 1, 0.72)
+				draw_texture_rect(texture, Rect2(center - Vector2(84, 62), Vector2(168, 124)), false, tint)
+			elif mark == "S":
+				draw_texture_rect(
+					_UNIT_RING_TEXTURE,
+					Rect2(center - Vector2(72, 64), Vector2(144, 128)),
+					false,
+					Color(1, 0.45, 0.5, 0.72),
+				)
+			elif mark == "G":
+				draw_texture_rect(
+					_SELECT_TEXTURE,
+					Rect2(center - Vector2(88, 65), Vector2(176, 130)),
+					false,
+					Color(1, 0.9, 0.58, 0.82),
+				)
 
 
 func _draw_range() -> void:
@@ -129,8 +142,13 @@ func _draw_range() -> void:
 		if int(unit.get("id", -1)) != _selected_id:
 			continue
 		var center := _cell_center(int(unit.col), int(unit.row))
-		var radius := float(unit.get("range", 1.0)) * float(_cell)
-		draw_arc(center, radius, 0.0, TAU, 64, Color(1, 1, 1, 0.85), 4.0)
+		var radius := float(unit.get("range", 1.0)) * 110.0
+		draw_texture_rect(
+			_RANGE_TEXTURE,
+			Rect2(center - Vector2(radius, radius * 0.72), Vector2(radius * 2.0, radius * 1.44)),
+			false,
+			Color(1, 1, 1, 0.78),
+		)
 
 
 func _draw_units() -> void:
@@ -140,19 +158,27 @@ func _draw_units() -> void:
 			continue
 		var unit: Dictionary = unit_v
 		var center := _cell_center(int(unit.col), int(unit.row))
-		var palette := _unit_colors(str(unit.get("character_id", "")))
-		draw_circle(center, 42.0, palette[0])
-		draw_circle(center, 22.0, palette[1])
+		draw_texture_rect(
+			_UNIT_RING_TEXTURE,
+			Rect2(center - Vector2(78, 70), Vector2(156, 140)),
+			false,
+			Color(1, 0.72, 0.72, 0.9),
+		)
+		draw_texture_rect(
+			_REIMU_TEXTURE,
+			Rect2(center - Vector2(51, 64), Vector2(102, 102)),
+			false,
+		)
 		if font == null:
 			continue
 		draw_string(
 			font,
-			center + Vector2(-16, 54),
+			center + Vector2(-12, 58),
 			str(int(unit.get("level", 1))),
 			HORIZONTAL_ALIGNMENT_LEFT,
 			-1,
-			28,
-			Color.WHITE,
+			24,
+			Color("#FFF0DC"),
 		)
 
 
@@ -161,14 +187,24 @@ func _draw_enemies() -> void:
 		if typeof(enemy_v) != TYPE_DICTIONARY:
 			continue
 		var enemy: Dictionary = enemy_v
-		var pos := Vector2(float(enemy.x), float(enemy.y)) * float(_cell)
+		var pos := _logical_point(Vector2(float(enemy.x), float(enemy.y)))
 		var fast := str(enemy.get("enemy_id", "")) == "enm_shade_fast"
-		var radius := 22.0 if fast else 30.0
-		var base := _COLOR_FAST if fast else _COLOR_BASIC
-		var tint := base
+		var radius := 38.0 if fast else 46.0
+		var tint := Color(0.72, 0.82, 1, 0.92) if fast else Color.WHITE
 		if _flashes.has(int(enemy.id)):
-			tint = base.lerp(_flash_color, _flash_strength)
-		draw_circle(pos, radius, tint)
+			tint = tint.lerp(_flash_color, _flash_strength)
+			draw_texture_rect(
+				_HIT_TEXTURE,
+				Rect2(pos - Vector2(70, 64), Vector2(140, 128)),
+				false,
+				Color(1, 0.72, 0.76, 0.88),
+			)
+		draw_texture_rect(
+			_ENEMY_TEXTURE,
+			Rect2(pos - Vector2(radius, radius), Vector2(radius * 2.0, radius * 2.0)),
+			false,
+			tint,
+		)
 		_draw_hp(pos, float(enemy.hp), float(enemy.max_hp), radius)
 
 
@@ -177,22 +213,21 @@ func _draw_shots() -> void:
 		if typeof(shot_v) != TYPE_DICTIONARY:
 			continue
 		var shot: Dictionary = shot_v
-		var pos := Vector2(float(shot.x), float(shot.y)) * float(_cell)
-		draw_rect(Rect2(pos - Vector2(8, 12), Vector2(16, 24)), _COLOR_SHOT)
+		var pos := _logical_point(Vector2(float(shot.x), float(shot.y)))
+		draw_texture_rect(
+			_SHOT_TEXTURE,
+			Rect2(pos - Vector2(62, 28), Vector2(124, 56)),
+			false,
+		)
 
 
 func _draw_beams() -> void:
 	for beam_v in _beams:
 		var beam: Dictionary = beam_v
-		var from := Vector2(float(beam.x0), float(beam.y0)) * float(_cell)
-		var to := Vector2(float(beam.x1), float(beam.y1)) * float(_cell)
-		draw_line(from, to, _COLOR_BEAM, 10.0)
-
-
-func _draw_guard(rect: Rect2) -> void:
-	var box := Rect2(rect.position + Vector2(34, 36), Vector2(60, 56))
-	draw_rect(box, Color("#F4F0E6"))
-	draw_rect(Rect2(box.position + Vector2(0, 24), Vector2(60, 8)), _COLOR_GUARD)
+		var from := _logical_point(Vector2(float(beam.x0), float(beam.y0)))
+		var to := _logical_point(Vector2(float(beam.x1), float(beam.y1)))
+		draw_line(from, to, Color(1, 0.87, 0.5, 0.9), 6.0)
+		draw_texture_rect(_SHOT_TEXTURE, Rect2(to - Vector2(54, 24), Vector2(108, 48)), false)
 
 
 func _draw_hp(pos: Vector2, hp: float, max_hp: float, radius: float) -> void:
@@ -237,7 +272,7 @@ func _spawn_number(event: Dictionary) -> void:
 	label.add_theme_color_override("font_color", _heavy_color if heavy else _normal_color)
 	label.add_theme_color_override("font_outline_color", Color("#1A1420"))
 	label.add_theme_constant_override("outline_size", 8)
-	var origin := Vector2(float(event.x), float(event.y)) * float(_cell) + Vector2(-28, -36)
+	var origin := _logical_point(Vector2(float(event.x), float(event.y))) + Vector2(-28, -46)
 	label.position = origin
 	add_child(label)
 	_floaters.append(
@@ -290,27 +325,14 @@ func _mark(col: int, row: int) -> String:
 	return line.substr(col, 1)
 
 
-func _cell_color(mark: String) -> Color:
-	match mark:
-		".":
-			return _COLOR_PLACE
-		"P":
-			return _COLOR_PATH
-		"S":
-			return _COLOR_SPAWN
-		"G":
-			return _COLOR_GUARD
-		_:
-			return _COLOR_BLOCKED
-
-
-func _unit_colors(character_id: String) -> Array:
-	if character_id == "chr_reimu":
-		return [_COLOR_REIMU, _COLOR_REIMU_INNER]
-	if character_id == "chr_marisa":
-		return [_COLOR_MARISA, _COLOR_MARISA_INNER]
-	return [Color("#D0D0D0"), Color("#333333")]
-
-
 func _cell_center(col: int, row: int) -> Vector2:
-	return Vector2((float(col) + 0.5) * float(_cell), (float(row) + 0.5) * float(_cell))
+	return _logical_point(Vector2(float(col) + 0.5, float(row) + 0.5))
+
+
+func _logical_point(point: Vector2) -> Vector2:
+	var row_ratio := point.y / float(maxi(_rows, 1))
+	var column_offset := point.x - float(_columns) * 0.5
+	return Vector2(
+		lerpf(size.x - 95.0, 95.0, row_ratio),
+		size.y * 0.5 + column_offset * 92.0,
+	)

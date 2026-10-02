@@ -6,7 +6,7 @@ config_version=5
 [application]
 
 config/name="东方守幻录"
-config/description="东方Project 同人竖屏角色塔防。个人制作，免费，非商业。不是弹幕射击。"
+config/description="东方Project 同人角色塔防。个人制作，免费，非商业。不是弹幕射击。"
 config/version="0.1.0"
 run/main_scene="res://scenes/main/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
@@ -20,14 +20,14 @@ GameState="*res://scripts/autoload/game_state.gd"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=1920
-; 桌面预览窗口。逻辑视口仍是 1080×1920，窗口缩到 540×960，方便和 Cursor 并排。
-window/size/window_width_override=540
-window/size/window_height_override=960
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+; 本轮只让标题和序章第一关按 16:9 横屏排版，不代表整部游戏已确定改为横屏。
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=1
+window/handheld/orientation=0
 
 [editor_plugins]
 

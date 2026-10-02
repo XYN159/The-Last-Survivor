@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/main_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/prologue_title_art.jpg" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/hud_frame.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/button_frame.png" id="4_button"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_start"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -11,7 +16,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,66 +25,128 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.07, 0.1, 0.12, 1)
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitleBlock" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 34.0
+offset_right = 620.0
+offset_bottom = 194.0
+theme_override_constants/separation = -8
+
+[node name="TitleLabel" type="Label" parent="TitleBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.92, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.02, 0.04, 0.9)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_font_sizes/font_size = 76
+text = "ui.menu.title"
+
+[node name="EnglishTitleLabel" type="Label" parent="TitleBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.83, 0.65, 0.55, 1)
+theme_override_font_sizes/font_size = 21
+text = "ui.menu.english_title"
+
+[node name="ChapterFrame" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 204.0
+offset_right = 780.0
+offset_bottom = 720.0
+mouse_filter = 2
+modulate = Color(1, 1, 1, 0.88)
+texture = ExtResource("3_frame")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="CenterColumn" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -280.0
-offset_right = 360.0
-offset_bottom = 280.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 28
-alignment = 1
+layout_mode = 0
+offset_left = 82.0
+offset_top = 258.0
+offset_right = 670.0
+offset_bottom = 640.0
+theme_override_constants/separation = 5
 
-[node name="TitleLabel" type="Label" parent="CenterColumn"]
+[node name="ChapterLabel" type="Label" parent="CenterColumn"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
+theme_override_colors/font_color = Color(0.88, 0.66, 0.58, 1)
+theme_override_font_sizes/font_size = 26
+text = "ui.menu.chapter"
+
+[node name="PrologueTitleLabel" type="Label" parent="CenterColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.94, 0.9, 1)
+theme_override_colors/font_shadow_color = Color(0.12, 0.03, 0.05, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
 theme_override_font_sizes/font_size = 64
-text = "ui.menu.title"
-horizontal_alignment = 1
+text = "ui.menu.prologue_title"
+
+[node name="PrologueEnglishLabel" type="Label" parent="CenterColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.72, 0.7, 1)
+theme_override_font_sizes/font_size = 22
+text = "ui.menu.prologue_english"
+
+[node name="Divider" type="Label" parent="CenterColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.18, 0.22, 1)
+theme_override_font_sizes/font_size = 28
+text = "—"
 
 [node name="SubtitleLabel" type="Label" parent="CenterColumn"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.74, 0.42, 1)
-theme_override_font_sizes/font_size = 36
-text = "ui.menu.subtitle"
-horizontal_alignment = 1
-
-[node name="StartButton" type="Button" parent="CenterColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 42
-text = "ui.menu.start"
+theme_override_colors/font_color = Color(0.78, 0.76, 0.74, 1)
+theme_override_font_sizes/font_size = 22
+text = "ui.menu.subtitle"
 
-[node name="HintLabel" type="Label" parent="CenterColumn"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
-theme_override_font_sizes/font_size = 26
-text = "ui.menu.hint"
-horizontal_alignment = 1
-autowrap_mode = 3
+[node name="StartFrame" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1532.0
+offset_top = 818.0
+offset_right = 1814.0
+offset_bottom = 1006.0
+mouse_filter = 2
+texture = ExtResource("4_button")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StartButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1532.0
+offset_top = 818.0
+offset_right = 1814.0
+offset_bottom = 1006.0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.98, 0.91, 0.82, 1)
+theme_override_colors/font_hover_color = Color(1, 0.72, 0.65, 1)
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_start")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_start")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_start")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_start")
+text = "ui.menu.start"
 
 [node name="VersionLabel" type="Label" parent="."]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -80.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.6, 0.64, 0.66, 1)
-theme_override_font_sizes/font_size = 24
+layout_mode = 0
+offset_left = 58.0
+offset_top = 1014.0
+offset_right = 430.0
+offset_bottom = 1060.0
+theme_override_colors/font_color = Color(0.62, 0.61, 0.62, 1)
+theme_override_font_sizes/font_size = 19
 text = "ui.menu.version"
-horizontal_alignment = 1
 vertical_alignment = 1
