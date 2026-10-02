@@ -1,7 +1,7 @@
 # 地形效果与关卡地图对接
 
 > 状态：草案（战斗策划）。地图格式归关卡策划；本文件只规定**战斗读取地图和地形时需要的最小字段**，关卡策划可以在此基础上加字段。
-> 对应配置：`data/balance/combat/terrain.json`。
+> 对应配置：`data/balance/combat/terrain.json`（行为）。倍率等数字在 PR #8 的 `stats.json` → `terrain.<id>.*`，`terrain.json` 用 `*_stats_key` 引用。关卡文件的正式格式以关卡策划 PR #5 的 `docs/design/level/data_format.md` 为准。
 
 ## 1. 地形效果是什么
 
@@ -17,10 +17,10 @@
 
 | ID | 能放在哪种格子 | 效果 | 影响 Boss | 挡放置 | 挡直线攻击 | 优先级 | MVP |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `ter_ice` 冰面 | 路线格 | 敌人在上面移速 ×1.5，和减速相乘；总倍率仍受 30% 下限、2.0 上限约束 | 是 | 否 | 否 | 20 | 是 |
-| `ter_icicle` 冰柱 | 非路线格 | 挡住经过这格的直线攻击；这格不能放角色；生成时格上有角色则改为冻住角色 3 秒 | 否 | 是 | 是 | 30 | 是 |
-| `ter_fog` 浓雾 | 任意 | 目标站在浓雾格时，攻击者对它的有效射程 −1 格（最少 1 格）；紫的隙间攻击不受影响 | 否 | 否 | 否 | 5 | 是（第一章） |
-| `ter_barrier` 结界 | 任意 | 区域类：敌人进入挂 `st_barrier_mark`（受伤 +20%），离开移除 | 是 | 否 | 否 | 10 | 是 |
+| `ter_ice` 冰面 | 路线格 | 敌人在上面移速 × `terrain.ter_ice.move_speed_mult`（PR #8，和 PR #5 一致），和减速相乘；总倍率仍受 30% 下限、2.0 上限约束 | 是 | 否 | 否 | 20 | 是 |
+| `ter_icicle` 冰柱 | 非路线格 | 挡住经过这格的直线攻击；这格不能放角色；存在 12 秒（关卡 `phase_1.duration_sec`，兜底 12）；生成时格上有角色则改为冻住角色（秒数读 `terrain.ter_ice.stop_on_declare_sec`） | 否 | 是 | 是 | 30 | 是 |
+| `ter_fog` 浓雾 | 任意 | 目标站在浓雾格时，攻击者对它的有效射程减 `terrain.ter_fog.range_minus_cells` 格，最少 `terrain.ter_fog.min_range_cells` 格（PR #8、PR #5 都是这一版）；紫的隙间攻击不受影响 | 否 | 否 | 否 | 5 | 是（第一章） |
+| `ter_barrier` 结界 | 任意 | 区域类：敌人进入挂 `st_barrier_mark`（受伤增加 `statuses.st_barrier_mark.vulnerability_add`），离开移除 | 是 | 否 | 否 | 10 | 是 |
 | `ter_burning` 火焰地面 | 路线格 | 区域类：每 0.5 秒给里面的敌人挂灼烧 | 是 | 否 | 否 | 15 | 否 |
 | `ter_faded` 褪色格 | 可放置格 | 不能放角色；格上已有角色停止攻击（带 `fade_immune` 的妹红例外） | 否 | 是 | 否 | 25 | 否（第五章） |
 
@@ -39,11 +39,11 @@
 
 ## 4. 关卡地图数据需要提供的字段（建议格式）
 
-关卡文件放在哪里、叫什么，由关卡策划决定（建议 `data/levels/<level_id>.json`）。战斗需要读取下面这些字段。下面是一张完整的示例地图（一条 S 形路线，21 格长），可以直接拿来做原型：
+关卡文件放在 `data/levels/<level_id>.json`，格式由关卡策划在 PR #5 定（`data_format.md`），以那边为准。下面只是战斗读取的最小字段，以及一张示例地图（一条 S 形路线，21 格长），可以直接拿来做原型。波次字段已按 core_rules.md 4.2 的时间轴写：
 
 ```json
 {
-  "level_id": "lv_ch01_03",
+  "id": "example_s_route",
   "grid": {
     "columns": 7,
     "rows": 12
@@ -154,7 +154,27 @@
           "delay_sec": 0
         }
       ],
-      "next_wave_delay_sec": 10,
+      "delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "next_wave_delay_sec": 4,
+      "is_boss": false
+    },
+    {
+      "wave_id": "w2",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path_a",
+          "count": 6,
+          "interval_sec": 0.4,
+          "delay_sec": 5
+        }
+      ],
+      "delay_sec": 4,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "next_wave_delay_sec": 0,
       "is_boss": false
     }
   ]
@@ -172,19 +192,24 @@
 | `terrain[].start` | 字符串 | `level_start`，或 `wave_<序号>`（第几波开始时出现） | 何时生成 |
 | `terrain[].duration_sec` | 数字 | 秒；-1 表示一直存在 | 何时消失 |
 | `cell_sets` | 名字 → 格子数组 | 给 Boss 符卡或脚本引用的命名格子集合 | Boss 符卡的 `cells_ref` 在这里查；查不到用兜底规则 |
-| `spell_energy_start` | 数字 | 开局符卡能量（0–100） | 教学关可以给高一点 |
+| `spell_energy_start` | 数字 | 开局符卡能量（0 到当前符卡使的满值 `characters.<id>.spell_energy_max`，超出按满值算） | 教学关可以给高一点 |
 | `spell_charge_mult` | 数字 | 本关充能倍率 | PR #2 建议序章充能更快，可以填 2.0 |
 | `deploy_time_sec` / `intermission_sec` | 数字 | 覆盖默认的 10 秒 / 4 秒（空档只能 3–5） | 波次状态机 |
-| `deploy_wait_for_player` | 布尔 | 布阵倒计时是否等玩家放置完成才开始 | 教学关 |
+| `deploy_wait_for_player` | 布尔 | 为真时，玩家放下第一个角色前布阵倒计时停在 10 秒不走（序章用） | 教学关 |
 | `waves[].spawns[]` | 数组 | 敌人 ID、路线、数量、出怪间隔、相对本波开始的延迟 | 刷怪 |
-| `waves[].next_wave_delay_sec` | 数字 | 本波出完到下一波开始的秒数 | 叫波奖励按剩余时间算 |
+| `waves[].delay_sec` | 数字 | 上一波最后一只出生后再等多少秒，这一波才开始（= 空档，默认 4）。**第一波填 0**：布阵结束就出怪 | 波次状态机 |
+| `waves[].duration_sec` | 数字 | 刷怪窗口，约 20 秒：第一只到最后一只出生 | 校验刷怪时间 |
+| `waves[].ends_when` | 字符串 | `spawn_window`：刷完 + 空档就进下一波，不等清场。`boss_defeated`：只用于 Boss 关最后一波 | 波次状态机 |
+| `waves[].next_wave_delay_sec` | 数字 | 等于下一波的 `delay_sec`；最后一波填 0 | 叫波奖励按剩余时间算 |
 | `waves[].is_boss` | 布尔 | Boss 波，开始前播放 Boss 登场演出 | 进入 `boss_intro` |
 
 ## 5. 给关卡策划的使用提示
 
 - **放置格**：角色只能放在标成 `.` 的预定槽位上。示例图里 `P` 是路线。一关可以有多条路线，写在 `paths` 里，这一关中途不改路线。给人看的草图可以用另一套：入口 `E`、障碍 `#`、预定槽位 `*`。这三个字母不写进 JSON。
-- **波数**：序章可以少于 5 波，前两关没有三选一，第 3 关开始教三选一。其余关卡 10 到 20 波，MVP 多用 10 到 12 波。每波大约 20 秒，空档 3 到 5 秒。具体关数见 core_rules.md 第 4.3 节对关卡策划 PR #5 的引用。
-- **第一章雾之湖的浓雾**：用 `ter_fog` + `start: "wave_2"` 做「雾随波次变浓」（对应 PR #2 `dlg.ch01.mid.004`「雾变浓了」）。雾只让「打雾里的敌人」的射程变短，所以关卡要留几个贴着路线的 `.` 格，配合教学 `tut.ch01.002`「把角色放在离路线近的地方」。
+- **波数**：序章可以少于 5 波，前两关没有三选一，第 3 关开始教三选一。其余关卡 10 到 20 波，MVP 多用 10 到 12 波。每波刷怪窗口约 20 秒，空档 3 到 5 秒，不等清场，第一波 `delay_sec` = 0。具体关数见 core_rules.md 第 4.3 节对关卡策划 PR #5 的引用。
+- **第一章雾之湖的浓雾**：用 `ter_fog` + `start: "wave_2"` 做「雾随波次变浓」（对应 PR #2 `dlg.ch1_02.mid.001`「雾变浓了」）。雾只让「打雾里的敌人」的射程变短，所以关卡要留几个贴着路线的 `.` 格，配合教学 `tut.ch1_01.002`「把角色放在离路线近的地方」（`tut.ch1_01.001`「浓雾会缩短角色的攻击范围」）。
 - **固定冰面**：湖边关卡可以在普通波次里放永久冰面（`duration_sec: -1`），让快残影在这里加速，形成「必须在冰面前面拦住」的点位。
 - **冰之残影 Boss 关**（`boss_cirno`，琪露诺的复制体，ID 不改）：请在 `cell_sets` 里给出 `boss_cirno_p1_icicles`（3–5 个格子，建议选路线拐角旁边的 `.` 格，让冰柱挡住魔理沙的常用射线）和 `boss_cirno_p3_ice`（8–12 个路线格，建议选离守护点较近的直路段）。不给也能跑，会用兜底规则。
+- **硬残影**：MVP 里只在 `ch1_03` 出现（第 6 到 12 波，共 8 只）。第 6 波那只是紫的隙间演示目标，见 characters.md 2.2，关卡需要在 `w06` 写这个剧情事件。
+- **美铃**（第二章起）：要挡人，就要有紧贴路线的 `.` 格。关卡给她留位置时，选路线拐角或直路中段旁边的格子。
 - 所有地形效果都会在 tick 第 ④ 步生效，第 ⑤ 步敌人移动时读取倍率。

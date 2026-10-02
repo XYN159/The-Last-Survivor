@@ -76,14 +76,14 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `gate_bonus_per_upgrade` | 每通过一道「加人门」增加的人数 | 1 |
 | `starting_supplies` | 开局物资 | 0 |
 
-战斗草案另有一套配置，放在 `data/balance/combat/`。字段说明在 `docs/design/combat/data_reference.md`，索引在 `docs/design/combat/README.md`。这批文件目前只给制作人审核，游戏代码还不会读取它们。`stats.json` 整份，以及文档里标成「占位」的字段，都等数值策划确认。
+战斗草案另有一套配置，放在 `data/balance/combat/`。字段说明在 `docs/design/combat/data_reference.md`，索引在 `docs/design/combat/README.md`。这批文件目前只给制作人审核，游戏代码还不会读取它们。数值只有一个来源：数值策划 PR #8 生成的 `stats.json`。战斗策划的表只放行为和手感参数，用 `*_stats_key` 按点号路径引用 `stats.json` 的字段。
 
 | 文件 | 内容 | 维护者 |
 | --- | --- | --- |
 | `data/balance/combat/rules.json` | 战斗规则和手感参数。伤害保底不在这里 | 战斗策划 |
-| `data/balance/combat/stats.json` | 全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人（含 Boss）、经济、充能、系数的数值。敌人的血量、移速、护甲、掉落、漏怪、威胁、击杀充能都在 `enemies` 里 | 数值策划 |
-| `data/balance/combat/characters.json` | 角色攻击方式、技能、符卡、升级外观 | 战斗策划 |
-| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 的行为。血量、移速等数值在 `stats.json` | 战斗策划 |
+| `data/balance/combat/stats.json` | 全部数值：全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人（`enemies`）、Boss（`bosses`）、波次、经济、充能、符卡、状态、地形的数值。由 PR #8 的脚本从 `data/*.csv` 生成，不要手改 | 数值策划（PR #8） |
+| `data/balance/combat/characters.json` | 角色攻击方式、技能、符卡、阻挡、升级外观 | 战斗策划 |
+| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 的行为。血量、移速等数值在 `stats.json` 的 `enemies` / `bosses` 段 | 战斗策划 |
 | `data/balance/combat/statuses.json` / `terrain.json` | 状态和地形效果 | 战斗策划 |
 | `data/balance/combat/spell_cards.json` / `synergies.json` / `buffs.json` | 符卡、联动、强化 | 战斗策划 |
 | `data/balance/combat/feel.json` | 打击反馈和演出参数 | 战斗策划 |

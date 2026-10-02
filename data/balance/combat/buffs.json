@@ -1,25 +1,27 @@
 {
   "meta": {
-    "schema_version": 4,
+    "schema_version": 5,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/roguelite_buffs.md",
-    "stats_file": "data/balance/combat/stats.json"
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
   },
   "offer_rules": {
     "trigger": "every_n_waves_cleared",
     "n_rules_key": "buff_offers.every_n_waves_cleared",
-    "choices": 3,
+    "choices_stats_key": "buff_offer.choices",
     "distinct": true,
     "exclude_maxed": true,
     "exclude_missing_required_characters": true,
-    "weight_field": "offer_weight",
+    "weight_field": "stats.json buffs.<id>.offer_weight",
     "pauses_logic": true,
     "pity_owned_below_threshold": true,
     "allow_repeat_stacks": true,
     "clear_on_level_end": true,
     "prologue_levels_without_offer": 2,
-    "prologue_offer_starts_at_level": 3
+    "prologue_offer_starts_at_level": 3,
+    "skip_offer_on_final_wave": true
   },
   "buffs": [
     {
@@ -29,14 +31,33 @@
       "name_key": "buff.split_shot.name",
       "desc_key": "buff.split_shot.desc",
       "category": "projectile",
-      "max_stacks": 3,
-      "offer_weight": 10,
+      "max_stacks_stats_key": "buffs.buff_split_shot.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_split_shot.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "on_hit_split", "sub_bullets_per_stack": 1, "spread": "fan_60", "sub_can_split": false, "damage_stats_key": "buffs.buff_split_shot.split_damage_ratio"}
+        {
+          "type": "on_hit_split",
+          "sub_bullets_per_stack": 1,
+          "spread": "fan_60",
+          "sub_can_split": false,
+          "damage_stats_key": "buffs.buff_split_shot.split_damage_ratio"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "split_starfall", "draft_name": "满天星", "override": {"type": "on_hit_split", "sub_bullets": 6, "spread": "radial_360", "sub_can_split": true, "max_generation": 2}, "unit_visual": "projectile_star_trail", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "split_starfall",
+          "draft_name": "满天星",
+          "override": {
+            "type": "on_hit_split",
+            "sub_bullets_stats_key": "buffs.buff_split_shot.starfall_sub_bullets",
+            "spread": "radial_360",
+            "sub_can_split": true,
+            "max_generation": 2
+          },
+          "unit_visual": "projectile_star_trail",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_split_shot.transform_at_stacks"
+        }
       ]
     },
     {
@@ -46,11 +67,16 @@
       "name_key": "buff.sharp_ofuda.name",
       "desc_key": "buff.sharp_ofuda.desc",
       "category": "attack",
-      "max_stacks": 5,
-      "offer_weight": 14,
+      "max_stacks_stats_key": "buffs.buff_sharp_ofuda.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_sharp_ofuda.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "stat_pct", "stat": "attack", "attack_category": "buff", "stats_key": "buffs.buff_sharp_ofuda.attack_pct_per_stack"}
+        {
+          "type": "stat_pct",
+          "stat": "attack",
+          "attack_category": "buff",
+          "stats_key": "buffs.buff_sharp_ofuda.attack_pct_per_stack"
+        }
       ],
       "thresholds": []
     },
@@ -61,14 +87,31 @@
       "name_key": "buff.rapid_fire.name",
       "desc_key": "buff.rapid_fire.desc",
       "category": "attack_speed",
-      "max_stacks": 3,
-      "offer_weight": 12,
+      "max_stacks_stats_key": "buffs.buff_rapid_fire.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_rapid_fire.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "stat_pct", "stat": "attack_interval", "attack_category": "buff", "stats_key": "buffs.buff_rapid_fire.interval_pct_per_stack"}
+        {
+          "type": "stat_pct",
+          "stat": "attack_interval",
+          "attack_category": "buff",
+          "stats_key": "buffs.buff_rapid_fire.interval_pct_per_stack"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "rapid_burst", "draft_name": "三连发", "add": {"type": "every_nth_attack_repeat", "n": 5, "extra_attacks": 2, "repeat_gap_sec": 0.08}, "unit_visual": "aura_clockwork", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "rapid_burst",
+          "draft_name": "三连发",
+          "add": {
+            "type": "every_nth_attack_repeat",
+            "n": 5,
+            "extra_attacks_stats_key": "buffs.buff_rapid_fire.burst_extra_attacks",
+            "repeat_gap_sec": 0.08
+          },
+          "unit_visual": "aura_clockwork",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_rapid_fire.transform_at_stacks"
+        }
       ]
     },
     {
@@ -79,14 +122,42 @@
       "name_key": "buff.frost_frog.name",
       "desc_key": "buff.frost_frog.desc",
       "category": "freeze",
-      "max_stacks": 3,
-      "offer_weight": 12,
+      "max_stacks_stats_key": "buffs.buff_frost_frog.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_frost_frog.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "on_hit_status_chance", "status_id": "st_freeze", "duration_sec": 1.0, "chance_stats_key": "buffs.buff_frost_frog.freeze_chance_per_stack", "respect_immunity": true, "attack_kinds": ["normal"]}
+        {
+          "type": "on_hit_status_chance",
+          "status_id": "st_freeze",
+          "duration_stats_key": "buffs.buff_frost_frog.freeze_sec",
+          "numeric_pending_pr8": true,
+          "chance_stats_key": "buffs.buff_frost_frog.freeze_chance_per_stack",
+          "respect_immunity": true,
+          "attack_kinds": [
+            "normal"
+          ]
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "frog_ice_burst", "draft_name": "青蛙冰雕", "add": {"type": "on_frozen_enemy_shatter_or_death", "burst_radius_cells": 1.0, "damage_stats_key": "buffs.buff_frost_frog.shard_damage_coef", "apply_status": {"status_id": "st_freeze", "duration_sec": 1.0, "respect_immunity": true}, "max_chain_depth": 3}, "unit_visual": "frost_frog_orbit", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "frog_ice_burst",
+          "draft_name": "青蛙冰雕",
+          "add": {
+            "type": "on_frozen_enemy_shatter_or_death",
+            "burst_radius_cells": 1.0,
+            "damage_stats_key": "buffs.buff_frost_frog.shard_damage_coef",
+            "apply_status": {
+              "status_id": "st_freeze",
+              "duration_stats_key": "buffs.buff_frost_frog.freeze_sec",
+              "numeric_pending_pr8": true,
+              "respect_immunity": true
+            },
+            "max_chain_depth": 3
+          },
+          "unit_visual": "frost_frog_orbit",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_frost_frog.transform_at_stacks"
+        }
       ]
     },
     {
@@ -96,14 +167,30 @@
       "name_key": "buff.crit_charm.name",
       "desc_key": "buff.crit_charm.desc",
       "category": "crit",
-      "max_stacks": 3,
-      "offer_weight": 10,
+      "max_stacks_stats_key": "buffs.buff_crit_charm.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_crit_charm.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "stat_add", "stat": "crit_chance", "stats_key": "buffs.buff_crit_charm.crit_chance_per_stack"}
+        {
+          "type": "stat_add",
+          "stat": "crit_chance",
+          "stats_key": "buffs.buff_crit_charm.crit_chance_per_stack"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "crit_explosion", "draft_name": "必中之符", "add": {"type": "on_crit_explode", "radius_cells": 0.8, "damage_stats_key": "buffs.buff_crit_charm.explosion_coef", "can_crit": false}, "unit_visual": "aura_gold_spark", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "crit_explosion",
+          "draft_name": "必中之符",
+          "add": {
+            "type": "on_crit_explode",
+            "radius_cells": 0.8,
+            "damage_stats_key": "buffs.buff_crit_charm.explosion_coef",
+            "can_crit": false
+          },
+          "unit_visual": "aura_gold_spark",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_crit_charm.transform_at_stacks"
+        }
       ]
     },
     {
@@ -113,14 +200,33 @@
       "name_key": "buff.great_barrier.name",
       "desc_key": "buff.great_barrier.desc",
       "category": "reimu_barrier",
-      "max_stacks": 3,
-      "offer_weight": 8,
-      "requires_characters_any": ["chr_reimu"],
+      "max_stacks_stats_key": "buffs.buff_great_barrier.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_great_barrier.offer_weight",
+      "requires_characters_any": [
+        "chr_reimu"
+      ],
       "per_stack": [
-        {"type": "skill_param_add", "skill_id": "skl_reimu_barrier", "param": "effect.duration_sec", "value": 2.0}
+        {
+          "type": "skill_param_add",
+          "skill_id": "skl_reimu_barrier",
+          "param": "effect.duration_sec",
+          "value": 2.0
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "barrier_permanent", "draft_name": "常驻大结界", "override": {"type": "skill_mode", "skill_id": "skl_reimu_barrier", "mode": "permanent_all_path_cells_in_range", "vuln_add_stats_key": "buffs.buff_great_barrier.barrier_vuln_add_at_max"}, "unit_visual": "reimu_barrier_ring_big", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "barrier_permanent",
+          "draft_name": "常驻大结界",
+          "override": {
+            "type": "skill_mode",
+            "skill_id": "skl_reimu_barrier",
+            "mode": "permanent_all_path_cells_in_range",
+            "vuln_add_stats_key": "buffs.buff_great_barrier.barrier_vuln_add_at_max"
+          },
+          "unit_visual": "reimu_barrier_ring_big",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_great_barrier.transform_at_stacks"
+        }
       ]
     },
     {
@@ -130,14 +236,27 @@
       "name_key": "buff.spell_battery.name",
       "desc_key": "buff.spell_battery.desc",
       "category": "spell_charge",
-      "max_stacks": 3,
-      "offer_weight": 10,
+      "max_stacks_stats_key": "buffs.buff_spell_battery.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_spell_battery.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "charge_pct", "stats_key": "buffs.buff_spell_battery.charge_pct_per_stack"}
+        {
+          "type": "charge_pct",
+          "stats_key": "buffs.buff_spell_battery.charge_pct_per_stack"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "spell_refund", "draft_name": "连续宣言", "add": {"type": "on_spell_cast_refund", "stats_key": "buffs.buff_spell_battery.refund_ratio_at_max"}, "unit_visual": "spell_button_double_ring", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "spell_refund",
+          "draft_name": "连续宣言",
+          "add": {
+            "type": "on_spell_cast_refund",
+            "stats_key": "buffs.buff_spell_battery.refund_ratio_at_max"
+          },
+          "unit_visual": "spell_button_double_ring",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_spell_battery.transform_at_stacks"
+        }
       ]
     },
     {
@@ -147,11 +266,14 @@
       "name_key": "buff.piercing_star.name",
       "desc_key": "buff.piercing_star.desc",
       "category": "projectile",
-      "max_stacks": 3,
-      "offer_weight": 10,
+      "max_stacks_stats_key": "buffs.buff_piercing_star.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_piercing_star.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "projectile_pierce_add", "stats_key": "buffs.buff_piercing_star.pierce_per_stack"}
+        {
+          "type": "projectile_pierce_add",
+          "stats_key": "buffs.buff_piercing_star.pierce_per_stack"
+        }
       ],
       "thresholds": []
     },
@@ -162,11 +284,14 @@
       "name_key": "buff.spirit_greed.name",
       "desc_key": "buff.spirit_greed.desc",
       "category": "economy",
-      "max_stacks": 3,
-      "offer_weight": 10,
+      "max_stacks_stats_key": "buffs.buff_spirit_greed.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_spirit_greed.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "spirit_per_kill_add", "stats_key": "buffs.buff_spirit_greed.spirit_per_kill_per_stack"}
+        {
+          "type": "spirit_per_kill_add",
+          "stats_key": "buffs.buff_spirit_greed.spirit_per_kill_per_stack"
+        }
       ],
       "thresholds": []
     },
@@ -177,14 +302,28 @@
       "name_key": "buff.guard_mend.name",
       "desc_key": "buff.guard_mend.desc",
       "category": "guard",
-      "max_stacks": 3,
-      "offer_weight": 8,
+      "max_stacks_stats_key": "buffs.buff_guard_mend.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_guard_mend.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "guard_heal_on_pick", "stats_key": "buffs.buff_guard_mend.guard_heal_per_pick"}
+        {
+          "type": "guard_heal_on_pick",
+          "stats_key": "buffs.buff_guard_mend.guard_heal_per_pick"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "guard_sturdy", "draft_name": "不褪色", "add": {"type": "leak_damage_reduction", "stats_key": "buffs.buff_guard_mend.leak_reduction_at_max", "min_leak_damage": 1}, "unit_visual": "guard_glow", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "guard_sturdy",
+          "draft_name": "不褪色",
+          "add": {
+            "type": "leak_damage_reduction",
+            "stats_key": "buffs.buff_guard_mend.leak_reduction_at_max",
+            "min_leak_damage": 1
+          },
+          "unit_visual": "guard_glow",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_guard_mend.transform_at_stacks"
+        }
       ]
     },
     {
@@ -194,11 +333,16 @@
       "name_key": "buff.combo_fever.name",
       "desc_key": "buff.combo_fever.desc",
       "category": "combo",
-      "max_stacks": 1,
-      "offer_weight": 6,
+      "max_stacks_stats_key": "buffs.buff_combo_fever.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_combo_fever.offer_weight",
       "requires_characters_any": [],
       "per_stack": [
-        {"type": "combo_attack_bonus", "attack_category": "temp", "per_10_combo_stats_key": "buffs.buff_combo_fever.attack_pct_per_10_combo", "cap_stats_key": "buffs.buff_combo_fever.cap_pct"}
+        {
+          "type": "combo_attack_bonus",
+          "attack_category": "temp",
+          "per_10_combo_stats_key": "buffs.buff_combo_fever.attack_pct_per_10_combo",
+          "cap_stats_key": "buffs.buff_combo_fever.cap_pct"
+        }
       ],
       "thresholds": []
     },
@@ -209,14 +353,38 @@
       "name_key": "buff.gap_eye.name",
       "desc_key": "buff.gap_eye.desc",
       "category": "yukari_gap",
-      "max_stacks": 3,
-      "offer_weight": 8,
-      "requires_characters_any": ["chr_yukari"],
+      "max_stacks_stats_key": "buffs.buff_gap_eye.max_stacks",
+      "offer_weight_stats_key": "buffs.buff_gap_eye.offer_weight",
+      "requires_characters_any": [
+        "chr_yukari"
+      ],
       "per_stack": [
-        {"type": "skill_param_pct", "skill_id": "skl_yukari_gap_swap", "param": "cooldown_sec", "stats_key": "buffs.buff_gap_eye.cooldown_pct_per_stack"}
+        {
+          "type": "skill_param_pct",
+          "skill_id": "skl_yukari_gap_swap",
+          "param": "cooldown_sec",
+          "stats_key": "buffs.buff_gap_eye.cooldown_pct_per_stack"
+        }
       ],
       "thresholds": [
-        {"stacks": 2, "id": "gap_corridor", "draft_name": "隙间回廊", "add": {"type": "skill_param_add", "skill_id": "skl_yukari_gap_swap", "param": "effect.pairs", "value": 1, "on_swap_hit": {"damage_coef": 2.0, "heavy": true}}, "unit_visual": "yukari_gap_ring_many", "feedback_event": "buff_threshold_reached"}
+        {
+          "id": "gap_corridor",
+          "draft_name": "隙间回廊",
+          "add": {
+            "type": "skill_param_add",
+            "skill_id": "skl_yukari_gap_swap",
+            "param": "effect.pairs",
+            "value": 1,
+            "on_swap_hit": {
+              "heavy": true,
+              "damage_stats_key": "buffs.buff_gap_eye.swap_hit_damage_coef",
+              "damage_pending_numeric": true
+            }
+          },
+          "unit_visual": "yukari_gap_ring_many",
+          "feedback_event": "buff_threshold_reached",
+          "stacks_stats_key": "buffs.buff_gap_eye.transform_at_stacks"
+        }
       ]
     }
   ]

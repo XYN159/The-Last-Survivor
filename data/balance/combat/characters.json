@@ -1,10 +1,12 @@
 {
   "meta": {
-    "schema_version": 4,
+    "schema_version": 5,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/characters.md",
-    "stats_file": "data/balance/combat/stats.json"
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "numbers_from_stats_zh": "射程 range_cells、攻击间隔 attack_interval_sec、费用、攻击、暴击、同名上限、满能量、美铃的 max_hp / block_count、普攻附带效果数值都在 stats.json 的 characters.<id>"
   },
   "characters": [
     {
@@ -16,8 +18,8 @@
       "tags": [],
       "attack": {
         "type": "homing_projectile",
-        "range_cells": 2.5,
-        "interval_sec": 0.8,
+        "range_stats_key": "characters.chr_reimu.range_cells",
+        "interval_stats_key": "characters.chr_reimu.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
@@ -65,10 +67,10 @@
         }
       ],
       "spell_card_ids": [
-        "sc_fantasy_seal",
-        "sc_evil_sealing_circle"
+        "sc_evil_sealing_circle",
+        "sc_fantasy_seal"
       ],
-      "default_spell_card_id": "sc_fantasy_seal",
+      "default_spell_card_id": "sc_evil_sealing_circle",
       "levels": [
         {
           "level": 1,
@@ -124,12 +126,14 @@
       "name_key": "char.marisa.name",
       "playable_status": "confirmed",
       "mvp": true,
+      "unlock": "prologue_01_clear",
+      "first_available_level_id": "prologue_02",
       "role": "line_pierce_burst",
       "tags": [],
       "attack": {
         "type": "instant_line",
-        "range_cells": 3.5,
-        "interval_sec": 1.6,
+        "range_stats_key": "characters.chr_marisa.range_cells",
+        "interval_stats_key": "characters.chr_marisa.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "line_length": "range",
@@ -208,12 +212,13 @@
       "playable_status": "confirmed",
       "mvp": true,
       "unlock": "ch1_01_clear",
+      "first_available_level_id": "ch1_02",
       "role": "slow_freeze_control",
       "tags": [],
       "attack": {
         "type": "projectile_splash",
-        "range_cells": 2.0,
-        "interval_sec": 1.0,
+        "range_stats_key": "characters.chr_cirno.range_cells",
+        "interval_stats_key": "characters.chr_cirno.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
@@ -228,8 +233,8 @@
         "applies_statuses": [
           {
             "status_id": "st_slow",
-            "strength": 0.35,
-            "duration_sec": 2.0
+            "strength_stats_key": "characters.chr_cirno.normal_effect.value",
+            "duration_stats_key": "characters.chr_cirno.normal_effect.param"
           }
         ],
         "projectile": {
@@ -253,7 +258,8 @@
             "target": "current_target",
             "radius_cells": 0.8,
             "status_id": "st_freeze",
-            "duration_sec": 1.5,
+            "duration_stats_key": "skills.skl_cirno_freeze.freeze_sec",
+            "numeric_pending_pr8": true,
             "heavy": false
           }
         }
@@ -322,8 +328,8 @@
       "tags": [],
       "attack": {
         "type": "none",
-        "range_cells": 0,
-        "interval_sec": 0,
+        "range_stats_key": "characters.chr_daiyousei.range_cells",
+        "interval_stats_key": "characters.chr_daiyousei.attack_interval_sec",
         "targeting": "none"
       },
       "skills": [
@@ -335,7 +341,7 @@
             "shape": "neighbors_8",
             "stat": "attack_speed",
             "category": "aura",
-            "value": 0.15
+            "value_stats_key": "skills.skl_daiyousei_mist_aura.attack_speed_pct"
           }
         }
       ],
@@ -362,13 +368,7 @@
             "projectile_vfx": "",
             "scale": 1.05
           },
-          "behavior_mods": [
-            {
-              "op": "set",
-              "path": "skills.skl_daiyousei_mist_aura.effect.value",
-              "value": 0.2
-            }
-          ]
+          "behavior_mods": []
         },
         {
           "level": 3,
@@ -393,19 +393,17 @@
       "name_key": "char.meiling.name",
       "playable_status": "confirmed",
       "mvp": false,
-      "role": "hold_knockback_melee",
+      "role": "blocker_melee",
       "tags": [],
       "attack": {
         "type": "melee",
-        "range_cells": 1.2,
-        "interval_sec": 0.9,
+        "range_stats_key": "characters.chr_meiling.range_cells",
+        "interval_stats_key": "characters.chr_meiling.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
-        "heavy_every_n_hits": 3,
-        "heavy_knockback_cells": 0.4,
         "heavy": false,
         "can_crit": true,
-        "knockback_cells": 0.1,
+        "knockback_cells": 0.0,
         "blocked_by_icicle": false,
         "damage_tags": [
           "qi",
@@ -413,22 +411,7 @@
         ],
         "applies_statuses": []
       },
-      "skills": [
-        {
-          "id": "skl_meiling_hold",
-          "trigger": "auto_cooldown",
-          "cooldown_sec": 7.0,
-          "initial_delay_sec": 1.0,
-          "requires_target_in_range": true,
-          "effect": {
-            "type": "apply_status_targets",
-            "targets": "closest_to_guard_n",
-            "n": 2,
-            "status_id": "st_hold",
-            "duration_sec": 1.2
-          }
-        }
-      ],
+      "skills": [],
       "spell_card_ids": [
         "sc_rainbow_dance",
         "sc_extreme_typhoon"
@@ -453,13 +436,7 @@
             "projectile_vfx": "qi_palm_color",
             "scale": 1.05
           },
-          "behavior_mods": [
-            {
-              "op": "set",
-              "path": "skills.skl_meiling_hold.effect.n",
-              "value": 3
-            }
-          ]
+          "behavior_mods": []
         },
         {
           "level": 3,
@@ -469,15 +446,23 @@
             "projectile_vfx": "qi_palm_rainbow",
             "scale": 1.1
           },
-          "behavior_mods": [
-            {
-              "op": "set",
-              "path": "attack.heavy_every_n_hits",
-              "value": 2
-            }
-          ]
+          "behavior_mods": []
         }
-      ]
+      ],
+      "placement": "placeable_adjacent_to_path",
+      "block": {
+        "count_stats_key": "characters.chr_meiling.block_count",
+        "max_hp_stats_key": "characters.chr_meiling.max_hp",
+        "blocks_on": "path_cells_orthogonally_adjacent",
+        "blocked_status_id": "st_blocked",
+        "pick_rule": "first_to_arrive",
+        "enemy_damage_stats_key": "enemies.<id>.block_dps",
+        "boss_blockable": false,
+        "flying_blockable": false,
+        "on_hp_zero": "knocked_out_release_blocked",
+        "redeploy_cooldown_stats_key": "characters.chr_meiling.redeploy_cooldown_sec",
+        "redeploy_cooldown_pending_numeric": true
+      }
     },
     {
       "id": "chr_sakuya",
@@ -488,8 +473,8 @@
       "tags": [],
       "attack": {
         "type": "multi_projectile",
-        "range_cells": 3.0,
-        "interval_sec": 0.6,
+        "range_stats_key": "characters.chr_sakuya.range_cells",
+        "interval_stats_key": "characters.chr_sakuya.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "highest_current_hp",
         "count": 3,
@@ -571,8 +556,8 @@
       "tags": [],
       "attack": {
         "type": "homing_projectile",
-        "range_cells": 3.0,
-        "interval_sec": 2.5,
+        "range_stats_key": "characters.chr_remilia.range_cells",
+        "interval_stats_key": "characters.chr_remilia.attack_interval_sec",
         "initial_delay_sec": 0.5,
         "targeting": "highest_max_hp",
         "count": 1,
@@ -647,8 +632,8 @@
       "tags": [],
       "attack": {
         "type": "homing_projectile",
-        "range_cells": 2.5,
-        "interval_sec": 1.2,
+        "range_stats_key": "characters.chr_keine.range_cells",
+        "interval_stats_key": "characters.chr_keine.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
@@ -744,12 +729,13 @@
       ],
       "attack": {
         "type": "projectile_splash",
-        "range_cells": 2.0,
-        "interval_sec": 1.1,
+        "range_stats_key": "characters.chr_mokou.range_cells",
+        "interval_stats_key": "characters.chr_mokou.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
-        "splash_radius_cells": 0.5,
+        "splash_radius_stats_key": "characters.chr_mokou.normal_effect.param",
+        "splash_ratio_stats_key": "characters.chr_mokou.normal_effect.value",
         "heavy": false,
         "can_crit": true,
         "knockback_cells": 0.0,
@@ -804,9 +790,9 @@
           },
           "behavior_mods": [
             {
-              "op": "set",
+              "op": "add",
               "path": "attack.splash_radius_cells",
-              "value": 0.7
+              "value": 0.2
             }
           ]
         },
@@ -837,8 +823,8 @@
       "tags": [],
       "attack": {
         "type": "homing_projectile",
-        "range_cells": 3.0,
-        "interval_sec": 0.35,
+        "range_stats_key": "characters.chr_aya.range_cells",
+        "interval_stats_key": "characters.chr_aya.attack_interval_sec",
         "initial_delay_sec": 0.2,
         "targeting": "closest_to_guard",
         "count": 1,
@@ -858,6 +844,12 @@
           "hit_radius_cells": 0.2,
           "retarget_radius_cells": 1.0,
           "pierce": 0
+        },
+        "bonus_vs_speed": {
+          "bucket": "synergy",
+          "min_move_speed_stats_key": "characters.chr_aya.normal_effect.param",
+          "add_stats_key": "synergies.syn_aya_vs_fast.synergy_add",
+          "status": "draft_pending_producer"
         }
       },
       "skills": [],
@@ -914,12 +906,13 @@
       "tags": [],
       "attack": {
         "type": "projectile_splash",
-        "range_cells": 2.5,
-        "interval_sec": 1.4,
+        "range_stats_key": "characters.chr_sanae.range_cells",
+        "interval_stats_key": "characters.chr_sanae.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
-        "splash_radius_cells": 1.0,
+        "splash_radius_stats_key": "characters.chr_sanae.normal_effect.param",
+        "splash_ratio_stats_key": "characters.chr_sanae.normal_effect.value",
         "heavy": false,
         "can_crit": true,
         "knockback_cells": 0.1,
@@ -932,7 +925,7 @@
           {
             "tag": "outside_object",
             "bucket": "synergy",
-            "add": 0.5
+            "add_stats_key": "synergies.syn_sanae_outside_object.synergy_add"
           }
         ],
         "projectile": {
@@ -971,9 +964,9 @@
           },
           "behavior_mods": [
             {
-              "op": "set",
+              "op": "add",
               "path": "attack.splash_radius_cells",
-              "value": 1.2
+              "value": 0.2
             }
           ]
         },
@@ -1002,13 +995,31 @@
       "mvp": true,
       "unlock": "chapter1_boss_clear",
       "before_unlock": "chapter1_gap_peek_once",
+      "before_unlock_demo": {
+        "event_id": "evt_yukari_gap_demo",
+        "level_id": "ch1_03",
+        "wave_id": "w06",
+        "target_enemy_id": "enm_shade_armored",
+        "target_nth_in_wave": 1,
+        "trigger": "target_path_progress_ratio",
+        "trigger_value": 0.5,
+        "effect": "gap_send_to_spawn",
+        "deals_damage": false,
+        "applies_statuses": [],
+        "once_per_save": false,
+        "once_per_attempt": true,
+        "skip_if_target_dead": true,
+        "dialogue_key": "tut.ch1_03.001",
+        "only_while_locked": true
+      },
       "mvp_use": "replay_cleared_levels",
+      "first_available_level_id": "ch2_01",
       "role": "gap_control",
       "tags": [],
       "attack": {
         "type": "instant_gap",
-        "range_cells": 3.0,
-        "interval_sec": 1.2,
+        "range_stats_key": "characters.chr_yukari.range_cells",
+        "interval_stats_key": "characters.chr_yukari.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "heavy": false,
@@ -1104,8 +1115,8 @@
       "tags": [],
       "attack": {
         "type": "homing_projectile",
-        "range_cells": 2.5,
-        "interval_sec": 1.3,
+        "range_stats_key": "characters.chr_wasure.range_cells",
+        "interval_stats_key": "characters.chr_wasure.attack_interval_sec",
         "initial_delay_sec": 0.3,
         "targeting": "closest_to_guard",
         "count": 1,
@@ -1195,5 +1206,6 @@
         }
       ]
     }
-  ]
+  ],
+  "multi_shot_rule_zh": "attack.count > 1 时一次攻击的总伤害不变：每发技能系数 1/count，护甲也按 1/count 分摊（见 rules.json damage.multi_shot_split）"
 }

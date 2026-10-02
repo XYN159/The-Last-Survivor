@@ -1,97 +1,295 @@
 {
   "meta": {
-    "schema_version": 3,
+    "schema_version": 4,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
-    "stats_file": "data/balance/combat/stats.json"
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "stats_sections": [
+      "enemies",
+      "bosses"
+    ],
+    "attacks_blocker_note_zh": "残影不主动攻击角色。例外：被美铃挡住时打美铃（block_dps）；扑人残影（post_mvp，推荐行为）会扑向最近的角色让它短暂停止行动",
+    "name_key_rule_zh": "显示名 key 按 PR #2 术语表：enemy.<战斗 id 去掉 enm_>.name；Boss 用完整战斗 id，如 enemy.boss_cirno.name"
   },
   "enemies": [
     {
       "id": "enm_shade_basic",
       "name_key": "enemy.shade_basic.name",
-      "narrative_ref": "残影（通用，褪色杂物）",
+      "narrative_ref": "小残影（通用，褪色杂物）",
       "status": "mvp",
-      "tags": ["shade"],
+      "tags": [
+        "shade"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.3,
       "knockback_resist": 0.0,
       "armor_feedback": false,
       "immunities": [],
-      "visual": {"sprite": "shade_basic", "scale": 1.0, "death_vfx": "shade_burst_light", "walk_anim": "float_bob"}
+      "visual": {
+        "sprite": "shade_basic",
+        "scale": 1.0,
+        "death_vfx": "shade_burst_light",
+        "walk_anim": "float_bob"
+      }
     },
     {
       "id": "enm_shade_fast",
       "name_key": "enemy.shade_fast.name",
       "narrative_ref": "褪色玩具",
       "status": "mvp",
-      "tags": ["shade", "outside_object", "fast"],
+      "tags": [
+        "shade",
+        "outside_object",
+        "fast"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.25,
       "knockback_resist": 0.0,
       "armor_feedback": false,
       "immunities": [],
       "lateral_jitter_cells": 0.12,
-      "visual": {"sprite": "shade_toy", "scale": 0.8, "death_vfx": "shade_burst_light_small", "walk_anim": "hop_fast"}
+      "visual": {
+        "sprite": "shade_toy",
+        "scale": 0.8,
+        "death_vfx": "shade_burst_light_small",
+        "walk_anim": "hop_fast"
+      }
     },
     {
       "id": "enm_shade_armored",
       "name_key": "enemy.shade_armored.name",
       "narrative_ref": "旧电器",
-      "status": "post_mvp",
-      "tags": ["shade", "outside_object", "armored"],
+      "status": "mvp",
+      "mvp_levels": [
+        "ch1_03"
+      ],
+      "tags": [
+        "shade",
+        "outside_object",
+        "armored"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.35,
       "knockback_resist": 0.5,
       "armor_feedback": true,
       "immunities": [],
-      "visual": {"sprite": "shade_appliance", "scale": 1.15, "death_vfx": "shade_burst_light_large", "walk_anim": "heavy_shuffle"}
+      "visual": {
+        "sprite": "shade_appliance",
+        "scale": 1.15,
+        "death_vfx": "shade_burst_light_large",
+        "walk_anim": "heavy_shuffle"
+      }
     },
     {
-      "id": "enm_shade_phantom",
-      "name_key": "enemy.shade_phantom.name",
-      "narrative_ref": "遗忘之影",
+      "id": "enm_shade_heavy",
+      "name_key": "enemy.shade_heavy.name",
+      "narrative_ref": "旧电器（大型），PR #8 新增的暂定兵种",
       "status": "reserved",
-      "tags": ["shade", "stealth"],
+      "first_level_id_source": "stats.json#/enemies/enm_shade_heavy/first_level_id",
+      "tags": [
+        "shade",
+        "outside_object",
+        "armored"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
+      "hit_radius_cells": 0.4,
+      "knockback_resist": 0.7,
+      "armor_feedback": true,
+      "immunities": [],
+      "note_zh": "行为草案：比硬残影更大更硬，考验高单发角色。和硬残影共用护甲提示",
+      "visual": {
+        "sprite": "shade_appliance_large",
+        "scale": 1.3,
+        "death_vfx": "shade_burst_light_large",
+        "walk_anim": "heavy_shuffle"
+      }
+    },
+    {
+      "id": "enm_shade_swarm",
+      "name_key": "enemy.shade_swarm.name",
+      "narrative_ref": "褪色玩具（成群），PR #8 新增的暂定兵种",
+      "status": "reserved",
+      "first_level_id_source": "stats.json#/enemies/enm_shade_swarm/first_level_id",
+      "tags": [
+        "shade",
+        "outside_object",
+        "swarm"
+      ],
+      "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
+      "hit_radius_cells": 0.2,
+      "knockback_resist": 0.0,
+      "armor_feedback": false,
+      "immunities": [],
+      "lateral_jitter_cells": 0.15,
+      "note_zh": "行为草案：一次出一大群，考验范围伤害。关卡里成组出",
+      "visual": {
+        "sprite": "shade_toy_small",
+        "scale": 0.65,
+        "death_vfx": "shade_burst_light_small",
+        "walk_anim": "hop_fast"
+      }
+    },
+    {
+      "id": "enm_shade_pouncer",
+      "name_key": "enemy.shade_pouncer.name",
+      "narrative_ref": "扑人残影（PR #2 暂定，第三章，会攻击村民）",
+      "status": "post_mvp",
+      "behavior_status": "recommendation",
+      "behavior_zh": "【推荐】扑向最近的已放置角色，让它短暂停止行动（挂 st_unit_pounced），然后继续沿路线走",
+      "tags": [
+        "shade",
+        "pouncer"
+      ],
+      "attacks_units": true,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.3,
       "knockback_resist": 0.0,
       "armor_feedback": false,
       "immunities": [],
-      "stealth": {"untargetable_unless_revealed": true, "reveal_duration_sec": 3.0},
-      "visual": {"sprite": "shade_phantom", "scale": 1.0, "death_vfx": "shade_burst_light", "walk_anim": "fade_flicker"}
+      "pounce": {
+        "target_rule": "nearest_placed_character",
+        "applies_unit_status": "st_unit_pounced",
+        "numbers_source": "stats.json#/enemies/enm_shade_pouncer（待数值策划补：触发距离、停止秒数、冷却）",
+        "behavior_status": "recommendation"
+      },
+      "visual": {
+        "sprite": "shade_pouncer",
+        "scale": 1.0,
+        "death_vfx": "shade_burst_light",
+        "walk_anim": "pounce_hop"
+      }
+    },
+    {
+      "id": "enm_shade_flying",
+      "name_key": "enemy.shade_flying.name",
+      "narrative_ref": "飞行残影（PR #2，第四章）",
+      "status": "post_mvp",
+      "behavior_status": "recommendation",
+      "behavior_zh": "【推荐】飞在路线上空：无视阻挡和美铃的阻挡（不会被 st_blocked），仍沿路线走、仍会被攻击",
+      "tags": [
+        "shade",
+        "flying"
+      ],
+      "attacks_units": false,
+      "attacks_blocker_when_blocked": false,
+      "hit_radius_cells": 0.3,
+      "knockback_resist": 0.0,
+      "armor_feedback": false,
+      "immunities": [
+        "st_blocked"
+      ],
+      "flying": {
+        "ignores_blockers": true,
+        "ignores_meiling_block": true,
+        "follows_path": true,
+        "targetable_by": "all_attacks",
+        "behavior_status": "recommendation"
+      },
+      "visual": {
+        "sprite": "shade_flying",
+        "scale": 1.0,
+        "death_vfx": "shade_burst_light",
+        "walk_anim": "hover"
+      }
+    },
+    {
+      "id": "enm_shade_phantom",
+      "name_key": "enemy.shade_phantom.name",
+      "narrative_ref": "遗忘残影（PR #2 暂定，原暂名遗忘之影）",
+      "status": "reserved",
+      "tags": [
+        "shade",
+        "stealth"
+      ],
+      "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
+      "hit_radius_cells": 0.3,
+      "knockback_resist": 0.0,
+      "armor_feedback": false,
+      "immunities": [],
+      "stealth": {
+        "untargetable_unless_revealed": true,
+        "reveal_duration_sec": 3.0
+      },
+      "visual": {
+        "sprite": "shade_phantom",
+        "scale": 1.0,
+        "death_vfx": "shade_burst_light",
+        "walk_anim": "fade_flicker"
+      }
     },
     {
       "id": "enm_shade_heap",
       "name_key": "enemy.shade_heap.name",
-      "narrative_ref": "堆积体",
+      "narrative_ref": "堆积残影（PR #2 暂定，原暂名堆积体）",
       "status": "reserved",
-      "tags": ["shade", "elite"],
+      "tags": [
+        "shade",
+        "elite"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.45,
       "knockback_resist": 0.8,
       "armor_feedback": true,
       "immunities": [],
-      "on_death_spawn": {"enemy_id": "enm_shade_fast", "count": 3, "spread_cells": 0.4},
-      "visual": {"sprite": "shade_heap", "scale": 1.4, "death_vfx": "shade_burst_heap", "walk_anim": "heavy_shuffle"}
+      "on_death_spawn": {
+        "enemy_id": "enm_shade_fast",
+        "count": 3,
+        "spread_cells": 0.4
+      },
+      "visual": {
+        "sprite": "shade_heap",
+        "scale": 1.4,
+        "death_vfx": "shade_burst_heap",
+        "walk_anim": "heavy_shuffle"
+      }
     },
     {
       "id": "enm_shade_rift",
       "name_key": "enemy.shade_rift.name",
-      "narrative_ref": "结界之渣",
+      "narrative_ref": "结界残影（PR #2 暂定，原名结界之渣）",
       "status": "reserved",
-      "tags": ["shade", "elite", "rift"],
+      "tags": [
+        "shade",
+        "elite",
+        "rift"
+      ],
       "attacks_units": false,
+      "attacks_blocker_when_blocked": true,
       "hit_radius_cells": 0.4,
       "knockback_resist": 0.5,
       "armor_feedback": true,
       "immunities": [],
-      "aura_terrain": {"terrain_id": "ter_faded", "radius_cells": 1.0},
-      "visual": {"sprite": "shade_rift", "scale": 1.3, "death_vfx": "shade_burst_rift", "walk_anim": "glitch_float"}
+      "aura_terrain": {
+        "terrain_id": "ter_faded",
+        "radius_cells": 1.0
+      },
+      "visual": {
+        "sprite": "shade_rift",
+        "scale": 1.3,
+        "death_vfx": "shade_burst_rift",
+        "walk_anim": "glitch_float"
+      }
     }
   ],
   "state_machine": {
-    "states": ["spawn", "walk", "controlled", "reaching", "dead", "leaked"],
+    "states": [
+      "spawn",
+      "walk",
+      "controlled",
+      "blocked",
+      "reaching",
+      "dead",
+      "leaked"
+    ],
     "initial": "spawn"
   }
 }

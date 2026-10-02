@@ -1,10 +1,11 @@
 {
   "meta": {
-    "schema_version": 2,
+    "schema_version": 3,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/spell_cards.md",
-    "stats_file": "data/balance/combat/stats.json"
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
   },
   "spell_cards": [
     {
@@ -12,14 +13,16 @@
       "owner": "chr_reimu",
       "name_key": "spell.reimu.fantasy_seal.name",
       "user": "player",
-      "mvp": true,
+      "mvp": false,
       "detail_level": "full",
       "portrait": "portrait_reimu",
-      "tags": ["homing"],
+      "tags": [
+        "homing"
+      ],
       "effects": [
         {
           "type": "homing_orbs",
-          "count": 7,
+          "count_stats_key": "spell_cards.sc_fantasy_seal.orb_count",
           "scope": "board",
           "target_rule": "highest_current_hp",
           "allow_multiple_per_target": true,
@@ -36,13 +39,26 @@
       "owner": "chr_reimu",
       "name_key": "spell.reimu.evil_sealing_circle.name",
       "user": "player",
-      "mvp": false,
-      "detail_level": "outline",
+      "mvp": true,
+      "detail_level": "full",
       "portrait": "portrait_reimu",
-      "tags": ["barrier"],
+      "tags": [
+        "control",
+        "slow"
+      ],
       "effects": [
-        {"type": "area_status", "center_rule": "caster", "radius_cells": 2.0, "status_id": "st_hold", "duration_sec": 2.0, "ignore_immunity": true, "damage_stats_key": "spell_cards.sc_evil_sealing_circle.damage_coef"},
-        {"type": "spawn_terrain", "terrain_id": "ter_barrier", "center_rule": "caster", "size_cells": [5, 5], "duration_sec": 8.0}
+        {
+          "type": "area_status",
+          "center_rule": "caster_or_guard",
+          "radius_stats_key": "characters.chr_reimu.range_cells",
+          "targets": "all_enemies_in_radius_at_cast",
+          "status_id": "st_slow",
+          "strength_stats_key": "spell_cards.sc_evil_sealing_circle.slow_strength",
+          "duration_stats_key": "spell_cards.sc_evil_sealing_circle.duration_sec",
+          "damage_stats_key": "spell_cards.sc_evil_sealing_circle.damage_coef",
+          "affects_boss": true,
+          "heavy": false
+        }
       ]
     },
     {
@@ -53,7 +69,9 @@
       "mvp": true,
       "detail_level": "full",
       "portrait": "portrait_marisa",
-      "tags": ["beam"],
+      "tags": [
+        "beam"
+      ],
       "effects": [
         {
           "type": "beam",
@@ -61,11 +79,13 @@
           "direction_rule": "best_of_8",
           "width_cells": 1.6,
           "length": "board",
-          "duration_sec": 1.5,
+          "ticks_stats_key": "spell_cards.sc_master_spark.ticks",
           "tick_sec": 0.15,
           "heavy": true,
           "knockback_cells_per_tick": 0.05,
-          "destroys_terrain": ["ter_icicle"],
+          "destroys_terrain": [
+            "ter_icicle"
+          ],
           "damage_stats_key": "spell_cards.sc_master_spark.damage_coef_per_tick"
         }
       ]
@@ -78,9 +98,19 @@
       "mvp": false,
       "detail_level": "outline",
       "portrait": "portrait_marisa",
-      "tags": ["area"],
+      "tags": [
+        "area"
+      ],
       "effects": [
-        {"type": "area_damage_ticks", "center_rule": "caster", "radius_cells": 2.5, "duration_sec": 2.0, "tick_sec": 0.25, "heavy": false, "damage_stats_key": "spell_cards.sc_stardust_reverie.damage_coef_per_tick"}
+        {
+          "type": "area_damage_ticks",
+          "center_rule": "caster",
+          "radius_cells": 2.5,
+          "duration_sec": 2.0,
+          "tick_sec": 0.25,
+          "heavy": false,
+          "damage_stats_key": "spell_cards.sc_stardust_reverie.damage_coef_per_tick"
+        }
       ]
     },
     {
@@ -91,18 +121,22 @@
       "mvp": false,
       "detail_level": "full",
       "portrait": "portrait_cirno",
-      "tags": ["freeze", "area"],
+      "tags": [
+        "freeze",
+        "area"
+      ],
       "effects": [
         {
           "type": "area_status",
           "center_rule": "densest_cluster",
-          "radius_cells": 2.5,
+          "radius_stats_key": "spell_cards.sc_perfect_freeze.radius_cells",
           "status_id": "st_freeze",
-          "duration_sec": 3.0,
+          "duration_stats_key": "spell_cards.sc_perfect_freeze.freeze_sec",
           "ignore_immunity": true,
           "damage_stats_key": "spell_cards.sc_perfect_freeze.damage_coef",
           "damage_before_status": true,
-          "heavy": true
+          "heavy": true,
+          "boss_slow_strength_stats_key": "spell_cards.sc_perfect_freeze.boss_slow_strength"
         }
       ]
     },
@@ -114,9 +148,23 @@
       "mvp": false,
       "detail_level": "outline",
       "portrait": "portrait_cirno",
-      "tags": ["area"],
+      "tags": [
+        "area"
+      ],
       "effects": [
-        {"type": "area_damage_ticks", "center_rule": "densest_cluster", "radius_cells": 2.0, "duration_sec": 2.0, "tick_sec": 0.25, "apply_status": {"status_id": "st_slow", "strength": 0.6, "duration_sec": 4.0}, "damage_stats_key": "spell_cards.sc_icicle_fall.damage_coef_per_tick"}
+        {
+          "type": "area_damage_ticks",
+          "center_rule": "densest_cluster",
+          "radius_cells": 2.0,
+          "duration_sec": 2.0,
+          "tick_sec": 0.25,
+          "apply_status": {
+            "status_id": "st_slow",
+            "strength": 0.6,
+            "duration_sec": 4.0
+          },
+          "damage_stats_key": "spell_cards.sc_icicle_fall.damage_coef_per_tick"
+        }
       ]
     },
     {
@@ -127,12 +175,15 @@
       "mvp": false,
       "detail_level": "full",
       "portrait": "portrait_yukari",
-      "tags": ["gap", "control"],
+      "tags": [
+        "gap",
+        "control"
+      ],
       "effects": [
         {
           "type": "send_to_spawn",
           "select_rule": "closest_to_guard_n",
-          "n": 15,
+          "n_stats_key": "spell_cards.sc_spiriting_away.max_targets",
           "scope": "board",
           "exclude_boss": true,
           "stagger_cells": 1.0,
@@ -140,7 +191,12 @@
           "daze_duration_sec": 1.0,
           "keep_statuses": true
         },
-        {"type": "boss_fallback_status", "status_id": "st_slow", "strength": 0.5, "duration_sec": 4.0}
+        {
+          "type": "boss_fallback_status",
+          "status_id": "st_slow",
+          "duration_sec": 4.0,
+          "strength_stats_key": "spell_cards.sc_spiriting_away.boss_slow_strength"
+        }
       ]
     },
     {
@@ -151,29 +207,417 @@
       "mvp": false,
       "detail_level": "outline",
       "portrait": "portrait_yukari",
-      "tags": ["barrier", "control"],
+      "tags": [
+        "barrier",
+        "control"
+      ],
       "effects": [
-        {"type": "guard_seal", "radius_cells": 2.0, "duration_sec": 5.0, "slow_strength": 0.6, "blocks_reaching_guard": true}
+        {
+          "type": "guard_seal",
+          "radius_cells": 2.0,
+          "duration_sec": 5.0,
+          "slow_strength": 0.6,
+          "blocks_reaching_guard": true
+        }
       ]
     },
-    {"id": "sc_morning_mist", "owner": "chr_daiyousei", "name_key": "spell.daiyousei.morning_mist.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_daiyousei", "tags": ["support"], "effects": [{"type": "team_stat_pct", "stat": "attack_speed", "category": "temp", "value": 0.3, "duration_sec": 8.0}]},
-    {"id": "sc_rainbow_dance", "owner": "chr_meiling", "name_key": "spell.meiling.rainbow_dance.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_meiling", "tags": ["area", "knockback"], "effects": [{"type": "area_damage", "center_rule": "caster", "radius_cells": 2.0, "knockback_cells": 2.0, "heavy": true, "damage_stats_key": "spell_cards.sc_rainbow_dance.damage_coef"}]},
-    {"id": "sc_extreme_typhoon", "owner": "chr_meiling", "name_key": "spell.meiling.extreme_typhoon.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_meiling", "tags": ["area", "control"], "effects": [{"type": "area_status", "center_rule": "caster", "radius_cells": 1.5, "status_id": "st_hold", "duration_sec": 3.0, "ignore_immunity": true}]},
-    {"id": "sc_the_world", "owner": "chr_sakuya", "name_key": "spell.sakuya.the_world.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_sakuya", "tags": ["time", "control"], "effects": [{"type": "area_status", "center_rule": "board", "radius_cells": 0, "status_id": "st_time_stop", "duration_sec": 3.0, "ignore_immunity": true}]},
-    {"id": "sc_killing_doll", "owner": "chr_sakuya", "name_key": "spell.sakuya.killing_doll.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_sakuya", "tags": ["homing"], "effects": [{"type": "homing_orbs", "count": 24, "scope": "radius", "radius_cells": 3.5, "target_rule": "closest_to_guard", "allow_multiple_per_target": true, "travel_sec": 0.6, "heavy": false, "damage_stats_key": "spell_cards.sc_killing_doll.damage_coef_per_knife"}]},
-    {"id": "sc_gungnir", "owner": "chr_remilia", "name_key": "spell.remilia.gungnir.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_remilia", "tags": ["beam", "single"], "effects": [{"type": "piercing_spear", "target_rule": "highest_max_hp", "scope": "board", "width_cells": 0.8, "heavy": true, "destroys_terrain": ["ter_icicle"], "damage_stats_key": "spell_cards.sc_gungnir.damage_coef"}]},
-    {"id": "sc_red_magic", "owner": "chr_remilia", "name_key": "spell.remilia.red_magic.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_remilia", "tags": ["area"], "effects": [{"type": "cross_burst", "center_rule": "caster", "arm_length_cells": 4, "arm_width_cells": 1, "heavy": true}]},
-    {"id": "sc_modoribashi", "owner": "chr_keine", "name_key": "spell.keine.modoribashi.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_keine", "tags": ["control"], "effects": [{"type": "send_back_segment", "segment_rule": "last_n_path_cells", "n": 5, "send_back_cells": 3.0, "exclude_boss": true}]},
-    {"id": "sc_legend_of_gensokyo", "owner": "chr_keine", "name_key": "spell.keine.legend_of_gensokyo.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_keine", "tags": ["guard"], "effects": [{"type": "guard_invulnerable", "duration_sec": 5.0}]},
-    {"id": "sc_phoenix_wings", "owner": "chr_mokou", "name_key": "spell.mokou.phoenix_wings.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_mokou", "tags": ["path_sweep", "fire"], "effects": [{"type": "path_sweep", "from": "guard", "to": "spawn", "duration_sec": 1.5, "width_cells": 1.0, "hits_per_enemy": 1, "heavy": true, "apply_status": {"status_id": "st_burn", "strength": 1.0, "duration_sec": 4.0}, "damage_stats_key": "spell_cards.sc_phoenix_wings.damage_coef"}]},
-    {"id": "sc_phoenix_rebirth", "owner": "chr_mokou", "name_key": "spell.mokou.phoenix_rebirth.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_mokou", "tags": ["area", "fire"], "effects": [{"type": "spawn_terrain", "terrain_id": "ter_burning", "center_rule": "caster", "size_cells": [5, 5], "duration_sec": 8.0}]},
-    {"id": "sc_gensou_fuubi", "owner": "chr_aya", "name_key": "spell.aya.gensou_fuubi.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_aya", "tags": ["path_sweep"], "effects": [{"type": "path_sweep", "from": "spawn", "to": "guard", "duration_sec": 0.8, "width_cells": 1.0, "hits_per_enemy": 2, "heavy": true, "reveal_stealth": true, "damage_stats_key": "spell_cards.sc_gensou_fuubi.damage_coef"}]},
-    {"id": "sc_autumn_leaf_fan", "owner": "chr_aya", "name_key": "spell.aya.autumn_leaf_fan.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_aya", "tags": ["knockback"], "effects": [{"type": "area_damage", "center_rule": "densest_cluster", "radius_cells": 2.0, "knockback_cells": 3.0, "reveal_stealth": true, "heavy": false}]},
-    {"id": "sc_gray_thaumaturgy", "owner": "chr_sanae", "name_key": "spell.sanae.gray_thaumaturgy.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_sanae", "tags": ["area"], "effects": [{"type": "multi_blast", "count": 5, "center_rule": "densest_cluster_distinct", "radius_cells": 1.2, "interval_sec": 0.15, "heavy": true, "damage_stats_key": "spell_cards.sc_gray_thaumaturgy.damage_coef"}]},
-    {"id": "sc_yasaka_divine_wind", "owner": "chr_sanae", "name_key": "spell.sanae.yasaka_divine_wind.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_sanae", "tags": ["area"], "effects": [{"type": "area_damage", "center_rule": "board", "radius_cells": 0, "bonus_vs_tags": [{"tag": "outside_object", "bucket": "synergy", "add": 1.0}], "heavy": true}]},
-    {"id": "sc_lost_and_found", "owner": "chr_wasure", "name_key": "spell.wasure.lost_and_found.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_wasure", "tags": ["summon"], "effects": [{"type": "convert_kills_to_helpers", "duration_sec": 6.0, "radius_cells": 3.0, "helper_id": "hlp_lost_item", "helper_duration_sec": 8.0, "max_helpers": 10}]},
-    {"id": "sc_forgotten_song", "owner": "chr_wasure", "name_key": "spell.wasure.forgotten_song.name", "user": "player", "mvp": false, "detail_level": "outline", "portrait": "portrait_wasure", "tags": ["control"], "effects": [{"type": "reverse_walk", "center_rule": "densest_cluster", "radius_cells": 2.5, "duration_sec": 3.0, "exclude_boss": true}]},
-
+    {
+      "id": "sc_morning_mist",
+      "owner": "chr_daiyousei",
+      "name_key": "spell.daiyousei.morning_mist.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_daiyousei",
+      "tags": [
+        "support"
+      ],
+      "effects": [
+        {
+          "type": "team_stat_pct",
+          "stat": "attack_speed",
+          "category": "temp",
+          "value": 0.3,
+          "duration_sec": 8.0
+        }
+      ]
+    },
+    {
+      "id": "sc_rainbow_dance",
+      "owner": "chr_meiling",
+      "name_key": "spell.meiling.rainbow_dance.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_meiling",
+      "tags": [
+        "area",
+        "knockback"
+      ],
+      "effects": [
+        {
+          "type": "area_damage",
+          "center_rule": "caster",
+          "radius_cells": 2.0,
+          "heavy": true,
+          "damage_stats_key": "spell_cards.sc_rainbow_dance.damage_coef",
+          "knockback_stats_key": "spell_cards.sc_rainbow_dance.knockback_cells"
+        }
+      ]
+    },
+    {
+      "id": "sc_extreme_typhoon",
+      "owner": "chr_meiling",
+      "name_key": "spell.meiling.extreme_typhoon.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_meiling",
+      "tags": [
+        "area",
+        "control"
+      ],
+      "effects": [
+        {
+          "type": "area_status",
+          "center_rule": "caster",
+          "radius_cells": 1.5,
+          "status_id": "st_hold",
+          "duration_sec": 3.0,
+          "ignore_immunity": true
+        }
+      ]
+    },
+    {
+      "id": "sc_the_world",
+      "owner": "chr_sakuya",
+      "name_key": "spell.sakuya.the_world.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_sakuya",
+      "tags": [
+        "time",
+        "control"
+      ],
+      "effects": [
+        {
+          "type": "area_status",
+          "center_rule": "board",
+          "radius_cells": 0,
+          "status_id": "st_time_stop",
+          "ignore_immunity": true,
+          "duration_stats_key": "spell_cards.sc_the_world.duration_sec",
+          "boss_slow_strength_stats_key": "spell_cards.sc_the_world.boss_slow_strength"
+        }
+      ]
+    },
+    {
+      "id": "sc_killing_doll",
+      "owner": "chr_sakuya",
+      "name_key": "spell.sakuya.killing_doll.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_sakuya",
+      "tags": [
+        "homing"
+      ],
+      "effects": [
+        {
+          "type": "homing_orbs",
+          "count": 24,
+          "scope": "radius",
+          "radius_cells": 3.5,
+          "target_rule": "closest_to_guard",
+          "allow_multiple_per_target": true,
+          "travel_sec": 0.6,
+          "heavy": false,
+          "damage_stats_key": "spell_cards.sc_killing_doll.damage_coef_per_knife"
+        }
+      ]
+    },
+    {
+      "id": "sc_gungnir",
+      "owner": "chr_remilia",
+      "name_key": "spell.remilia.gungnir.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_remilia",
+      "tags": [
+        "beam",
+        "single"
+      ],
+      "effects": [
+        {
+          "type": "piercing_spear",
+          "target_rule": "highest_max_hp",
+          "scope": "board",
+          "width_cells": 0.8,
+          "heavy": true,
+          "destroys_terrain": [
+            "ter_icicle"
+          ],
+          "damage_stats_key": "spell_cards.sc_gungnir.damage_coef"
+        }
+      ]
+    },
+    {
+      "id": "sc_red_magic",
+      "owner": "chr_remilia",
+      "name_key": "spell.remilia.red_magic.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_remilia",
+      "tags": [
+        "area"
+      ],
+      "effects": [
+        {
+          "type": "cross_burst",
+          "center_rule": "caster",
+          "arm_length_cells": 4,
+          "arm_width_cells": 1,
+          "heavy": true
+        }
+      ]
+    },
+    {
+      "id": "sc_modoribashi",
+      "owner": "chr_keine",
+      "name_key": "spell.keine.modoribashi.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_keine",
+      "tags": [
+        "control"
+      ],
+      "effects": [
+        {
+          "type": "send_back_segment",
+          "segment_rule": "last_n_path_cells",
+          "n": 5,
+          "exclude_boss": true,
+          "send_back_stats_key": "spell_cards.sc_modoribashi.send_back_cells"
+        }
+      ]
+    },
+    {
+      "id": "sc_legend_of_gensokyo",
+      "owner": "chr_keine",
+      "name_key": "spell.keine.legend_of_gensokyo.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_keine",
+      "tags": [
+        "guard"
+      ],
+      "effects": [
+        {
+          "type": "guard_invulnerable",
+          "duration_stats_key": "spell_cards.sc_legend_of_gensokyo.duration_sec"
+        }
+      ]
+    },
+    {
+      "id": "sc_phoenix_wings",
+      "owner": "chr_mokou",
+      "name_key": "spell.mokou.phoenix_wings.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_mokou",
+      "tags": [
+        "path_sweep",
+        "fire"
+      ],
+      "effects": [
+        {
+          "type": "path_sweep",
+          "from": "guard",
+          "to": "spawn",
+          "duration_sec": 1.5,
+          "width_cells": 1.0,
+          "hits_per_enemy": 1,
+          "heavy": true,
+          "apply_status": {
+            "status_id": "st_burn",
+            "strength": 1.0,
+            "duration_sec": 4.0
+          },
+          "damage_stats_key": "spell_cards.sc_phoenix_wings.damage_coef"
+        }
+      ]
+    },
+    {
+      "id": "sc_phoenix_rebirth",
+      "owner": "chr_mokou",
+      "name_key": "spell.mokou.phoenix_rebirth.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_mokou",
+      "tags": [
+        "area",
+        "fire"
+      ],
+      "effects": [
+        {
+          "type": "spawn_terrain",
+          "terrain_id": "ter_burning",
+          "center_rule": "caster",
+          "size_cells": [
+            5,
+            5
+          ],
+          "duration_sec": 8.0
+        }
+      ]
+    },
+    {
+      "id": "sc_gensou_fuubi",
+      "owner": "chr_aya",
+      "name_key": "spell.aya.gensou_fuubi.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_aya",
+      "tags": [
+        "path_sweep"
+      ],
+      "effects": [
+        {
+          "type": "path_sweep",
+          "from": "spawn",
+          "to": "guard",
+          "duration_sec": 0.8,
+          "width_cells": 1.0,
+          "hits_per_enemy": 2,
+          "heavy": true,
+          "reveal_stealth": true,
+          "damage_stats_key": "spell_cards.sc_gensou_fuubi.damage_coef"
+        }
+      ]
+    },
+    {
+      "id": "sc_autumn_leaf_fan",
+      "owner": "chr_aya",
+      "name_key": "spell.aya.autumn_leaf_fan.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_aya",
+      "tags": [
+        "knockback"
+      ],
+      "effects": [
+        {
+          "type": "area_damage",
+          "center_rule": "densest_cluster",
+          "radius_cells": 2.0,
+          "knockback_cells": 3.0,
+          "reveal_stealth": true,
+          "heavy": false
+        }
+      ]
+    },
+    {
+      "id": "sc_gray_thaumaturgy",
+      "owner": "chr_sanae",
+      "name_key": "spell.sanae.gray_thaumaturgy.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_sanae",
+      "tags": [
+        "area"
+      ],
+      "effects": [
+        {
+          "type": "multi_blast",
+          "count": 5,
+          "center_rule": "densest_cluster_distinct",
+          "radius_cells": 1.2,
+          "interval_sec": 0.15,
+          "heavy": true,
+          "damage_stats_key": "spell_cards.sc_gray_thaumaturgy.damage_coef"
+        }
+      ]
+    },
+    {
+      "id": "sc_yasaka_divine_wind",
+      "owner": "chr_sanae",
+      "name_key": "spell.sanae.yasaka_divine_wind.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_sanae",
+      "tags": [
+        "area"
+      ],
+      "effects": [
+        {
+          "type": "area_damage",
+          "center_rule": "board",
+          "radius_cells": 0,
+          "bonus_vs_tags": [
+            {
+              "tag": "outside_object",
+              "bucket": "synergy",
+              "add": 1.0
+            }
+          ],
+          "heavy": true
+        }
+      ]
+    },
+    {
+      "id": "sc_lost_and_found",
+      "owner": "chr_wasure",
+      "name_key": "spell.wasure.lost_and_found.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_wasure",
+      "tags": [
+        "summon"
+      ],
+      "effects": [
+        {
+          "type": "convert_kills_to_helpers",
+          "duration_sec": 6.0,
+          "radius_cells": 3.0,
+          "helper_id": "hlp_lost_item",
+          "helper_duration_sec": 8.0,
+          "max_helpers": 10
+        }
+      ]
+    },
+    {
+      "id": "sc_forgotten_song",
+      "owner": "chr_wasure",
+      "name_key": "spell.wasure.forgotten_song.name",
+      "user": "player",
+      "mvp": false,
+      "detail_level": "outline",
+      "portrait": "portrait_wasure",
+      "tags": [
+        "control"
+      ],
+      "effects": [
+        {
+          "type": "reverse_walk",
+          "center_rule": "densest_cluster",
+          "radius_cells": 2.5,
+          "duration_sec": 3.0,
+          "exclude_boss": true
+        }
+      ]
+    },
     {
       "id": "sc_boss_cirno_icicle_fall",
       "owner": "boss_cirno",
@@ -182,16 +626,32 @@
       "mvp": true,
       "detail_level": "full",
       "portrait": "portrait_cirno",
-      "tags": ["map_change", "icicle"],
+      "tags": [
+        "map_change",
+        "icicle"
+      ],
       "effects": [
         {
           "type": "icicle_drop",
           "cells_ref": "boss_cirno_p1_icicles",
-          "fallback": {"rule": "units_nearest_boss_then_empty_beside_path", "max_units": 2, "max_empty": 3},
+          "fallback": {
+            "rule": "units_nearest_boss_then_empty_beside_path",
+            "max_units": 2,
+            "max_empty": 3
+          },
           "telegraph_sec": 0.8,
-          "on_unit_cell": {"status_id": "st_unit_frozen", "duration_sec": 3.0},
-          "on_empty_cell": {"terrain_id": "ter_icicle", "duration_sec": 12.0},
-          "clear_on_phase_end": true
+          "on_unit_cell": {
+            "status_id": "st_unit_frozen",
+            "duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",
+            "spawn_terrain": false
+          },
+          "on_empty_cell": {
+            "terrain_id": "ter_icicle",
+            "duration_source": "level.bosses[].phases[phase_1].duration_sec",
+            "duration_fallback_sec": 12.0
+          },
+          "clear_on_phase_end": true,
+          "casts_per_phase": 1
         }
       ]
     },
@@ -204,7 +664,10 @@
       "mvp": true,
       "detail_level": "full",
       "portrait": "portrait_cirno",
-      "tags": ["map_change", "freeze"],
+      "tags": [
+        "map_change",
+        "freeze"
+      ],
       "effects": [
         {
           "type": "freeze_everything_in_area",
@@ -212,9 +675,17 @@
           "radius_cells": 2.5,
           "cells_ref": "boss_cirno_p2_area",
           "telegraph_sec": 1.0,
-          "unit_status": {"status_id": "st_unit_frozen", "duration_sec": 3.0},
-          "enemy_status": {"status_id": "st_freeze", "duration_sec": 2.5, "ignore_immunity": false},
-          "affects_boss_self": false
+          "unit_status": {
+            "status_id": "st_unit_frozen",
+            "duration_stats_key": "terrain.ter_ice.stop_on_declare_sec"
+          },
+          "enemy_status": {
+            "status_id": "st_freeze",
+            "duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",
+            "ignore_immunity": true
+          },
+          "affects_boss_self": false,
+          "casts_per_phase": 1
         }
       ]
     },
@@ -226,24 +697,40 @@
       "mvp": true,
       "detail_level": "full",
       "portrait": "portrait_cirno",
-      "tags": ["map_change", "ice_road"],
+      "tags": [
+        "map_change",
+        "ice_road"
+      ],
       "effects": [
         {
           "type": "spawn_terrain",
           "terrain_id": "ter_ice",
           "cells_ref": "boss_cirno_p3_ice",
-          "fallback": {"rule": "path_cells_ahead_of_boss", "count": 10},
+          "fallback": {
+            "rule": "path_cells_ahead_of_boss",
+            "count": 10
+          },
           "telegraph_sec": 0.6,
           "spread_sec": 1.0,
           "duration_sec": -1,
-          "clear_on_boss_defeat": true
+          "clear_on_boss_defeat": true,
+          "move_speed_mult_stats_key": "terrain.ter_ice.move_speed_mult"
         }
       ]
     }
   ],
   "direction_rules": {
     "best_of_8": {
-      "directions": ["up", "down", "left", "right", "up_left", "up_right", "down_left", "down_right"],
+      "directions": [
+        "up",
+        "down",
+        "left",
+        "right",
+        "up_left",
+        "up_right",
+        "down_left",
+        "down_right"
+      ],
       "score": "sum_over_hit_enemies(1 + progress_ratio)",
       "tie_breaker": "toward_spawn_first"
     }

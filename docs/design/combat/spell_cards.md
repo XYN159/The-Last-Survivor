@@ -1,33 +1,33 @@
 # 符卡
 
-> 状态：草案（战斗策划）。符卡名来自 PR #2 `data/text/names_zh.csv`。符卡伤害系数、每点伤害充能、每次击杀充能：**占位，待数值策划确认**（`stats.json`）。
+> 状态：草案（战斗策划）。符卡名来自 PR #2 `data/text/names_zh.csv`。符卡伤害系数、持续时间、范围、数量、充能都是数值，唯一来源是 PR #8 的 `stats.json`（`spell_cards.<id>.*`、`spell_charge.*`）。本文只写行为和字段名。
 > 对应配置：`data/balance/combat/spell_cards.json`、`rules.json` 的 `spell_energy` 和 `spell_cutin` 段。
 
 ## 1. 能量条【战斗策划决定 6】
 
-- 全队共用一条能量，满值 100。开局 0（关卡可用 `spell_energy_start` 覆盖）。
+数字全在 PR #8 的 `stats.json` → `spell_charge` 和 `characters.<id>`，本节只写规则。
+
+- 全队共用一条能量。满值**不是固定 100**，按当前符卡使读 PR #8 的 `characters.<id>.spell_energy_max`（每人不同，大约 80 到 150；某人没填才用 `spell_charge.energy_max_default`）。配置是 `rules.json` → `spell_energy.max_stats_key`。
+- 换符卡使的规则不变：只能在布阵期和波次空档换，换人时能量清零，所以满值跟着新符卡使变，不用换算旧能量。开局 `spell_charge.energy_start`（关卡可用 `spell_energy_start` 覆盖）。
 - 充能来源：
-  1. **造成伤害**：每次命中的「有效伤害」（不算溢出）× 每点伤害充能 0.03【占位·数值】。
-  2. **击杀**：每只敌人的 `kill_charge`（`stats.json` → `enemies.<id>.kill_charge`；普通 1.0、快 0.8、硬 2.0）【占位·数值】。
+  1. **造成伤害**：每次命中的「有效伤害」（不算溢出）× 每点伤害充能。每点伤害充能按关卡取 `spell_charge.per_damage_by_level.<level_id>`，没有这一关就用 `spell_charge.per_damage`。
+  2. **击杀**：每只敌人的 `enemies.<id>.kill_charge`。
   3. 符卡自己造成的伤害和击杀**不充能**，防止连锁。
-- **危急加速**：任一敌人进入最后 3 行（`row ≥ 9`），或守护点生命 ≤ 30% 时，所有充能 ×1.5【战斗策划决定 6】。两个条件同时满足也只是 ×1.5。
-- 其他倍率：关卡的 `spell_charge_mult`、强化「充能」（同类相加）。总充能倍率 = 危急倍率 × 关卡倍率 × (1 + 强化加成之和)。
-- 满 100 后多出来的能量丢弃。释放后能量归 0（强化「连续宣言」会返还 30%）。
+- **危急加速**：任一敌人进入最后 3 行（`row ≥ 9`），或守护点生命 ≤ 30% 时，所有充能 × `spell_charge.crisis_charge_mult`【战斗策划决定 6】。两个条件同时满足也只乘一次。
+- 其他倍率：关卡的 `spell_charge_mult`、强化「充能」（`buffs.buff_spell_battery.charge_pct_per_stack`，同类相加）。总充能倍率 = 危急倍率 × 关卡倍率 × (1 + 强化加成之和)。
+- 满了以后多出来的能量丢弃。释放后能量归 0（强化「连续宣言」满层时返还 `buffs.buff_spell_battery.refund_ratio_at_max`）。
+- 换符卡使时能量清零（`stats.json` 顶层 `caster_switch_clears_charge`）。
 
 ### 1.1 充能节奏目标
 
-| 局面 | 目标 | 说明 |
-| --- | --- | --- |
-| 普通波次 | 约 60 秒充满一次 | 10 波约 4 到 5 分钟，大约能放 4–5 次。20 波约 8 到 10 分钟，次数按关卡长度增加 |
-| 危急时刻 | 约 40 秒充满 | 60 ÷ 1.5 = 40，框架要求「危急时刻刚好能放」 |
-| 序章教学 | 建议 25–30 秒 | 关卡填 `spell_charge_mult: 2.0`，PR #2 希望序章充能更快 |
+目标由数值策划定，写在 `spell_charge.target_full_sec_normal`（普通波次多少秒充满一次）。危急时刻 = 普通目标 ÷ `crisis_charge_mult`，框架要求「危急时刻刚好能放」。伤害和击杀各占多少写在 `spell_charge.damage_share`、`kill_share`。
 
-**给数值策划的换算方法**：设某阶段全队平均每秒有效伤害为 D、平均每秒击杀数为 K，希望约 70% 能量来自伤害、30% 来自击杀：
+换算方法（数值策划已按这个方法逐关算出 `per_damage_by_level`）：设某关全队平均每秒有效伤害为 D、平均每秒击杀数为 K，满值为 E，目标 T 秒充满：
 
-- 每点伤害充能 = 70 ÷ (60 × D)
-- 每次击杀充能 = 30 ÷ (60 × K)
+- 每点伤害充能 = E × damage_share ÷ (T × D)
+- 每次击杀充能 = E × kill_share ÷ (T × K)
 
-例：第一章中段 D ≈ 40、K ≈ 0.5，则每点伤害充能 ≈ 0.029，每次击杀 ≈ 1.0。这就是占位值的来源。随着局内升级伤害变高，充能会变快，数值策划可以决定是否需要按章节调整 `per_damage`。
+序章想更快充满时，由关卡填 `spell_charge_mult`，或数值策划直接调低那几关的 `per_damage_by_level`。
 
 ## 2. 释放规则
 
@@ -43,7 +43,7 @@
 - 默认关闭（`auto_release_default_on` = false）。局内可以随时切换（`auto_release_toggle_during_battle` = true），开关在符卡按钮右上角。
 - 打开后，在 tick 第 ① 步检查：能量满，**并且**（场上敌人 ≥ 8 **或** 有敌人进入最后 3 行），就自动释放。
 - 自动释放和手动释放走完全相同的流程（包括立绘演出）。
-- 序章教学开始时也是关着的，方便 `tut.prologue.008` 让玩家亲手点一次。开关不锁死，局内仍可以打开。
+- 序章教学开始时也是关着的，方便 `tut.prologue_01.008` 让玩家亲手点一次。开关不锁死，局内仍可以打开。
 
 ### 2.3 立绘演出【框架】
 
@@ -59,10 +59,11 @@
 
 1. 开局前选一名角色当「符卡使」。底部符卡按钮绑定她的默认符卡（`default_spell_card_id`）。
 2. 布阵期（`deploy`）和波次空档（`intermission`）可以点已放置的角色，选「设为符卡使」。
-3. 波次进行中不能换。`spawning`（正在出怪）和 `waiting`（下一波倒计时、场上还有敌人）都不出现「设为符卡使」。
+3. 刷怪窗口（`spawning`）里不能换，不出现「设为符卡使」。空档里场上还有上一波的敌人也可以换（空档不等清场，见 core_rules.md 4.2）。
 4. 换人时符卡能量清零（`caster_switch_clears_charge` = true，数值策划已确认）。
-5. 序章里灵梦先当符卡使。魔理沙第 3 波前加入后的空档，可以把她设为符卡使，这样 `dlg.prologue.mid.017`「玩家首次发动魔理沙符卡」能成立。
-6. PR #2 教学 `tut.prologue.008` 仍写着「点击灵梦，发动符卡」。文案需要改成「点击下方的符卡按钮」。
+5. 序章第 1 关 `prologue_01` 只有灵梦，她当符卡使。魔理沙在 `prologue_01` 打完后加入（PR #2 `dlg.prologue_01.post.003`、`tut.prologue_01.011`），从 `prologue_02` 起可以放。`prologue_02` 的布阵期可以把她设为符卡使，这样 `dlg.prologue_02.mid.002`「首次发动魔理沙符卡」能成立。
+6. PR #2 教学 `tut.prologue_01.008` 仍写着「点击灵梦，发动符卡」。文案需要改成「点击下方的符卡按钮」。
+7. PR #2 `dlg.prologue_01.mid.010`（灵梦首次发动符卡）喊的是 灵符「梦想封印」，但灵梦默认符卡已改成 梦符「封魔阵」（用户已确认）。文案需要改这句台词。
 
 发出规则：
 
@@ -72,62 +73,68 @@
 
 ## 4. MVP 符卡详细效果
 
-### 4.1 灵符「梦想封印」 `sc_fantasy_seal`（灵梦）
+### 4.1 梦符「封魔阵」 `sc_evil_sealing_circle`（灵梦默认，用户已确认）
 
-1. 放出 7 颗大光弹，目标是全场「当前血量最高」的敌人，按血量从高到低分配，每个敌人一颗；敌人少于 7 个时，多出来的光弹从血量最高的开始再分一轮。
-2. 光弹 0.8 秒飞到目标（追踪，必中），命中造成 攻击 × 4.0【占位·数值】的重击，并在 0.8 格内造成 × 0.5 的溅射。
+1. 以灵梦为中心（灵梦不在场就以守护点为中心），半径 = 灵梦的射程 `characters.chr_reimu.range_cells`。
+2. 范围内所有敌人挂 `st_slow`，强度 `spell_cards.sc_evil_sealing_circle.slow_strength`，持续 `spell_cards.sc_evil_sealing_circle.duration_sec`。伤害系数 `spell_cards.sc_evil_sealing_circle.damage_coef`（现在是 0，纯控场）。
+3. 对 Boss 也有效（减速照常挂，Boss 移动总倍率下限 0.5）。
+4. 设计意图：序章教「符卡 = 救急」，减速比伤害更容易看懂，也给魔理沙留出打穿的时间。
+
+### 4.1b 灵符「梦想封印」 `sc_fantasy_seal`（灵梦第二张，MVP 之后）
+
+1. 放出 `spell_cards.sc_fantasy_seal.orb_count` 颗大光弹，目标是全场「当前血量最高」的敌人，按血量从高到低分配，每个敌人一颗；敌人不够时，多出来的光弹从血量最高的开始再分一轮。
+2. 光弹 0.8 秒飞到目标（追踪，必中），每颗造成 攻击 × `spell_cards.sc_fantasy_seal.damage_coef` 的重击，并在 0.8 格内造成 × `splash_coef` 的溅射。每颗按自己的系数算，不按多发拆分。
 3. 目标在飞行中死亡：改追当时血量最高的其他敌人。
 4. 对 Boss 有效（Boss 通常血量最高，会吃多颗）。
 
 ### 4.2 恋符「极限火花」 `sc_master_spark`（魔理沙）
 
 1. 方向选择（自动，不需要瞄准，单手友好）：从魔理沙所在格向上下左右和四个斜向共 8 个方向试射，给每个方向打分 = 这条光束会打到的每个敌人的 (1 + 该敌人已走路程占比) 之和，选分最高的方向。平分时优先朝裂缝方向。
-2. 光束宽 1.6 格，长度贯穿整个棋盘，持续 1.5 秒，每 0.15 秒结算一跳（共 10 跳），每跳对光束里每个敌人造成 攻击 × 1.2【占位·数值】，算重击，击退 0.05 格。
+2. 光束宽 1.6 格，长度贯穿整个棋盘，每 0.15 秒结算一跳，一共 `spell_cards.sc_master_spark.ticks` 跳（持续时间 = 跳数 × 0.15 秒），每跳对光束里每个敌人造成 攻击 × `spell_cards.sc_master_spark.damage_coef_per_tick`，算重击，击退 0.05 格。
 3. 打碎路径上的冰柱。
 4. 每一跳都是魔理沙的命中，所以打到冻结敌人会触发冰碎（第一跳翻倍并碎冰，之后该敌人有冻结免疫）。
 5. 光束持续期间逻辑正常运行（只有立绘阶段暂停）。
 
 ### 4.3 冻符「完美冻结」 `sc_perfect_freeze`（琪露诺，第一章第 2 关起）
 
-1. 圆心 = 敌人最密集的点（以每个敌人位置为候选圆心，数半径 2.5 格内的敌人数，取最多的；平局取更靠近守护点的）。
-2. 先造成 攻击 × 1.0 的重击，再冻结 3 秒，**无视冻结免疫**。Boss 改为减速 50% 3 秒。
+1. 圆心 = 敌人最密集的点（以每个敌人位置为候选圆心，数半径 `spell_cards.sc_perfect_freeze.radius_cells` 内的敌人数，取最多的；平局取更靠近守护点的）。
+2. 先造成 攻击 × `spell_cards.sc_perfect_freeze.damage_coef` 的重击，再冻结 `spell_cards.sc_perfect_freeze.freeze_sec` 秒（用户已确认的值在 PR #8），**无视冻结免疫**。Boss 改为减速，强度 `spell_cards.sc_perfect_freeze.boss_slow_strength`，同样时长。
 3. 设计意图：放完立刻接魔理沙，满屏冰碎。
 
 ### 4.4 罔两「八云紫的神隐」 `sc_spiriting_away`（紫）
 
-1. 选全场离守护点最近的最多 15 个非 Boss 敌人。
+1. 选全场离守护点最近的最多 `spell_cards.sc_spiriting_away.max_targets` 个非 Boss 敌人。
 2. 全部送回各自路线的起点（`path_progress` = 0 到 1 格之间随机错开，防止叠成一团），保留身上的状态，挂 `st_gap_daze` 1.0 秒。
-3. 场上有 Boss 时 Boss 减速 50%，4 秒。
-4. 视觉：全屏同时张开十几道隙间，敌人被吞进去，裂缝处再吐出来。
+3. 场上有 Boss 时 Boss 减速，强度 `spell_cards.sc_spiriting_away.boss_slow_strength`，4 秒。
+4. 视觉：全屏同时张开很多道隙间，敌人被吞进去，裂缝处再吐出来。
 5. 设计意图：危急时刻的「重置」，最能体现紫「操纵境界」的身份，也是险胜翻盘的时刻。
 
 ## 5. Boss 符卡
 
-冰之残影（`boss_cirno`，琪露诺的复制体）的三张 Boss 符卡详见 [enemies_and_bosses.md](enemies_and_bosses.md) 第 6 节。阶段和机制不变。显示名称和符卡名归文案策划。Boss 符卡和玩家符卡共用立绘演出规则。
+冰之残影（`boss_cirno`，琪露诺的复制体）的三张 Boss 符卡详见 [enemies_and_bosses.md](enemies_and_bosses.md) 第 6 节。每张只在进入阶段时放一次；冻结秒数读 PR #8 `terrain.ter_ice.stop_on_declare_sec`，冰柱存在时间读关卡 `phase_1.duration_sec`（12 秒）。显示名称和符卡名归文案策划。Boss 符卡和玩家符卡共用立绘演出规则。
 
 ## 6. 其他角色符卡（后续章节，概要）
 
-`spell_cards.json` 里 `detail_level: "outline"` 的条目只写了效果类型和主要参数，进入对应章节前再细化。一览：
+`spell_cards.json` 里 `detail_level: "outline"` 的条目只写了效果类型和主要参数，进入对应章节前再细化。PR #8 有字段的，数字以 PR #8 为准（下表用字段名）。一览：
 
 | ID | 名称 | 效果概要 |
 | --- | --- | --- |
-| `sc_evil_sealing_circle` | 梦符「封魔阵」 | 灵梦周围 2 格敌人被拦住 2 秒，并生成 5×5 结界 8 秒 |
 | `sc_stardust_reverie` | 魔符「星尘幻想」 | 魔理沙周围 2.5 格持续 2 秒的星弹多段伤害 |
 | `sc_icicle_fall` | 冰符「冰瀑」（玩家版） | 密集点 2 格持续冰柱伤害，强减速 60% 4 秒 |
 | `sc_quadruple_barrier` | 境符「四重结界」 | 守护点周围 2 格 5 秒：强减速且敌人无法到达守护点 |
 | `sc_morning_mist` | 湖符「晨雾之湖」 | 全队攻速 +30%，8 秒 |
-| `sc_rainbow_dance` | 彩符「彩光乱舞」 | 美铃周围 2 格伤害并击退 2 格 |
+| `sc_rainbow_dance` | 彩符「彩光乱舞」 | 美铃周围 2 格伤害并击退 `spell_cards.sc_rainbow_dance.knockback_cells` 格。被她挡住的敌人一起被推开 |
 | `sc_extreme_typhoon` | 彩符「极彩台风」 | 美铃周围 1.5 格拦住 3 秒 |
-| `sc_the_world` | 幻世「世界」 | 全场时停 3 秒，伤害记账后一起结算 |
-| `sc_killing_doll` | 幻符「杀人玩偶」 | 24 把飞刀追踪 3.5 格内的敌人 |
+| `sc_the_world` | 幻世「世界」 | 全场时停 `spell_cards.sc_the_world.duration_sec` 秒，伤害记账后一起结算 |
+| `sc_killing_doll` | 幻符「杀人玩偶」 | 24 把飞刀追踪 3.5 格内的敌人，每把 `spell_cards.sc_killing_doll.damage_coef_per_knife` |
 | `sc_gungnir` | 神枪「冈格尼尔」 | 贯穿全图的长枪，针对最大血量目标 |
 | `sc_red_magic` | 红符「不夜城红」 | 以自身为中心的十字爆发 |
-| `sc_modoribashi` | 转世「一条归桥」 | 守护点前 5 格的敌人往回送 3 格 |
-| `sc_legend_of_gensokyo` | 虚史「幻想乡传说」 | 守护点 5 秒不受漏怪伤害 |
+| `sc_modoribashi` | 转世「一条归桥」 | 守护点前 5 格的敌人往回送 `spell_cards.sc_modoribashi.send_back_cells` 格 |
+| `sc_legend_of_gensokyo` | 虚史「幻想乡传说」 | 守护点 `spell_cards.sc_legend_of_gensokyo.duration_sec` 秒不受漏怪伤害 |
 | `sc_phoenix_wings` | 不死「火鸟 -凤翼天翔-」 | 火鸟从守护点沿路线飞到裂缝，每个敌人一次重击 + 灼烧 |
 | `sc_phoenix_rebirth` | 「凤凰再诞」 | 自身周围 5×5 火焰地面 8 秒 |
-| `sc_gensou_fuubi` | 「幻想风靡」 | 从裂缝扫到守护点，每个敌人两次伤害，现形遗忘之影 |
-| `sc_autumn_leaf_fan` | 旋符「红叶扇风」 | 密集点 2 格吹回 3 格，现形遗忘之影 |
+| `sc_gensou_fuubi` | 「幻想风靡」 | 从裂缝扫到守护点，每个敌人两次伤害，现形遗忘残影 |
+| `sc_autumn_leaf_fan` | 旋符「红叶扇风」 | 密集点 2 格吹回 3 格，现形遗忘残影 |
 | `sc_gray_thaumaturgy` | 秘术「灰色奇术」 | 5 个密集点依次爆炸 |
 | `sc_yasaka_divine_wind` | 大奇迹「八坂之神风」 | 全场伤害，对外界之物联动桶 +1.0 |
 | `sc_lost_and_found` | 拾遗「无人认领的失物招领处」 | 6 秒内 3 格内击倒的残影变成帮手 |

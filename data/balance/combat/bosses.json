@@ -1,28 +1,58 @@
 {
   "meta": {
-    "schema_version": 4,
+    "schema_version": 5,
     "status": "draft",
     "owner": "combat_design",
     "doc": "docs/design/combat/enemies_and_bosses.md",
-    "stats_file": "data/balance/combat/stats.json"
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "stats_sections": [
+      "bosses"
+    ]
   },
   "bosses": [
     {
       "id": "boss_cirno",
       "draft_name": "冰之残影",
-      "name_key": "boss.ice_shade.name",
+      "name_key": "enemy.boss_cirno.name",
       "identity": "cirno_copy",
       "copy_of": "chr_cirno",
-      "tags": ["boss", "ice"],
+      "tags": [
+        "boss",
+        "ice"
+      ],
       "hit_radius_cells": 0.45,
       "knockback_immune": true,
       "status_conversions": [
-        {"from": "st_freeze", "to": "st_slow", "strength": 0.5, "keep_duration": true},
-        {"from": "st_hold", "to": "st_slow", "strength": 0.5, "keep_duration": true},
-        {"from": "st_time_stop", "to": "st_slow", "strength": 0.7, "keep_duration": true},
-        {"from": "st_gap_daze", "to": "none", "strength": 0, "keep_duration": false}
+        {
+          "from": "st_freeze",
+          "to": "st_slow",
+          "strength": 0.5,
+          "keep_duration": true
+        },
+        {
+          "from": "st_hold",
+          "to": "st_slow",
+          "strength": 0.5,
+          "keep_duration": true
+        },
+        {
+          "from": "st_time_stop",
+          "to": "st_slow",
+          "strength": 0.7,
+          "keep_duration": true
+        },
+        {
+          "from": "st_gap_daze",
+          "to": "none",
+          "strength": 0,
+          "keep_duration": false
+        }
       ],
-      "immune_to_effects": ["gap_swap", "send_back"],
+      "immune_to_effects": [
+        "gap_swap",
+        "send_back"
+      ],
       "affected_by_terrain": true,
       "on_reach_guard": "loop_to_spawn",
       "reach_guard_deals_leak_damage": true,
@@ -30,28 +60,33 @@
       "victory": "must_defeat",
       "phase_transition": {
         "clamp_hp_at_threshold": true,
-        "invulnerable_sec": 1.5,
+        "invulnerable_sec_stats_key": "boss_rules.phase_invuln_sec",
         "stop_moving_while_invulnerable": true,
         "clear_previous_phase_terrain": true,
         "cutin_uses_spell_cutin_rules": true
       },
-      "hp_bar": {"show_phase_pips": true, "position": "top"},
+      "hp_bar": {
+        "show_phase_pips": true,
+        "position": "top"
+      },
       "phases": [
         {
           "index": 1,
           "hp_ratio_start": 1.0,
           "spell_card_id": "sc_boss_cirno_icicle_fall",
           "cast_on_enter": true,
-          "repeat_interval_sec": 10.0,
-          "level_hook": "boss_cirno_p1"
+          "repeat_interval_sec": 0,
+          "level_hook": "boss_cirno_p1",
+          "casts_per_phase": 1
         },
         {
           "index": 2,
           "hp_ratio_start": 0.66,
           "spell_card_id": "sc_boss_cirno_perfect_freeze",
           "cast_on_enter": true,
-          "repeat_interval_sec": 15.0,
-          "level_hook": "boss_cirno_p2"
+          "repeat_interval_sec": 0,
+          "level_hook": "boss_cirno_p2",
+          "casts_per_phase": 1
         },
         {
           "index": 3,
@@ -59,10 +94,18 @@
           "spell_card_id": "sc_boss_cirno_diamond_blizzard",
           "cast_on_enter": true,
           "repeat_interval_sec": 0,
-          "level_hook": "boss_cirno_p3"
+          "level_hook": "boss_cirno_p3",
+          "casts_per_phase": 1
         }
       ],
-      "visual": {"sprite": "boss_cirno", "scale": 1.5, "portrait": "portrait_cirno", "defeat_vfx": "ice_shatter_big"}
+      "visual": {
+        "sprite": "boss_cirno",
+        "scale": 1.5,
+        "portrait": "portrait_cirno",
+        "defeat_vfx": "ice_shatter_big"
+      },
+      "stats_path": "bosses.boss_cirno",
+      "phase_hp_ratios_stats_key": "boss_rules.phase_hp_ratios"
     }
   ]
 }

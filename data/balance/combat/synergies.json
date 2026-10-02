@@ -1,9 +1,11 @@
 {
   "meta": {
-    "schema_version": 3,
+    "schema_version": 4,
     "status": "draft",
     "owner": "combat_design",
-    "doc": "docs/design/combat/synergies.md"
+    "doc": "docs/design/combat/synergies.md",
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
   },
   "discovery": {
     "persist_in_save": true,
@@ -18,11 +20,35 @@
       "name_key": "syn.ice_shatter.name",
       "status": "confirmed_framework",
       "mvp": true,
-      "mvp_freeze_sources": ["buff_frost_frog", "sc_boss_cirno_perfect_freeze", "chr_cirno"],
-      "mvp_freeze_source_unlock": {"chr_cirno": "ch1_01_clear"},
-      "requires": {"characters_any": ["chr_marisa"], "freeze_source": true},
-      "trigger": {"event": "on_hit", "attacker_character": "chr_marisa", "target_has_status": "st_freeze", "check_step": "pipeline_4"},
-      "effect": {"bucket": "synergy", "add": 1.0, "force_heavy": true, "remove_target_status": "st_freeze", "remove_at_step": "pipeline_7", "vfx": "ice_shatter", "sfx": "ice_break"}
+      "mvp_freeze_sources": [
+        "buff_frost_frog",
+        "sc_boss_cirno_perfect_freeze",
+        "chr_cirno"
+      ],
+      "mvp_freeze_source_unlock": {
+        "chr_cirno": "ch1_01_clear"
+      },
+      "requires": {
+        "characters_any": [
+          "chr_marisa"
+        ],
+        "freeze_source": true
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_character": "chr_marisa",
+        "target_has_status": "st_freeze",
+        "check_step": "pipeline_4"
+      },
+      "effect": {
+        "bucket": "synergy",
+        "add_stats_key": "synergies.syn_ice_shatter.synergy_add",
+        "force_heavy": true,
+        "remove_target_status": "st_freeze",
+        "remove_at_step": "pipeline_7",
+        "vfx": "ice_shatter",
+        "sfx": "ice_break"
+      }
     },
     {
       "id": "syn_barrier_bonus",
@@ -30,9 +56,25 @@
       "name_key": "syn.barrier_bonus.name",
       "status": "confirmed_framework",
       "mvp": true,
-      "requires": {"characters_any": ["chr_reimu"]},
-      "trigger": {"event": "on_hit", "attacker_character": "any", "target_has_status": "st_barrier_mark", "check_step": "pipeline_4"},
-      "effect": {"bucket": "vulnerability", "add": 0.0, "provided_by_status": "st_barrier_mark", "discovery_only": true, "vfx": "", "sfx": ""}
+      "requires": {
+        "characters_any": [
+          "chr_reimu"
+        ]
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_character": "any",
+        "target_has_status": "st_barrier_mark",
+        "check_step": "pipeline_4"
+      },
+      "effect": {
+        "bucket": "vulnerability",
+        "add": 0.0,
+        "provided_by_status": "st_barrier_mark",
+        "discovery_only": true,
+        "vfx": "",
+        "sfx": ""
+      }
     },
     {
       "id": "syn_ofuda_detonate",
@@ -40,10 +82,31 @@
       "name_key": "syn.ofuda_detonate.name",
       "status": "draft",
       "mvp": true,
-      "requires": {"characters_all": ["chr_reimu", "chr_marisa"]},
-      "trigger": {"event": "on_hit", "attacker_character": "chr_marisa", "target_has_status": "st_ofuda_tag", "check_step": "pipeline_2"},
-      "effect": {"force_crit": true, "remove_target_status": "st_ofuda_tag", "remove_at_step": "pipeline_7", "vfx": "ofuda_explode", "sfx": "ofuda_pop"},
-      "helper_status": {"id": "st_ofuda_tag", "applied_by": "chr_reimu", "on": "normal_attack_hit", "duration_sec": 1.5}
+      "requires": {
+        "characters_all": [
+          "chr_reimu",
+          "chr_marisa"
+        ]
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_character": "chr_marisa",
+        "target_has_status": "st_ofuda_tag",
+        "check_step": "pipeline_2"
+      },
+      "effect": {
+        "force_crit": true,
+        "remove_target_status": "st_ofuda_tag",
+        "remove_at_step": "pipeline_7",
+        "vfx": "ofuda_explode",
+        "sfx": "ofuda_pop"
+      },
+      "helper_status": {
+        "id": "st_ofuda_tag",
+        "applied_by": "chr_reimu",
+        "on": "normal_attack_hit",
+        "duration_sec": 1.5
+      }
     },
     {
       "id": "syn_border_seal",
@@ -51,9 +114,30 @@
       "name_key": "syn.border_seal.name",
       "status": "draft",
       "mvp": false,
-      "requires": {"characters_all": ["chr_reimu", "chr_yukari"]},
-      "trigger": {"event": "on_gap_move", "source_character": "chr_yukari", "move_types": ["gap_swap", "send_to_spawn", "send_back"]},
-      "effect": {"apply_status": {"status_id": "st_barrier_mark", "mode": "timed", "duration_sec": 4.0}, "vfx": "gap_exit_ofuda", "sfx": "barrier_chime"}
+      "requires": {
+        "characters_all": [
+          "chr_reimu",
+          "chr_yukari"
+        ]
+      },
+      "trigger": {
+        "event": "on_gap_move",
+        "source_character": "chr_yukari",
+        "move_types": [
+          "gap_swap",
+          "send_to_spawn",
+          "send_back"
+        ]
+      },
+      "effect": {
+        "apply_status": {
+          "status_id": "st_barrier_mark",
+          "mode": "timed",
+          "duration_sec": 4.0
+        },
+        "vfx": "gap_exit_ofuda",
+        "sfx": "barrier_chime"
+      }
     },
     {
       "id": "syn_boundary_spark",
@@ -61,9 +145,30 @@
       "name_key": "syn.boundary_spark.name",
       "status": "draft",
       "mvp": false,
-      "requires": {"characters_all": ["chr_marisa", "chr_yukari"]},
-      "trigger": {"event": "on_spell_cast", "spell_card_id": "sc_master_spark"},
-      "effect": {"extra_beam": {"origin": "yukari_unit", "direction_rule": "best_of_8_excluding_first", "damage_ratio": 0.5, "delay_sec": 0.3, "width_cells": 1.2, "destroys_terrain": ["ter_icicle"]}, "vfx": "gap_beam_exit", "sfx": "gap_open_big"}
+      "requires": {
+        "characters_all": [
+          "chr_marisa",
+          "chr_yukari"
+        ]
+      },
+      "trigger": {
+        "event": "on_spell_cast",
+        "spell_card_id": "sc_master_spark"
+      },
+      "effect": {
+        "extra_beam": {
+          "origin": "yukari_unit",
+          "direction_rule": "best_of_8_excluding_first",
+          "damage_ratio": 0.5,
+          "delay_sec": 0.3,
+          "width_cells": 1.2,
+          "destroys_terrain": [
+            "ter_icicle"
+          ]
+        },
+        "vfx": "gap_beam_exit",
+        "sfx": "gap_open_big"
+      }
     },
     {
       "id": "syn_fire_and_ice",
@@ -71,9 +176,30 @@
       "name_key": "syn.fire_and_ice.name",
       "status": "draft",
       "mvp": false,
-      "requires": {"characters_all": ["chr_cirno", "chr_mokou"]},
-      "trigger": {"event": "on_hit", "attacker_damage_tag": "fire", "target_has_any_status": ["st_freeze", "st_slow"], "slow_source_tag": "ice", "check_step": "pipeline_4"},
-      "effect": {"bucket": "synergy", "add": 0.5, "remove_target_status": "st_freeze", "remove_at_step": "pipeline_7", "vfx": "steam_burst", "sfx": "sizzle"}
+      "requires": {
+        "characters_all": [
+          "chr_cirno",
+          "chr_mokou"
+        ]
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_damage_tag": "fire",
+        "target_has_any_status": [
+          "st_freeze",
+          "st_slow"
+        ],
+        "slow_source_tag": "ice",
+        "check_step": "pipeline_4"
+      },
+      "effect": {
+        "bucket": "synergy",
+        "add_stats_key": "synergies.syn_ice_fire.synergy_add",
+        "remove_target_status": "st_freeze",
+        "remove_at_step": "pipeline_7",
+        "vfx": "steam_burst",
+        "sfx": "sizzle"
+      }
     },
     {
       "id": "syn_gatekeeper_line",
@@ -81,9 +207,27 @@
       "name_key": "syn.gatekeeper_line.name",
       "status": "draft",
       "mvp": false,
-      "requires": {"characters_all": ["chr_meiling", "chr_marisa"]},
-      "trigger": {"event": "on_hit", "attacker_character": "chr_marisa", "target_has_status": "st_hold", "check_step": "pipeline_4"},
-      "effect": {"bucket": "synergy", "add": 0.5, "extra_knockback_cells": 0.4, "vfx": "qi_star_burst", "sfx": "impact_heavy"}
+      "requires": {
+        "characters_all": [
+          "chr_meiling",
+          "chr_marisa"
+        ]
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_character": "chr_marisa",
+        "target_has_status": "st_blocked",
+        "check_step": "pipeline_4"
+      },
+      "effect": {
+        "bucket": "synergy",
+        "add_stats_key": "synergies.syn_gatekeeper_line.synergy_add",
+        "extra_knockback_cells": 0,
+        "vfx": "qi_star_burst",
+        "sfx": "impact_heavy",
+        "add_pending_numeric": true,
+        "releases_block": false
+      }
     },
     {
       "id": "syn_frozen_moment",
@@ -91,9 +235,26 @@
       "name_key": "syn.frozen_moment.name",
       "status": "draft",
       "mvp": false,
-      "requires": {"characters_all": ["chr_sakuya"], "freeze_source": true},
-      "trigger": {"event": "on_hit", "attacker_character": "chr_sakuya", "target_has_status": "st_freeze", "check_step": "pipeline_4"},
-      "effect": {"bucket": "synergy", "add_per_prior_hit": 0.1, "add_cap": 0.5, "reset_when_status_ends": "st_freeze", "vfx": "knife_ice_stick", "sfx": "knife_ting"}
+      "requires": {
+        "characters_all": [
+          "chr_sakuya"
+        ],
+        "freeze_source": true
+      },
+      "trigger": {
+        "event": "on_hit",
+        "attacker_character": "chr_sakuya",
+        "target_has_status": "st_freeze",
+        "check_step": "pipeline_4"
+      },
+      "effect": {
+        "bucket": "synergy",
+        "add_per_prior_hit": 0.1,
+        "add_cap": 0.5,
+        "reset_when_status_ends": "st_freeze",
+        "vfx": "knife_ice_stick",
+        "sfx": "knife_ting"
+      }
     }
   ]
 }

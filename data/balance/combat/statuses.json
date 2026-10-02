@@ -1,9 +1,12 @@
 {
   "meta": {
-    "schema_version": 1,
+    "schema_version": 2,
     "status": "draft",
     "owner": "combat_design",
-    "doc": "docs/design/combat/damage_and_status.md"
+    "doc": "docs/design/combat/damage_and_status.md",
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "duration_rule_zh": "冻结类时长归数值策划（A-08）：只写引用，不写秒数。duration_source = attacker 表示时长由施加它的技能/符卡/强化给出。numeric_pending_pr8 = PR #8 还没有这个字段"
   },
   "statuses": [
     {
@@ -14,10 +17,10 @@
         "type": "move_speed_mult",
         "formula": "1 - strength"
       },
-      "default_duration_sec": 2.0,
+      "duration_source": "attacker",
       "stacking": "strongest_only",
       "same_source": "refresh_duration",
-      "max_strength": 0.7,
+      "max_strength_stats_key": "statuses.st_slow.max_strength",
       "blocks_knockback": false,
       "immune_tags": [],
       "visual": {
@@ -33,14 +36,16 @@
       "effect": {
         "type": "hard_stop"
       },
-      "default_duration_sec": 1.5,
+      "duration_source": "attacker",
       "stacking": "single_instance",
       "same_source": "extend_to_max",
-      "max_chain_sec": 3.0,
+      "max_chain_stats_key": "statuses.st_freeze.max_chain_sec",
+      "numeric_pending_pr8": true,
       "blocks_knockback": true,
       "on_end_apply": {
         "status_id": "st_freeze_immune",
-        "duration_sec": 1.5
+        "duration_stats_key": "statuses.st_freeze_immune.duration_sec",
+        "numeric_pending_pr8": true
       },
       "immune_tags": [
         "boss"
@@ -67,7 +72,8 @@
         ],
         "bypass_flag": "ignore_immunity"
       },
-      "default_duration_sec": 1.5,
+      "duration_stats_key": "statuses.st_freeze_immune.duration_sec",
+      "numeric_pending_pr8": true,
       "stacking": "single_instance",
       "same_source": "refresh_duration",
       "blocks_knockback": false,
@@ -85,7 +91,7 @@
       "effect": {
         "type": "damage_taken_bucket_add",
         "bucket": "vulnerability",
-        "value": 0.2
+        "value_stats_key": "statuses.st_barrier_mark.vulnerability_add"
       },
       "default_duration_sec": 0,
       "zone_bound": true,
@@ -192,6 +198,27 @@
       }
     },
     {
+      "id": "st_blocked",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "hard_stop",
+        "bound_to_blocker": true
+      },
+      "default_duration_sec": 0,
+      "stacking": "single_instance",
+      "same_source": "none",
+      "blocks_knockback": false,
+      "immune_tags": [
+        "boss"
+      ],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "qi_block_ring",
+        "icon": "icon_hold"
+      }
+    },
+    {
       "id": "st_time_stop",
       "target_kind": "enemy",
       "mvp": false,
@@ -266,7 +293,7 @@
         "type": "damage_immune",
         "block_new_statuses": true
       },
-      "default_duration_sec": 1.5,
+      "duration_stats_key": "boss_rules.phase_invuln_sec",
       "stacking": "single_instance",
       "same_source": "refresh_duration",
       "blocks_knockback": true,
@@ -285,14 +312,17 @@
         "type": "unit_disable",
         "pause_cooldowns": true,
         "block_upgrade_sell": true,
-        "tap_to_break": 3
+        "tap_to_break": 3,
+        "tap_to_break_status": "pending_producer"
       },
-      "default_duration_sec": 3.0,
+      "duration_source": "attacker",
+      "boss_cirno_duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",
       "stacking": "single_instance",
       "same_source": "extend_to_max",
       "on_end_apply": {
         "status_id": "st_unit_freeze_immune",
-        "duration_sec": 2.0
+        "duration_stats_key": "statuses.st_unit_freeze_immune.duration_sec",
+        "numeric_pending_pr8": true
       },
       "immune_tags": [],
       "visual": {
@@ -313,7 +343,8 @@
         ],
         "bypass_flag": "none"
       },
-      "default_duration_sec": 2.0,
+      "duration_stats_key": "statuses.st_unit_freeze_immune.duration_sec",
+      "numeric_pending_pr8": true,
       "stacking": "single_instance",
       "same_source": "refresh_duration",
       "immune_tags": [],
@@ -321,6 +352,30 @@
         "tint": "",
         "overlay_vfx": "thaw_drips",
         "icon": ""
+      }
+    },
+    {
+      "id": "st_unit_pounced",
+      "target_kind": "unit",
+      "mvp": false,
+      "status": "post_mvp",
+      "behavior_status": "recommendation",
+      "effect": {
+        "type": "unit_disable",
+        "pause_cooldowns": true,
+        "block_upgrade_sell": false
+      },
+      "duration_stats_key": "enemies.enm_shade_pouncer.pounce_disable_sec",
+      "duration_pending_numeric": true,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "immune_tags": [],
+      "note_zh": "扑人残影扑中角色：角色短暂停止攻击和技能。秒数归数值策划，PR #8 还没有这个字段",
+      "visual": {
+        "tint": "#B8B8B8",
+        "overlay_vfx": "shade_grab_unit",
+        "icon": "icon_pounced",
+        "pause_animation": false
       }
     }
   ]
