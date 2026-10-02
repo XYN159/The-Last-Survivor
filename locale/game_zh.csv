@@ -30,7 +30,13 @@ ui.battle.result_win,守住了
 ui.battle.result_lose,失守了
 ui.battle.result_body,%s\n生命 %d/%d    灵力 %d
 ui.battle.retry,再打一次
-ui.battle.back_to_title,返回标题
+ui.battle.continue,继续
+ui.originals.back,返回
+ui.originals.server,服务器
+ui.originals.notice,公告
+ui.originals.gacha,抽卡
+ui.originals.stamina,体力
+ui.originals.gear,装备
 char.reimu.name,灵梦
 char.marisa.name,魔理沙
 char.cirno.name,琪露诺

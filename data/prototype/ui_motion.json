@@ -84,5 +84,8 @@
   },
   "layout": {
     "route_clear_px": 28
+  },
+  "originals": {
+    "page_fade_sec": 0.18
   }
 }

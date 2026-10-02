@@ -2,7 +2,7 @@ extends Control
 
 ## 塔防对局的画面。规则在 BattleSim，这里只负责按钮、棋盘和结算。
 
-const MAIN_MENU_SCENE := "res://scenes/main/main_menu.tscn"
+const FLOW_SCENE := "res://scenes/main/original_flow.tscn"
 const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
@@ -12,6 +12,7 @@ const _REIMU_TOKEN := preload("res://assets/art/prologue_01/reimu_token.png")
 const BoardMotion := preload("res://scripts/battle/board_motion.gd")
 const ScreenMotion := preload("res://scripts/battle/screen_motion.gd")
 const PressMotion := preload("res://scripts/ui/press_motion.gd")
+const OriginalFlow := preload("res://scripts/main/original_flow.gd")
 
 static var remembered_speed: int = 1
 
@@ -337,7 +338,9 @@ func _on_retry_pressed() -> void:
 
 
 func _on_menu_pressed() -> void:
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	# 守住或失守都先看结算原画，再从那里回主界面。
+	OriginalFlow.pending_entry = OriginalFlow.RESULT_SCREEN
+	get_tree().change_scene_to_file(FLOW_SCENE)
 
 
 func _show_result(state: Dictionary) -> void:
@@ -398,7 +401,7 @@ func _apply_speed_rules() -> void:
 func _apply_static_labels() -> void:
 	_close_unit_button.text = tr("ui.battle.close")
 	_retry_button.text = tr("ui.battle.retry")
-	_menu_button.text = tr("ui.battle.back_to_title")
+	_menu_button.text = tr("ui.battle.continue")
 
 
 func _has_selected_cell() -> bool:

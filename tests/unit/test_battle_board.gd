@@ -76,4 +76,4 @@ func test_finishing_the_level_offers_retry_and_title() -> void:
 	assert_eq(title.text, "守住了")
 	assert_true(body.text.begins_with("神社的直路"), body.text)
 	assert_eq((board.get_node("%RetryButton") as Button).text, "再打一次")
-	assert_eq((board.get_node("%MenuButton") as Button).text, "返回标题")
+	assert_eq((board.get_node("%MenuButton") as Button).text, "继续")

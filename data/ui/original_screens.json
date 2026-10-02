@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "temporary",
+    "doc": "docs/adr/0008-ui-originals-as-placeholder-screens.md",
+    "note": "二十张界面原画的点击区。坐标按 1920×1080 原图像素写，rect 是 [左, 上, 宽, 高]。没有 label 的是透明按钮；有 label 的是原画上没有、额外加的小按钮，文字走翻译 key。改点击位置只改这份文件"
+  },
+  "design_size": [1920, 1080],
+  "back_rect": [24, 996, 160, 60],
+  "screens": {
+    "splash": {
+      "image": "res://assets/ui/originals/01_splash.png",
+      "back": false,
+      "hotspots": [
+        {"id": "tap_to_start", "rect": [0, 0, 1920, 1080], "action": "replace", "target": "login"}
+      ]
+    },
+    "login": {
+      "image": "res://assets/ui/originals/02_login.png",
+      "back": false,
+      "hotspots": [
+        {"id": "login", "rect": [1256, 722, 572, 97], "action": "reset", "target": "home"},
+        {"id": "open_server", "rect": [1290, 960, 240, 64], "action": "push", "target": "server", "label": "ui.originals.server"},
+        {"id": "open_notice", "rect": [1590, 960, 240, 64], "action": "push", "target": "notice", "label": "ui.originals.notice"}
+      ]
+    },
+    "server": {
+      "image": "res://assets/ui/originals/03_server.png",
+      "hotspots": [
+        {"id": "confirm_server", "rect": [1316, 900, 484, 112], "action": "back"}
+      ]
+    },
+    "notice": {
+      "image": "res://assets/ui/originals/04_notice.png",
+      "back_rect": [24, 20, 160, 60],
+      "hotspots": [
+        {"id": "close_notice", "rect": [1810, 0, 110, 100], "action": "back"}
+      ]
+    },
+    "home": {
+      "image": "res://assets/ui/originals/05_home.png",
+      "back": false,
+      "hotspots": [
+        {"id": "sortie", "rect": [1440, 190, 440, 380], "action": "push", "target": "chapter"},
+        {"id": "open_squad", "rect": [90, 955, 240, 100], "action": "push", "target": "squad"},
+        {"id": "open_roster", "rect": [420, 955, 260, 100], "action": "push", "target": "roster"},
+        {"id": "open_missions", "rect": [790, 955, 200, 100], "action": "push", "target": "missions"},
+        {"id": "open_shop", "rect": [1110, 955, 200, 100], "action": "push", "target": "shop"},
+        {"id": "open_mail", "rect": [1440, 955, 200, 100], "action": "push", "target": "mail"},
+        {"id": "open_event_banner", "rect": [40, 720, 880, 200], "action": "push", "target": "notice"},
+        {"id": "open_gacha", "rect": [1500, 24, 180, 64], "action": "push", "target": "gacha", "label": "ui.originals.gacha"},
+        {"id": "open_stamina", "rect": [1700, 24, 180, 64], "action": "popup", "target": "stamina_popup", "label": "ui.originals.stamina"}
+      ]
+    },
+    "chapter": {
+      "image": "res://assets/ui/originals/06_chapter.png",
+      "hotspots": [
+        {"id": "chapter_sakura", "rect": [56, 300, 864, 647], "action": "push", "target": "stage_map"}
+      ]
+    },
+    "stage_map": {
+      "image": "res://assets/ui/originals/07_stage_map.png",
+      "hotspots": [
+        {"id": "stage_node", "rect": [910, 550, 150, 100], "action": "push", "target": "stage_detail"},
+        {"id": "stage_panel", "rect": [1575, 262, 328, 736], "action": "push", "target": "stage_detail"}
+      ]
+    },
+    "stage_detail": {
+      "image": "res://assets/ui/originals/08_stage_detail.png",
+      "hotspots": [
+        {"id": "start_operation", "rect": [1406, 913, 441, 109], "action": "push", "target": "squad"}
+      ]
+    },
+    "squad": {
+      "image": "res://assets/ui/originals/09_squad.png",
+      "hotspots": [
+        {"id": "start_battle", "rect": [1459, 922, 382, 104], "action": "push", "target": "dialogue"}
+      ]
+    },
+    "result": {
+      "image": "res://assets/ui/originals/10_result.png",
+      "hotspots": [
+        {"id": "confirm_result", "rect": [1571, 952, 313, 83], "action": "reset", "target": "home"}
+      ]
+    },
+    "dialogue": {
+      "image": "res://assets/ui/originals/11_dialogue.png",
+      "back_rect": [24, 20, 160, 60],
+      "hotspots": [
+        {"id": "continue_dialogue", "rect": [0, 0, 1920, 1080], "action": "battle"}
+      ]
+    },
+    "roster": {
+      "image": "res://assets/ui/originals/12_roster.png",
+      "hotspots": [
+        {"id": "open_character", "rect": [141, 103, 275, 291], "action": "push", "target": "character"}
+      ]
+    },
+    "character": {
+      "image": "res://assets/ui/originals/13_character.png",
+      "hotspots": [
+        {"id": "open_upgrade", "rect": [1237, 919, 422, 93], "action": "push", "target": "upgrade"},
+        {"id": "open_gear", "rect": [1700, 930, 190, 72], "action": "push", "target": "gear", "label": "ui.originals.gear"}
+      ]
+    },
+    "upgrade": {
+      "image": "res://assets/ui/originals/14_upgrade.png",
+      "hotspots": []
+    },
+    "gear": {
+      "image": "res://assets/ui/originals/15_gear.png",
+      "hotspots": []
+    },
+    "gacha": {
+      "image": "res://assets/ui/originals/16_gacha.png",
+      "hotspots": []
+    },
+    "shop": {
+      "image": "res://assets/ui/originals/17_shop.png",
+      "hotspots": [
+        {"id": "close_shop", "rect": [1815, 10, 100, 95], "action": "back"}
+      ]
+    },
+    "missions": {
+      "image": "res://assets/ui/originals/18_missions.png",
+      "hotspots": []
+    },
+    "mail": {
+      "image": "res://assets/ui/originals/19_mail.png",
+      "back_rect": [24, 20, 160, 60],
+      "hotspots": []
+    },
+    "stamina_popup": {
+      "image": "res://assets/ui/originals/20_popup_stamina.png",
+      "popup": true,
+      "back": false,
+      "hotspots": [
+        {"id": "stamina_cancel", "rect": [666, 756, 262, 82], "action": "close_popup"},
+        {"id": "stamina_confirm", "rect": [994, 756, 262, 82], "action": "close_popup"}
+      ]
+    }
+  }
+}
