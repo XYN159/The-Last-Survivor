@@ -4,10 +4,10 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APK_PATH="${1:-${ROOT}/build/android/the-last-survivor-debug.apk}"
+APK_PATH="${1:-${ROOT}/build/android/touhou-forgotten-defense-debug.apk"
 SDK_PATH="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 JAVA_PATH="${JAVA_HOME:-}"
-KEYSTORE_PATH="${RUNNER_TEMP:-/tmp}/the-last-survivor-debug.keystore"
+KEYSTORE_PATH="${RUNNER_TEMP:-/tmp}/touhou-forgotten-defense-debug.keystore"
 
 if [[ -z "${SDK_PATH}" || -z "${JAVA_PATH}" ]]; then
 	echo "需要 ANDROID_HOME（或 ANDROID_SDK_ROOT）以及 JAVA_HOME。" >&2
