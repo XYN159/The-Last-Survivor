@@ -1,0 +1,14 @@
+rule_key,value,status,description_zh
+currency_name,记忆碎片,proposal,局外养成货币暂名，待文案策划确认；只能靠通关获得，没有任何购买渠道
+level_cost_formula,80+25*(n-1)+0*(n-1)^2,proposal,每个角色各自 1–20 级；n 级升 n+1 级的花费，取整到 5
+first_clear_formula,50+70*(L-1),proposal,第 L 关（全局序号）首通奖励，Boss 关再乘 boss_reward_mult，取整到 5
+boss_reward_mult,1.5,proposal,Boss 关首通奖励倍率
+star_reward,0,confirmed,星星只解锁外观和故事，不给任何资源（系统策划 PR #3）；补拿星靠重打
+focus_count_checked,3,proposal,模拟验证了两种分法：平均分给出战阵容 / 集中培养前 3 人，都不需要刷关
+repeat_ratio_2nd,0.5,proposal,第 2 次通关奖励比例
+repeat_ratio_3rd,0.3,proposal,第 3 次通关奖励比例
+repeat_ratio_floor,0.2,proposal,第 4 次起的保底比例
+catch_up_gap,3,proposal,比最高等级角色低这么多级及以上时享受追赶折扣
+catch_up_discount,0.5,proposal,追赶折扣（0.5 = 花费打 5 折）
+join_level_rule,avg_floor,proposal,新角色加入时等级 = 已有角色平均等级向下取整
+fail_reward,0,proposal,失败不给碎片，也不扣任何东西

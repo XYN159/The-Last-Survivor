@@ -6,6 +6,8 @@
 
 ### 变更
 
+- ch1_04 的 `threat_budget_coef` 定为 0.71，并删掉旁路系数。Boss 第 11 波登场，`boss_rules.hp_uses_level_mult` 为 false。扑人残影威胁点 3，飞行残影威胁点 2。Boss 的 `leak_damage` 只留在 `bosses` 段。
+- 叫波奖励一次最多 20。灵梦默认符卡写成梦符「封魔阵」。`stats.json` 补上嵌套的攻击字段和局内升级。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

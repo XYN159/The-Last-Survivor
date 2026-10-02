@@ -1,0 +1,954 @@
+{
+  "meta": {
+    "schema_version": 2,
+    "status": "filled_by_balance_design",
+    "owner": "balance_design",
+    "doc": "docs/design/combat/data_reference.md",
+    "numeric_doc": "docs/design/numeric/README.md",
+    "generated_by": "tools/numeric/gen_stats_json.py",
+    "source_tables": [
+      "data/characters.csv",
+      "data/enemies.csv",
+      "data/roguelite_buffs.csv",
+      "data/balance/battle_rules.csv",
+      "data/balance/combat_coefficients.csv",
+      "data/balance/level_difficulty.csv"
+    ],
+    "note_zh": "本文件由脚本从 CSV 生成，改数请改 CSV 后重跑 run_all.py 或 gen_stats_json.py，不要手改。用户已确认的值与 PR #4 占位冲突时一律以用户确认值为准（如灵梦攻击 20、硬残影护甲 10）。",
+    "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、in_battle_upgrade、economy.early_call_reward_cap、characters.*.max_copies/attack_interval_sec/range_cells/attack.{range_cells,interval_sec}/spell_energy_max/max_hp/block_count、enemies 与 bosses 各有 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge）。Boss 只在 bosses 段，leak_damage 不抄到 enemies。enemies.json 只留 ID 和表现。扁平的 attack_interval_sec / range_cells 和嵌套的 attack 是同一对数，旧的字段路径还能读。buffs.*.transform_at_stacks（叠到 2 层质变）、buff_offer（保底规则）、spell_charge.per_damage_by_level、stars 等。attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准。value_status: confirmed=用户已确认，其余为数值提议或占位，待用户拍板。"
+  },
+  "armor_floor_ratio": 0.2,
+  "min_damage": 1,
+  "caster_switch_clears_charge": true,
+  "rounding": "round_half_away_from_zero",
+  "guard": {
+    "max_hp": 20
+  },
+  "economy": {
+    "starting_spirit": 150,
+    "wave_clear_bonus": 20,
+    "early_call_reward_per_sec": 2,
+    "early_call_reward_cap": 20,
+    "early_start_reward_per_sec": 1,
+    "sell_refund_ratio_default": 0.7,
+    "copy_cost_increase_ratio_default": 0.5,
+    "max_copies_per_character": 3
+  },
+  "spell_charge": {
+    "energy_max_default": 100,
+    "per_damage": 0.04,
+    "per_damage_by_level": {
+      "prologue_01": 0.04,
+      "prologue_02": 0.0305,
+      "prologue_03": 0.0189,
+      "ch1_01": 0.0161,
+      "ch1_02": 0.0175,
+      "ch1_03": 0.0136,
+      "ch1_04": 0.0173,
+      "ch2_01": 0.00993,
+      "ch2_02": 0.0102,
+      "ch2_03": 0.0108,
+      "ch2_04": 0.0141,
+      "ch3_01": 0.0105,
+      "ch3_02": 0.00915,
+      "ch3_03": 0.00981,
+      "ch3_04": 0.00877,
+      "ch4_01": 0.00932,
+      "ch4_02": 0.00992,
+      "ch4_03": 0.00891,
+      "ch4_04": 0.00742,
+      "ch5_01": 0.0104,
+      "ch5_02": 0.00941,
+      "ch5_03": 0.0083,
+      "ch5_04": 0.00892,
+      "final_01": 0.0048
+    },
+    "per_damage_fallback": {
+      "base": 0.02,
+      "rule": "base_div_enemy_hp_multiplier"
+    },
+    "per_kill_default": 0.6,
+    "energy_start": 0,
+    "auto_release_default_on": false,
+    "manual_release_sim_rule_zh": "模拟里手动放的假设：充满后，场上敌人 ≥6 个、有 Boss、进入危急，或充满已等 8 秒且敌人 ≥3 个时，再过 1 秒反应时间放出",
+    "damage_share": 0.7,
+    "kill_share": 0.3,
+    "target_full_sec_normal": 60,
+    "crisis_charge_mult": 1.5
+  },
+  "stars": {
+    "thresholds_lives_left": [
+      20,
+      10,
+      1
+    ],
+    "rule_zh": "满生命 20/20 = 3 星；剩余 ≥10 = 2 星；通关 = 1 星。星星只解锁外观和故事，不给资源",
+    "gives_resources": false
+  },
+  "buff_offer": {
+    "every_n_waves": 5,
+    "choices": 3,
+    "transform_at_stacks_default": 2,
+    "guarantee_owned_untransformed": true,
+    "rule_zh": "已拥有但还没质变的强化，下一次三选一保底出现其中一个；最后一波之后那次三选一对本局无效"
+  },
+  "waves": {
+    "advance_mode": "spawn_window",
+    "spawn_window_sec": 20,
+    "gap_sec": 4,
+    "deploy_time_sec": 10,
+    "rule_zh": "每波刷怪窗口 20 秒，窗口结束 + 4 秒后下一波，不等清场（关卡策划 PR #5 ends_when = spawn_window）"
+  },
+  "boss_rules": {
+    "enter_waves_from_end": 10,
+    "on_reach_guard": "leak_then_loop",
+    "phase_hp_ratios": [
+      0.66,
+      0.33
+    ],
+    "phase_invuln_sec": 1.5,
+    "hp_uses_level_mult": false
+  },
+  "terrain": {
+    "ter_ice": {
+      "move_speed_mult": 1.5,
+      "stop_on_declare_sec": 2
+    },
+    "ter_fog": {
+      "range_minus_cells": 1,
+      "min_range_cells": 1,
+      "note_zh": "目标站在雾格上时，角色射程 −1 格（最少 1 格）。雾格和从第几波开始由关卡文件的 terrain 决定（PR #5 最新分支，和 PR #4 一致）"
+    }
+  },
+  "in_battle_upgrade": {
+    "max_level": 3,
+    "costs": [
+      50,
+      100
+    ],
+    "attack_mult_by_level": [
+      1.0,
+      1.4,
+      1.8
+    ],
+    "note_zh": "局内从 1 级升到 max_level。costs 是第 1 次、第 2 次升级的灵力。attack_mult_by_level 下标 0 是 1 级。和每个角色上的 upgrade_costs、level_attack_mult 相同。"
+  },
+  "level_scaling": {
+    "enemy_hp_mult_per_level": 0.15,
+    "wave_budget_base": 10,
+    "wave_budget_per_wave": 4,
+    "boss_threat_points": 0,
+    "upgrade_attack_pct": 0.4,
+    "buff_offer_every_n_waves": 5,
+    "buff_offer_choices": 3,
+    "meta_attack_per_level": 0.08,
+    "meta_level_max": 20,
+    "per_level_table": "data/balance/level_difficulty.csv"
+  },
+  "characters": {
+    "chr_reimu": {
+      "cost": 80,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 20,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1,
+      "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 1
+      },
+      "spell_energy_max": 100,
+      "value_status": "confirmed"
+    },
+    "chr_marisa": {
+      "cost": 120,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 45,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1.5,
+      "range_cells": 4,
+      "attack": {
+        "range_cells": 4,
+        "interval_sec": 1.5
+      },
+      "spell_energy_max": 100,
+      "value_status": "confirmed"
+    },
+    "chr_cirno": {
+      "cost": 60,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 10,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 0.8,
+      "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 0.8
+      },
+      "spell_energy_max": 90,
+      "value_status": "confirmed",
+      "normal_effect": {
+        "type": "slow_on_hit",
+        "value": 0.2,
+        "param": 1.5
+      }
+    },
+    "chr_daiyousei": {
+      "cost": 60,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 2,
+      "base_attack": 0,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0,
+      "crit_mult": 1,
+      "attack_interval_sec": 0,
+      "range_cells": 0,
+      "attack": {
+        "range_cells": 0,
+        "interval_sec": 0
+      },
+      "spell_energy_max": 80,
+      "value_status": "pending_producer",
+      "normal_effect": {
+        "type": "aura_aspd",
+        "value": 0.15,
+        "param": "neighbors_8"
+      }
+    },
+    "chr_meiling": {
+      "cost": 70,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 2,
+      "base_attack": 15,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1.2,
+      "range_cells": 1,
+      "attack": {
+        "range_cells": 1,
+        "interval_sec": 1.2
+      },
+      "spell_energy_max": 100,
+      "value_status": "partial",
+      "max_hp": 300,
+      "block_count": 2
+    },
+    "chr_sakuya": {
+      "cost": 100,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 12,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.1,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 0.5,
+      "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 0.5
+      },
+      "spell_energy_max": 150,
+      "value_status": "confirmed"
+    },
+    "chr_remilia": {
+      "cost": 150,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 1,
+      "base_attack": 60,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.1,
+      "crit_mult": 2,
+      "attack_interval_sec": 2.5,
+      "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 2.5
+      },
+      "spell_energy_max": 130,
+      "value_status": "pending_producer"
+    },
+    "chr_keine": {
+      "cost": 90,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 16,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1,
+      "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 1
+      },
+      "spell_energy_max": 110,
+      "value_status": "placeholder"
+    },
+    "chr_mokou": {
+      "cost": 110,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 18,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1,
+      "range_cells": 2,
+      "attack": {
+        "range_cells": 2,
+        "interval_sec": 1
+      },
+      "spell_energy_max": 110,
+      "value_status": "placeholder",
+      "normal_effect": {
+        "type": "splash",
+        "value": 0.6,
+        "param": 1
+      }
+    },
+    "chr_aya": {
+      "cost": 110,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.9,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 16,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.1,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 0.6,
+      "range_cells": 3.5,
+      "attack": {
+        "range_cells": 3.5,
+        "interval_sec": 0.6
+      },
+      "spell_energy_max": 110,
+      "value_status": "placeholder",
+      "normal_effect": {
+        "type": "bonus_vs_fast",
+        "value": 0.5,
+        "param": 1.4
+      }
+    },
+    "chr_sanae": {
+      "cost": 100,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 3,
+      "base_attack": 22,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1.3,
+      "range_cells": 3,
+      "attack": {
+        "range_cells": 3,
+        "interval_sec": 1.3
+      },
+      "spell_energy_max": 110,
+      "value_status": "placeholder",
+      "normal_effect": {
+        "type": "splash",
+        "value": 0.5,
+        "param": 1
+      }
+    },
+    "chr_yukari": {
+      "cost": 150,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 1,
+      "max_copies": 1,
+      "base_attack": 25,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1.5,
+      "range_cells": 3.5,
+      "attack": {
+        "range_cells": 3.5,
+        "interval_sec": 1.5
+      },
+      "spell_energy_max": 150,
+      "value_status": "proposal"
+    },
+    "chr_wasure": {
+      "cost": 130,
+      "upgrade_costs": [
+        50,
+        100
+      ],
+      "sell_refund_ratio": 0.7,
+      "copy_cost_increase_ratio": 0.5,
+      "max_copies": 1,
+      "base_attack": 18,
+      "level_attack_mult": [
+        1.0,
+        1.4,
+        1.8
+      ],
+      "crit_chance": 0.05,
+      "crit_mult": 1.8,
+      "attack_interval_sec": 1.3,
+      "range_cells": 2.5,
+      "attack": {
+        "range_cells": 2.5,
+        "interval_sec": 1.3
+      },
+      "spell_energy_max": 120,
+      "value_status": "proposal"
+    }
+  },
+  "enemies": {
+    "enm_shade_basic": {
+      "hp": 60,
+      "move_speed_cells_per_sec": 1,
+      "armor": 0,
+      "spirit_drop": 5,
+      "leak_damage": 1,
+      "threat_points": 1,
+      "kill_charge": 0.6,
+      "first_level_id": "prologue_01",
+      "value_status": "confirmed",
+      "block_dps": 8
+    },
+    "enm_shade_fast": {
+      "hp": 35,
+      "move_speed_cells_per_sec": 2,
+      "armor": 0,
+      "spirit_drop": 5,
+      "leak_damage": 1,
+      "threat_points": 1,
+      "kill_charge": 0.5,
+      "first_level_id": "ch1_01",
+      "value_status": "confirmed",
+      "block_dps": 5
+    },
+    "enm_shade_armored": {
+      "hp": 200,
+      "move_speed_cells_per_sec": 0.6,
+      "armor": 10,
+      "spirit_drop": 15,
+      "leak_damage": 2,
+      "threat_points": 4,
+      "kill_charge": 1.2,
+      "first_level_id": "ch1_03",
+      "value_status": "confirmed",
+      "block_dps": 15
+    },
+    "enm_shade_heavy": {
+      "hp": 150,
+      "move_speed_cells_per_sec": 0.8,
+      "armor": 25,
+      "spirit_drop": 12,
+      "leak_damage": 2,
+      "threat_points": 4,
+      "kill_charge": 1.2,
+      "first_level_id": "ch2_02",
+      "value_status": "placeholder",
+      "block_dps": 12
+    },
+    "enm_shade_swarm": {
+      "hp": 25,
+      "move_speed_cells_per_sec": 1.2,
+      "armor": 0,
+      "spirit_drop": 2,
+      "leak_damage": 1,
+      "threat_points": 0.5,
+      "kill_charge": 0.25,
+      "first_level_id": "ch3_01",
+      "value_status": "placeholder",
+      "block_dps": 3
+    },
+    "enm_shade_pouncer": {
+      "hp": 120,
+      "move_speed_cells_per_sec": 1.4,
+      "armor": 0,
+      "spirit_drop": 10,
+      "leak_damage": 1,
+      "threat_points": 3,
+      "kill_charge": 0.9,
+      "first_level_id": "ch3_01",
+      "value_status": "partial",
+      "block_dps": 8
+    },
+    "enm_shade_flying": {
+      "hp": 80,
+      "move_speed_cells_per_sec": 1.5,
+      "armor": 0,
+      "spirit_drop": 6,
+      "leak_damage": 1,
+      "threat_points": 2,
+      "kill_charge": 0.6,
+      "first_level_id": "ch4_01",
+      "value_status": "partial"
+    },
+    "enm_shade_phantom": {
+      "hp": 70,
+      "move_speed_cells_per_sec": 1.4,
+      "armor": 0,
+      "spirit_drop": 6,
+      "leak_damage": 1,
+      "threat_points": 2,
+      "kill_charge": 0.7,
+      "first_level_id": "ch4_01",
+      "value_status": "placeholder"
+    },
+    "enm_shade_heap": {
+      "hp": 800,
+      "move_speed_cells_per_sec": 0.5,
+      "armor": 8,
+      "spirit_drop": 40,
+      "leak_damage": 5,
+      "threat_points": 12,
+      "kill_charge": 2.5,
+      "first_level_id": "ch3_01",
+      "value_status": "placeholder",
+      "block_dps": 25
+    },
+    "enm_shade_rift": {
+      "hp": 500,
+      "move_speed_cells_per_sec": 0.8,
+      "armor": 15,
+      "spirit_drop": 30,
+      "leak_damage": 3,
+      "threat_points": 8,
+      "kill_charge": 2,
+      "first_level_id": "ch5_01",
+      "value_status": "placeholder",
+      "block_dps": 20
+    }
+  },
+  "bosses": {
+    "boss_cirno": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch1_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch2_sakuya_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch2_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch3_mokou_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch3_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch4_sanae_shade": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch4_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_ch5_gatekeeper": {
+      "hp": 3000,
+      "move_speed_cells_per_sec": 0.4,
+      "armor": 5,
+      "spirit_drop": 100,
+      "leak_damage": 10,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "ch5_04",
+      "value_status": "partial",
+      "block_dps": 50
+    },
+    "boss_wasure": {
+      "hp": 4000,
+      "move_speed_cells_per_sec": 0.35,
+      "armor": 10,
+      "spirit_drop": 200,
+      "leak_damage": 20,
+      "threat_points": 0,
+      "kill_charge": 0,
+      "first_level_id": "final_01",
+      "value_status": "proposal",
+      "block_dps": 80
+    }
+  },
+  "skills": {
+    "skl_reimu_barrier": {
+      "damage_coef": 0
+    },
+    "skl_cirno_freeze": {
+      "damage_coef": 0
+    },
+    "skl_yukari_gap_swap": {
+      "damage_coef": 0
+    },
+    "skl_meiling_hold": {
+      "damage_coef": 0
+    },
+    "skl_keine_hide_history": {
+      "damage_coef": 0,
+      "leak_block_per_stack": 1
+    },
+    "skl_wasure_register": {
+      "damage_coef": 0,
+      "helper_attack_coef": 0.5
+    },
+    "skl_daiyousei_mist_aura": {
+      "attack_speed_pct": 0.15
+    }
+  },
+  "statuses": {
+    "st_burn": {
+      "tick_damage_coef": 0.15
+    },
+    "st_barrier_mark": {
+      "vulnerability_add": 0.2
+    },
+    "st_slow": {
+      "max_strength": 0.7
+    }
+  },
+  "synergies": {
+    "syn_ice_shatter": {
+      "synergy_add": 1
+    },
+    "syn_ice_fire": {
+      "synergy_add": 0.5
+    },
+    "syn_sanae_outside_object": {
+      "synergy_add": 0.5
+    },
+    "syn_aya_vs_fast": {
+      "synergy_add": 0.5
+    }
+  },
+  "spell_cards": {
+    "sc_fantasy_seal": {
+      "damage_coef": 3,
+      "splash_coef": 0.5,
+      "orb_count": 7
+    },
+    "sc_evil_sealing_circle": {
+      "damage_coef": 0,
+      "slow_strength": 0.4,
+      "duration_sec": 3
+    },
+    "sc_master_spark": {
+      "damage_coef_per_tick": 0.5,
+      "ticks": 10
+    },
+    "sc_stardust_reverie": {
+      "damage_coef_per_tick": 0.35
+    },
+    "sc_perfect_freeze": {
+      "damage_coef": 1,
+      "freeze_sec": 2,
+      "radius_cells": 2.5,
+      "boss_slow_strength": 0.5
+    },
+    "sc_icicle_fall": {
+      "damage_coef_per_tick": 0.3
+    },
+    "sc_spiriting_away": {
+      "damage_coef": 0,
+      "max_targets": 12,
+      "boss_slow_strength": 0.5
+    },
+    "sc_quadruple_barrier": {
+      "damage_coef": 0
+    },
+    "sc_morning_mist": {
+      "damage_coef": 0
+    },
+    "sc_rainbow_dance": {
+      "damage_coef": 2.5,
+      "knockback_cells": 2
+    },
+    "sc_killing_doll": {
+      "damage_coef_per_knife": 0.6
+    },
+    "sc_the_world": {
+      "duration_sec": 3,
+      "stored_damage_mult": 1,
+      "boss_slow_strength": 0.7
+    },
+    "sc_gungnir": {
+      "damage_coef": 12
+    },
+    "sc_red_magic": {
+      "damage_coef": 3
+    },
+    "sc_modoribashi": {
+      "damage_coef": 0,
+      "send_back_cells": 3
+    },
+    "sc_legend_of_gensokyo": {
+      "duration_sec": 5
+    },
+    "sc_phoenix_wings": {
+      "damage_coef": 3
+    },
+    "sc_phoenix_rebirth": {
+      "damage_coef": 0
+    },
+    "sc_gensou_fuubi": {
+      "damage_coef": 1.5
+    },
+    "sc_autumn_leaf_fan": {
+      "damage_coef": 1
+    },
+    "sc_gray_thaumaturgy": {
+      "damage_coef": 2.5
+    },
+    "sc_yasaka_divine_wind": {
+      "damage_coef": 1.5
+    },
+    "sc_lost_and_found": {
+      "helper_attack_coef": 0.8
+    },
+    "sc_forgotten_song": {
+      "damage_coef": 0
+    }
+  },
+  "buffs": {
+    "buff_sharp_ofuda": {
+      "offer_weight": 14,
+      "max_stacks": 5,
+      "attack_pct_per_stack": 0.12
+    },
+    "buff_rapid_fire": {
+      "offer_weight": 12,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "interval_pct_per_stack": -0.08,
+      "burst_extra_attacks": 1
+    },
+    "buff_split_shot": {
+      "offer_weight": 10,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "split_damage_ratio": 0.3,
+      "starfall_sub_bullets": 6
+    },
+    "buff_piercing_star": {
+      "offer_weight": 10,
+      "max_stacks": 3,
+      "pierce_per_stack": 1
+    },
+    "buff_frost_frog": {
+      "offer_weight": 12,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "freeze_chance_per_stack": 0.05,
+      "shard_damage_coef": 0.5
+    },
+    "buff_crit_charm": {
+      "offer_weight": 10,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "crit_chance_per_stack": 0.07,
+      "explosion_coef": 0.4
+    },
+    "buff_spell_battery": {
+      "offer_weight": 10,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "charge_pct_per_stack": 0.12,
+      "refund_ratio_at_max": 0.25
+    },
+    "buff_spirit_greed": {
+      "offer_weight": 10,
+      "max_stacks": 3,
+      "spirit_per_kill_per_stack": 1
+    },
+    "buff_guard_mend": {
+      "offer_weight": 8,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "guard_heal_per_pick": 3,
+      "leak_reduction_at_max": 1
+    },
+    "buff_great_barrier": {
+      "offer_weight": 8,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "barrier_vuln_add_at_max": 0.1
+    },
+    "buff_combo_fever": {
+      "offer_weight": 6,
+      "max_stacks": 1,
+      "attack_pct_per_10_combo": 0.05,
+      "cap_pct": 0.3
+    },
+    "buff_gap_eye": {
+      "offer_weight": 8,
+      "max_stacks": 3,
+      "transform_at_stacks": 2,
+      "cooldown_pct_per_stack": -0.12
+    },
+    "buff_boss_slayer": {
+      "offer_weight": 4,
+      "max_stacks": 1,
+      "boss_synergy_add": 0.3,
+      "value_status": "numeric_proposal_new_buff_behavior_pending_combat_design"
+    },
+    "buff_armor_break": {
+      "offer_weight": 4,
+      "max_stacks": 2,
+      "armor_break_per_stack": 5,
+      "value_status": "numeric_proposal_new_buff_behavior_pending_combat_design"
+    },
+    "buff_offering_box": {
+      "offer_weight": 8,
+      "max_stacks": 5,
+      "spirit_on_pick": 120,
+      "value_status": "numeric_proposal_new_buff_behavior_pending_combat_design"
+    },
+    "buff_upgrade_discount": {
+      "offer_weight": 4,
+      "max_stacks": 1,
+      "upgrade_cost_pct": -0.3,
+      "value_status": "numeric_proposal_new_buff_behavior_pending_combat_design"
+    },
+    "buff_spell_power": {
+      "offer_weight": 4,
+      "max_stacks": 1,
+      "spell_damage_pct": 0.3,
+      "value_status": "numeric_proposal_new_buff_behavior_pending_combat_design"
+    }
+  }
+}

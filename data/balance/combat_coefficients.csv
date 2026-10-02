@@ -1,0 +1,55 @@
+section,id,field,value,unit,status,notes_zh
+skills,skl_reimu_barrier,damage_coef,0,ratio,proposal,结界本身不造成伤害；增伤走 statuses.st_barrier_mark
+skills,skl_cirno_freeze,damage_coef,0,ratio,proposal,冰结只冻结不造成伤害
+skills,skl_yukari_gap_swap,damage_coef,0,ratio,proposal,隙间换位不造成伤害
+skills,skl_meiling_hold,damage_coef,0,ratio,proposal,拦住不造成伤害（美铃是否阻挡见 characters.csv 备注的冲突）
+skills,skl_keine_hide_history,damage_coef,0,ratio,proposal,
+skills,skl_keine_hide_history,leak_block_per_stack,1,count,proposal,每层护盾挡掉 1 次漏怪（不论这只怪扣几点）
+skills,skl_wasure_register,damage_coef,0,ratio,proposal,
+skills,skl_wasure_register,helper_attack_coef,0.5,ratio,proposal,失物帮手攻击 = 忘的攻击 × 50%
+skills,skl_daiyousei_mist_aura,attack_speed_pct,0.15,ratio,proposal,周围角色攻速 +15%（2 级 +20%），光环类（aura）
+statuses,st_burn,tick_damage_coef,0.15,ratio,proposal,每跳 = 施加者攻击 × 15%，0.5 秒一跳、3 秒 6 跳 = 90%；不暴击，照常算护甲和最少 1 点
+statuses,st_barrier_mark,vulnerability_add,0.2,ratio,proposal,结界里的敌人易伤桶 +0.2（PR #4 草案值，数值确认沿用）
+statuses,st_slow,max_strength,0.7,ratio,proposal,减速强度上限 70%（PR #4 草案值，数值确认沿用）
+synergies,syn_ice_shatter,synergy_add,1.0,ratio,proposal,冰碎：魔理沙打冻住的敌人，联动桶 +1.0（×2），并解除冻结
+synergies,syn_ice_fire,synergy_add,0.5,ratio,proposal,冰火交加 +0.5（PR #4 草案值）
+synergies,syn_sanae_outside_object,synergy_add,0.5,ratio,proposal,早苗普攻对「外界之物」+0.5（PR #4 草案值）
+synergies,syn_aya_vs_fast,synergy_add,0.5,ratio,proposal,数值这边的补充：文普攻对快的敌人 +0.5，放联动桶，待战斗策划确认
+spell_cards,sc_fantasy_seal,damage_coef,3.0,ratio,proposal,灵梦默认符卡：7 颗光弹，每颗 300%（PR #4 占位 400%，灵梦攻击从 10 改为 20 后下调）
+spell_cards,sc_fantasy_seal,splash_coef,0.5,ratio,proposal,0.8 格溅射 50%
+spell_cards,sc_fantasy_seal,orb_count,7,count,proposal,
+spell_cards,sc_evil_sealing_circle,damage_coef,0,ratio,confirmed,用户确认的灵梦符卡：范围内减速 40% 持续 3 秒，不造成伤害。PR #4 写的是拦住 2 秒 + 5×5 结界，冲突待拍板
+spell_cards,sc_evil_sealing_circle,slow_strength,0.4,ratio,confirmed,
+spell_cards,sc_evil_sealing_circle,duration_sec,3.0,sec,confirmed,
+spell_cards,sc_master_spark,damage_coef_per_tick,0.5,ratio,confirmed,用户确认合计 500%：10 跳 × 50%（PR #4 占位每跳 120%，合计 1200%，以用户为准）
+spell_cards,sc_master_spark,ticks,10,count,proposal,1.5 秒、每 0.15 秒一跳（PR #4）
+spell_cards,sc_stardust_reverie,damage_coef_per_tick,0.35,ratio,proposal,8 跳合计 280%
+spell_cards,sc_perfect_freeze,damage_coef,1.0,ratio,proposal,先打 100% 再冻结
+spell_cards,sc_perfect_freeze,freeze_sec,2.0,sec,confirmed,用户确认冻 2 秒（PR #4 写 3 秒）
+spell_cards,sc_perfect_freeze,radius_cells,2.5,cell,proposal,PR #4 草案值
+spell_cards,sc_perfect_freeze,boss_slow_strength,0.5,ratio,proposal,Boss 改为减速 50%
+spell_cards,sc_icicle_fall,damage_coef_per_tick,0.3,ratio,proposal,8 跳合计 240% + 减速 60% 4 秒
+spell_cards,sc_spiriting_away,damage_coef,0,ratio,proposal,
+spell_cards,sc_spiriting_away,max_targets,12,count,proposal,PR #4 写 15，数量归数值，提议 12
+spell_cards,sc_spiriting_away,boss_slow_strength,0.5,ratio,proposal,Boss 减速 50% 4 秒
+spell_cards,sc_quadruple_barrier,damage_coef,0,ratio,proposal,
+spell_cards,sc_morning_mist,damage_coef,0,ratio,proposal,全队攻速 +30% 8 秒（PR #4）
+spell_cards,sc_rainbow_dance,damage_coef,2.5,ratio,proposal,PR #4 占位 200%，提议 250%
+spell_cards,sc_rainbow_dance,knockback_cells,2.0,cell,proposal,PR #4 草案值
+spell_cards,sc_killing_doll,damage_coef_per_knife,0.6,ratio,proposal,24 把 × 60%
+spell_cards,sc_the_world,duration_sec,3.0,sec,confirmed,用户确认全场停 3 秒
+spell_cards,sc_the_world,stored_damage_mult,1.0,ratio,proposal,时停中记账的伤害结束时 ×1.0 结算（不额外加成，时停本身已经够强）
+spell_cards,sc_the_world,boss_slow_strength,0.7,ratio,proposal,Boss 改为减速 70%
+spell_cards,sc_gungnir,damage_coef,12.0,ratio,proposal,蕾米莉亚是否可玩待定
+spell_cards,sc_red_magic,damage_coef,3.0,ratio,proposal,
+spell_cards,sc_modoribashi,damage_coef,0,ratio,proposal,
+spell_cards,sc_modoribashi,send_back_cells,3.0,cell,proposal,守护点前 5 格的敌人往回送 3 格（PR #4）
+spell_cards,sc_legend_of_gensokyo,duration_sec,5.0,sec,proposal,守护点 5 秒不受漏怪伤害
+spell_cards,sc_phoenix_wings,damage_coef,3.0,ratio,proposal,每个敌人一次 300% + 灼烧 4 秒
+spell_cards,sc_phoenix_rebirth,damage_coef,0,ratio,proposal,只生成火焰地面，伤害走 st_burn
+spell_cards,sc_gensou_fuubi,damage_coef,1.5,ratio,proposal,每个敌人两次，每次 150%（PR #4 占位 200%）
+spell_cards,sc_autumn_leaf_fan,damage_coef,1.0,ratio,proposal,
+spell_cards,sc_gray_thaumaturgy,damage_coef,2.5,ratio,proposal,5 次爆炸，每次 250%，半径 1.2 格
+spell_cards,sc_yasaka_divine_wind,damage_coef,1.5,ratio,proposal,全场 150%，外界之物联动桶 +1.0
+spell_cards,sc_lost_and_found,helper_attack_coef,0.8,ratio,proposal,
+spell_cards,sc_forgotten_song,damage_coef,0,ratio,proposal,
