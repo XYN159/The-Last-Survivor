@@ -41,14 +41,14 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
 theme_override_font_sizes/font_size = 64
-text = "东方守幻录"
+text = "ui.menu.title"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.74, 0.42, 1)
 theme_override_font_sizes/font_size = 36
-text = "Touhou Forgotten Defense"
+text = "ui.menu.subtitle"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="CenterColumn"]
@@ -57,13 +57,13 @@ custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 42
-text = "开始"
+text = "ui.menu.start"
 
 [node name="HintLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
 theme_override_font_sizes/font_size = 26
-text = "占位原型。角色塔防正在开发。"
+text = "ui.menu.hint"
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -79,6 +79,6 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.6, 0.64, 0.66, 1)
 theme_override_font_sizes/font_size = 24
-text = "v0.1.0"
+text = "ui.menu.version"
 horizontal_alignment = 1
 vertical_alignment = 1

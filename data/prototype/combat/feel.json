@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "prototype",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/feedback.md"
+  },
+  "hit_flash": {
+    "duration_sec": 0.08,
+    "color": "#FFFFFF",
+    "strength": 0.85
+  },
+  "damage_numbers": {
+    "normal_color": "#FFFFFF",
+    "heavy_color": "#FFD23F",
+    "normal_font_px": 34,
+    "heavy_font_px": 48,
+    "rise_px": 60,
+    "lifetime_sec": 0.6,
+    "max_on_screen": 40
+  },
+  "guard_damage_vignette": {
+    "duration_sec": 0.4,
+    "color": "#FF0000",
+    "max_alpha": 0.45
+  }
+}

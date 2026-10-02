@@ -9,14 +9,14 @@ func after_each() -> void:
 		directory.remove(_TEMP_NAME)
 
 
-func test_round_trip_keeps_squad_and_supplies() -> void:
+func test_round_trip_keeps_the_saved_dictionary() -> void:
 	var path := "user://%s" % _TEMP_NAME
-	var payload := {"squad_size": 4, "supplies": 12}
+	var payload := {"lives": 4, "spirit": 12}
 	var error := SaveGame.save_to_file(path, payload)
 	assert_eq(error, OK)
 	var loaded := SaveGame.load_from_file(path)
-	assert_eq(int(loaded["squad_size"]), 4)
-	assert_eq(int(loaded["supplies"]), 12)
+	assert_eq(int(loaded["lives"]), 4)
+	assert_eq(int(loaded["spirit"]), 12)
 
 
 func test_missing_file_returns_empty_dictionary() -> void:
