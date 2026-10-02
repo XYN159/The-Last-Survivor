@@ -28,7 +28,7 @@
 | 美术策划 | 第 10 节 `art-designer` | [bc-f9d00968-aefa-521c-b290-c66b48800915](https://cursor.com/agents/bc-f9d00968-aefa-521c-b290-c66b48800915) |
 | 游戏测试 | 第 13 节 `qa-tester` | [bc-44ef6f13-a35e-52a3-b0c2-0db173efc126](https://cursor.com/agents/bc-44ef6f13-a35e-52a3-b0c2-0db173efc126) |
 
-动效师（第 11 节 `ui-motion-designer`）还没有单独的 agent。带界面的 PR 要审时，按 `ROLES.md` 第 11 节另开一个，评论开头「【动效师审核】」。不要把动效审派给美术策划。
+动效师（第 11 节 `ui-motion-designer`）还没有常驻 agent。带界面的 PR 要审时，按 `ROLES.md` 第 11 节另开一个，评论开头「【动效师审核】」。不要把动效审派给美术策划。#12 这一轮另开的是 [bc-04f23713-8a1c-515d-b28d-8e4e7d211378](https://cursor.com/agents/bc-04f23713-8a1c-515d-b28d-8e4e7d211378)，只审这一轮。
 
 ## 1. 已定，不再问用户
 
@@ -83,13 +83,25 @@
 - **#2、#3**：这次没有新的已定修改。#2 仍等 #4、#5 进 `main` 再合。
 - **#12、#14**：见第 4、5 节。不在上表的顺序里。
 
-## 4. PR #12（T-00 原型）要返工
+## 4. PR #12（T-00 原型）返工已交，待复审
 
 - PR：https://github.com/XYN159/Touhou-forgotten-defense/pull/12
 - 分支：`cursor/battle-core-prototype-d174`
-- head：`452f1b3`（草稿）
-- agent：https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174
-- 正式审核已经补上：[战斗策划](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132717)、[执行制作人汇总](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812)。评论 `5945898325` 是更早的一份战斗验收，和后来的更正有冲突，不以它为返工清单。
+- 返工 head：`b5b3bed`（已不是草稿）。上一轮「需要返工」看的是 `452f1b3`，不作为这一版的结论。
+- 返工由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到原 PR。它说本地 lint 和 GUT 33/33 通过，但没能改 PR 描述，也没能留言。执行制作人还没有汇总。等下面的复审到齐再写「可以合并」或「需要返工」。
+- 原原型 agent：[bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)
+- 上一轮正式审核：[战斗策划](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132717)、[执行制作人汇总](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812)。评论 `5945898325` 是更早的一份战斗验收，和后来的更正有冲突，不以它为返工清单。
+
+2026-10-02 已按第 4.1 节派出复审，只看 `b5b3bed`。分派时，第 0.1 节里的战斗策划和数值策划正在跑更早的任务，关卡、文案、游戏测试当时空闲，follow-up 没有附到那些原 agent 上，这一轮实际在审的是下面这些。动效师按第 11 节另开，东方字体和 Theme 归 T-20，不挡这个色块原型。
+
+| 角色 | 这一轮实际在审 |
+| --- | --- |
+| 战斗策划 | [bc-3b0c8fde-57b3-5820-a844-54c36f207d07](https://cursor.com/agents/bc-3b0c8fde-57b3-5820-a844-54c36f207d07) |
+| 数值策划 | [bc-8f07b024-f775-543e-88e9-8cde9b93c939](https://cursor.com/agents/bc-8f07b024-f775-543e-88e9-8cde9b93c939) |
+| 关卡策划 | [bc-44b1f8f0-2cae-5268-99df-8759e291015d](https://cursor.com/agents/bc-44b1f8f0-2cae-5268-99df-8759e291015d) |
+| 文案策划 | [bc-6664af32-85c4-582d-a3d9-10477ad558af](https://cursor.com/agents/bc-6664af32-85c4-582d-a3d9-10477ad558af) |
+| 游戏测试 | [bc-9c0a15aa-e590-568c-8a41-6a1d1a5c0cbd](https://cursor.com/agents/bc-9c0a15aa-e590-568c-8a41-6a1d1a5c0cbd) |
+| 动效师 | [bc-04f23713-8a1c-515d-b28d-8e4e7d211378](https://cursor.com/agents/bc-04f23713-8a1c-515d-b28d-8e4e7d211378) |
 
 要合并的评论（以这些为准，互相打架时以下面的返工清单为准）：
 
@@ -118,7 +130,7 @@
 9. **正式表依赖 #4、#5、#8。** 注释和 ADR 里写清楚。`USE_OFFICIAL_TABLES` 打开时，缺文件或缺关键字段用 `push_error`，不要悄悄用默认值。
 10. **删掉旧车道的 GUT 用例**：`tests/unit/test_scenes.gd` 第 30–37 行，以及 `test_balance_config.gd`、`test_save_game.gd` 里还在保护小队和物资的断言。
 
-改完把草稿 PR 转为 ready for review，再请各角色复审。
+草稿已经转为 ready for review。复审已派出，见本节开头的表。
 
 ### 4.2 可选，不挡这一轮合并
 
@@ -191,11 +203,11 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 已经做完、不要再派：
 
 - **#14 / T-19a**：乱码由 agent [bc-97f23ac2-10b8-503a-917f-c8fc5d4870ca](https://cursor.com/agents/bc-97f23ac2-10b8-503a-917f-c8fc5d4870ca) 在 `01fe51c` 修好。四人 v2 已写进 PR。等用户合并。
-- **#12 的审核**：战斗策划和执行制作人汇总已经留在 PR 上，结论是需要返工。
+- **#12 的上一轮审核**：针对 `452f1b3`，结论是需要返工。返工已经推到 `b5b3bed`。
 
 正在做：
 
-- **#12 返工**：应发回原原型 agent [bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)。2026-10-02 直接派工时，工具新开了 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)。提示词要求它改原来的 PR #12，不要新开 PR，也不要由制作人改 `scripts/`。
+- **#12 复审**：看 `b5b3bed`。这一轮的审核 agent 见第 4 节的表。评论到齐之前，执行制作人不写「可以合并」。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
@@ -209,4 +221,4 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 GitHub 整理员是 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344)。原来靠 Grok Bot 的 GitHub 触发例程叫醒，该例程已暂停。状态页过期时，由执行制作人直接给它发消息。它只维护 `docs/PR_STATUS.md`，不合并。
 
-策划和测试的分派名单在第 0.1 节。动效师需要时另开。用户还没回复的拍板见第 6 节。D-01 已定，不要再问。只有用户能合并。
+策划和测试的常驻名单在第 0.1 节。#12 这一轮复审没有附到那些原 agent 上，实际审核链接见第 4 节。动效师需要时另开。用户还没回复的拍板见第 6 节。D-01 已定，不要再问。只有用户能合并。

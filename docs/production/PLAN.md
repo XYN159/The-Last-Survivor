@@ -9,7 +9,7 @@
 
 | 任务 | agent | 状态 | 说明 |
 | --- | --- | --- | --- |
-| T-00 塔防核心原型 | https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174 | 返工进行中，PR #12 @ `452f1b3` | 返工清单见 [`HANDOFF.md`](HANDOFF.md) 第 4 节。本轮执行是 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)，要求它改原 PR，不新开 |
+| T-00 塔防核心原型 | https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60 | 返工已推到 PR #12 @ `b5b3bed`，待复审 | 清单和这一轮审核 agent 见 [`HANDOFF.md`](HANDOFF.md) 第 4 节。还没汇总 |
 | T-19a 角色概念图 | https://cursor.com/agents/bc-97f23ac2-10b8-503a-917f-c8fc5d4870ca | PR #14 @ `01fe51c`，等用户合并 | 四人 v2、半褪 v2、总览中文已修好。不要再派这个活 |
 | 修 CI（`ci/export_android_debug.sh`） | https://cursor.com/agents/bc-5cebddf9-0607-573d-bec7-3435cd202717 | 进行中，PR #7 | 改名提交 `7818316` 让第 7 行丢了 `}`，main 上 export-android 一直是红的 |
 | GitHub 整理员 | https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344 | 触发例程已暂停 | 状态刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)。只维护 `docs/PR_STATUS.md`，不合并 |
@@ -38,7 +38,7 @@
 - **已改完，可以合并**：#3、#4、#6、#8。#2 的文字也改完了，但要等 #4、#5 合并后再合。#4 的空档已改成窗口结束后固定 4 秒（`ad8ab29`）。#6 的默认符卡已按 D-04 写成定案（`fe0f3d5`）。
 - **#5**：`enter_wave` 已是 11（`822ae26`）。出怪数量还没按 #8 锁定的 0.74 重排。
 - **#8**：ch1_04 系数锁定 0.74（`ac47c18`）。第 11 波登场，血量不加成。叫波一次最多 +20。第 2 到 5 章首领关还没按新规则重跑。
-- **#12**（T-00 原型）：在返工，清单见 [`HANDOFF.md`](HANDOFF.md) 第 4 节。不插进下面的设计文档顺序。
+- **#12**（T-00 原型）：返工已推到 `b5b3bed`，正在复审。清单见 [`HANDOFF.md`](HANDOFF.md) 第 4 节。不插进下面的设计文档顺序。
 - **#13**（角色手册）：待用户审核。建议和 #11 一起看，或者紧跟在 #11 后面。
 - **#14**（T-19a 概念图）：用户已选定四人 v2、紫的半褪用 v2。`01fe51c` 已用仓库里的 Noto Sans SC 重画总览中文，并写明选定版本。不插进下面的设计文档顺序。等用户合并。
 
@@ -143,7 +143,7 @@
 
 ## 4. MVP 开发任务
 
-T-00 是 PR #12，正在返工。下面 T-01 起都排在它后面，按顺序开工。每个任务一个 Cursor cloud agent、一个 PR。
+T-00 是 PR #12，返工已推到 `b5b3bed`，正在复审。下面 T-01 起都排在它合并之后，按顺序开工。每个任务一个 Cursor cloud agent、一个 PR。
 
 文中路径都是设计 PR 合并后在 main 上的位置。没合并之前，到对应分支去读。
 
@@ -154,9 +154,9 @@ T-00 是 PR #12，正在返工。下面 T-01 起都排在它后面，按顺序�
 | 关卡表 | `data/levels/*.json` |
 | 文本表 | `data/text/*.csv` |
 
-### T-00 塔防核心原型（PR #12，返工中）
+### T-00 塔防核心原型（PR #12，返工已交，待复审）
 
-- **说明**：网格地图、残影沿路线走、在 `.` 格放角色自动攻击、灵力、生命、波次、胜负、色块占位。head `452f1b3`。
+- **说明**：网格地图、残影沿路线走、在 `.` 格放角色自动攻击、灵力、生命、波次、胜负、色块占位。返工 head `b5b3bed`。
 - **返工**（完整清单和评论链接见 [`HANDOFF.md`](HANDOFF.md) 第 4 节）：
   - 放置改成先点格子再点头像。
   - `waves[0].delay_sec = 0`，去掉首波特判；`duration_sec` 当 20 秒窗口；两波间隔固定 4 秒；删 `intermission_min_sec` / `intermission_max_sec`；波内 `interval_sec` 按数量摊在 20 秒内。
