@@ -9,7 +9,7 @@ route_markers,地图,路线可读性：方向箭头「〉」+入口形状标记�
 reimu_parts,角色,灵梦棋盘小人拆件（头/身体/前后手/御币/袖子）+ idle/attack/place 动画,整体160×192 / 320×384；图集≤1024×1024,assets/textures/characters/reimu/,P0,自绘,未开始,PR #4 sprite_variant reimu_lv1
 marisa_parts,角色,魔理沙棋盘小人拆件（头帽/身体/手/扫帚/八卦炉）+ 动画,整体160×192 / 320×384,assets/textures/characters/marisa/,P0,自绘,未开始,PR #4 sprite_variant marisa_lv1
 cirno_parts,角色,琪露诺棋盘小人拆件（头/身体/手/冰晶翅膀）+ 动画；首领版共用,整体160×192 / 320×384,assets/textures/characters/cirno/,P0,自绘,未开始,打完 ch1_01 后加入（PR #4 unlock=ch1_01_clear）。首领冰之残影复用这套拆件，scale 1.5，再叠着色器 shade_ice_boss，不另画本体
-yukari_parts,角色,八云紫棋盘小人拆件（头帽/身体/手/洋伞/扇子）+ 动画；待机身边飘小隙间gap_small_eyes,整体160×200 / 320×400（比其他人略高）,assets/textures/characters/yukari/,P0,自绘,未开始,打完 ch1_04 后以弱化状态加入（PR #4 unlock=chapter1_boss_clear）。首通用不上，重打才能放，拆件仍是 P0。弱化表现见 yukari_faded（名称待文案术语表，文件名是占位）
+yukari_parts,角色,八云紫棋盘小人拆件（头帽/身体/手/洋伞/扇子）+ 动画；待机身边飘小隙间gap_small_eyes,整体160×200 / 320×400（比其他人略高）,assets/textures/characters/yukari/,P0,自绘,未开始,打完 ch1_04 后以弱化状态加入（PR #4 unlock=chapter1_boss_clear）。首通用不上，重打才能放，拆件仍是 P0。弱化表现见 yukari_halffaded。半褪（文案暂定，待制作人确认）。从 ch1_04 持续到 ch5_04。袖口褪色必须画出
 shade_basic,残影,小残影：圆形旧物团，灰白半透明+噪点,80×80 / 160×160,assets/textures/enemies/shade_basic.png,P0,自绘,未开始,ID enm_shade_basic。文件名去掉 enm_ 前缀。不沿用旧贴图字段名
 shade_fast,残影,快残影：细长的褪色玩具,64×100 / 128×200,assets/textures/enemies/shade_fast.png,P0,自绘,未开始,ID enm_shade_fast。文件名 shade_fast.png（去掉 enm_）。enemies.json 的 sprite 仍写 shade_toy，美术不跟那个名字
 shade_armored,残影,硬残影：方块厚重的旧电器,112×104 / 224×208,assets/textures/enemies/shade_armored.png,P0,自绘,未开始,ID enm_shade_armored。文件名去掉 enm_。已定进 MVP，保持 P0。关卡数据 ch1_03 首次登场，共 8 只：第 6 到第 11 波各 1 只，第 12 波左右各 1 只。其他 MVP 关不出
@@ -62,11 +62,11 @@ bg_shrine,地图,序章背景和左右装饰（神社院子）,1440×2340（导�
 bg_lake,地图,第一章背景和左右装饰（湖面和雾）,1440×2340（导出1倍）,assets/textures/tiles/lake/bg_lake.png,P1,自绘或CC0,未开始,
 ui_meta_upgrade,界面,局外养成（角色1-20级）框架,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #3 资源名未定
 ui_settings,界面,设置：符卡演出长短、震屏开关,面板复用,assets/textures/ui/,P1,自绘,未开始,PR #4 spell_cards 2.3
-yukari_faded,特效,八云紫弱化（名称待文案术语表）：袖口等边缘褪成灰，局部降低饱和度。主体保持鲜艳，不整体灰白，不半透明,叠在 yukari 拆件上,assets/textures/vfx/yukari_faded.png 或着色器,P1,自绘/程序,未开始,文件名 yukari_faded 是占位。正式名字和状态 ID 等文案术语表。PR #2：ch1_04 救场被冰之残影碰到，力量褪色，弱化跟队，第五章恢复全力。不能看起来像残影
+yukari_halffaded,特效,八云紫「半褪」（文案暂定，待制作人确认）：袖口褪色必须画出，隙间只能半开，局部降低饱和度。主体保持鲜艳，不整体灰白，不半透明,叠在 yukari 拆件上,assets/textures/vfx/yukari_halffaded.png 或着色器,P1,自绘/程序,未开始,文本 key state.yukari_halffaded.name。从 ch1_04 持续到 ch5_04：替人挡下冰之残影一击，被碰到的部分褪色，ch5_04 恢复全力。名称待制作人最终确认，改名只影响文本，不影响资源。不能看起来像残影
 pal_reimu_alt,外观（星星解锁）,博丽灵梦满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/reimu/pal_reimu_alt.png,P1,自绘,未开始,序章全部3星解锁。衣服造型不变，只换配色，小人和头像都不重画。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
 pal_marisa_alt,外观（星星解锁）,雾雨魔理沙满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/marisa/pal_marisa_alt.png,P1,自绘,未开始,序章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
 pal_cirno_alt,外观（星星解锁）,琪露诺满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/cirno/pal_cirno_alt.png,P1,自绘,未开始,第一章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。导入：无损、关 mipmap、Nearest
-pal_yukari_alt,外观（星星解锁）,八云紫满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/yukari/pal_yukari_alt.png,P1,自绘,未开始,第一章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。和弱化状态 yukari_faded 不是同一张
+pal_yukari_alt,外观（星星解锁）,八云紫满星换色调色板：横条，第1行原色、第2行替换色,宽16×高2（不放大）,assets/textures/characters/yukari/pal_yukari_alt.png,P1,自绘,未开始,第一章全部3星解锁。衣服造型不变，只换配色。头像和立绘共用这张。不能用灰白或半透明。和弱化状态 yukari_halffaded 不是同一张
 palette_swap,着色器,调色板替换：按原色行找到颜色，换成替换色行。套在拆件、头像和立绘上,—,（着色器，程序做）,P1,程序,未开始,首选做法，零重画。若实机色块对不齐、边缘发脏，再退回导出换色后的 PNG 副本。见风格指南第8节
 icicle_pillar,地形,一阶段冰柱：落在放置格上，挡直线12秒，灰白冰蓝+褪色噪点,128×192 / 256×384,assets/textures/terrain/icicle_pillar.png,P1,自绘,未开始,ter_icicle。挡住直线 12 秒是障碍时长。格上角色被冻 2 秒。不是右列冰面
 ui_slot_bubble,界面,长按放置格的符纸气泡：显示 label 和 why,最大宽420，高约120-160 / 2倍九宫格,assets/textures/ui/ui_slot_bubble.png,P1,自绘,未开始,例：分叉之前 / 只贴左路。不画常驻角标。待确认8，待制作人定

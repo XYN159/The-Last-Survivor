@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 紫的弱化状态暂定名为「半褪」（文本 key `state.yukari_halffaded.name`），资源文件名改为 `yukari_halffaded`。从 `ch1_04` 持续到 `ch5_04`。名称待制作人最终确认，改名只影响文本，不影响资源。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

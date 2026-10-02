@@ -154,7 +154,7 @@ main 上的 `project.godot` **没有写** `default_texture_filter`。Godot 4 不
    - 冰色残影着色器的美术侧名字是 `shade_ice_boss`。`bosses.json` 的 `visual` 里还没有 shader 字段。
    - 守护点用 PR #5 的 `guard_point.id` 去掉点号：`guard_hakurei_offering_box.png`、`guard_misty_lake_frogs.png`。
    - 满星换色调色板：`pal_<角色短名>_alt.png`，放在该角色目录下。换色着色器是 `palette_swap`（见风格指南第 8 节）。
-   - 紫的弱化表现文件名先用占位 `yukari_faded`。正式状态名等文案术语表，到时候再改文件名。
+   - 紫的弱化表现文件名是 `yukari_halffaded`，对齐文本 key `state.yukari_halffaded.name`。半褪（文案暂定，待制作人确认）。名称待制作人最终确认，改名只影响文本，不影响资源。
 4. 同一个东西的占位图和正式图**用同一个文件名**，换图就是覆盖文件，不改代码。
 
 例子：
@@ -214,7 +214,7 @@ assets/textures/
 | 快残影 | 灰白半透明竖椭圆 | 同上 |
 | 硬残影 | 灰白半透明方块，描边加粗 | 同上 |
 | 冰之残影 | 比琪露诺大 1.5 倍的圆角矩形，灰白偏冰蓝，不透明度约 75%，上面几道裂纹。字写「冰」 | `#D7E7F2` |
-| 紫的弱化（`yukari_faded`，名称待文案） | 紫的占位块不变，袖口和裙摆边缘盖一条灰。身体仍是饱和的紫，不透明 | 边缘灰 `#A7A3AE`，身体 `#7A4FB0` |
+| 半褪（文案暂定，待制作人确认）（`yukari_halffaded`） | 紫的占位块不变。袖口必须盖一条灰。隙间只画半开。身体仍是饱和的紫，不透明。状态从 `ch1_04` 持续到 `ch5_04` | 袖口灰 `#A7A3AE`，身体 `#7A4FB0` |
 | 路线格 | 土黄色方块 | `#C9B79C` |
 | 空地 | 草绿色方块，四周浅色边框 | `#7FB069`，边框 `#DDEBC8` |
 | 障碍 | 深灰方块 | `#4A4A4A` |
@@ -257,4 +257,4 @@ assets/textures/
 | 13 | 项目默认纹理过滤和 mipmap | **已定（执行制作人 2026-10-02）**：手绘平涂，默认 Linear，不开 mipmap。缩到 50% 以下的大图才单独开 mipmap | 项目设置 `rendering/textures/canvas_textures/default_texture_filter` = Linear。导入 `mipmaps/generate=false`。压缩方式见第 3 节。main 上没写过滤项，默认已是 Linear，本 PR 不改 `project.godot` | — |
 | 14 | 源文件放哪 | **已定（执行制作人 2026-10-02）**：`.kra`、`.psd`、`.clip` 和分层工程不进主仓库，也不进 Git LFS。主仓库只放导出的 PNG / WebP | 建议的 `.gitignore` 写在第 5 节。根目录 `.gitignore` 本 PR 不改 | — |
 | 18 | 星星解锁哪几种外观 | **已定（制作人 2026-09-27，经系统策划转达）**：MVP 只做换色版，四人各 1 套调色板。全新服装以后再做 | 横条调色板 + `palette_swap`。尺寸和导入见第 2 节 | — |
-| 20 | 紫的弱化状态叫什么 | **视觉已定，名称待文案**。力量褪色：边缘褪灰、局部降饱和，主体鲜艳，不半透明 | 文件名占位 `yukari_faded` | 文案策划 |
+| 20 | 紫的弱化状态叫什么 | **已定**。半褪（文案暂定，待制作人确认）。从 `ch1_04` 持续到 `ch5_04`。袖口褪色必须画出，隙间只能半开 | 文件名 `yukari_halffaded`。名称待制作人最终确认，改名只影响文本，不影响资源 | 制作人 |
