@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 仓库首页的介绍加上二十张界面原画。登录和选服务器只是画面，不建账号，也不连网。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 
