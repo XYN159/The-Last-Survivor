@@ -1,5 +1,5 @@
 name,spec,n,coef,calib,share,hp,smoothed,hp_min,picked
-主版本（写进表里）：第 6–11 波各 1 只、第 12 波左右各 1 只,6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:1:path.left;12:1:path.right,8,0.75,locked,9.9%,14.8,14.6,13.0,主版本
+主版本（写进表里）：第 6–11 波各 1 只、第 12 波左右各 1 只,6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:1:path.left;12:1:path.right,8,0.75,table,9.9%,14.8,,13.0,主版本
 关卡策划倾向：第 6–12 波各 1 只（7 只）,6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:1:path.left,7,0.77,cliff,8.4%,10.0,11.6,7.0,对照
 第 6–9 波各 1 只、第 10–12 波各 2 只（10 只）,6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:2:path.left;11:2:path.right;12:2:path.left,10,0.78,cliff,11.9%,10.8,12.0,9.0,对照
-只有小残影和快残影（旧版，对照）,,0,0.76,ok,0.0%,13.4,11.8,10.0,对照
+只有小残影和快残影（旧版，对照）,,0,0.76,table,0.0%,13.4,,10.0,对照

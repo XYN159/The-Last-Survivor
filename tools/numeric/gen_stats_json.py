@@ -69,9 +69,11 @@ def main():
         if float(e.get("block_dps") or 0) > 0:
             extra["block_dps"] = n(e["block_dps"])
         d.update(extra)
-        en_out[e["enemy_id"]] = d
+        # Boss 只进 bosses。leak_damage 的正式路径是 bosses.<id>.leak_damage，不在 enemies 里再放一份。
         if e["category"] == "boss":
             boss_out[e["enemy_id"]] = d
+        else:
+            en_out[e["enemy_id"]] = d
 
     sections: dict = {"skills": {}, "statuses": {}, "synergies": {}, "spell_cards": {}}
     for r in coef_rows:
@@ -109,8 +111,8 @@ def main():
             "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、"
                                "in_battle_upgrade、economy.early_call_reward_cap、"
                                "characters.*.max_copies/attack_interval_sec/range_cells/attack.{range_cells,interval_sec}/spell_energy_max/max_hp/block_count、"
-                               "enemies 与 bosses 的同一份 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge）。"
-                               "Boss 两处都有，数字相同；#4 的正式路径仍是 bosses.<id>。enemies.json 只留 ID 和表现。"
+                               "enemies 与 bosses 各有 7 个字段（hp、move_speed_cells_per_sec、armor、spirit_drop、leak_damage、threat_points、kill_charge）。"
+                               "Boss 只在 bosses 段，leak_damage 不抄到 enemies。enemies.json 只留 ID 和表现。"
                                "扁平的 attack_interval_sec / range_cells 和嵌套的 attack 是同一对数，旧的字段路径还能读。"
                                "buffs.*.transform_at_stacks（叠到 2 层质变）、buff_offer（保底规则）、spell_charge.per_damage_by_level、stars 等。"
                                "attack_interval_sec、range_cells、move_speed 是用户确认的数值，若与 characters.json / enemies.json 不同，以本文件为准。"

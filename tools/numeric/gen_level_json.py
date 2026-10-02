@@ -108,19 +108,16 @@ def main():
         if L.get("boss_wave"):
             d["boss_id"] = L["boss_enemy_id"]
             d["boss_enters_wave"] = int(L["boss_wave"])
-            if lid == "ch1_04":
-                d["boss_enters_wave_if_boss_fix"] = 11
-                d["boss_hp_scaled_by_level_if_boss_fix"] = False
-                d["boss_fix_status"] = "applied_d01_wave_11_no_hp_mult"
-            else:
+            # ch1_04 的登场波和系数已经写在上面的正式字段里，不再另放一套「如果采纳修正」的旁路。
+            if lid != "ch1_04":
                 d["boss_enters_wave_if_boss_fix"] = int(L["wave_count"]) - int(R.get("proposed_boss_enter_waves_from_end", 5))
                 d["boss_hp_scaled_by_level_if_boss_fix"] = False
                 d["boss_fix_status"] = "not_retuned"
-            if L.get("threat_budget_coef_boss_fix"):
-                d["threat_budget_coef_if_boss_fix"] = num(L["threat_budget_coef_boss_fix"])
-                d["sim_lives_if_boss_fix"] = num(L["sim_hp_boss_fix"])
-                if lid not in C.FIX_COEF and (num(L["sim_hp_first_clear"], 0) or 0) < (num(L["target_hp_first_clear"], 0) or 0) - 1:
-                    d["threat_budget_coef_status"] = "numbers_calibrated_target_unreachable_under_current_boss_rules"
+                if L.get("threat_budget_coef_boss_fix"):
+                    d["threat_budget_coef_if_boss_fix"] = num(L["threat_budget_coef_boss_fix"])
+                    d["sim_lives_if_boss_fix"] = num(L["sim_hp_boss_fix"])
+                    if lid not in C.FIX_COEF and (num(L["sim_hp_first_clear"], 0) or 0) < (num(L["target_hp_first_clear"], 0) or 0) - 1:
+                        d["threat_budget_coef_status"] = "numbers_calibrated_target_unreachable_under_current_boss_rules"
         if L.get("extra_spawns"):
             spawns = [x.split(":") for x in L["extra_spawns"].split(";") if x.strip()]
             d["armored_shades"] = dict(
@@ -138,8 +135,10 @@ def main():
         elif lid == "ch1_04":
             d["threat_budget_coef_lock"] = dict(
                 by="数值策划（D-01：第 11 波登场，血量不乘倍率）",
-                note="允许 0.70–0.74。0.74 的平滑期望剩余 11.9，是区间里仍不低于目标 11 减 0.5 的最大系数。"
-                     "5 个种子平均剩余 10.0，最差种子 -9，两星 60%。run_all.py --calibrate 不会改写。")
+                note="最终系数 0.71。首通阵容灵梦 6 / 琪露诺 3 / 魔理沙 6，五个种子全过，"
+                     "平均剩余 17.4，最差 14，两星 100%，左右 ±0.02 的平滑期望 16.3。"
+                     "0.72 最差种子只剩 6；0.74 有一个种子输掉。不再保留 threat_budget_coef_if_boss_fix。"
+                     "run_all.py --calibrate 不会改写。")
         if L.get("unlock_characters"):
             d["unlock_characters"] = L["unlock_characters"].split("|")
         if L.get("banned_characters"):
@@ -154,8 +153,8 @@ def main():
             "owner: 数值策划",
             "status: numbers_calibrated（tools/numeric/gen_level_json.py 从 data/balance/level_difficulty.csv 生成，不再是种子）",
             "formula: 每一波预算 = (10 + 4 × wave_index) × threat_budget_coef，wave_index 从 1 起，四舍五入（0.5 进位）",
-            "coef: 24 关都按模拟校准；ch1_03 按关卡策划确认锁定 0.75，ch1_04 按 D-01 锁定 0.74（config.FIX_COEF）。"
-            "ch1_04 第 11 波登场、Boss 血量不乘倍率。其他首领关还没按这条规则重跑",
+            "coef: 24 关都按模拟校准；ch1_03 按关卡策划确认锁定 0.75，ch1_04 按 D-01 锁定 0.71（config.FIX_COEF）。"
+            "ch1_04 第 11 波登场、Boss 血量不乘倍率，没有旁路系数。其他首领关还没按这条规则重跑",
             "first_clear: 普通关剩余 11-13 条命，首领关 10-11（expected_first_clear_lives）；数值校准目标见 target_lives_first_clear，等制作人确认",
             "lives: 20",
             "boss_does_not_consume_wave_budget: true",
@@ -180,7 +179,7 @@ def main():
             },
             "boss_fix": {
                 "status": "applied_for_ch1_04_only",
-                "note": "D-01 已定：Boss 血量不乘倍率。ch1_04 第 11 波入场，系数锁定 0.74。"
+                "note": "D-01 已定：Boss 血量不乘倍率。ch1_04 第 11 波入场，系数锁定 0.71，不再写旁路字段。"
                         "旧建议「总波数 − 5」会把 15 波关放在第 10 波，没有采用。"
                         "第 2 到 5 章首领关的系数仍是旧规则下的校准值，boss_fix_status 为 not_retuned。",
                 "ch1_04_enter_wave": 11,
@@ -192,7 +191,7 @@ def main():
             {"id": "table_path", "note": "PR #5 最新分支（f2212be）已把难度表放回 data/balance/level_difficulty.json（种子：MVP 七关第二轮系数，其余 1.0），"
                                          "并删掉了 data/balance/level_tables/。本文件就是正式输出；tools/numeric/output/level_tables_level_difficulty.csv 只作参考。"
                                          "PR #5 的 tools/validate_levels.py 和 tests/unit/test_level_data.gd 里写死了种子系数和「status: seed」，合并后需要关卡策划按本表更新。"},
-            {"id": "boss_rules", "note": "ch1_04 已按 D-01 写成第 11 波、血量不乘倍率、系数 0.74。其他首领关还没重跑。漏一次扣多少仍见 bosses.<id>.leak_damage。"},
+            {"id": "boss_rules", "note": "ch1_04 已按 D-01 写成第 11 波、血量不乘倍率、系数 0.71，没有 threat_budget_coef_if_boss_fix。其他首领关还没重跑。漏一次扣多少仍见 bosses.<id>.leak_damage。"},
             {"id": "enemy_ids", "note": "PR #5 敌人图鉴有 pouncer / flying，没有本表第三章起用的 heavy / swarm；第二章起的编组等关卡策划出稿后再对齐。"},
             {"id": "mvp_enemies", "note": "制作人定：MVP 敌人 = 小残影、快残影，加 ch1_03 少量硬残影（第 6–11 波各 1 只、第 12 波左右各 1 只，共 8 只）；其他 MVP 关不出硬残影。PR #5 f2212be 的 ch1_03 已按系数 0.75 补上这 8 只，排法一致。"},
             {"id": "boss_cirno_phases", "note": "ch1_04 冰瀑挡直线、完美冻结的秒数和次数是模拟假设（冻结 2 秒、宣言时一次），等战斗策划定。"},
@@ -210,7 +209,8 @@ def write_pr5_table(levels):
     with open(OUT_PR5_TABLE, "w", newline="", encoding="utf-8") as f:
         f.write("# owner: 数值策划\n# status: numbers_calibrated（tools/numeric/gen_level_json.py 生成）\n"
                 "# formula: 每一波预算 = (10 + 4 × wave_index) × threat_budget_coef，wave_index 从 1 起\n"
-                "# coef: 按现行首领规则校准；ch1_03 按关卡策划确认锁定 0.75；首领关如果采用数值建议的首领修正，改用 data/balance/level_difficulty.csv 的 threat_budget_coef_boss_fix\n"
+                "# coef: 按现行首领规则校准；ch1_03 按关卡策划确认锁定 0.75；ch1_04 锁定 0.71，没有旁路系数。\n"
+                "# 其他首领关如果以后改成不乘血量倍率，再重跑，不要把 threat_budget_coef_boss_fix 当成现系数\n"
                 "# lives: 20\n")
         w = csv.writer(f, lineterminator="\n")
         w.writerow(PR5_TABLE_HEADER)

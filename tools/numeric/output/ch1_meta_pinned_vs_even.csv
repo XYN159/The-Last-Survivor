@@ -2,4 +2,4 @@ level_id,pinned_meta,pinned_hp,even_meta,even_hp,even_min
 ch1_01,reimu:3|marisa:2,13.4,reimu:3|marisa:2,13.4,7.0
 ch1_02,reimu:4|cirno:3|marisa:3,14.6,reimu:4|cirno:3|marisa:3,14.6,13.0
 ch1_03,reimu:5|cirno:3|marisa:5,14.8,reimu:5|cirno:4|marisa:4,15.0,13.0
-ch1_04,reimu:6|cirno:3|marisa:6,-0.4,reimu:5|cirno:5|marisa:5,-0.6,-1.0
+ch1_04,reimu:6|cirno:3|marisa:6,17.4,reimu:5|cirno:5|marisa:5,14.6,5.0

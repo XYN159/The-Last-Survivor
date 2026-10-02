@@ -336,8 +336,13 @@ def main():
         else:
             coef, status, info = tdsim.num(base.get("threat_budget_coef_boss_fix"), raw["budget_coef"]), "table", {}
         res = campaign.simulate_level(T, LF, squad, meta, C.SEEDS, coef, ov)
-        base["threat_budget_coef_boss_fix"] = f"{coef:.2f}"
-        base["sim_hp_boss_fix"] = hp_of(res)
+        # ch1_04 的系数已经是最终值，不再写旁路列 threat_budget_coef_boss_fix。
+        if raw["level_id"] == "ch1_04":
+            base["threat_budget_coef_boss_fix"] = ""
+            base["sim_hp_boss_fix"] = ""
+        else:
+            base["threat_budget_coef_boss_fix"] = f"{coef:.2f}"
+            base["sim_hp_boss_fix"] = hp_of(res)
         boss_rows.append(dict(level_id=raw["level_id"], squad=raw["squad"], target=tgt,
                               coef_confirmed=f'{raw["budget_coef"]:.2f}', hp_confirmed=raw["hp_mean"],
                               boss_loops_confirmed=row["boss_loops"],
@@ -479,7 +484,7 @@ def main():
           "紫通关 ch1_04 后加入（MVP 首通用不到）。第一章 2–4 关首通时碎片照旧只花在灵梦和魔理沙身上（和上一版首通等级一样），琪露诺停在加入时的 3 级。"
           "MVP 7 关用 PR #5 最新分支的地图（只能放预定槽位，每关 3–5 格）、逐波编组（个数 × 系数）、浓雾（目标在雾格上射程 −1）和 ch1_04 首领三阶段；"
           "每波 20 秒刷怪窗口 + 4 秒空隙，不等清场。"
-          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。locked = 关卡策划确认后手动锁定的系数（config.FIX_COEF，目前只有 ch1_03 = 0.75），不再自动校准，期望和 +0.05 按同样的口径另算；locked_cliff = 锁定值再加 0.05 会掉到目标以下 3 条命以上。"
+          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。locked = 手动锁定的系数（config.FIX_COEF：ch1_03 = 0.75，ch1_04 = 0.71），不再自动校准，期望和 +0.05 按同样的口径另算；locked_cliff = 锁定值再加 0.05 会掉到目标以下 3 条命以上。"
           "校准先按 0.05 粗扫，再在附近按 0.01 细扫；剩余生命随系数是锯齿状的，所以每个系数取左右 ±0.02 共 5 个点 × 5 个种子的平均当「期望」，"
           "选「期望 ≥ 目标 − 0.5」的最大系数（系数太低时灵力少、反而难，所以取大的）。「模拟剩余」是这个系数本身 5 个种子的平均，和期望差 1–3 条命是正常的锯齿；校准列 cliff = 再加 0.05 就掉到目标以下 3 条命以上。\n\n",
           md_table(sa, cols, heads),
