@@ -92,15 +92,27 @@ Godot 4 的图片导入选项在「导入」面板里。按下表设，改完点
 
 | 资源类型 | `compress/mode` | `mipmaps/generate` | 显示时的过滤（节点的 `texture_filter`） | 其他 |
 | --- | --- | --- | --- | --- |
-| 角色、残影、首领、特效、格子、界面（2 倍图） | Lossless（无损） | 开 | Linear Mipmap | `process/fix_alpha_border` 保持开（默认） |
-| 半身立绘 | VRAM Compressed，`compress/high_quality` 开 | 开 | Linear Mipmap | 手机上走 ASTC。先看描边有没有脏；脏就改回 Lossless |
+| 角色、残影、首领、特效、格子、界面（2 倍图） | Lossless（无损） | **关** | Linear | `process/fix_alpha_border` 保持开（默认）。源稿是显示尺寸的 2 倍，缩到一半，不到「50% 以下」，不开 mipmap |
+| 半身立绘（按一半大小显示） | VRAM Compressed，`compress/high_quality` 开 | **关** | Linear | 手机上走 ASTC。先看描边有没有脏；脏就改回 Lossless。显示正好是源稿的 50%，默认不开 mipmap |
+| 缩到 50% 以下的大图 | 同上 | 可以开 | Linear Mipmap | 例外：同一张大图要缩得很小才开，例如立绘再做成小图。单独这一张把 `mipmaps/generate` 打开 |
+| 换色调色板 | Lossless（无损） | 关 | Nearest | 色块不能被抹开。见第 2 节 |
 | 章节背景（1 倍导出） | VRAM Compressed，`compress/high_quality` 开 | 关 | Linear | 大图，不缩小显示，不需要 mipmap |
+
+**已定（执行制作人 2026-10-02）**：画风是手绘平涂，不是像素风。项目默认纹理过滤用 **Linear**，**不开 mipmap**。画面固定按 1080×1920 缩放，没有 3D，常规界面也不会把图缩到一半以下。
+
+对应的 Godot 4 设置：
+
+- 项目设置 `rendering/textures/canvas_textures/default_texture_filter` = Linear（平滑）。
+- 导入预设 `mipmaps/generate` = false。
+- 压缩方式仍用上表：角色和界面 Lossless，立绘和背景 VRAM Compressed（`compress/high_quality` 开）。`project.godot` 里已经开了 `textures/vram_compression/import_etc2_astc`。
+
+main 上的 `project.godot` **没有写** `default_texture_filter`。Godot 4 不写这一项时默认就是 Linear，和这次决定一致，过滤不用改。mipmap 不是项目设置，是每张图的导入选项。本 PR 不改 `project.godot`。以后放图的开发 PR 按上表导入即可。
 
 每个选项是什么意思（给不熟悉的人）：
 
-- **Linear（线性 / 平滑）**：缩放时把相邻像素混合，边缘平滑。手绘图要用它。像素风才用 Nearest（最近点，边缘锐利带锯齿）。
-- **Mipmap**：Godot 预先生成 1/2、1/4……大小的缩小版。图被缩小显示时用对应的小版本，避免闪烁和锯齿。代价是这张图多占约 1/3 内存。我们的图都是缩小一半显示，所以开。
-- **Linear Mipmap**：「平滑 + 用 mipmap」。只有导入时开了 mipmap 才有效，否则等于 Linear。Godot 4 里过滤是在节点上设的（`CanvasItem.texture_filter`），子节点默认继承父节点，根节点默认跟随项目设置 `rendering/textures/canvas_textures/default_texture_filter`（现在没写，默认 Linear）。建议程序把项目默认改成 Linear Mipmap，见待确认 13。
+- **Linear（线性 / 平滑）**：缩放时把相邻像素混合，边缘平滑。手绘图要用它。像素风才用 Nearest（最近点，边缘锐利带锯齿）。调色板是例外，用 Nearest。
+- **Mipmap**：Godot 预先生成 1/2、1/4……大小的缩小版。图被缩得很小时用对应的小版本，避免闪烁。代价是这张图多占约 1/3 内存。默认关。只有缩到显示尺寸的 50% 以下才单独开。
+- **Linear Mipmap**：「平滑 + 用 mipmap」。只有导入时开了 mipmap 才有效，否则等于 Linear。Godot 4 里过滤是在节点上设的（`CanvasItem.texture_filter`），子节点默认继承父节点，根节点默认跟随项目设置。
 - **Lossless（无损）**：画质不变，占内存最多（每像素 4 字节）。
 - **VRAM Compressed（显存压缩）**：手机显卡直接读的压缩格式（ASTC / ETC2），内存约为无损的 1/4，但可能有轻微色块。`project.godot` 已经开了 ETC2 / ASTC 导入。
 - **fix_alpha_border**：把透明像素的颜色改成相邻不透明像素的颜色，平滑缩放时边缘不会出现黑边或白边。保持开。
@@ -110,11 +122,11 @@ Godot 4 的图片导入选项在「导入」面板里。按下表设，改完点
 
 | 内容 | 估算 |
 | --- | --- |
-| 4 个角色图集（各 ≤ 1024²，无损 + mipmap） | 每张约 5.6 MB，共 ≤ 22 MB；实际拆件用 512×1024 就够时约 3.7 MB 一张 |
+| 4 个角色图集（各 ≤ 1024²，无损，不开 mipmap） | 每张约 4 MB，共 ≤ 16 MB；实际拆件用 512×1024 就够时约 2 MB 一张 |
 | 3 种残影（MVP）+ 冰之残影着色器 | 约 2 MB |
-| 一章格子图集（2048×1024，无损 + mipmap） | 约 11 MB |
-| 章节背景（1440×2340，VRAM 压缩） | 约 3.4 MB |
-| 立绘（1280×1920，VRAM 压缩 + mipmap，最多同时 4 张） | 每张约 3.3 MB |
+| 一章格子图集（2048×1024，无损，不开 mipmap） | 约 8 MB |
+| 章节背景（1440×2340，VRAM 压缩，不开 mipmap） | 约 3.4 MB |
+| 立绘（1280×1920，VRAM 压缩，不开 mipmap，最多同时 4 张） | 每张约 2.5 MB |
 | 界面 + 特效 | 约 5–8 MB |
 
 合计约 45–55 MB，2020 年以后的安卓手机没有问题。如果以后吃紧，先把格子图集和立绘换成 VRAM 压缩，再考虑把格子改成 1 倍导出。
@@ -176,7 +188,16 @@ assets/textures/
 
 - 这些目录等真正放图的那个 PR 再建，本 PR 只写约定。放进真实文件后，可以删掉 `assets/textures/.gitkeep`。
 - 所有 png 由 Git LFS 管理（`.gitattributes` 已有 `*.png filter=lfs`）。克隆前先装 Git LFS。
-- **源文件**（Krita 的 `.kra`、Photoshop 的 `.psd`、矢量 `.svg`）建议不放进 Godot 会扫描的目录。`.psd` 已在 LFS 规则里，`.kra` 不在。放哪里见待确认 14。
+- **源文件已定（执行制作人 2026-10-02）**：`.kra`、`.psd`、`.clip` 以及别的分层工程文件不进主仓库，也不用 Git LFS。作者自己放云盘，或另建一个私有素材仓库。主仓库只放导出的 PNG / WebP。
+- 根目录 `.gitignore` 和 `.gitattributes` 本 PR 不改。`.gitattributes` 里现在还有 `*.psd filter=lfs`，留给开发 PR 删掉。建议开发 PR 在根目录 `.gitignore` 加上：
+
+```
+# 分层源文件不进主仓库。放云盘或私有素材库。
+*.kra
+*.psd
+*.psb
+*.clip
+```
 - 字体继续放 `assets/fonts/`，许可证文件放在字体旁边（现有 `OFL.txt` 就是这样）。
 
 ## 6. 占位方案（程序不等美术）
@@ -233,7 +254,7 @@ assets/textures/
 | 1 | 逻辑分辨率用 720×1280 还是 1080×1920 | **已定（系统策划 2026-09-27）**：用 1080×1920，不用 720×1280 | 按 1080×1920 画。不改 `project.godot` | — |
 | 2 | 「7 格横向铺满屏宽」 | **已定（系统策划 2026-09-27）**：每格 128 像素，7×12，偏移 (92, 140)，顶栏 0–140，底栏 1676–1920 | 棋盘 896×1536。与 PR #4 `rules.json` 一致 | — |
 | 3 | 长屏手机多出的高度、刘海安全区 | **已定（系统策划 2026-09-27）**：先扣掉顶部刘海安全区，剩下的高度全部给底栏，棋盘大小不变。底栏背景用九宫格，上下留可延展区 | 见 1.3。背景风景仍按 1440×2340 画够宽和高，但多出来的战斗高度不拿去画风景 | — |
-| 13 | 项目默认纹理过滤 | `project.godot` 没有写 `rendering/textures/canvas_textures/default_texture_filter`（默认 Linear） | 建议程序改成 Linear Mipmap；在那之前，放图的节点手动设 `texture_filter` | 程序 |
-| 14 | 源文件放哪 | `.gitattributes` 有 `*.psd` 的 LFS 规则，没有 `*.kra` | 建议在仓库根目录建 `art_source/`，里面放一个空的 `.gdignore`（Godot 不扫描），并给 `*.kra` 加 LFS 规则；或者源文件不进仓库，只放在自己电脑和网盘 | 程序 |
+| 13 | 项目默认纹理过滤和 mipmap | **已定（执行制作人 2026-10-02）**：手绘平涂，默认 Linear，不开 mipmap。缩到 50% 以下的大图才单独开 mipmap | 项目设置 `rendering/textures/canvas_textures/default_texture_filter` = Linear。导入 `mipmaps/generate=false`。压缩方式见第 3 节。main 上没写过滤项，默认已是 Linear，本 PR 不改 `project.godot` | — |
+| 14 | 源文件放哪 | **已定（执行制作人 2026-10-02）**：`.kra`、`.psd`、`.clip` 和分层工程不进主仓库，也不进 Git LFS。主仓库只放导出的 PNG / WebP | 建议的 `.gitignore` 写在第 5 节。根目录 `.gitignore` 本 PR 不改 | — |
 | 18 | 星星解锁哪几种外观 | **已定（制作人 2026-09-27，经系统策划转达）**：MVP 只做换色版，四人各 1 套调色板。全新服装以后再做 | 横条调色板 + `palette_swap`。尺寸和导入见第 2 节 | — |
 | 20 | 紫的弱化状态叫什么 | **视觉已定，名称待文案**。力量褪色：边缘褪灰、局部降饱和，主体鲜艳，不半透明 | 文件名占位 `yukari_faded` | 文案策划 |
