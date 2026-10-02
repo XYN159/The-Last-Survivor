@@ -28,7 +28,7 @@
 | [dialogue_samples.md](dialogue_samples.md) | 序章、第一章的可读版剧本，以及按关卡 id 的文本 key 规则 | 文案，程序，关卡策划 |
 | [`data/text/dialogue_zh.csv`](../../../data/text/dialogue_zh.csv) | 序章、第一章的对话与教学提示文本表 | 程序（接入对话系统） |
 | [`data/text/names_zh.csv`](../../../data/text/names_zh.csv) | 角色名、章节名、符卡名、敌人名、货币名 | 程序，界面 |
-| [`data/text/ui_zh.csv`](../../../data/text/ui_zh.csv) | 界面短句（`combat.*`）、联动名（`syn.*.name`）、局内强化（`buff.*.name` / `.desc`） | 程序，界面 |
+| [`data/text/ui_zh.csv`](../../../data/text/ui_zh.csv) | 界面短句、联动名、局内强化，以及战斗状态、地形、角色技能的名称和说明 | 程序，界面 |
 | [`data/text/lostbook_zh.csv`](../../../data/text/lostbook_zh.csv) | MVP 七关的失物簿条目 | 程序，界面 |
 
 ## 二次创作声明（发布时必须随附）
@@ -84,7 +84,7 @@
 
 ### 八云紫（已定方向 B）
 
-- 序章到第一章，她从隙间里吐槽，人不下来。`ch1_04` 她挡下冰之残影的一击，力量褪色，然后以弱化状态跟队。这个状态暂定叫「半褪」。嘴上要面子。
+- 入队之前，她只通过隙间探头露面，不在队伍里，玩家也不能放。`ch1_03` 第 6 波她探头，把第一只硬残影送回裂缝，然后退场。这是脚本演出，不算入队，而且在她受伤之前，力量还是完整的。`ch1_04` 她挡下冰之残影的一击，力量褪色，然后以弱化状态跟队。这个状态暂定叫「半褪」。嘴上要面子。
 - 跟队之后不要再写成“第四章末才正式现身、第五章才入队”。第四章末她只透露一点：缝隙里有东西在呼唤失物。第五章她恢复全力。
 - 隙间笑点不能重复。序章偷茶，第一章钓鱼。写新台词前先查 [story_outline.md](story_outline.md)。
 - 她知道得比谁都多，但不直接给答案。茶杯、收音机这些小动作先留着，不要在第四章用“我一直在补结界”把话一次说完。
@@ -94,7 +94,7 @@
 - 面向手机竖屏气泡：**单句建议不超过 40 个字**（含标点），一句只表达一件事。魔理沙的气泡尽量不超过 20 个字。
 - 用中文全角标点：，。！？……——「」『』。不用英文逗号，也不要用 ♪、☆、★（当前字体子集没有这些字形，会显示成方框）。
 - 符卡名写法：`符种「名字」`，如 恋符「极限火花」。台词里喊符卡时不加原名；资料和表格里写“中文译名（原名）”。
-- 文本 key：路上敌人去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。界面是 `combat.<id>`，联动是 `syn.<id>.name`，局内强化是 `buff.<id>.name` 和 `.desc`。后三类在 `data/text/ui_zh.csv`。
+- 文本 key：路上敌人去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。界面是 `combat.<id>`，联动是 `syn.<id>.name`，局内强化是 `buff.<id>.name` 和 `.desc`。战斗状态是 `status.<去掉 st_>.name/.desc`，地形是 `terrain.<去掉 ter_>.name/.desc`，角色技能是 `skill.<去掉 skl_>.name/.desc`。这些都在 `data/text/ui_zh.csv`。半褪不在战斗状态表里，仍用 `state.yukari_halffaded`。
 - 角色名在台词和文档里统一按 [glossary.md](glossary.md)。
 
 ### 禁区

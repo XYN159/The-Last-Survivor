@@ -66,7 +66,7 @@ spell.boss_ch5_gatekeeper.door_queue.name,裂符「门口的排队」,本作原�
 spell.boss_ch5_gatekeeper.crack_shadow.name,隐符「门缝里的影子」,本作原创。暂定。召唤遗忘残影
 currency.reiryoku,灵力,局内货币。已定
 currency.meta,待定,局外通用资源。候选：忆晶（推荐）/ 赛钱 / 幻想碎片。定名前界面不要写死
-state.yukari_halffaded.name,半褪,暂定。隙间半合、袖口褪色。美术按局部褪色、主体保持鲜艳
+state.yukari_halffaded.name,半褪,暂定。隙间半合、袖口褪色。美术按局部褪色、主体保持鲜艳。战斗状态表里没有这一条，不并进 status.*
 state.yukari_halffaded.desc,隙间半合，袖口褪了色。人还是鲜艳的。,暂定。弱化状态的短说明
 enemy.shade_basic.name,小残影,战斗 id：enm_shade_basic。MVP 基础敌人
 enemy.shade_fast.name,快残影,战斗 id：enm_shade_fast。第一章新敌人

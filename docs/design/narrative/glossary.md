@@ -39,6 +39,7 @@
 | 保护目标 | Escort Target | 第三章里需要保护的村民等 | 不写“人质”“NPC” |
 | 波次 | Wave | 一批一批出现的残影 | 教学里可说“一批”“一波” |
 | 隙间 | Sukima (Gap) | 八云紫的能力，空间中打开的缝，里面有很多眼睛 | 只用于紫。不写“传送门”“次元门”。与“缝隙”（结界里的地方）区分 |
+| 隙间探头 | Gap Peek | MVP 里，紫入队之前只通过这个关卡脚本事件露面。她从隙间露脸、说话，然后退场。不在队伍里，玩家也不能放她 | 序章偷茶、序章提醒赛钱箱、`ch1_02` 钓鱼、`ch1_03` 第 6 波把第一只硬残影送回裂缝，都叫这个。最后这一次在她受伤之前，力量还是完整的。脚本演出，不算入队 |
 | 神隐 | Spiriting Away | 人或物突然消失；紫的符卡罔两「八云紫的神隐」 | 只在紫相关文本中使用 |
 
 ## 系统与数值术语
@@ -112,7 +113,7 @@
 
 | 名字 | 文本 key | 说明 |
 | --- | --- | --- |
-| 半褪 | `state.yukari_halffaded.name` | **暂定。** 八云紫在 `ch1_04` 之后的弱化状态：隙间半合、袖口褪色。说明行是 `state.yukari_halffaded.desc`。美术按局部褪色、主体保持鲜艳来做外观 |
+| 半褪 | `state.yukari_halffaded.name` | **暂定。** 八云紫在 `ch1_04` 挡击之后的弱化状态：隙间半合、袖口褪色。说明行是 `state.yukari_halffaded.desc`。战斗状态表 `st_*` 里没有这一条，所以不并进 `status.*`。美术按局部褪色、主体保持鲜艳来做外观 |
 
 ## 界面、联动和强化
 
@@ -123,8 +124,11 @@
 | 界面 | `combat.<id>` | `combat.armor` → 护甲 |
 | 联动名 | `syn.<id>.name` | `syn.ice_shatter.name` → 冰碎 |
 | 局内强化 | `buff.<id>.name` 和 `buff.<id>.desc` | `buff.frost_frog.name` → 褪色的发条青蛙 |
+| 战斗状态 | `status.<id 去掉 st_>.name` 和 `.desc` | `status.freeze.name` → 冻结。长按图标 |
+| 地形 | `terrain.<id 去掉 ter_>.name` 和 `.desc` | `terrain.ice.name` → 冰面。关卡开场和格子提示 |
+| 角色技能 | `skill.<id 去掉 skl_>.name` 和 `.desc` | `skill.cirno_freeze.name` → 冰结。角色信息页 |
 
-强化的名字用残影掉落的被遗忘之物来包装，语气轻松。说明只写效果，数字用战斗表里的占位符（如 `{split_damage_ratio}`），不写死。路上敌人的文本 key 仍去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。
+强化的名字用残影掉落的被遗忘之物来包装，语气轻松。说明只写效果，数字用战斗表里的占位符（如 `{split_damage_ratio}`），不写死。状态、地形、技能的说明也一样，每句尽量不超过 30 字。路上敌人的文本 key 仍去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。状态、地形、技能同样去掉 `st_`、`ter_`、`skl_`。
 
 ## 标点与格式
 

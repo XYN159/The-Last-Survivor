@@ -15,11 +15,11 @@ tut.prologue_01.007,,放置角色要花灵力。击散残影会掉灵力。,局�
 dlg.prologue_01.mid.001,char.reimu,一只、两只……算了，全打回去就是了。,触发：第1波开始
 dlg.prologue_01.mid.002,char.reimu,打散了？……掉下来的东西，也是灰的。,触发：第一个残影被击散
 dlg.prologue_01.mid.003,char.reimu,赛钱箱的颜色淡了！……这可不能忍。,触发：守护点首次受损。未受损则不播
-dlg.prologue_01.mid.004,char.yukari,哎呀，茶还温着呢。那我就不客气了。,第2波前。隙间探头，人不下来
-dlg.prologue_01.mid.005,char.reimu,紫！把茶放下！……你是来帮忙的？,
-dlg.prologue_01.mid.006,char.yukari,帮忙？我只是来看热闹。结界那边，正热闹着呢。,
-dlg.prologue_01.mid.007,char.reimu,结界？喂，你把话说清楚——,
-dlg.prologue_01.mid.008,char.yukari,说清楚就不好玩了。加油哦，巫女小姐。,隙间合上，茶杯一起消失
+dlg.prologue_01.mid.004,char.yukari,哎呀，茶还温着呢。那我就不客气了。,隙间探头。脚本演出，不算入队
+dlg.prologue_01.mid.005,char.reimu,紫！把茶放下！……你是来帮忙的？,隙间探头
+dlg.prologue_01.mid.006,char.yukari,帮忙？我只是来看热闹。结界那边，正热闹着呢。,隙间探头
+dlg.prologue_01.mid.007,char.reimu,结界？喂，你把话说清楚——,隙间探头
+dlg.prologue_01.mid.008,char.yukari,说清楚就不好玩了。加油哦，巫女小姐。,隙间探头结束。隙间合上，茶杯一起消失
 dlg.prologue_01.mid.009,char.reimu,……连杯子都拿走了！,
 tut.prologue_01.008,,符卡充能完毕！点下方的符卡按钮。,灵梦符卡首次充满。这是放符卡，不是放角色。建议放慢到玩家点底部按钮
 dlg.prologue_01.mid.010,char.reimu,麻烦死了，一口气解决！梦符「封魔阵」！,玩家首次发动灵梦符卡。MVP 默认符卡。战斗 id：sc_evil_sealing_circle
@@ -42,15 +42,15 @@ dlg.prologue_02.mid.002,char.marisa,恋符「极限火花」！火力就是正�
 dlg.prologue_02.post.001,char.marisa,哦？这个旧八音盒还挺好看的。我收下啦。,第三章误会的伏笔
 dlg.prologue_02.post.002,char.reimu,异变里掉下来的东西，别乱捡。,
 dlg.prologue_02.post.003,char.marisa,不是偷，是借！,
-dlg.prologue_03.mid.001,char.yukari,提醒一句，赛钱箱要守好哦。,小隙间，只露出半张脸
-dlg.prologue_03.mid.002,char.reimu,用不着你说！,
-dlg.prologue_03.mid.003,char.yukari,啊，我是说里面的钱。,
-dlg.prologue_03.mid.004,char.reimu,里面没有钱！,隙间合上
+dlg.prologue_03.mid.001,char.yukari,提醒一句，赛钱箱要守好哦。,隙间探头。脚本演出，不算入队
+dlg.prologue_03.mid.002,char.reimu,用不着你说！,隙间探头
+dlg.prologue_03.mid.003,char.yukari,啊，我是说里面的钱。,隙间探头
+dlg.prologue_03.mid.004,char.reimu,里面没有钱！,隙间探头结束。隙间合上
 dlg.prologue_03.post.001,char.reimu,……缝还在天上。得去看看是哪边漏的。,
 dlg.prologue_03.post.002,char.marisa,雾之湖那边好像也在冒灰烟啦。一起去！,
 dlg.prologue_03.post.003,char.reimu,雾之湖啊……那个冰精又要吵了。,
-dlg.prologue_03.post.004,char.yukari,路上小心哦。茶杯我洗好了再还你。,
-dlg.prologue_03.post.005,char.reimu,现在就还！,
+dlg.prologue_03.post.004,char.yukari,路上小心哦。茶杯我洗好了再还你。,隙间探头。脚本演出，不算入队
+dlg.prologue_03.post.005,char.reimu,现在就还！,隙间探头
 dlg.prologue_03.post.006,char.marisa,……茶杯？你们在说什么？,序章结束
 dlg.ch1_01.pre.001,char.marisa,雾好大……连湖对岸都看不见啦。,雾之湖畔
 dlg.ch1_01.pre.002,char.reimu,雾是平常。湖面变灰才不平常。,
@@ -82,18 +82,20 @@ dlg.ch1_02.pre.002,char.reimu,先打残影。决斗往后排。,
 dlg.ch1_02.pre.003,char.cirno,排到第几个了？我可是有在数的！,
 dlg.ch1_02.mid.001,char.daiyousei,雾变浓了……大家小心，远处看不清。,
 dlg.ch1_02.mid.002,char.cirno,我、我知道啦！……才没有担心！,
-dlg.ch1_02.mid.003,char.yukari,嗯～今天湖里收获不错呢。,湖面上隙间垂下钓竿。紫仍未入队
-dlg.ch1_02.mid.004,char.marisa,紫？你在钓鱼？,
-dlg.ch1_02.mid.005,char.yukari,钓到一台外界的收音机。可惜，已经不会响了。,
-dlg.ch1_02.mid.006,char.cirno,喂，隙间妖怪！你也是犯人吧！跟我决斗！,
-dlg.ch1_02.mid.007,char.cirno,……逃跑了！哈哈，她怕了最强的我！,隙间合上
+dlg.ch1_02.mid.003,char.yukari,嗯～今天湖里收获不错呢。,隙间探头。脚本演出，不算入队
+dlg.ch1_02.mid.004,char.marisa,紫？你在钓鱼？,隙间探头
+dlg.ch1_02.mid.005,char.yukari,钓到一台外界的收音机。可惜，已经不会响了。,隙间探头
+dlg.ch1_02.mid.006,char.cirno,喂，隙间妖怪！你也是犯人吧！跟我决斗！,隙间探头
+dlg.ch1_02.mid.007,char.cirno,……逃跑了！哈哈，她怕了最强的我！,隙间探头结束。隙间合上
 dlg.ch1_02.mid.008,char.reimu,……随她高兴吧。,
 dlg.ch1_02.post.001,char.daiyousei,我也跟着走。琪露诺一个人会迷路的……,待定·建议：若可玩，本关打完后作辅助加入。文本不写成定案解锁
 dlg.ch1_02.post.002,char.cirno,我才不会迷路！决斗还没打呢！,
 dlg.ch1_03.pre.001,char.cirno,路分成两边了！决斗也要分两边吗？,
 dlg.ch1_03.pre.002,char.reimu,不分。先把两边都守住。,
 dlg.ch1_03.pre.003,char.marisa,硬的来了好几只！,硬残影在本章 ch1_03 正式登场
-tut.ch1_03.001,char.yukari,硬的来了。我从隙间看一眼，人可不下去。,第6波口头提示。紫要到 ch1_04 打完才加入，这一关不能放置，所以不做换位演示
+tut.ch1_03.001,char.yukari,这种残影很硬，交给魔理沙。,ch1_03 第6波。隙间探头。脚本演出，不算入队。力量还是完整的
+tut.ch1_03.002,char.yukari,那我就送它回裂缝吧。,把这一波第一只硬残影送回裂缝。不造成伤害
+tut.ch1_03.003,char.yukari,看完了。人可不下去哦。,探头结束，退场。玩家不能放置紫
 dlg.ch1_03.mid.001,char.cirno,这些走得好慢……最强的我也不怕慢的！,
 dlg.ch1_03.mid.002,char.daiyousei,湖边的花也变灰了……,
 dlg.ch1_03.post.001,char.cirno,下一关！下一关绝对决斗！,
@@ -113,7 +115,7 @@ dlg.ch1_04.mid.006,char.marisa,连残影都冻住了！这家伙到底帮哪边�
 dlg.ch1_04.mid.007,char.cirno,我帮最强的这边！它不算！,
 dlg.ch1_04.mid.008,,雪符「钻石风暴」！前面的路，全变成冰！,冰之残影第3阶段宣言。战斗符卡 id：sc_boss_cirno_diamond_blizzard
 dlg.ch1_04.mid.009,char.cirno,连路都冻上了！抄得也太冷了吧！,接着上一张。冰面让残影更快
-dlg.ch1_04.mid.010,char.yukari,让开。这一下，我来挡。,替灵梦或琪露诺挡下冰之残影的一击
+dlg.ch1_04.mid.010,char.yukari,让开。这一下，我来挡。,她自己下来挡击。这不是隙间探头
 dlg.ch1_04.mid.011,char.reimu,紫？！你怎么自己下来了！,
 dlg.ch1_04.mid.012,char.yukari,隙间有点不听话。……别大惊小怪。,袖口褪成灰色
 dlg.ch1_04.mid.013,char.cirno,呜哇，冰自己碎了！是我赢的！,首领被击破

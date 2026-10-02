@@ -35,3 +35,59 @@ buff.combo_fever.name,,转个不停的陀螺,失物包装。战斗 id：buff_com
 buff.combo_fever.desc,,连击叠得越高，全队打得越疼。每一档加上 {attack_pct_per_10_combo}，最多 {cap_pct}。断了就回到原样。,不写死数字
 buff.gap_eye.name,,半张旧车票,失物包装。战斗 id：buff_gap_eye。需要紫
 buff.gap_eye.desc,,换位等得更短，冷却按 {cooldown_pct_per_stack}。质变后一次能多换一对，被换走的那只再吃一击，伤害按 {swap_hit_damage_coef}。,不写死数字。需要紫
+status.slow.name,,减速,战斗 id：st_slow。长按图标
+status.slow.desc,,走得更慢。强度上限 {max_strength}。,不写死数字
+status.freeze.name,,冻结,战斗 id：st_freeze。长按图标
+status.freeze.desc,,停在原地。首领只会变慢。,首领不冻结。不写死减速强度
+status.freeze_immune.name,,冻结免疫,战斗 id：st_freeze_immune
+status.freeze_immune.desc,,暂时冻不住。时长看 {duration_sec}。,不写死数字
+status.barrier_mark.name,,结界标记,战斗 id：st_barrier_mark
+status.barrier_mark.desc,,受到的伤害变高，加上 {vulnerability_add}。,不写死数字
+status.ofuda_tag.name,,符札,战斗 id：st_ofuda_tag
+status.ofuda_tag.desc,,贴着灵梦的御札。魔理沙打中会引爆。,不写死时长
+status.burn.name,,灼烧,战斗 id：st_burn。不在 MVP
+status.burn.desc,,持续掉血。伤害按 {tick_damage_coef}。,不写死数字
+status.hold.name,,拦住,战斗 id：st_hold。不在 MVP。美铃的拦截技能已取消，这个状态还在
+status.hold.desc,,停住一下。这不是冻结。,不写死时长
+status.hold_immune.name,,拦住免疫,战斗 id：st_hold_immune。不在 MVP
+status.hold_immune.desc,,这段时间拦不住。,不写死时长
+status.blocked.name,,阻挡,战斗 id：st_blocked。不在 MVP
+status.blocked.desc,,被美铃挡住，停下来打她。,首领和飞行残影挡不住
+status.time_stop.name,,时停,战斗 id：st_time_stop。不在 MVP
+status.time_stop.desc,,伤害先记账，倍率 {stored_damage_mult}。,不写死时长
+status.gap_daze.name,,隙间晕眩,战斗 id：st_gap_daze。不在 MVP
+status.gap_daze.desc,,从隙间出来，愣一下。,不写死时长
+status.registered.name,,登记,战斗 id：st_registered。不在 MVP
+status.registered.desc,,被击破时会留下帮手。,不写失物帮手的单独 key
+status.invulnerable.name,,无敌,战斗 id：st_invulnerable。飘字仍用 combat.invulnerable
+status.invulnerable.desc,,打不中。时长看 {phase_invuln_sec}。,不写死数字
+status.unit_frozen.name,,冻住,战斗 id：st_unit_frozen。挂在角色身上
+status.unit_frozen.desc,,暂时不能攻击，也不能升级。,不写连点次数
+status.unit_freeze_immune.name,,防冻,战斗 id：st_unit_freeze_immune。挂在角色身上
+status.unit_freeze_immune.desc,,暂时不会被冻住。时长看 {duration_sec}。,不写死数字
+status.unit_pounced.name,,被扑中,战斗 id：st_unit_pounced。不在 MVP
+status.unit_pounced.desc,,暂时停手。时长看 {pounce_disable_sec}。,不写死数字
+terrain.ice.name,,冰面,战斗 id：ter_ice。关卡开场和格子提示
+terrain.ice.desc,,残影速度按 {move_speed_mult}。,不写死数字
+terrain.icicle.name,,冰柱,战斗 id：ter_icicle
+terrain.icicle.desc,,挡住直线攻击，格子上放不了人。,存在时间由关卡决定，不写死
+terrain.fog.name,,浓雾,战斗 id：ter_fog
+terrain.fog.desc,,射程减少 {range_minus_cells}，最少 {min_range_cells}。,不写死数字
+terrain.barrier.name,,结界,战斗 id：ter_barrier。和灵梦技能同名，key 不同
+terrain.barrier.desc,,走进来的残影带上结界标记。,
+terrain.burning.name,,火焰地面,战斗 id：ter_burning。不在 MVP
+terrain.burning.desc,,走上去会灼烧。,
+terrain.faded.name,,褪色格,战斗 id：ter_faded。不在 MVP
+terrain.faded.desc,,放不了人。站在上面会停手。,不怕褪色的角色不受影响
+skill.reimu_barrier.name,,结界,战斗 id：skl_reimu_barrier。角色信息页。和地形结界同名，key 不同
+skill.reimu_barrier.desc,,在目标脚下展开一片结界。,不写死冷却和范围
+skill.cirno_freeze.name,,冰结,战斗 id：skl_cirno_freeze
+skill.cirno_freeze.desc,,冻住目标和附近的残影。时长 {freeze_sec}。,不写死数字
+skill.daiyousei_mist_aura.name,,晨雾,战斗 id：skl_daiyousei_mist_aura。大妖精是否可玩仍待定
+skill.daiyousei_mist_aura.desc,,让旁边的角色打得更快。加上 {attack_speed_pct}。,不写死数字。可对照湖符「晨雾之湖」，这不是那张符卡
+skill.keine_hide_history.name,,隐史,战斗 id：skl_keine_hide_history
+skill.keine_hide_history.desc,,守护点多一层护盾，能挡一次漏怪。,不写死层数上限
+skill.yukari_gap_swap.name,,隙间换位,战斗 id：skl_yukari_gap_swap。入队后才能放。和 ch1_03 送回裂缝的探头不是同一件事
+skill.yukari_gap_swap.desc,,把最前面的残影和后面的交换位置。,不写死距离和冷却
+skill.wasure_register.name,,失物登记,战斗 id：skl_wasure_register
+skill.wasure_register.desc,,带着登记被击破后，留下帮手挡路。,不写失物帮手的单独 key
