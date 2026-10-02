@@ -9,7 +9,9 @@ addons/gut/          GUT 测试插件（第三方，不要手改）
 assets/audio/        音效和音乐
 assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
 assets/models/       三维模型（glb 等）
+assets/shaders/      着色器。现在只有受击暗角，只压左右和底部
 assets/textures/     图片
+assets/themes/       界面主题。ofuda.tres 是符札样式，只挂在关名符札和结算卡上
 data/balance/        数值 JSON。调平衡改这里
 data/levels/         正式关卡。现在只有 prologue_01.json，原样复制自关卡 PR #5
 data/prototype/      塔防原型用的数值和旧的两路试验关。正式表合并前先读这里
@@ -18,10 +20,12 @@ scenes/battle/       可玩的塔防棋盘，以及还留着的旧车道画面
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
 scripts/balance/     旧车道数值的读取和计算
-scripts/battle/      塔防规则（不画画面）和棋盘画面
+scripts/battle/      塔防规则（不画画面）、棋盘画面和战斗动效
 scripts/main/        标题场景脚本
 scripts/save/        存档读写
+scripts/ui/          可复用的界面脚本：动效表读取、按钮按下反馈
 tests/unit/          GUT 测试，文件名以 test_ 开头
+tests/capture/       给 PR 拍动效截图的脚本，不是测试，不进安装包
 ci/                  给 GitHub Actions 用的脚本
 docs/                给人读的文档
 ```
@@ -54,6 +58,21 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 界面中文走 `AppTheme` 自动加载：它复制 Godot 默认主题，只换上 `assets/fonts/NotoSansSC-Regular.ttf`，按钮样式保持引擎自带的样子。字体子集覆盖基本拉丁字符和中日韩统一表意文字（U+4E00–U+9FFF）。日常简体中文够用。如果某个很生僻的字显示成方框，需要扩大子集后重新放进 `assets/fonts/`，并保留 `OFL.txt`。
 
+## 动效
+
+动效分三层，都不改规则，`BattleSim` 不知道它们存在。每个反馈长什么样、时长读哪个字段，见 `docs/design/ui_motion/prologue_01_motion.md`。为什么这样分，见 `docs/adr/0006-ui-motion-overlay.md`。
+
+| 节点或脚本 | 作用 | 时间 |
+| --- | --- | --- |
+| `BoardMotion`（`scripts/battle/board_motion.gd`） | 叠在 `BoardView` 上、同样大小、不接收点击。画格子呼吸光、选框、放置封印环、命中光点、击杀光点飞向灵力栏、守护点受击、进关结界 | 真实时间 × 倍速，由 `battle_board.gd` 每帧推进 |
+| `ScreenMotion`（`scripts/battle/screen_motion.gd`） | 用 Tween 做进关暗幕、上下栏滑入、关名符札、结算卡展开、文字弹跳和抖动、离场暗幕 | 真实时间 |
+| `ResultSeal`（`scripts/battle/result_seal.gd`） | 结算标题四周的结界环和转动的小符札 | 真实时间 |
+| `ButtonMotion`（`scripts/ui/button_motion.gd`） | 挂到按钮上做悬停放大、按下缩小、松开回弹、点成功闪光 | 真实时间 |
+
+`BoardView` 只配合两件事：伤害数字的弹出和淡出，以及按 `BoardMotion.unit_scales()` 放大缩小角色。
+
+所有时长和幅度读 `data/prototype/ui_motion.json`，由 `MotionConfig`（`scripts/ui/motion_config.gd`）读取。这份表是动效师给的临时值，正式数字等数值策划定。
+
 ## 自动加载
 
 | 名称 | 脚本 | 职责 |
@@ -85,7 +104,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `combat/stats.json` | 攻击、费用、敌人生命和移速 |
 | `combat/characters.json` | 灵梦、魔理沙怎么打 |
 | `combat/enemies.json` | 小残影、快残影的体型和击退 |
-| `combat/feel.json` | 闪白和伤害数字 |
+| `combat/feel.json` | 闪白、伤害数字、击杀光点、灵力栏弹跳、升级闪光。后几项照抄 PR #4 |
+| `ui_motion.json` | 进关、放置、按钮、受击、结算的动效时长和幅度。临时值 |
 | `levels/prototype_01.json` | 旧的两路试验关。「开始」不再进这里，只留给测试 |
 | `level_difficulty.json` | 每关的开局灵力、每波加的灵力和血量倍率。`prologue_01` 这一行是照抄 #8 的临时行 |
 
