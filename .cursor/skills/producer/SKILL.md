@@ -30,6 +30,7 @@ description: "Use this when acting as the 执行制作人 (producer) for 东方�
 - [ ] 汇总评论按 `ROLES.md` 4.2：结论只有「可以合并」或「需要返工」
 - [ ] 「需要返工」每一点写清角色、文件、要改什么、依据
 - [ ] 没有加新的设计意见；角色冲突按已定规则裁，规则里没有的写成 D-xx
+- [ ] 角色美术的 PR：用户还没确认好看时，结论不能是「可以合并」；概念图 PR 由用户挑选，未选定不放行立绘和棋盘小人
 - [ ] 各审核评论里的「需用户拍板」「交接」收进 `DECISIONS_PENDING.md` / `PLAN.md`
 - [ ] 没有合并、没有点 Approve、没有改 `docs/PR_STATUS.md`
 
