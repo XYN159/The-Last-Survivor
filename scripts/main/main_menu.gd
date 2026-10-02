@@ -1,6 +1,6 @@
 extends Control
 
-## 标题画面。开始按钮只负责进入占位战斗车道，用来确认场景切换。
+## 标题画面。开始按钮进入占位场景，用来确认场景切换。塔防原型会换掉那个场景。
 
 @onready var _start_button: Button = %StartButton
 @onready var _version_label: Label = %VersionLabel

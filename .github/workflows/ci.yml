@@ -95,11 +95,11 @@ jobs:
           key: godot-android-${{ runner.os }}-${{ hashFiles('godot-version.txt') }}
 
       - name: Export debug APK
-        run: ./ci/export_android_debug.sh "${GITHUB_WORKSPACE}/build/android/the-last-survivor-debug.apk"
+        run: ./ci/export_android_debug.sh "${GITHUB_WORKSPACE}/build/android/touhou-forgotten-defense-debug.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: the-last-survivor-android-debug
+          name: touhou-forgotten-defense-android-debug
           path: build/android/*.apk
           if-no-files-found: error

@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### 变更
+
+- 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
+- GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
+
 ### 新增
 
 - 加入《东方守幻录》塔防的关卡框架：24 关的顺序，以及序章 3 关、第一章 4 关的完整地图和波次。说明在 `docs/design/level/`，地图在 `data/levels/`。
@@ -24,4 +29,4 @@
 - 加入 Cursor 工作区配置（推荐 godot-tools、语言服务器端口 6005、从编辑器启动游戏），并写好每天并排改游戏的说明 `docs/DEV_LOOP.md`。
 - 把 Cursor 里的 Godot 路径改成这台 Windows 电脑上的 `D:/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe`。
 
-[Unreleased]: https://github.com/XYN159/The-Last-Survivor/compare/main...HEAD
+[Unreleased]: https://github.com/XYN159/touhou-forgotten-defense/compare/main...HEAD
