@@ -50,9 +50,17 @@ Godot 不需要安装到系统里，这个 exe 就是编辑器。Cursor 里写�
 
 ```bash
 cd /c/Users/你的用户名/Documents
-git clone https://github.com/XYN159/The-Last-Survivor.git
-cd The-Last-Survivor
+git clone https://github.com/XYN159/touhou-forgotten-defense.git
+cd touhou-forgotten-defense
 ```
+
+仓库在 GitHub 上改名之后，用上面的地址。电脑里如果已经克隆过旧地址，不必删掉重来。在旧文件夹里执行：
+
+```bash
+git remote set-url origin https://github.com/XYN159/touhou-forgotten-defense.git
+```
+
+本地文件夹可以继续用原来的名字，也可以自己改成 `touhou-forgotten-defense`。文件夹叫什么不影响游戏。
 
 克隆完成后，`assets/fonts/NotoSansSC-Regular.ttf` 应该是一个大约 7MB 的字体文件，而不是几行 `version https://git-lfs.github.com/spec/v1` 文本。如果是文本，执行 `git lfs pull`。
 
@@ -79,8 +87,8 @@ git pull origin main
 1. 打开 Godot。如果它还停在项目列表，选 **导入**，找到仓库里的 `project.godot`。
 2. 第一次导入会扫资源，等它结束。
 3. 按 `F5`，或点右上角的播放按钮。
-4. 应该看到深色标题 **The Last Survivor**、中文副标题，以及 **开始** 按钮。
-5. 点 **开始**，进入「战斗车道」。画面中间有一条竖道和两道色块，并显示 **小队人数：1**。
+4. 应该看到深色标题 **东方守幻录**、英文副标题 **Touhou Forgotten Defense**，以及 **开始** 按钮。标题下面有一行「占位原型。角色塔防正在开发。」
+5. 点 **开始**，进入占位场景。画面上方仍会写着 **战斗车道**，中间有一条竖道和两道色块，并显示 **小队人数：1**。这是改名前留下的占位，塔防原型会换掉它。
 6. 点 **返回**，回到标题。
 
 窗口比手机窄，是故意的：逻辑分辨率仍是 1080×1920，桌面上缩成 540×960，免得挡住别的窗口。
@@ -91,8 +99,8 @@ git pull origin main
 
 1. 用浏览器打开仓库的 **Actions**。
 2. 左侧选 **CI**，点开一次绿色的运行。
-3. 拉到页面底部，下载名为 `the-last-survivor-android-debug` 的 Artifact。
-4. 解压，得到 `the-last-survivor-debug.apk`。
+3. 拉到页面底部，下载名为 `touhou-forgotten-defense-android-debug` 的 Artifact。
+4. 解压，得到 `touhou-forgotten-defense-debug.apk`。
 5. 用数据线或微信文件传输助手把 APK 拷到手机。
 6. 在手机上点开 APK。如果系统拦截，到设置里允许浏览器或文件管理器「安装未知应用」，然后再点一次。
 7. 安装后打开，应看到和编辑器里一样的标题画面。点「开始」和「返回」确认。
@@ -102,7 +110,7 @@ git pull origin main
 电脑上如果装了 Android Platform Tools，也可以在 APK 所在目录执行：
 
 ```bash
-adb install -r the-last-survivor-debug.apk
+adb install -r touhou-forgotten-defense-debug.apk
 ```
 
 手机需要先打开开发者选项里的 USB 调试。
