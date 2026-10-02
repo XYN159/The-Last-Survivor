@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/feedback.md"
+  },
+  "hit_flash": {"duration_sec": 0.08, "color": "#FFFFFF", "strength": 0.85, "throttle_per_enemy_sec": 0.05},
+  "knockback_visual": {"tween_sec": 0.06},
+  "damage_numbers": {
+    "normal_color": "#FFFFFF",
+    "heavy_color": "#FFD23F",
+    "normal_font_px": 34,
+    "heavy_font_px": 48,
+    "heavy_pop_scale": 1.4,
+    "rise_px": 60,
+    "lifetime_sec": 0.6,
+    "max_on_screen": 40,
+    "merge_same_target_window_sec": 0.12,
+    "overflow_policy": "drop_new_normal_then_oldest_normal_keep_heavy",
+    "invulnerable_text_key": "combat.invulnerable",
+    "invulnerable_color": "#9AA0A6",
+    "invulnerable_throttle_sec": 0.5
+  },
+  "screen_shake": {"heavy_duration_sec": 0.15, "heavy_amplitude_px": 6, "max_amplitude_px": 12, "throttle_sec": 0.1, "settings_toggle": true},
+  "kill_burst": {"particles_per_kill": 6, "fly_duration_sec": 0.5, "max_active_orbs": 60, "merge_over_cap": true, "target_anchor": "spirit_counter"},
+  "spirit_counter_bump": {"scale": 1.25, "duration_sec": 0.15, "count_up_sec": 0.3},
+  "spell_button": {"ready_glow_pulse_sec": 0.8, "ready_sfx": "spell_ready_chime", "disabled_alpha": 0.5},
+  "spell_cutin": {"dim_alpha": 0.55, "portrait_slide_in_sec": 0.2, "name_fade_in_sec": 0.15, "portrait_side_player": "left", "portrait_side_boss": "right", "tap_to_skip": true},
+  "combo": {"label_format": "×%d", "display_linger_sec": 1.2, "pop_scale": 1.3, "milestones": [10, 20, 50], "milestone_scale": 1.6},
+  "slowmo": {"ease_in_real_sec": 0.05, "ease_out_real_sec": 0.1, "vignette_alpha": 0.2},
+  "armor_feedback": {"text_key": "combat.armor", "spark_vfx": "armor_spark", "color": "#B0B8C0", "sfx": "metal_tink"},
+  "guard_alert": {"flash_color": "#FF3030", "flash_pulse_sec": 0.5, "sfx": "alarm_short"},
+  "guard_damage_vignette": {"duration_sec": 0.4, "color": "#FF0000", "max_alpha": 0.45},
+  "synergy_popup": {"first_time_duration_sec": 1.6, "text_key": "combat.synergy_found", "repeat_label_duration_sec": 0.8},
+  "boss": {"hp_bar_drain_sec": 0.3, "phase_break_flash_sec": 0.2, "entry_banner_sec": 1.0},
+  "wave_banner": {"duration_sec": 1.0, "final_wave_text_key": "combat.final_wave"},
+  "early_call": {"reward_popup_sec": 0.8},
+  "level_up": {"flash_sec": 0.3, "scale_pop": 1.15, "sfx": "level_up"},
+  "buff_threshold": {"banner_sec": 1.2, "sfx": "buff_evolve"},
+  "freeze": {"apply_sfx": "freeze_crackle", "shatter_vfx": "ice_shatter", "shatter_sfx": "ice_break"},
+  "unit_frozen": {"tap_crack_vfx": "ice_crack_step", "tap_sfx": "ice_tap"}
+}

@@ -11,6 +11,7 @@ assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
 data/balance/        数值 JSON。调平衡改这里
+data/balance/combat/ 战斗草案配置。游戏代码尚未读取
 scenes/main/         标题等流程场景
 scenes/battle/       占位战斗场景（旧车道画面，暂不改名）
 scenes/ui/           以后可复用的界面碎片（目前还没有）
@@ -22,6 +23,7 @@ scripts/save/        存档读写
 tests/unit/          GUT 测试，文件名以 test_ 开头
 ci/                  给 GitHub Actions 用的脚本
 docs/                给人读的文档
+docs/design/combat/  战斗规则草案。索引见该目录的 README.md
 ```
 
 Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
@@ -64,7 +66,9 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 ## 数值配置
 
-平衡数字放在 `data/balance/starting_balance.json`。下面这些字段仍是旧占位原型在用，塔防数值以后另写，不要把这里当成新玩法的定案：
+平衡数字放在 `data/balance/`。`BalanceConfig` 负责读取和计算，例如 `squad_size_after_gates()`。场景脚本只问 `GameState` 要结果，不自己解析 JSON。
+
+已经接入游戏的起始数值是 `data/balance/starting_balance.json`。下面这些字段仍是旧占位原型在用，塔防数值以后另写，不要把这里当成新玩法的定案：
 
 | 字段 | 含义 | 当前值 |
 | --- | --- | --- |
@@ -72,9 +76,19 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `gate_bonus_per_upgrade` | 每通过一道「加人门」增加的人数 | 1 |
 | `starting_supplies` | 开局物资 | 0 |
 
-`BalanceConfig` 负责读取和计算，例如 `squad_size_after_gates()`。场景脚本只问 `GameState` 要结果，不自己解析 JSON。
+战斗草案另有一套配置，放在 `data/balance/combat/`。字段说明在 `docs/design/combat/data_reference.md`，索引在 `docs/design/combat/README.md`。这批文件目前只给制作人审核，游戏代码还不会读取它们。数值只有一个来源：数值策划 PR #8 生成的 `stats.json`。战斗策划的表只放行为和手感参数，用 `*_stats_key` 按点号路径引用 `stats.json` 的字段。
 
-新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*`。
+| 文件 | 内容 | 维护者 |
+| --- | --- | --- |
+| `data/balance/combat/rules.json` | 战斗规则和手感参数。伤害保底不在这里 | 战斗策划 |
+| `data/balance/combat/stats.json` | 全部数值：全局常量 `armor_floor_ratio`、`min_damage`，以及角色、敌人（`enemies`）、Boss（`bosses`）、波次、经济、充能、符卡、状态、地形的数值。由 PR #8 的脚本从 `data/*.csv` 生成，不要手改 | 数值策划（PR #8） |
+| `data/balance/combat/characters.json` | 角色攻击方式、技能、符卡、阻挡、升级外观 | 战斗策划 |
+| `data/balance/combat/enemies.json` / `bosses.json` | 敌人和 Boss 的行为。血量、移速等数值在 `stats.json` 的 `enemies` / `bosses` 段 | 战斗策划 |
+| `data/balance/combat/statuses.json` / `terrain.json` | 状态和地形效果 | 战斗策划 |
+| `data/balance/combat/spell_cards.json` / `synergies.json` / `buffs.json` | 符卡、联动、强化 | 战斗策划 |
+| `data/balance/combat/feel.json` | 打击反馈和演出参数 | 战斗策划 |
+
+新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*`。Godot 4.7 的 `*` 会匹配任意字符，包括路径里的 `/`，所以 `data/balance/starting_balance.json` 和 `data/balance/combat/` 下的 JSON 都会打进 APK。这次不用改 `export_presets.cfg`。
 
 ## 存档
 

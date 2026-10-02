@@ -1,0 +1,384 @@
+# 配置表字段说明
+
+> JSON 不能写注释，所以每个字段的含义写在这里。
+> 「归属」列：**战斗** = 战斗策划（行为和手感）；**数值** = 数值策划（数字只在 PR #8 的 `stats.json`）；**关卡** = 关卡策划；**文案** = 文案策划；**程序** = 实现细节。
+> 所有文件都在 `data/balance/combat/`，UTF-8，字段英文小写下划线。每个文件都有 `meta` 段：`schema_version`（整数，结构改了就 +1）、`status`（`draft` / `placeholder_pending_balance_design`）、`owner`、`doc`（对应文档）。
+> 注意：Godot 的 `JSON.parse` 把所有数字读成浮点数，程序取整数字段时要 `int()`。
+
+## 文件归属总览
+
+| 文件 | 内容 | 主要归属 |
+| --- | --- | --- |
+| `rules.json` | 棋盘、tick、局内流程、选敌、移动、危急、符卡能量规则、连击、慢动作、伤害取整和护甲提示、放置、强化触发、性能上限 | 战斗 |
+| `stats.json` | 全部数值。**由数值策划 PR #8 生成，本 PR 不带**，见下面「stats.json」一节 | **数值**（PR #8） |
+| `characters.json` | 角色攻击方式、弹道、技能、符卡、阻挡、每级外观。射程、间隔用 `*_stats_key` 指向 PR #8 | 战斗 |
+| `enemies.json` | 敌人标签、反馈、状态机。数值在 PR #8 `enemies.<id>` | 战斗 |
+| `bosses.json` | Boss 阶段、符卡、控制免疫、切阶段规则。数值在 PR #8 `bosses.<id>` | 战斗 |
+| `statuses.json` | 状态效果、时长、叠加、免疫、视觉 | 战斗 |
+| `terrain.json` | 地形效果 | 战斗（关卡引用） |
+| `spell_cards.json` | 符卡效果 | 战斗 |
+| `synergies.json` | 联动条件和效果 | 战斗 |
+| `buffs.json` | 强化行为、叠层、质变 | 战斗（结构）/ 系统（稀有度、权重）/ 数值（每层数值） |
+| `feel.json` | 打击反馈和演出参数 | 战斗 |
+
+## rules.json
+
+| 字段 | 类型 | 单位 | 含义 | 归属 |
+| --- | --- | --- | --- | --- |
+| `grid.columns` / `grid.rows` | 整数 | 格 | 7 × 12【框架】 | 战斗 |
+| `grid.origin` | 字符串 | — | 坐标原点，`top_left` | 程序 |
+| `grid.cell_size_px` | 整数 | 像素 | 每格像素，草案 128 | 程序/制作人 |
+| `grid.board_offset_px` | [x, y] | 像素 | 棋盘左上角在 1080×1920 画面里的位置 | 程序 |
+| `tick.logic_hz` | 整数 | 次/秒 | 逻辑频率 60 | 战斗 |
+| `tick.max_ticks_per_frame` | 整数 | 次 | 一帧最多补跑几个 tick | 程序 |
+| `time_scale.speed_options` | 数组 | 倍 | 可选倍速 [1, 2]【框架】 | 战斗 |
+| `battle_flow.deploy_time_sec` | 数字 | 秒 | 布阵期 10【框架】 | 战斗（关卡可覆盖） |
+| `battle_flow.intermission_sec` | 数字 | 秒 | 空档固定 4。从 20 秒刷怪窗口结束起算，清场不缩短 | 战斗（关卡可覆盖） |
+| `battle_flow.advance_mode` | 字符串 | — | `spawn_window`：刷完 + 空档就进下一波，不等清场（推荐，待用户拍板） | 战斗/关卡 |
+| `battle_flow.spawn_window_sec` | 数字 | 秒 | 刷怪窗口约 20：第一只到最后一只出生。替代旧的 `wave_target_sec` | 战斗/关卡 |
+| `battle_flow.wait_for_clear` | 布尔 | — | 是否等清场。false | 战斗 |
+| `battle_flow.gap_starts_at` | 字符串 | — | 空档从刷怪窗口结束起算：`spawn_window_end`。窗口是 20 秒，不是「最后一只出生」 | 战斗 |
+| `battle_flow.intermission_shortened_by_clear` | 布尔 | — | 清场是否缩短空档。false：空档固定走完 | 战斗 |
+| `battle_flow.first_wave_delay_sec` | 数字 | 秒 | 布阵结束到第一只出生。0（关卡 `waves[0].delay_sec` = 0） | 战斗/关卡 |
+| `battle_flow.deploy_wait_for_player_holds_full_countdown` / `deploy_wait_for_player_releases_on` | 布尔 / 字符串 | — | 序章：放下第一个角色（`first_placement`）前倒计时停在 10 秒 | 战斗 |
+| `battle_flow.early_call_keeps_current_wave_spawns` | 布尔 | — | 刷怪窗口里叫波，这一波没出生的敌人按原时间表照常出生，和下一波重叠。true | 战斗 |
+| `battle_flow.early_call_drops_unspawned` | 布尔 | — | 叫波是否丢掉这一波没出生的敌人。false（叫波不能用来跳过敌人） | 战斗 |
+| `battle_flow.early_call_skips_zh` | 字符串 | — | 各状态里叫波跳过什么的中文说明 | 战斗 |
+| `battle_flow.wave_clear_bonus_at` | 字符串 | — | 清波奖励在 `intermission_start` 发 | 战斗 |
+| `battle_flow.tutorial_wave_count_may_be_below` | 整数 | 波 | 序章教学可以少于 5 波 | 战斗/关卡 |
+| `battle_flow.level_wave_count_min` / `_max` | 整数 | 波 | 其余关卡 10 到 20 波 | 战斗/关卡 |
+| `battle_flow.mvp_wave_count_min` / `_max` | 整数 | 波 | MVP 关卡多用 10 到 12 波 | 战斗/关卡 |
+| `battle_flow.early_call_allowed_states` | 数组 | — | 哪些局内状态能叫波：`deploy`、`spawning`、`intermission` | 战斗 |
+| `battle_flow.early_call_reward_rounding` | 字符串 | — | 奖励取整方式 `floor` | 战斗 |
+| `targeting.default_rule` | 字符串 | — | 默认选敌 `closest_to_guard`（离守护点路程最近） | 战斗 |
+| `targeting.tie_breaker` | 字符串 | — | 平局取出生更早的 | 战斗 |
+| `targeting.deprioritize_invulnerable` | 布尔 | — | 无敌目标排在最后 | 战斗 |
+| `movement.min_speed_mult` | 数字 | 倍 | 移速总倍率下限 0.3【框架】 | 战斗 |
+| `movement.max_speed_mult` | 数字 | 倍 | 上限 2.0 | 战斗 |
+| `movement.boss_min_speed_mult` | 数字 | 倍 | Boss 下限 0.5 | 战斗 |
+| `movement.hard_stop_statuses` | 数组 | — | 让速度归零的状态 | 战斗 |
+| `knockback.default_cells` | 数字 | 格 | 默认击退 0.1【框架】 | 战斗 |
+| `knockback.per_enemy_cooldown_sec` | 数字 | 秒 | 同一敌人普通击退冷却 0.25 | 战斗 |
+| `enemy_spawn.spawn_state_sec` | 数字 | 秒 | 出生状态时长 0.3 | 战斗 |
+| `guard.alert_rows_from_bottom` | 整数 | 行 | 报警区 = 最后 2 行 | 战斗 |
+| `guard.alert_throttle_real_sec` | 数字 | 秒（真实） | 报警音节流 2.0 | 战斗 |
+| `guard.damage_vignette_sec` | 数字 | 秒 | 扣血泛红 0.4【框架】 | 战斗 |
+| `crisis.rows_from_bottom` | 整数 | 行 | 危急区 = 最后 3 行 | 战斗 |
+| `crisis.guard_hp_ratio` | 数字 | 比例 | 守护点 ≤ 30% 算危急 | 战斗 |
+| `crisis.charge_mult_stats_key` | 字符串 | — | 危急充能倍率，指向 `spell_charge.crisis_charge_mult` | 数值 |
+| `spell_energy.max_stats_key` / `max_fallback_stats_key` | 字符串 | — | 能量满值按当前符卡使读 `characters.<caster_id>.spell_energy_max`（不是固定 100），没填用 `spell_charge.energy_max_default` | 数值 |
+| `spell_energy.start_stats_key` | 字符串 | — | 开局能量，指向 `spell_charge.energy_start` | 数值 |
+| `spell_energy.charge_from_spell_damage` | 布尔 | — | 符卡伤害是否充能（否） | 战斗 |
+| `spell_energy.count_overkill` | 布尔 | — | 溢出伤害是否充能（否） | 战斗 |
+| `spell_energy.auto_release_scope` | 字符串 | — | 自动释放是全局开关，值为 `global`。已拍板 | 战斗 |
+| `spell_energy.auto_release_default_on` | 布尔 | — | 自动释放默认关。已拍板 | 战斗 |
+| `spell_energy.auto_release_toggle_during_battle` | 布尔 | — | 局内可以切换自动释放。已拍板为 true | 战斗 |
+| `spell_energy.auto_release_disabled_in_tutorial` | 布尔 | — | 教学关不锁死自动释放。值为 false：开局是关，局内可以打开 | 战斗 |
+| `spell_energy.auto_release_min_enemies` | 整数 | 只 | 自动释放条件之一：场上 ≥ 8 只 | 战斗 |
+| `spell_energy.auto_release_rows_from_bottom` | 整数 | 行 | 自动释放条件之二：有敌人进入最后 3 行 | 战斗 |
+| `spell_energy.caster_mode` | 字符串 | — | 已定为 `single_caster_switchable`（方案 A+，2026-09-27） | 制作人 |
+| `spell_energy.caster_switch_allowed_states` | 数组 | — | 允许换符卡使的状态：`deploy`、`intermission` | 战斗 |
+| `spell_energy.caster_switch_clears_charge` | 布尔 | — | 换符卡使时能量清零。数值策划已确认为 true | 战斗/数值 |
+| `spell_energy.caster_absent_origin` | 字符串 | — | 符卡使不在场时从哪里发出（守护点） | 战斗 |
+| `spell_energy.caster_unfreeze_on_cast` | 布尔 | — | 释放时解冻被冻住的符卡使 | 战斗 |
+| `spell_cutin.first_duration_sec` / `repeat_duration_sec` | 数字 | 秒 | 1.2 / 0.6【框架】 | 战斗 |
+| `spell_cutin.shorten_scope` | 字符串 | — | 缩短按「同一关同一张符卡」计 | 战斗 |
+| `combo.chain_window_sec` | 数字 | 秒 | 连击间隔 1.0 | 战斗 |
+| `combo.display_from` | 整数 | 次 | ×3 起显示 | 战斗 |
+| `slowmo.kills_window_sec` / `kills_threshold` | 数字 / 整数 | 秒 / 只 | 0.2 秒内 8 只 | 战斗 |
+| `slowmo.spell_kills_threshold` | 整数 | 只 | 符卡击杀 5 只 | 战斗 |
+| `slowmo.duration_real_sec` / `time_mult` / `cooldown_real_sec` | 数字 | 秒 / 倍 / 秒 | 0.5 / 0.3【框架】/ 8 | 战斗 |
+| `damage.rounding` | 字符串 | — | 四舍五入（0.5 远离 0） | 战斗 |
+| `damage.armor_feedback_ratio` / `_throttle_sec` | 数字 | 比例 / 秒 | 削掉 ≥ 50% 提示「护甲」，0.5 秒一次 | 战斗 |
+| `damage.attack_mult_categories` | 数组 | — | 攻击加成的分类（同类加、异类乘） | 战斗 |
+| `damage.damage_mult_buckets` | 数组 | — | 伤害倍率桶：易伤、联动 | 战斗 |
+| `damage.multi_shot_split` | 对象 | — | 多发总伤害不变：每发攻击和护甲都 ÷ 发数，暴击每发各掷。见 damage_and_status.md 2.2 | 战斗 |
+| `placement.place_delay_sec` | 数字 | 秒 | 放置后多久开始攻击 | 战斗 |
+| `placement.max_copies_per_character` | 整数 | 个 | 同一角色最多放几个的缺省值，已定为 3（2026-09-27） | 制作人 |
+| `placement.per_character_max_copies_stats_key` | 字符串 | — | 每个角色自己的上限 `characters.<id>.max_copies` | 数值 |
+| `character_levels.max_level` | 整数 | 级 | 局内最高 3 级，即每个角色升 2 次。已和数值策划对齐 | 战斗/数值 |
+| `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 每 5 波三选一。已拍板，和 PR #8 `buff_offer` 一致 | 战斗/系统 |
+| `buff_offers.offer_trigger_point` | 字符串 | — | 第 5、10、15 波刷完、进入空档那一刻弹出，不等清场 | 战斗 |
+| `buff_offers.transform_at_stacks_stats_key` / `_default_stats_key` | 字符串 | — | 质变层数指向 `buffs.<id>.transform_at_stacks`，缺省 `buff_offer.transform_at_stacks_default`（2 层） | 数值 |
+| `buff_offers.scope` | 字符串 | — | 强化只管当局，`per_level`。过关清空。已拍板 | 制作人/系统 |
+| `buff_offers.clear_on_level_end` | 布尔 | — | 过关清空强化。已定为 true | 战斗/系统 |
+| `buff_offers.allow_repeat_stacks` | 布尔 | — | 同一强化可以重复叠加。已定为 true | 战斗 |
+| `buff_offers.prologue_levels_without_offer` | 整数 | 关 | 序章前几关没有三选一。已定为 2 | 战斗 |
+| `buff_offers.prologue_offer_starts_at_level` | 整数 | 关 | 序章从第几关开始教三选一。已定为 3 | 战斗 |
+| `buff_offers.pity_owned_below_threshold` | 布尔 | — | 已拥有但未到质变层数的强化，下次三选一保底出现其中一个。已定为 true | 战斗 |
+| `buff_offers.skip_offer_on_final_wave` | 布尔 | — | 最后一波打完不再给三选一。已定为 true | 战斗 |
+| `placement.allowed_cell_mark` | 字符串 | — | 只能放在地图里标成 `.` 的预定槽位。路线是 `P`。字母表和关卡策划 PR #5 一致 | 战斗/关卡 |
+| `placement.routes_fixed_during_level` | 布尔 | — | 一关的路线中途不变。已定为 true | 战斗/关卡 |
+| `retry.on_defeat` | 数组 | — | 失败后可选 `restart_wave`（从当前波重来）或 `restart_level`（整关重打） | 战斗 |
+| `retry.restart_wave_restore` | 字符串 | — | `wave_start_snapshot`：恢复到该波第一只出生前的快照 | 战斗 |
+| `retry.snapshot_restores` / `snapshot_does_not_restore` | 数组 | — | 快照恢复什么、不恢复什么（DI-05），见 core_rules.md 5.2 | 战斗 |
+| `performance.max_projectiles` / `max_damage_numbers` / `max_kill_orbs` | 整数 | 个 | 性能上限 300 / 40 / 60 | 程序/战斗 |
+| `rng.seeded_per_battle` | 布尔 | — | 每局一个随机种子 | 程序 |
+
+## stats.json（PR #8，本 PR 不带）
+
+`data/balance/combat/stats.json` 由数值策划 PR #8 的脚本 `tools/numeric/gen_stats_json.py` 从 `data/*.csv` 生成，**不要手改**，也不在本 PR 里。本 PR 的 JSON 用 `*_stats_key` 指向它的字段路径（例：`"range_stats_key": "characters.chr_reimu.range_cells"`）；`<id>` 表示换成当前对象的 ID，`<caster_id>` 是当前符卡使。下表是本 PR 引用到的字段，名字和 PR #8（提交 `5091adb`）逐个核对过。
+
+| 字段路径 | 含义 | 谁在用 |
+| --- | --- | --- |
+| `armor_floor_ratio`、`min_damage`（顶层） | 护甲保底比例、最少伤害 | 伤害流水线 |
+| `caster_switch_clears_charge`（顶层） | 换符卡使清空能量 | 符卡使规则 |
+| `guard.max_hp` | 守护点生命 | 守护点 |
+| `economy.starting_spirit` / `wave_clear_bonus` / `early_call_reward_per_sec` / `early_start_reward_per_sec` | 开局灵力、清波奖励、叫波和提前开始每秒奖励 | 波次状态机 |
+| `economy.sell_refund_ratio_default` / `copy_cost_increase_ratio_default` / `max_copies_per_character` | 缺省值；角色有自己的字段时用角色的 | 放置 |
+| `waves.advance_mode` / `spawn_window_sec` / `gap_sec` / `deploy_time_sec` | 波次时间轴（和 `rules.json` → `battle_flow` 同一口径） | 波次状态机 |
+| `spell_charge.energy_max_default` / `energy_start` | 能量满值缺省、开局能量 | 符卡 |
+| `spell_charge.per_damage` / `per_damage_by_level.<level_id>` / `per_kill_default` | 每点伤害充能（按关）、击杀充能缺省 | 符卡 |
+| `spell_charge.crisis_charge_mult` | 危急充能倍率（`rules.json` → `crisis.charge_mult_stats_key`） | 符卡 |
+| `spell_charge.target_full_sec_normal` / `damage_share` / `kill_share` | 设计目标，数值换算用，程序不读 | 数值 |
+| `buff_offer.every_n_waves` / `choices` / `transform_at_stacks_default` | 三选一间隔、选项数、质变层数缺省 | 强化 |
+| `boss_rules.phase_hp_ratios` / `phase_invuln_sec` / `on_reach_guard` | Boss 切阶段血量阈值、切阶段无敌秒数、走到守护点的规则 | Boss |
+| `terrain.ter_ice.move_speed_mult` | 冰面移速倍率 | 地形 |
+| `terrain.ter_ice.stop_on_declare_sec` | 冰之残影冻结秒数（冻角色、冻残影都用它）。名字是借用的，已请数值策划补专用字段 | Boss 符卡 |
+| `terrain.ter_fog.range_minus_cells` / `min_range_cells` | 浓雾射程减几格、最少几格 | 地形 |
+| `characters.<id>.cost` / `upgrade_costs` / `sell_refund_ratio` / `copy_cost_increase_ratio` / `max_copies` | 费用、升级费用、卖出返还、多放涨价、每人上限 | 放置 |
+| `characters.<id>.base_attack` / `level_attack_mult` / `crit_chance` / `crit_mult` | 攻击、每级倍率、暴击 | 伤害 |
+| `characters.<id>.attack_interval_sec` / `range_cells` | 攻击间隔、射程（`characters.json` → `interval_stats_key` / `range_stats_key`） | 角色 |
+| `characters.<id>.spell_energy_max` | 这名角色当符卡使时的能量满值（每人不同，约 80–150；不是固定 100） | 符卡 |
+| `characters.<id>.normal_effect.type` / `value` / `param` | 普攻附带效果（琪露诺：减速强度、秒数；妹红、早苗：溅射） | 角色 |
+| `characters.chr_meiling.block_count` / `max_hp` | 美铃同时挡几个、她的血量 | 美铃 |
+| `enemies.<id>.hp` / `move_speed_cells_per_sec` / `armor` / `spirit_drop` / `leak_damage` / `threat_points` / `kill_charge` / `block_dps` / `first_level_id` | 普通敌人数值 | 敌人 |
+| `bosses.<id>.hp` / `move_speed_cells_per_sec` / `armor` / `spirit_drop` / `leak_damage` / `kill_charge` / `block_dps` / `first_level_id` | Boss 数值，**在 `bosses` 段，不在 `enemies` 段**（DI-07）。`bosses.json` → `stats_path` | Boss |
+| `skills.<id>.*` | 技能系数（`damage_coef`、`attack_speed_pct` 等） | 技能 |
+| `statuses.st_slow.max_strength` / `st_barrier_mark.vulnerability_add` / `st_burn.tick_damage_coef` | 减速上限、结界易伤、灼烧每跳 | 状态 |
+| `spell_cards.<id>.*` | 符卡数值（`damage_coef`、`damage_coef_per_tick`、`ticks`、`orb_count`、`freeze_sec`、`radius_cells`、`boss_slow_strength`、`slow_strength`、`duration_sec`、`max_targets`、`knockback_cells`、`send_back_cells` 等） | 符卡 |
+| `synergies.<id>.synergy_add` | 联动桶加成。ID 和本 PR 不完全一样：冰火交加是 `syn_ice_fire` | 联动 |
+| `buffs.<id>.offer_weight` / `max_stacks` / `transform_at_stacks` / 各自的每层字段 | 强化数值 | 强化 |
+
+**PR #8 还没有、本 PR 已经引用的字段**（已请数值策划补，补之前程序用括号里的兜底）：
+
+| 字段 | 用途 | 兜底 |
+| --- | --- | --- |
+| `characters.chr_meiling.redeploy_cooldown_sec` | 美铃被打倒后多久能重新站起 | PR #8 `battle_rules.csv` 有 `blocker_redeploy_cooldown`，还没进 `stats.json` |
+| `synergies.syn_gatekeeper_line.synergy_add` | 门番的一条直线 | 不生效 |
+| `buffs.buff_gap_eye.swap_hit_damage_coef` | 隙间回廊额外一击 | 不生效 |
+| `enemies.enm_shade_pouncer.*`（建议 `pounce_disable_sec`）、`enemies.enm_shade_flying.*` | 第三、四章新敌人 | 不出场 |
+| 冰之残影冻结秒数专用字段（建议 `bosses.boss_cirno.unit_freeze_sec`） | 冰瀑、完美冻结的冻结秒数 | 先读 `terrain.ter_ice.stop_on_declare_sec` |
+| `skills.skl_cirno_freeze.freeze_sec` | 琪露诺技能「冰结」冻结秒数 | 无（必须补） |
+| `buffs.buff_frost_frog.freeze_sec` | 寒气、青蛙冰雕的冻结秒数 | 无（必须补） |
+| `statuses.st_freeze.max_chain_sec` | 连续冻结总时长上限 | 不设上限 |
+| `statuses.st_freeze_immune.duration_sec` / `statuses.st_unit_freeze_immune.duration_sec` | 冻结结束后的免疫秒数（敌人 / 角色） | 无（必须补） |
+
+**本 PR 旧草案和 PR #8 字段名对照**（已全部改成 PR #8 的名字）：
+
+| 旧写法（本 PR） | PR #8 实际字段 |
+| --- | --- |
+| 旧 `stats.json` → `enemies.boss_cirno.*` | `bosses.boss_cirno.*` |
+| `rules.json` → `spell_energy.max`（固定 100） | `characters.<caster_id>.spell_energy_max` |
+| `rules.json` → `crisis.charge_mult`（写死 1.5） | `spell_charge.crisis_charge_mult` |
+| `rules.json` → `fog.range_penalty_cells` / `min_range_cells` | `terrain.ter_fog.range_minus_cells` / `min_range_cells` |
+| `characters.json` → `attack.range_cells` / `attack.interval_sec` | `characters.<id>.range_cells` / `attack_interval_sec` |
+| `spell_cards.json` 写死的 `count`（梦想封印光弹数） | `spell_cards.sc_fantasy_seal.orb_count` |
+| `synergies.json` 写死的 `add`（冰火交加） | `synergies.syn_ice_fire.synergy_add` |
+| `buffs.json` → `thresholds[].stacks`、`max_stacks`、`offer_weight` | `buffs.<id>.transform_at_stacks`、`max_stacks`、`offer_weight` |
+| `bosses.json` → `phase_transition.invulnerable_sec` | `boss_rules.phase_invuln_sec` |
+| 文档里的 `stats.json` → `copy_cost_increase_ratio`（全局） | `characters.<id>.copy_cost_increase_ratio`（缺省 `economy.copy_cost_increase_ratio_default`） |
+
+## characters.json
+
+| 字段 | 类型 | 单位 | 含义 | 归属 |
+| --- | --- | --- | --- | --- |
+| `id` | 字符串 | — | `chr_<PR #2 角色 id>` | 战斗 |
+| `name_key` | 字符串 | — | 显示名文本 key（PR #2 已有） | 文案 |
+| `playable_status` | 字符串 | — | `confirmed` / `pending_producer`（PR #2 待定的三人） | 制作人 |
+| `mvp` | 布尔 | — | 是否属于 MVP 可放置角色。灵梦、魔理沙、琪露诺、紫为 true | 战斗 |
+| `unlock` | 字符串 | — | 可选。魔理沙 `prologue_01_clear`；琪露诺 `ch1_01_clear`；紫 `chapter1_boss_clear`（`ch1_04` 打完） | 战斗 |
+| `first_available_level_id` | 字符串 | — | 第一次能放的关：魔理沙 `prologue_02`、琪露诺 `ch1_02`、紫 `ch2_01` | 战斗/关卡 |
+| `before_unlock` | 字符串 | — | 可选。紫为 `chapter1_gap_peek_once` | 战斗 |
+| `before_unlock_demo` | 对象 | — | 紫的演示：`ch1_03` 第 6 波第一只硬残影走到一半时被送回裂缝，不伤害，每次打这关一次、只在紫未加入时（DI-14） | 战斗/关卡 |
+| `mvp_use` | 字符串 | — | 可选。紫为 `replay_cleared_levels`：MVP 里通过重打已通关的关卡放置 | 战斗 |
+| `role` | 字符串 | — | 定位标签，只给人看 | 战斗 |
+| `tags` | 数组 | — | 机制标签，如 `fade_immune` | 战斗 |
+| `attack.type` | 字符串 | — | 攻击类型，见 characters.md 第 3 节 | 战斗 |
+| `attack.range_stats_key` | 字符串 | — | 射程（圆形），指向 `characters.<id>.range_cells` | 数值 |
+| `attack.interval_stats_key` | 字符串 | — | 攻击间隔，指向 `characters.<id>.attack_interval_sec` | 数值 |
+| `attack.initial_delay_sec` | 数字 | 秒 | 放置后第一次攻击的延迟 | 战斗 |
+| `attack.targeting` | 字符串 | — | 选敌规则：`closest_to_guard` / `highest_current_hp` / `highest_max_hp` | 战斗 |
+| `attack.count` | 整数 | 发 | 一次发几发 | 战斗 |
+| `attack.heavy` | 布尔 | — | 是否每击都算重击 | 战斗 |
+| `attack.can_crit` | 布尔 | — | 能否暴击 | 战斗 |
+| `attack.knockback_cells` | 数字 | 格 | 每击击退 | 战斗 |
+| `attack.blocked_by_icicle` | 布尔 | — | 是否被冰柱挡住 | 战斗 |
+| `attack.damage_tags` | 数组 | — | 伤害标签，联动用（`fire`、`ice`…） | 战斗 |
+| `attack.applies_statuses[]` | 数组 | — | 命中附加的状态：`status_id`、`strength` / `strength_stats_key`、`duration_sec` / `duration_stats_key` | 战斗 |
+| `attack.projectile.speed_cells_per_sec` | 数字 | 格/秒 | 弹速 | 战斗 |
+| `attack.projectile.turn_deg_per_sec` | 数字 | 度/秒 | 追踪转向速度，0 = 直线 | 战斗 |
+| `attack.projectile.lifetime_sec` | 数字 | 秒 | 弹体寿命 | 战斗 |
+| `attack.projectile.hit_radius_cells` | 数字 | 格 | 碰撞半径 | 战斗 |
+| `attack.projectile.retarget_radius_cells` | 数字 | 格 | 目标死后在多大范围内换目标 | 战斗 |
+| `attack.projectile.pierce` | 整数 | 个 | 穿透数 | 战斗 |
+| `attack.line_width_cells` | 数字 | 格 | 直线攻击宽度（魔理沙） | 战斗 |
+| `attack.splash_radius_cells` | 数字 | 格 | 溅射半径 | 战斗 |
+| `attack.spread_deg` | 数字 | 度 | 多发弹体的扇形角 | 战斗 |
+| `attack.ignores_fog` | 布尔 | — | 不受浓雾射程惩罚（紫） | 战斗 |
+| `attack.bonus_vs_tags[]` | 数组 | — | 对某标签的加成：`tag`、`bucket`、`add_stats_key` | 战斗 |
+| `placement` / `block.*` | 字符串 / 对象 | — | 美铃：放在贴路线的 `.` 格，挡 `block.count_stats_key` 个敌人，血量 `max_hp_stats_key`，被挡敌人伤害 `enemies.<id>.block_dps` | 战斗 |
+| `attack.leaves_terrain` | 对象 | — | 命中处留下地形（妹红） | 战斗 |
+| `skills[].id` | 字符串 | — | `skl_<角色>_<名>` | 战斗 |
+| `skills[].trigger` | 字符串 | — | `auto_cooldown`（冷却好就放）/ `passive_aura` / `on_marked_enemy_death` | 战斗 |
+| `skills[].cooldown_sec` / `initial_delay_sec` | 数字 | 秒 | 冷却和首次延迟 | 战斗 |
+| `skills[].requires_target_in_range` | 布尔 | — | 射程内有敌人才放 | 战斗 |
+| `skills[].effect` | 对象 | — | 技能效果，`type` 决定其余字段 | 战斗 |
+| `spell_card_ids` / `default_spell_card_id` | 数组 / 字符串 | — | 该角色的符卡和按钮默认放的那张 | 战斗 |
+| `levels[].level` | 整数 | 级 | 1–3 | 战斗 |
+| `levels[].visual.sprite_variant` | 字符串 | — | 角色小人/立绘变体资源名 | 战斗/美术 |
+| `levels[].visual.aura_vfx` | 字符串 | — | 身边常驻特效，空字符串 = 没有 | 战斗/美术 |
+| `levels[].visual.projectile_vfx` | 字符串 | — | 弹幕外观 | 战斗/美术 |
+| `levels[].visual.scale` | 数字 | 倍 | 体型缩放 | 战斗 |
+| `levels[].behavior_mods[]` | 数组 | — | `{op: "set"/"add", path: "字段路径", value}`，升级时改行为；技能用 `skills.<技能id>.字段` | 战斗 |
+
+## enemies.json
+
+| 字段 | 类型 | 单位 | 含义 | 归属 |
+| --- | --- | --- | --- | --- |
+| `id` | 字符串 | — | `enm_shade_<类型>` | 战斗 |
+| `name_key` | 字符串 | — | `enemy.<战斗 id 去掉 enm_>.name`，PR #2 已有（新增的 heavy、swarm 还没有） | 文案 |
+| `narrative_ref` | 字符串 | — | PR #2 的叙事对应，只给人看 | — |
+| `status` | 字符串 | — | `mvp` / `post_mvp`（MVP 之后才出现）/ `reserved`（预留）。硬残影是 `mvp`（`mvp_levels` = `ch1_03`）；扑人残影、飞行残影是 `post_mvp` | 战斗 |
+| `mvp_levels` | 数组 | — | MVP 里出现在哪些关 | 战斗/关卡 |
+| `behavior_status` / `behavior_zh` | 字符串 | — | `recommendation` = 只是推荐行为（扑人、飞行） | 战斗 |
+| `tags` | 数组 | — | `shade`、`outside_object`、`armored`、`elite`、`stealth` 等 | 战斗 |
+| `attacks_units` | 布尔 | — | 是否主动攻击角色（只有扑人残影是） | 战斗 |
+| `attacks_blocker_when_blocked` | 布尔 | — | 被美铃挡住时打美铃 | 战斗 |
+| `pounce` / `flying` | 对象 | — | 扑人残影、飞行残影的推荐行为，没有数字 | 战斗 |
+| `hit_radius_cells` | 数字 | 格 | 受击半径 | 战斗 |
+| `knockback_resist` | 数字 | 比例 | 击退抗性，0.5 = 击退减半 | 战斗 |
+| `armor_feedback` | 布尔 | — | 是否显示「护甲」提示 | 战斗 |
+| `immunities` | 数组 | — | 免疫的状态 ID | 战斗 |
+| `lateral_jitter_cells` | 数字 | 格 | 纯视觉的左右晃动幅度 | 战斗 |
+| `stealth` / `on_death_spawn` / `aura_terrain` | 对象 | — | 预留敌人的特殊行为 | 战斗 |
+| `visual.*` | 字符串 / 数字 | — | 资源名和缩放 | 美术 |
+| `state_machine.states` | 数组 | — | 敌人状态列表，见 enemies_and_bosses.md | 程序 |
+
+## bosses.json
+
+| 字段 | 类型 | 单位 | 含义 | 归属 |
+| --- | --- | --- | --- | --- |
+| `id` | 字符串 | — | Boss ID。第一章 Boss 仍是 `boss_cirno`（冰之残影）。预留：`boss_ch2_sakuya_shade`、`boss_ch3_mokou_shade`、`boss_ch4_sanae_shade`、`boss_ch5_gatekeeper`、`boss_wasure` | 战斗 |
+| `stats_path` | 字符串 | — | 数值在 PR #8 的哪里：`bosses.boss_cirno` | 数值 |
+| `draft_name` | 字符串 | — | 草案显示名。`boss_cirno` 为「冰之残影」。正式名字归文案 | 文案 |
+| `name_key` | 字符串 | — | 血条名字的文本 key。冰之残影为 `enemy.boss_cirno.name`（PR #2 已有） | 文案 |
+| `identity` | 字符串 | — | `cirno_copy`：这是琪露诺的复制体，不是可放置的琪露诺 | 战斗 |
+| `copy_of` | 字符串 | — | 复制体对应的角色 ID。冰之残影为 `chr_cirno` | 战斗 |
+| `knockback_immune` | 布尔 | — | 免疫击退 | 战斗 |
+| `status_conversions[]` | 数组 | — | 状态转换：`from` 状态改成 `to` 状态，`strength` 强度，`keep_duration` 是否保留时长；`to: "none"` = 直接免疫 | 战斗 |
+| `immune_to_effects` | 数组 | — | 免疫的效果类型（隙间换位、送回） | 战斗 |
+| `affected_by_terrain` | 布尔 | — | 是否受地形影响 | 战斗 |
+| `on_reach_guard` | 字符串 | — | 已定为 `loop_to_spawn`：扣血后回到裂缝（2026-09-27） | 战斗 |
+| `reach_guard_deals_leak_damage` | 布尔 | — | 走到守护点时是否扣 `leak_damage`。已定为 true | 战斗 |
+| `reach_guard_keeps_hp_and_phase` | 布尔 | — | 折返时是否保持当前血量和阶段。已定为 true | 战斗 |
+| `victory` | 字符串 | — | Boss 关胜利条件。已定为 `must_defeat` | 战斗 |
+| `phase_transition.clamp_hp_at_threshold` | 布尔 | — | 血量卡在阈值 | 战斗 |
+| `phase_transition.invulnerable_sec_stats_key` | 字符串 | — | 切阶段无敌秒数，指向 `boss_rules.phase_invuln_sec` | 数值 |
+| `phase_hp_ratios_stats_key` | 字符串 | — | 切阶段血量阈值，指向 `boss_rules.phase_hp_ratios`，要和 `phases[].hp_ratio_start` 一致 | 数值 |
+| `phase_transition.stop_moving_while_invulnerable` | 布尔 | — | 无敌时站定 | 战斗 |
+| `phase_transition.clear_previous_phase_terrain` | 布尔 | — | 清掉上一阶段地形 | 战斗 |
+| `phases[].hp_ratio_start` | 数字 | 比例 | 该阶段从多少血开始 | 战斗 |
+| `phases[].spell_card_id` | 字符串 | — | 该阶段符卡 | 战斗 |
+| `phases[].cast_on_enter` | 布尔 | — | 进入阶段立即施放 | 战斗 |
+| `phases[].repeat_interval_sec` / `casts_per_phase` | 数字 / 整数 | 秒 / 次 | 阶段内重复间隔（现在都是 0）、每阶段放几次（现在都是 1） | 战斗 |
+| `phases[].level_hook` | 字符串 | — | 关卡脚本可以监听的事件名 | 关卡 |
+
+## statuses.json
+
+| 字段 | 类型 | 单位 | 含义 |
+| --- | --- | --- | --- |
+| `id` | 字符串 | — | `st_<名>` |
+| `target_kind` | 字符串 | — | `enemy` / `unit`（角色） |
+| `effect.type` | 字符串 | — | `move_speed_mult` / `hard_stop` / `block_status` / `damage_taken_bucket_add` / `damage_over_time` / `hard_stop_store_damage` / `damage_immune` / `unit_disable` / `marker` / `mark_for_owner_trigger` |
+| `default_duration_sec` | 数字 | 秒 | 非冻结类状态在来源没指定时的时长；0 = 区域绑定 |
+| `zone_bound` | 布尔 | — | 是否跟随区域进出 |
+| `stacking` | 字符串 | — | `strongest_only` / `single_instance` / `single_instance_refcount_zones` |
+| `same_source` | 字符串 | — | 同一来源再次施加：`refresh_duration` / `extend_to_max` / `none` |
+| `max_strength_stats_key` | 字符串 | — | 强度上限，指向 `statuses.st_slow.max_strength` |
+| `max_chain_stats_key` | 字符串 | — | 连续冻结总时长上限，指向 `statuses.st_freeze.max_chain_sec`（PR #8 待补） |
+| `duration_source` / `duration_stats_key` | 字符串 | — | `attacker` = 时长由施加它的来源给；或直接指向 PR #8 字段。冻结类状态不写秒数 |
+| `numeric_pending_pr8` | 布尔 | — | 引用的 PR #8 字段还不存在 |
+| `blocks_knockback` | 布尔 | — | 期间不被击退 |
+| `on_end_apply` | 对象 | — | 结束时附加的状态（免疫） |
+| `immune_tags` / `boss_conversion` | 数组 / 对象 | — | 哪些标签的目标免疫；Boss 改成什么 |
+| `visual.tint` / `overlay_vfx` / `icon` / `pause_animation` | — | — | 染色、叠加特效、图标、是否暂停动画 |
+
+## terrain.json
+
+| 字段 | 类型 | 单位 | 含义 |
+| --- | --- | --- | --- |
+| `id` | 字符串 | — | `ter_<名>` |
+| `allowed_cell_types` | 数组 | — | 能放在哪种格子上（`empty` 指非路线的空格） |
+| `effects[]` | 数组 | — | `enemy_move_speed_mult`（`value_stats_key`）/ `target_range_penalty`（`value_stats_key`、`min_range_stats_key`）/ `block_line_attacks` / `block_placement` / `target_range_penalty` / `zone_status` / `disable_unit_on_cell` |
+| `owner_bound` | 布尔 | — | 属于某个角色（结界、火焰地面） |
+| `on_occupied_cell` | 对象 | — | 生成时格上有角色怎么办（冰柱：冻住角色，不生成） |
+| `destroyed_by_spell_tags` | 数组 | — | 被带这些标签的符卡打碎 |
+| `affects_boss` | 布尔 | — | 是否影响 Boss |
+| `priority` | 整数 | — | 同类地形重叠时优先级高的生效 |
+| `stack_with_other_terrain` | 布尔 | — | 区域类，可和别的地形叠加 |
+| `visual.telegraph_sec` | 数字 | 秒 | 生成前的地面预警时长 |
+
+## spell_cards.json
+
+| 字段 | 类型 | 单位 | 含义 |
+| --- | --- | --- | --- |
+| `id` | 字符串 | — | 玩家符卡 `sc_<PR #2 符卡 id>`；Boss 符卡 `sc_boss_<角色>_<符卡 id>` |
+| `owner` | 字符串 | — | 所属角色或 Boss ID |
+| `name_key` | 字符串 | — | PR #2 的 `spell.<角色>.<符卡>.name`（`spell.cirno.diamond_blizzard.name` PR #2 已加） |
+| `user` | 字符串 | — | `player` / `boss` |
+| `detail_level` | 字符串 | — | `full`（可直接实现）/ `outline`（概要，后续细化） |
+| `portrait` | 字符串 | — | 立绘资源名 |
+| `tags` | 数组 | — | `beam`（能打碎冰柱）、`freeze`、`map_change` 等 |
+| `mvp_freeze_source` | 布尔 | — | 可选。为 true 时，这张符卡是 MVP 冻结来源之一 |
+| `effects[].type` | 字符串 | — | 效果类型，见 spell_cards.md |
+| `effects[].*_stats_key` | 字符串 | — | 去 `stats.json` 取数值的路径 |
+| `effects[].cells_ref` | 字符串 | — | Boss 符卡引用关卡 `cell_sets` 里的格子集合名 |
+| `effects[].fallback` | 对象 | — | 关卡没给格子集合时的兜底选格规则 |
+| `effects[].telegraph_sec` | 数字 | 秒 | 地面预警 |
+| `effects[].duration_sec` | 数字 | 秒 | 只用于 PR #8 没有的行为秒数；-1 = 持续到 Boss 被击败 |
+| `effects[].duration_source` / `duration_fallback_sec` | 字符串 / 数字 | — / 秒 | 冰柱时长读关卡 `phase_1.duration_sec`，兜底 12 |
+| `casts_per_phase` | 整数 | 次 | Boss 符卡每阶段放几次（1） |
+| `direction_rules.best_of_8` | 对象 | — | 极限火花 8 方向自动选择规则 |
+
+## synergies.json
+
+| 字段 | 类型 | 含义 |
+| --- | --- | --- |
+| `discovery.*` | — | 发现提示规则：存进存档、首次弹窗、之后小字节流 |
+| `id` | 字符串 | `syn_<名>` |
+| `draft_name` | 字符串 | 草案中文名，正式文本走 `name_key` |
+| `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案） |
+| `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
+| `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
+| `mvp_freeze_sources` | 数组 | MVP 冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze`、`chr_cirno`（第一章第 2 关起的琪露诺本人） |
+| `mvp_freeze_source_unlock` | 对象 | 某个来源从哪一次通关起可用。`chr_cirno` 为 `ch1_01_clear` |
+| `trigger.event` | 字符串 | `on_hit` / `on_gap_move` / `on_spell_cast` |
+| `trigger.check_step` | 字符串 | 在伤害流水线第几步判定 |
+| `trigger.attacker_character` / `attacker_damage_tag` / `target_has_status` | 字符串 | 条件 |
+| `effect.bucket` / `add_stats_key` | 字符串 | 放进哪个桶；加多少指向 `synergies.<PR #8 id>.synergy_add` |
+| `effect.force_heavy` / `force_crit` | 布尔 | 强制重击 / 强制暴击 |
+| `effect.remove_target_status` / `remove_at_step` | 字符串 | 命中后移除的状态和时机 |
+
+## buffs.json
+
+| 字段 | 类型 | 含义 | 归属 |
+| --- | --- | --- | --- |
+| `offer_rules.*` | — | 三选一规则 | 战斗/系统 |
+| `id` | 字符串 | `buff_<名>` | 战斗 |
+| `mvp_freeze_source` | 布尔 | 可选。为 true 时，该强化是 MVP 冻结来源之一 | 战斗 |
+| `draft_name` / `narrative_item` | 字符串 | 草案名 / 失物包装建议 | 文案/系统 |
+| `name_key` / `desc_key` | 字符串 | `buff.<名>.name` / `.desc`，待文案新增 | 文案 |
+| `category` | 字符串 | 强化类别 | 战斗 |
+| `max_stacks_stats_key` | 字符串 | 最多层数，指向 `buffs.<id>.max_stacks` | 数值 |
+| `offer_weight_stats_key` | 字符串 | 抽选权重，指向 `buffs.<id>.offer_weight` | 数值/系统 |
+| `requires_characters_any` | 数组 | 本关带了这些角色之一才会出现 | 战斗 |
+| `per_stack[]` | 数组 | 每层效果；数值用 `stats_key` 去 `stats.json` 取 | 战斗（数值归数值） |
+| `thresholds[].stacks_stats_key` | 字符串 | 质变层数，指向 `buffs.<id>.transform_at_stacks`（已定 2 层） | 数值 |
+| `thresholds[].override` / `add` | 对象 | 替换或追加的效果 | 战斗 |
+| `thresholds[].unit_visual` | 字符串 | 质变后的外观特效 | 战斗/美术 |
+| `thresholds[].feedback_event` | 字符串 | 质变反馈事件 | 战斗 |
+
+## feel.json
+
+全部归战斗策划。字段名直接对应 feedback.md 反馈事件表里的数字：`hit_flash`（闪白）、`damage_numbers`（伤害数字）、`screen_shake`（震屏）、`kill_burst`（光点）、`spirit_counter_bump`（灵力跳动）、`spell_button`、`spell_cutin`、`combo`、`slowmo`、`armor_feedback`、`guard_alert`、`guard_damage_vignette`、`synergy_popup`、`boss`、`wave_banner`、`early_call`、`level_up`、`buff_threshold`、`freeze`、`unit_frozen`。单位：`*_sec` 秒（演出时间，真实时间 × 倍速），`*_px` 像素（1080×1920 逻辑分辨率），`*_alpha` 0–1 不透明度，`*_scale` 倍数，颜色是 `#RRGGBB`，`*_key` 是文本 key。

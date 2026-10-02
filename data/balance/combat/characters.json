@@ -1,0 +1,1211 @@
+{
+  "meta": {
+    "schema_version": 5,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/characters.md",
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "numbers_from_stats_zh": "射程 range_cells、攻击间隔 attack_interval_sec、费用、攻击、暴击、同名上限、满能量、美铃的 max_hp / block_count、普攻附带效果数值都在 stats.json 的 characters.<id>"
+  },
+  "characters": [
+    {
+      "id": "chr_reimu",
+      "name_key": "char.reimu.name",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "role": "homing_single",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_stats_key": "characters.chr_reimu.range_cells",
+        "interval_stats_key": "characters.chr_reimu.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "ofuda"
+        ],
+        "applies_statuses": [
+          {
+            "status_id": "st_ofuda_tag",
+            "strength": 1.0,
+            "duration_sec": 1.5
+          }
+        ],
+        "projectile": {
+          "speed_cells_per_sec": 7.0,
+          "turn_deg_per_sec": 540,
+          "lifetime_sec": 1.5,
+          "hit_radius_cells": 0.25,
+          "retarget_radius_cells": 1.5,
+          "pierce": 0
+        }
+      },
+      "skills": [
+        {
+          "id": "skl_reimu_barrier",
+          "trigger": "auto_cooldown",
+          "cooldown_sec": 10.0,
+          "initial_delay_sec": 1.0,
+          "requires_target_in_range": true,
+          "effect": {
+            "type": "spawn_zone",
+            "terrain_id": "ter_barrier",
+            "center": "current_target_cell",
+            "size_cells": [
+              3,
+              3
+            ],
+            "duration_sec": 6.0,
+            "max_active_per_owner": 1
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_evil_sealing_circle",
+        "sc_fantasy_seal"
+      ],
+      "default_spell_card_id": "sc_evil_sealing_circle",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "reimu_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "ofuda_white",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "reimu_lv2",
+            "aura_vfx": "yin_yang_orb_small",
+            "projectile_vfx": "ofuda_red",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "reimu_lv3",
+            "aura_vfx": "yin_yang_orb_pair",
+            "projectile_vfx": "ofuda_red_trail",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 3
+            },
+            {
+              "op": "set",
+              "path": "skills.skl_reimu_barrier.cooldown_sec",
+              "value": 8.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_marisa",
+      "name_key": "char.marisa.name",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "unlock": "prologue_01_clear",
+      "first_available_level_id": "prologue_02",
+      "role": "line_pierce_burst",
+      "tags": [],
+      "attack": {
+        "type": "instant_line",
+        "range_stats_key": "characters.chr_marisa.range_cells",
+        "interval_stats_key": "characters.chr_marisa.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "line_length": "range",
+        "line_width_cells": 0.5,
+        "max_targets": 0,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": true,
+        "damage_tags": [
+          "magic",
+          "marisa"
+        ],
+        "applies_statuses": [],
+        "beam_visual_sec": 0.15
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_master_spark",
+        "sc_stardust_reverie"
+      ],
+      "default_spell_card_id": "sc_master_spark",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "marisa_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "star_laser_thin",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "marisa_lv2",
+            "aura_vfx": "hakkero_glow",
+            "projectile_vfx": "star_laser_mid",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.line_width_cells",
+              "value": 0.7
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "marisa_lv3",
+            "aura_vfx": "hakkero_stars_orbit",
+            "projectile_vfx": "star_laser_thick",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.line_width_cells",
+              "value": 0.9
+            },
+            {
+              "op": "set",
+              "path": "attack.end_star_burst_radius_cells",
+              "value": 0.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_cirno",
+      "name_key": "char.cirno.name",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "unlock": "ch1_01_clear",
+      "first_available_level_id": "ch1_02",
+      "role": "slow_freeze_control",
+      "tags": [],
+      "attack": {
+        "type": "projectile_splash",
+        "range_stats_key": "characters.chr_cirno.range_cells",
+        "interval_stats_key": "characters.chr_cirno.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "splash_radius_cells": 0.6,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": true,
+        "damage_tags": [
+          "ice"
+        ],
+        "applies_statuses": [
+          {
+            "status_id": "st_slow",
+            "strength_stats_key": "characters.chr_cirno.normal_effect.value",
+            "duration_stats_key": "characters.chr_cirno.normal_effect.param"
+          }
+        ],
+        "projectile": {
+          "speed_cells_per_sec": 6.0,
+          "turn_deg_per_sec": 0,
+          "lifetime_sec": 1.0,
+          "hit_radius_cells": 0.3,
+          "retarget_radius_cells": 0,
+          "pierce": 0
+        }
+      },
+      "skills": [
+        {
+          "id": "skl_cirno_freeze",
+          "trigger": "auto_cooldown",
+          "cooldown_sec": 6.0,
+          "initial_delay_sec": 2.0,
+          "requires_target_in_range": true,
+          "effect": {
+            "type": "apply_status_around_target",
+            "target": "current_target",
+            "radius_cells": 0.8,
+            "status_id": "st_freeze",
+            "duration_stats_key": "skills.skl_cirno_freeze.freeze_sec",
+            "numeric_pending_pr8": true,
+            "heavy": false
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_perfect_freeze",
+        "sc_icicle_fall"
+      ],
+      "default_spell_card_id": "sc_perfect_freeze",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "cirno_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "ice_shard_small",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "cirno_lv2",
+            "aura_vfx": "snowflake_drift",
+            "projectile_vfx": "ice_shard_mid",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.splash_radius_cells",
+              "value": 0.8
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "cirno_lv3",
+            "aura_vfx": "ice_wings_sparkle",
+            "projectile_vfx": "ice_shard_large",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.splash_radius_cells",
+              "value": 0.9
+            },
+            {
+              "op": "set",
+              "path": "skills.skl_cirno_freeze.cooldown_sec",
+              "value": 5.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_daiyousei",
+      "name_key": "char.daiyousei.name",
+      "playable_status": "pending_producer",
+      "mvp": false,
+      "role": "support_aura",
+      "tags": [],
+      "attack": {
+        "type": "none",
+        "range_stats_key": "characters.chr_daiyousei.range_cells",
+        "interval_stats_key": "characters.chr_daiyousei.attack_interval_sec",
+        "targeting": "none"
+      },
+      "skills": [
+        {
+          "id": "skl_daiyousei_mist_aura",
+          "trigger": "passive_aura",
+          "effect": {
+            "type": "aura_stat_pct",
+            "shape": "neighbors_8",
+            "stat": "attack_speed",
+            "category": "aura",
+            "value_stats_key": "skills.skl_daiyousei_mist_aura.attack_speed_pct"
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_morning_mist"
+      ],
+      "default_spell_card_id": "sc_morning_mist",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "daiyousei_lv1",
+            "aura_vfx": "mist_soft",
+            "projectile_vfx": "",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "daiyousei_lv2",
+            "aura_vfx": "mist_mid",
+            "projectile_vfx": "",
+            "scale": 1.05
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "daiyousei_lv3",
+            "aura_vfx": "mist_lake_ring",
+            "projectile_vfx": "",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_daiyousei_mist_aura.effect.shape",
+              "value": "radius_2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_meiling",
+      "name_key": "char.meiling.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "blocker_melee",
+      "tags": [],
+      "attack": {
+        "type": "melee",
+        "range_stats_key": "characters.chr_meiling.range_cells",
+        "interval_stats_key": "characters.chr_meiling.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "qi",
+          "melee"
+        ],
+        "applies_statuses": []
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_rainbow_dance",
+        "sc_extreme_typhoon"
+      ],
+      "default_spell_card_id": "sc_rainbow_dance",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "meiling_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "qi_palm",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "meiling_lv2",
+            "aura_vfx": "qi_rainbow_faint",
+            "projectile_vfx": "qi_palm_color",
+            "scale": 1.05
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "meiling_lv3",
+            "aura_vfx": "qi_rainbow_full",
+            "projectile_vfx": "qi_palm_rainbow",
+            "scale": 1.1
+          },
+          "behavior_mods": []
+        }
+      ],
+      "placement": "placeable_adjacent_to_path",
+      "block": {
+        "count_stats_key": "characters.chr_meiling.block_count",
+        "max_hp_stats_key": "characters.chr_meiling.max_hp",
+        "blocks_on": "path_cells_orthogonally_adjacent",
+        "blocked_status_id": "st_blocked",
+        "pick_rule": "first_to_arrive",
+        "enemy_damage_stats_key": "enemies.<id>.block_dps",
+        "boss_blockable": false,
+        "flying_blockable": false,
+        "on_hp_zero": "knocked_out_release_blocked",
+        "redeploy_cooldown_stats_key": "characters.chr_meiling.redeploy_cooldown_sec",
+        "redeploy_cooldown_pending_numeric": true
+      }
+    },
+    {
+      "id": "chr_sakuya",
+      "name_key": "char.sakuya.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "rapid_multi_hit_single",
+      "tags": [],
+      "attack": {
+        "type": "multi_projectile",
+        "range_stats_key": "characters.chr_sakuya.range_cells",
+        "interval_stats_key": "characters.chr_sakuya.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "highest_current_hp",
+        "count": 3,
+        "spread_deg": 10,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": true,
+        "damage_tags": [
+          "knife"
+        ],
+        "applies_statuses": [],
+        "projectile": {
+          "speed_cells_per_sec": 12.0,
+          "turn_deg_per_sec": 120,
+          "lifetime_sec": 0.6,
+          "hit_radius_cells": 0.2,
+          "retarget_radius_cells": 1.0,
+          "pierce": 0
+        }
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_the_world",
+        "sc_killing_doll"
+      ],
+      "default_spell_card_id": "sc_the_world",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "sakuya_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "knife_silver",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "sakuya_lv2",
+            "aura_vfx": "pocket_watch_tick",
+            "projectile_vfx": "knife_silver_trail",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "sakuya_lv3",
+            "aura_vfx": "clock_face_ring",
+            "projectile_vfx": "knife_blue_trail",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_remilia",
+      "name_key": "char.remilia.name",
+      "playable_status": "pending_producer",
+      "mvp": false,
+      "role": "heavy_single_burst",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_stats_key": "characters.chr_remilia.range_cells",
+        "interval_stats_key": "characters.chr_remilia.attack_interval_sec",
+        "initial_delay_sec": 0.5,
+        "targeting": "highest_max_hp",
+        "count": 1,
+        "heavy": true,
+        "can_crit": true,
+        "knockback_cells": 0.3,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "scarlet"
+        ],
+        "applies_statuses": [],
+        "projectile": {
+          "speed_cells_per_sec": 9.0,
+          "turn_deg_per_sec": 360,
+          "lifetime_sec": 1.2,
+          "hit_radius_cells": 0.35,
+          "retarget_radius_cells": 2.0,
+          "pierce": 0
+        }
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_gungnir",
+        "sc_red_magic"
+      ],
+      "default_spell_card_id": "sc_gungnir",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "remilia_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "red_orb",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "remilia_lv2",
+            "aura_vfx": "bat_swirl",
+            "projectile_vfx": "red_spear_small",
+            "scale": 1.05
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "remilia_lv3",
+            "aura_vfx": "scarlet_mist",
+            "projectile_vfx": "red_spear",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.projectile.pierce",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_keine",
+      "name_key": "char.keine.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "guard_support",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_stats_key": "characters.chr_keine.range_cells",
+        "interval_stats_key": "characters.chr_keine.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "history"
+        ],
+        "applies_statuses": [],
+        "projectile": {
+          "speed_cells_per_sec": 6.0,
+          "turn_deg_per_sec": 360,
+          "lifetime_sec": 1.5,
+          "hit_radius_cells": 0.25,
+          "retarget_radius_cells": 1.5,
+          "pierce": 0
+        }
+      },
+      "skills": [
+        {
+          "id": "skl_keine_hide_history",
+          "trigger": "auto_cooldown",
+          "cooldown_sec": 20.0,
+          "initial_delay_sec": 5.0,
+          "requires_target_in_range": false,
+          "effect": {
+            "type": "guard_shield_stack",
+            "add": 1,
+            "max_stacks": 2
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_modoribashi",
+        "sc_legend_of_gensokyo"
+      ],
+      "default_spell_card_id": "sc_modoribashi",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "keine_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "scroll_bolt",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "keine_lv2",
+            "aura_vfx": "history_pages",
+            "projectile_vfx": "scroll_bolt_gold",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_keine_hide_history.cooldown_sec",
+              "value": 16.0
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "keine_lv3",
+            "aura_vfx": "hakutaku_glow",
+            "projectile_vfx": "scroll_bolt_gold_trail",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_keine_hide_history.effect.max_stacks",
+              "value": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_mokou",
+      "name_key": "char.mokou.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "burn_area",
+      "tags": [
+        "fade_immune"
+      ],
+      "attack": {
+        "type": "projectile_splash",
+        "range_stats_key": "characters.chr_mokou.range_cells",
+        "interval_stats_key": "characters.chr_mokou.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "splash_radius_stats_key": "characters.chr_mokou.normal_effect.param",
+        "splash_ratio_stats_key": "characters.chr_mokou.normal_effect.value",
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": true,
+        "damage_tags": [
+          "fire"
+        ],
+        "applies_statuses": [
+          {
+            "status_id": "st_burn",
+            "strength": 1.0,
+            "duration_sec": 3.0
+          }
+        ],
+        "leaves_terrain": {
+          "terrain_id": "ter_burning",
+          "duration_sec": 2.0
+        },
+        "projectile": {
+          "speed_cells_per_sec": 6.0,
+          "turn_deg_per_sec": 0,
+          "lifetime_sec": 1.0,
+          "hit_radius_cells": 0.3,
+          "retarget_radius_cells": 0,
+          "pierce": 0
+        }
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_phoenix_wings",
+        "sc_phoenix_rebirth"
+      ],
+      "default_spell_card_id": "sc_phoenix_wings",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "mokou_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "fireball",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "mokou_lv2",
+            "aura_vfx": "ember_float",
+            "projectile_vfx": "fireball_large",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "add",
+              "path": "attack.splash_radius_cells",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "mokou_lv3",
+            "aura_vfx": "phoenix_wings_small",
+            "projectile_vfx": "fireball_phoenix",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.leaves_terrain.duration_sec",
+              "value": 3.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_aya",
+      "name_key": "char.aya.name",
+      "playable_status": "pending_producer",
+      "mvp": false,
+      "role": "rapid_reveal_mobile",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_stats_key": "characters.chr_aya.range_cells",
+        "interval_stats_key": "characters.chr_aya.attack_interval_sec",
+        "initial_delay_sec": 0.2,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "wind"
+        ],
+        "applies_statuses": [],
+        "reveals_stealth_in_range": true,
+        "projectile": {
+          "speed_cells_per_sec": 14.0,
+          "turn_deg_per_sec": 720,
+          "lifetime_sec": 0.5,
+          "hit_radius_cells": 0.2,
+          "retarget_radius_cells": 1.0,
+          "pierce": 0
+        },
+        "bonus_vs_speed": {
+          "bucket": "synergy",
+          "min_move_speed_stats_key": "characters.chr_aya.normal_effect.param",
+          "add_stats_key": "synergies.syn_aya_vs_fast.synergy_add",
+          "status": "draft_pending_producer"
+        }
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_gensou_fuubi",
+        "sc_autumn_leaf_fan"
+      ],
+      "default_spell_card_id": "sc_gensou_fuubi",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "aya_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "wind_blade",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "aya_lv2",
+            "aura_vfx": "camera_flash",
+            "projectile_vfx": "wind_blade_leaf",
+            "scale": 1.05
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "aya_lv3",
+            "aura_vfx": "feather_storm",
+            "projectile_vfx": "wind_blade_maple",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_sanae",
+      "name_key": "char.sanae.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "area_bonus_vs_outside",
+      "tags": [],
+      "attack": {
+        "type": "projectile_splash",
+        "range_stats_key": "characters.chr_sanae.range_cells",
+        "interval_stats_key": "characters.chr_sanae.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "splash_radius_stats_key": "characters.chr_sanae.normal_effect.param",
+        "splash_ratio_stats_key": "characters.chr_sanae.normal_effect.value",
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": true,
+        "damage_tags": [
+          "miracle"
+        ],
+        "applies_statuses": [],
+        "bonus_vs_tags": [
+          {
+            "tag": "outside_object",
+            "bucket": "synergy",
+            "add_stats_key": "synergies.syn_sanae_outside_object.synergy_add"
+          }
+        ],
+        "projectile": {
+          "speed_cells_per_sec": 6.5,
+          "turn_deg_per_sec": 0,
+          "lifetime_sec": 1.0,
+          "hit_radius_cells": 0.3,
+          "retarget_radius_cells": 0,
+          "pierce": 0
+        }
+      },
+      "skills": [],
+      "spell_card_ids": [
+        "sc_gray_thaumaturgy",
+        "sc_yasaka_divine_wind"
+      ],
+      "default_spell_card_id": "sc_gray_thaumaturgy",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "sanae_lv1",
+            "aura_vfx": "",
+            "projectile_vfx": "star_blue",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "sanae_lv2",
+            "aura_vfx": "gohei_wind",
+            "projectile_vfx": "star_blue_large",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "add",
+              "path": "attack.splash_radius_cells",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "sanae_lv3",
+            "aura_vfx": "snake_frog_charms",
+            "projectile_vfx": "star_pentagram",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "attack.count",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_yukari",
+      "name_key": "char.yukari.name",
+      "playable_status": "confirmed",
+      "mvp": true,
+      "unlock": "chapter1_boss_clear",
+      "before_unlock": "chapter1_gap_peek_once",
+      "before_unlock_demo": {
+        "event_id": "evt_yukari_gap_demo",
+        "level_id": "ch1_03",
+        "wave_id": "w06",
+        "target_enemy_id": "enm_shade_armored",
+        "target_nth_in_wave": 1,
+        "trigger": "target_path_progress_ratio",
+        "trigger_value": 0.5,
+        "effect": "gap_send_to_spawn",
+        "deals_damage": false,
+        "applies_statuses": [],
+        "once_per_save": false,
+        "once_per_attempt": true,
+        "skip_if_target_dead": true,
+        "dialogue_key": "tut.ch1_03.001",
+        "only_while_locked": true
+      },
+      "mvp_use": "replay_cleared_levels",
+      "first_available_level_id": "ch2_01",
+      "role": "gap_control",
+      "tags": [],
+      "attack": {
+        "type": "instant_gap",
+        "range_stats_key": "characters.chr_yukari.range_cells",
+        "interval_stats_key": "characters.chr_yukari.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.1,
+        "blocked_by_icicle": false,
+        "ignores_fog": true,
+        "damage_tags": [
+          "gap"
+        ],
+        "applies_statuses": [],
+        "gap_visual_sec": 0.25
+      },
+      "skills": [
+        {
+          "id": "skl_yukari_gap_swap",
+          "trigger": "auto_cooldown",
+          "cooldown_sec": 12.0,
+          "initial_delay_sec": 3.0,
+          "requires_target_in_range": true,
+          "effect": {
+            "type": "gap_swap",
+            "pairs": 1,
+            "min_distance_gain_cells": 3.0,
+            "fallback_send_back_cells": 4.0,
+            "daze_status_id": "st_gap_daze",
+            "daze_duration_sec": 0.6,
+            "exclude_boss": true
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_spiriting_away",
+        "sc_quadruple_barrier"
+      ],
+      "default_spell_card_id": "sc_spiriting_away",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "yukari_lv1",
+            "aura_vfx": "gap_small_eyes",
+            "projectile_vfx": "gap_slit",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "yukari_lv2",
+            "aura_vfx": "gap_parasol_eyes",
+            "projectile_vfx": "gap_slit_ribbon",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_yukari_gap_swap.cooldown_sec",
+              "value": 10.0
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "yukari_lv3",
+            "aura_vfx": "gap_many_eyes_ring",
+            "projectile_vfx": "gap_slit_wide",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_yukari_gap_swap.effect.pairs",
+              "value": 2
+            },
+            {
+              "op": "set",
+              "path": "skills.skl_yukari_gap_swap.effect.daze_duration_sec",
+              "value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chr_wasure",
+      "name_key": "char.wasure.name",
+      "playable_status": "confirmed",
+      "mvp": false,
+      "role": "convert_summon",
+      "tags": [],
+      "attack": {
+        "type": "homing_projectile",
+        "range_stats_key": "characters.chr_wasure.range_cells",
+        "interval_stats_key": "characters.chr_wasure.attack_interval_sec",
+        "initial_delay_sec": 0.3,
+        "targeting": "closest_to_guard",
+        "count": 1,
+        "heavy": false,
+        "can_crit": true,
+        "knockback_cells": 0.0,
+        "blocked_by_icicle": false,
+        "damage_tags": [
+          "memory"
+        ],
+        "applies_statuses": [
+          {
+            "status_id": "st_registered",
+            "strength": 1.0,
+            "duration_sec": 4.0
+          }
+        ],
+        "projectile": {
+          "speed_cells_per_sec": 5.0,
+          "turn_deg_per_sec": 360,
+          "lifetime_sec": 1.8,
+          "hit_radius_cells": 0.25,
+          "retarget_radius_cells": 1.5,
+          "pierce": 0
+        }
+      },
+      "skills": [
+        {
+          "id": "skl_wasure_register",
+          "trigger": "on_marked_enemy_death",
+          "effect": {
+            "type": "spawn_helper",
+            "helper_id": "hlp_lost_item",
+            "duration_sec": 5.0,
+            "max_active_per_owner": 3,
+            "helper_blocks_enemies_sec": 0.8
+          }
+        }
+      ],
+      "spell_card_ids": [
+        "sc_lost_and_found",
+        "sc_forgotten_song"
+      ],
+      "default_spell_card_id": "sc_lost_and_found",
+      "levels": [
+        {
+          "level": 1,
+          "visual": {
+            "sprite_variant": "wasure_lv1",
+            "aura_vfx": "tag_rustle",
+            "projectile_vfx": "paper_tag",
+            "scale": 1.0
+          },
+          "behavior_mods": []
+        },
+        {
+          "level": 2,
+          "visual": {
+            "sprite_variant": "wasure_lv2",
+            "aura_vfx": "music_box_notes",
+            "projectile_vfx": "paper_tag_glow",
+            "scale": 1.05
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_wasure_register.effect.max_active_per_owner",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "visual": {
+            "sprite_variant": "wasure_lv3",
+            "aura_vfx": "lost_items_rack_glow",
+            "projectile_vfx": "paper_tag_color",
+            "scale": 1.1
+          },
+          "behavior_mods": [
+            {
+              "op": "set",
+              "path": "skills.skl_wasure_register.effect.duration_sec",
+              "value": 7.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "multi_shot_rule_zh": "attack.count > 1 时一次攻击的总伤害不变：每发技能系数 1/count，护甲也按 1/count 分摊（见 rules.json damage.multi_shot_split）"
+}

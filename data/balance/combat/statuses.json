@@ -1,0 +1,382 @@
+{
+  "meta": {
+    "schema_version": 2,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/damage_and_status.md",
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "duration_rule_zh": "冻结类时长归数值策划（A-08）：只写引用，不写秒数。duration_source = attacker 表示时长由施加它的技能/符卡/强化给出。numeric_pending_pr8 = PR #8 还没有这个字段"
+  },
+  "statuses": [
+    {
+      "id": "st_slow",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "move_speed_mult",
+        "formula": "1 - strength"
+      },
+      "duration_source": "attacker",
+      "stacking": "strongest_only",
+      "same_source": "refresh_duration",
+      "max_strength_stats_key": "statuses.st_slow.max_strength",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "#8FD3FF",
+        "overlay_vfx": "frost_mist",
+        "icon": "icon_slow"
+      }
+    },
+    {
+      "id": "st_freeze",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "hard_stop"
+      },
+      "duration_source": "attacker",
+      "stacking": "single_instance",
+      "same_source": "extend_to_max",
+      "max_chain_stats_key": "statuses.st_freeze.max_chain_sec",
+      "numeric_pending_pr8": true,
+      "blocks_knockback": true,
+      "on_end_apply": {
+        "status_id": "st_freeze_immune",
+        "duration_stats_key": "statuses.st_freeze_immune.duration_sec",
+        "numeric_pending_pr8": true
+      },
+      "immune_tags": [
+        "boss"
+      ],
+      "boss_conversion": {
+        "to": "st_slow",
+        "strength": 0.5
+      },
+      "visual": {
+        "tint": "#DFF6FF",
+        "overlay_vfx": "ice_block",
+        "icon": "icon_freeze",
+        "pause_animation": true
+      }
+    },
+    {
+      "id": "st_freeze_immune",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "block_status",
+        "blocked_status_ids": [
+          "st_freeze"
+        ],
+        "bypass_flag": "ignore_immunity"
+      },
+      "duration_stats_key": "statuses.st_freeze_immune.duration_sec",
+      "numeric_pending_pr8": true,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "thaw_drips",
+        "icon": ""
+      }
+    },
+    {
+      "id": "st_barrier_mark",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "damage_taken_bucket_add",
+        "bucket": "vulnerability",
+        "value_stats_key": "statuses.st_barrier_mark.vulnerability_add"
+      },
+      "default_duration_sec": 0,
+      "zone_bound": true,
+      "stacking": "single_instance_refcount_zones",
+      "same_source": "none",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "ofuda_mark_overhead",
+        "icon": "icon_barrier_mark"
+      }
+    },
+    {
+      "id": "st_ofuda_tag",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "marker",
+        "used_by": [
+          "syn_ofuda_detonate"
+        ]
+      },
+      "default_duration_sec": 1.5,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "ofuda_stuck_small",
+        "icon": ""
+      }
+    },
+    {
+      "id": "st_burn",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "damage_over_time",
+        "tick_sec": 0.5,
+        "stats_key": "statuses.st_burn.tick_damage_coef",
+        "can_crit": false
+      },
+      "default_duration_sec": 3.0,
+      "stacking": "strongest_only",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "#FF9A4A",
+        "overlay_vfx": "small_flames",
+        "icon": "icon_burn"
+      }
+    },
+    {
+      "id": "st_hold",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "hard_stop"
+      },
+      "default_duration_sec": 1.2,
+      "stacking": "single_instance",
+      "same_source": "extend_to_max",
+      "blocks_knockback": false,
+      "on_end_apply": {
+        "status_id": "st_hold_immune",
+        "duration_sec": 1.0
+      },
+      "immune_tags": [
+        "boss"
+      ],
+      "boss_conversion": {
+        "to": "st_slow",
+        "strength": 0.5
+      },
+      "visual": {
+        "tint": "#FFD27A",
+        "overlay_vfx": "qi_ring",
+        "icon": "icon_hold"
+      }
+    },
+    {
+      "id": "st_hold_immune",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "block_status",
+        "blocked_status_ids": [
+          "st_hold"
+        ],
+        "bypass_flag": "ignore_immunity"
+      },
+      "default_duration_sec": 1.0,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "",
+        "icon": ""
+      }
+    },
+    {
+      "id": "st_blocked",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "hard_stop",
+        "bound_to_blocker": true
+      },
+      "default_duration_sec": 0,
+      "stacking": "single_instance",
+      "same_source": "none",
+      "blocks_knockback": false,
+      "immune_tags": [
+        "boss"
+      ],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "qi_block_ring",
+        "icon": "icon_hold"
+      }
+    },
+    {
+      "id": "st_time_stop",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "hard_stop_store_damage",
+        "release_mult_stats_key": "spell_cards.sc_the_world.stored_damage_mult"
+      },
+      "default_duration_sec": 3.0,
+      "stacking": "single_instance",
+      "same_source": "none",
+      "blocks_knockback": true,
+      "immune_tags": [
+        "boss"
+      ],
+      "boss_conversion": {
+        "to": "st_slow",
+        "strength": 0.7
+      },
+      "visual": {
+        "tint": "#9A9AC8",
+        "overlay_vfx": "grey_clock",
+        "icon": "icon_time_stop",
+        "pause_animation": true
+      }
+    },
+    {
+      "id": "st_gap_daze",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "hard_stop"
+      },
+      "default_duration_sec": 0.6,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [
+        "boss"
+      ],
+      "visual": {
+        "tint": "#C7A3FF",
+        "overlay_vfx": "gap_eyes_swirl",
+        "icon": "icon_daze"
+      }
+    },
+    {
+      "id": "st_registered",
+      "target_kind": "enemy",
+      "mvp": false,
+      "effect": {
+        "type": "mark_for_owner_trigger",
+        "trigger": "on_marked_enemy_death"
+      },
+      "default_duration_sec": 4.0,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": false,
+      "immune_tags": [
+        "boss"
+      ],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "number_tag_overhead",
+        "icon": "icon_registered"
+      }
+    },
+    {
+      "id": "st_invulnerable",
+      "target_kind": "enemy",
+      "mvp": true,
+      "effect": {
+        "type": "damage_immune",
+        "block_new_statuses": true
+      },
+      "duration_stats_key": "boss_rules.phase_invuln_sec",
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "blocks_knockback": true,
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "spell_declare_aura",
+        "icon": ""
+      }
+    },
+    {
+      "id": "st_unit_frozen",
+      "target_kind": "unit",
+      "mvp": true,
+      "effect": {
+        "type": "unit_disable",
+        "pause_cooldowns": true,
+        "block_upgrade_sell": true,
+        "tap_to_break": 3,
+        "tap_to_break_status": "pending_producer"
+      },
+      "duration_source": "attacker",
+      "boss_cirno_duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",
+      "stacking": "single_instance",
+      "same_source": "extend_to_max",
+      "on_end_apply": {
+        "status_id": "st_unit_freeze_immune",
+        "duration_stats_key": "statuses.st_unit_freeze_immune.duration_sec",
+        "numeric_pending_pr8": true
+      },
+      "immune_tags": [],
+      "visual": {
+        "tint": "#DFF6FF",
+        "overlay_vfx": "ice_block_unit",
+        "icon": "icon_freeze",
+        "pause_animation": true
+      }
+    },
+    {
+      "id": "st_unit_freeze_immune",
+      "target_kind": "unit",
+      "mvp": true,
+      "effect": {
+        "type": "block_status",
+        "blocked_status_ids": [
+          "st_unit_frozen"
+        ],
+        "bypass_flag": "none"
+      },
+      "duration_stats_key": "statuses.st_unit_freeze_immune.duration_sec",
+      "numeric_pending_pr8": true,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "immune_tags": [],
+      "visual": {
+        "tint": "",
+        "overlay_vfx": "thaw_drips",
+        "icon": ""
+      }
+    },
+    {
+      "id": "st_unit_pounced",
+      "target_kind": "unit",
+      "mvp": false,
+      "status": "post_mvp",
+      "behavior_status": "recommendation",
+      "effect": {
+        "type": "unit_disable",
+        "pause_cooldowns": true,
+        "block_upgrade_sell": false
+      },
+      "duration_stats_key": "enemies.enm_shade_pouncer.pounce_disable_sec",
+      "duration_pending_numeric": true,
+      "stacking": "single_instance",
+      "same_source": "refresh_duration",
+      "immune_tags": [],
+      "note_zh": "扑人残影扑中角色：角色短暂停止攻击和技能。秒数归数值策划，PR #8 还没有这个字段",
+      "visual": {
+        "tint": "#B8B8B8",
+        "overlay_vfx": "shade_grab_unit",
+        "icon": "icon_pounced",
+        "pause_animation": false
+      }
+    }
+  ]
+}

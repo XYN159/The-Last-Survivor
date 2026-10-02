@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "schema_version": 2,
+    "status": "draft",
+    "owner": "combat_design",
+    "doc": "docs/design/combat/terrain_and_map.md",
+    "stats_file": "data/balance/combat/stats.json",
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
+  },
+  "terrain": [
+    {
+      "id": "ter_ice",
+      "mvp": true,
+      "allowed_cell_types": [
+        "path"
+      ],
+      "effects": [
+        {
+          "type": "enemy_move_speed_mult",
+          "value_stats_key": "terrain.ter_ice.move_speed_mult"
+        }
+      ],
+      "affects_boss": true,
+      "blocks_placement": false,
+      "blocks_line_attacks": false,
+      "priority": 20,
+      "visual": {
+        "tile_overlay": "ice_floor",
+        "enemy_vfx": "slide_sparkle",
+        "spawn_vfx": "frost_spread",
+        "expire_vfx": "ice_crack_melt",
+        "telegraph_sec": 0.6
+      }
+    },
+    {
+      "id": "ter_icicle",
+      "mvp": true,
+      "allowed_cell_types": [
+        "placeable",
+        "blocked",
+        "empty"
+      ],
+      "effects": [
+        {
+          "type": "block_line_attacks"
+        },
+        {
+          "type": "block_placement"
+        }
+      ],
+      "on_occupied_cell": {
+        "apply_unit_status": "st_unit_frozen",
+        "duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",
+        "spawn_terrain": false
+      },
+      "destroyed_by_spell_tags": [
+        "beam"
+      ],
+      "affects_boss": false,
+      "blocks_placement": true,
+      "blocks_line_attacks": true,
+      "priority": 30,
+      "visual": {
+        "tile_overlay": "icicle_pillar",
+        "spawn_vfx": "icicle_drop",
+        "expire_vfx": "icicle_shatter",
+        "telegraph_sec": 0.8
+      },
+      "duration_source": "level.bosses[].phases[phase_1].duration_sec",
+      "duration_fallback_sec": 12.0
+    },
+    {
+      "id": "ter_fog",
+      "mvp": true,
+      "allowed_cell_types": [
+        "path",
+        "placeable",
+        "blocked",
+        "empty"
+      ],
+      "effects": [
+        {
+          "type": "target_range_penalty",
+          "value_stats_key": "terrain.ter_fog.range_minus_cells",
+          "min_range_stats_key": "terrain.ter_fog.min_range_cells"
+        }
+      ],
+      "affects_boss": false,
+      "blocks_placement": false,
+      "blocks_line_attacks": false,
+      "priority": 5,
+      "visual": {
+        "tile_overlay": "fog_soft",
+        "spawn_vfx": "fog_roll_in",
+        "expire_vfx": "fog_clear",
+        "telegraph_sec": 0
+      }
+    },
+    {
+      "id": "ter_barrier",
+      "mvp": true,
+      "allowed_cell_types": [
+        "path",
+        "placeable",
+        "blocked",
+        "empty"
+      ],
+      "owner_bound": true,
+      "effects": [
+        {
+          "type": "zone_status",
+          "status_id": "st_barrier_mark",
+          "on_enter": "apply",
+          "on_exit": "remove"
+        }
+      ],
+      "affects_boss": true,
+      "blocks_placement": false,
+      "blocks_line_attacks": false,
+      "priority": 10,
+      "stack_with_other_terrain": true,
+      "visual": {
+        "tile_overlay": "barrier_red_white",
+        "spawn_vfx": "barrier_unfold",
+        "expire_vfx": "barrier_fade",
+        "telegraph_sec": 0
+      }
+    },
+    {
+      "id": "ter_burning",
+      "mvp": false,
+      "allowed_cell_types": [
+        "path"
+      ],
+      "owner_bound": true,
+      "effects": [
+        {
+          "type": "zone_status",
+          "status_id": "st_burn",
+          "on_enter": "apply",
+          "on_exit": "keep",
+          "reapply_interval_sec": 0.5
+        }
+      ],
+      "affects_boss": true,
+      "blocks_placement": false,
+      "blocks_line_attacks": false,
+      "priority": 15,
+      "stack_with_other_terrain": true,
+      "visual": {
+        "tile_overlay": "fire_ground",
+        "spawn_vfx": "flame_burst",
+        "expire_vfx": "ember_out",
+        "telegraph_sec": 0
+      }
+    },
+    {
+      "id": "ter_faded",
+      "mvp": false,
+      "allowed_cell_types": [
+        "placeable"
+      ],
+      "effects": [
+        {
+          "type": "block_placement"
+        },
+        {
+          "type": "disable_unit_on_cell",
+          "exempt_tags": [
+            "fade_immune"
+          ]
+        }
+      ],
+      "affects_boss": false,
+      "blocks_placement": true,
+      "blocks_line_attacks": false,
+      "priority": 25,
+      "visual": {
+        "tile_overlay": "grey_desaturate",
+        "spawn_vfx": "color_drain",
+        "expire_vfx": "color_return",
+        "telegraph_sec": 0.5
+      }
+    }
+  ],
+  "overlap_rules": {
+    "movement_terrain": "highest_priority_wins",
+    "zone_terrain": "stack_if_flagged",
+    "placement_block": "any_blocks"
+  }
+}
