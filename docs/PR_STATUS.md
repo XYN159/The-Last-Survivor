@@ -2,9 +2,9 @@
 
 给制作人看的合并清单。这里只记录状态，不代替各 PR 里的设计正文。
 
-最近整理：2026-10-02 第四轮。基准仍是 `main` 的 `61e80d5`（首页已改成《东方守幻录》）。这一轮 `main` 没有新提交。#2、#4、#5、#13 有新提交，都还在最新 `main` 上。
+最近整理：2026-10-02 第五轮。基准仍是 `main` 的 `61e80d5`（首页已改成《东方守幻录》）。这一轮 `main` 没有新提交。今天写入的是 #11、#12、#14。
 
-这一轮没有合并、没有关闭任何 PR，没有删除分支，也没有推送到 `main`。
+这一轮没有合并、没有关闭任何 PR，没有点 Approve，没有删除分支，也没有推送到 `main`。合并仍然只有用户能点。不要自动合并。
 
 ## 推荐合并顺序
 
@@ -21,19 +21,19 @@
 5. **PR #5** 关卡表。放在数值表后面。它自己已经不再改 `docs/GDD.md` 和 `data/balance/level_difficulty.json`，难度表仍以 #8 为准。校验器要读 #8 的值，所以不要先于 #8。
 6. **PR #2** 叙事和用词。文件不和别人重叠。放置方式这一轮已经写成先点格子再点头像。第二到四章首领身份仍待定，#2 自己写了不卡住合并。
 7. **PR #6** 美术规范。引用战斗和关卡的 ID，放在它们后面。若更新日志和别人撞在一起，两边的条目都留下。
-8. **PR #12** 能玩的塔防原型。这是第一份游戏功能，放在它依赖的设计文档后面。数值在 `data/prototype/`，不要拿它覆盖 #8 的正式表。它会改 `CHANGELOG.md` 和 `docs/ARCHITECTURE.md`，和前面的设计 PR 撞在一起时，更新日志两边都留。
+8. **PR #12** 能玩的塔防原型。仍是草稿。结论是需要返工，返工已发回原原型 agent，请在同一 PR 上改。不要合并。放在它依赖的设计文档后面。数值在 `data/prototype/`，不要拿它覆盖 #8 的正式表。它会改 `CHANGELOG.md` 和 `docs/ARCHITECTURE.md`，和前面的设计 PR 撞在一起时，更新日志两边都留。汇总评论：https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812
 9. **PR #9** 测试计划。放在最后。合之前把已经对上的问题标成已解决，验收清单才跟得上最终文档。合设计稿之前仍可以先读它的 `DESIGN_ISSUES.md`。
 
-**PR #14** 角色概念图。放在 #6 后面即可，不挡住 #12。灵梦、魔理沙、琪露诺、八云紫各 3 版，另加紫的「半褪」。图在 `docs/design/art/concepts/`，不进游戏。请你挑选；稿里的建议是四人先看 v2。选定之前也可以先把候选图合进来。
+**PR #14** 角色概念图。head `01fe51c`。四人都选 v2，总览中文已重画。执行制作人汇总是可以合并，等用户合并。放在 #6 后面即可，不挡住 #12。图在 `docs/design/art/concepts/`，不进游戏。不要自动合并。汇总评论：https://github.com/XYN159/Touhou-forgotten-defense/pull/14#issuecomment-5946166173
 
 ## 开着的 PR
 
 | PR | 一句话 | 状态 | 更新日志 | CI |
 | --- | --- | --- | --- | --- |
-| [#14](https://github.com/XYN159/Touhou-forgotten-defense/pull/14) | MVP 四人各 3 版 Q 版概念图，外加紫的半褪，供挑选，不接入游戏。 | 设计文档，待拍板。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，另外两项通过 |
+| [#14](https://github.com/XYN159/Touhou-forgotten-defense/pull/14) | head `01fe51c`。四人都选 v2，总览中文已重画。执行制作人汇总是可以合并，等用户合并。不接入游戏。汇总评论：https://github.com/XYN159/Touhou-forgotten-defense/pull/14#issuecomment-5946166173 | 可以合并，等用户点。不要自动合并。标签仍是设计文档、待拍板。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#13](https://github.com/XYN159/Touhou-forgotten-defense/pull/13) | 8 个角色的工作手册。这一轮补了角色图的硬性验收。 | CI/工程，待审核。已在最新 `main` 上，无冲突。 | 未改 | `export-android` 失败，另外两项通过 |
-| [#12](https://github.com/XYN159/Touhou-forgotten-defense/pull/12) | 标题「开始」进入能玩的 7×12 塔防，灵梦和魔理沙打残影。草稿。数值在 `data/prototype/`。 | 开发、测试，待审核。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，`lint` 和 `test` 通过 |
-| [#11](https://github.com/XYN159/Touhou-forgotten-defense/pull/11) | MVP 开发计划和待拍板清单。这一轮又改了波次时间轴。 | 设计文档，待拍板。已在最新 `main` 上，无冲突。 | 正文写按要求不改；清单勾了已更新，但 diff 里没有这个文件 | `export-android` 失败，另外两项通过 |
+| [#12](https://github.com/XYN159/Touhou-forgotten-defense/pull/12) | 能玩的塔防原型。仍是草稿。结论是需要返工，返工已发回原原型 agent。汇总评论：https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812 | 开发、测试，待审核。草稿，需要返工。不要合并。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，`lint` 和 `test` 通过 |
+| [#11](https://github.com/XYN159/Touhou-forgotten-defense/pull/11) | MVP 开发计划和待拍板清单。分支 `docs/production-plan` 的最新提交 `017d708` 里有执行制作人交接 `HANDOFF.md`。 | 设计文档，待拍板。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#10](https://github.com/XYN159/Touhou-forgotten-defense/pull/10) | 维护本页：开着的 PR、状态和推荐合并顺序。草稿。 | CI/工程，待审核。从最新 `main` 拉出。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#7](https://github.com/XYN159/Touhou-forgotten-defense/pull/7) | 补上调试 APK 路径少写的 `}`，并让 lint 检查 shell 语法。 | CI/工程，待审核。已在最新 `main` 上。 | 已更新 | `lint`、`test`、`export-android` 都通过 |
 | [#9](https://github.com/XYN159/Touhou-forgotten-defense/pull/9) | 写测试计划、MVP 验收和关卡模拟方案，并列出设计稿之间对不上的地方。草稿。 | 测试，待审核。已在最新 `main` 上。 | 按描述故意未改 | `export-android` 失败，另外两项通过 |
@@ -46,7 +46,7 @@
 
 描述里没有还指向旧仓库名 `The-Last-Survivor` 的链接。#14 也没有。
 
-#11 的计划第 3 节还写着合入 `main` 之前的提交号（例如 #3 的 `1c64371`、#4 的 `1956921`、#5 的 `f2212be`、#2 的 `ccdf270`）。那些分支现在的尖端已经含最新 `main`。这一轮没有改计划正文。
+#11 最新提交 `017d708` 里有执行制作人交接 `docs/production/HANDOFF.md`。状态页这一轮没有改计划正文。
 
 ### 打包检查为什么是红的
 
@@ -54,7 +54,7 @@
 
 ### 和 main 的冲突
 
-这一轮 `main` 没动。#2 到 #14 都已经包含它，没有新的冲突要解。#14 也是直接就能合进 `main`。
+这一轮 `main` 没动。#2 到 #14 都已经包含它，没有新的冲突要解。#14 没有冲突，可以合并，等用户点。不要自动合并。
 
 上一轮 PR #2、#5 无冲突，已合入。PR #3、#4 的冲突只动了说明文字，没有改玩法规则和战斗数值：
 
@@ -72,7 +72,7 @@
 - PR #4：雪符「钻石风暴」、被冻住能不能连点破冰、新联动和强化、局内资源正式名字、大妖精 / 蕾米莉亚 / 文能不能玩。
 - PR #2：局外资源叫什么、大妖精 / 蕾米莉亚 / 文能不能玩、若干敌人正式名，以及要不要补一行更新日志。放置方式已经写成先点格子再点头像。第二到四章首领仍待定，不挡住这份稿合并。
 - 正式数值表仍只在 #8。#4 已经去掉自己的 `stats.json`，#5 已经不再带 `level_difficulty.json`。先合 #8，不要把别处的表覆盖回去。
-- PR #14：四人各 3 版概念图，请你挑。稿里建议先看 v2。这一轮没有代你选定。
+- PR #14：四人都选 v2，总览中文已重画。执行制作人汇总是可以合并，等用户合并。不要自动合并。这一轮没有代你点合并。
 
 ## 已合并或已关闭的 PR 留下的远程分支
 
@@ -88,4 +88,4 @@
 
 仓库里现在有这些整理用标签：设计文档、开发、CI/工程、测试、待审核、有冲突、待拍板。
 
-「有冲突」这一轮没有贴。和 `main` 的冲突已经处理完。PR #12 贴了「开发」，它是目前唯一在做游戏功能的 PR。
+「有冲突」这一轮没有贴。和 `main` 的冲突已经处理完。PR #12 仍贴着「开发」，它是目前唯一在做游戏功能的 PR，结论是需要返工。PR #14 的标签仍是「设计文档」和「待拍板」：这一轮没能改掉，当前身份不能改别人 PR 的标签。看上面的文字，四人都选了 v2，可以合并，等用户点，不是再挑一版。
