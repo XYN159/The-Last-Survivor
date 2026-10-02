@@ -6,6 +6,19 @@
     "reward_spirit_per_wave": "每活过一波加的灵力。原型在这一波的怪全部刷出、且守护点还活着时发放。"
   },
   "levels": {
+    "prologue_01": {
+      "chapter": "prologue",
+      "level_index": 1,
+      "level_number": 1,
+      "hp_multiplier": "1.00",
+      "level_role": "teaching",
+      "wave_count": 3,
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
+      "buff_after_waves": [],
+      "buff_pick_count": 0,
+      "_note": "临时。照抄 #8 numeric/touhou-td-framework@eddf21a 的 levels.prologue_01 这几列，供原型开关关着时使用。正式开关打开后改读 data/balance/level_difficulty.json，这一行删掉。"
+    },
     "prototype_01": {
       "chapter": "prototype",
       "level_index": 0,

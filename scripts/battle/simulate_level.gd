@@ -1,13 +1,13 @@
 extends SceneTree
 
-## 无头跑完原型关。摆放用关卡里的 suggested_opening，一直 tick 到胜负。
+## 无头跑完「开始」进的那一关。摆放见 CombatCatalog.scripted_opening，一直 tick 到胜负。
 
 
 func _init() -> void:
 	var catalog := CombatCatalog.load_default()
 	var sim := BattleSim.from_catalog(catalog)
 	sim.set_seed(1)
-	for opening_v in catalog.level().get("suggested_opening", []):
+	for opening_v in catalog.scripted_opening():
 		_try_place(sim, opening_v)
 	var ticks := 0
 	while str(sim.view_state().outcome) == "" and ticks < 300000:

@@ -7,6 +7,7 @@ extends RefCounted
 ## 出怪窗口用这一波的 duration_sec，从这一波开始时算。窗口结束再空一档，不等清场。
 ## 空档优先用下一波的 delay_sec；没有就用上一波的 next_wave_delay_sec，再没有用规则里的 4 秒。
 ## 刷怪窗口里先不叫波。以后如果做，不能把这一波还没出的怪丢掉。
+## 关卡写了 deploy_wait_for_player 时，布阵倒计时停住，放下第一个角色才开始走。
 
 const PHASE_DEPLOY := "deploy"
 const PHASE_SPAWNING := "spawning"
@@ -48,6 +49,7 @@ var _window_left: float = 0.0
 var _wave_index: int = -1
 var _id_serial: int = 1
 var _pending_wave_bonus: bool = false
+var _deploy_waiting: bool = false
 
 
 static func from_catalog(catalog: CombatCatalog) -> BattleSim:
@@ -112,6 +114,7 @@ func place(character_id: String, col: int, row: int) -> bool:
 	unit.cooldown = float(unit.attack.get("initial_delay_sec", 0.3))
 	_units.append(unit)
 	_spirit -= cost
+	_deploy_waiting = false
 	return true
 
 
@@ -153,6 +156,7 @@ func view_state() -> Dictionary:
 		"guard_max_hp": _guard_max_hp,
 		"phase": _phase,
 		"phase_time_left": maxf(_phase_time, 0.0),
+		"deploy_waiting": _deploy_waiting,
 		"wave_index": _wave_index,
 		"wave_count": _waves.size(),
 		"outcome": _outcome(),
@@ -187,6 +191,7 @@ func _configure(catalog: CombatCatalog) -> void:
 	_spawn_window_sec = float(tune.spawn_window_sec)
 	_phase = PHASE_DEPLOY
 	_phase_time = float(tune.deploy_time_sec)
+	_deploy_waiting = bool(tune.deploy_wait_for_player)
 	_wave_index = -1
 	_waves = _level.get("waves", [])
 	_read_paths()
@@ -199,6 +204,8 @@ func _advance_clock(dt: float) -> void:
 		_phase_time = _window_left
 		return
 	if _phase != PHASE_DEPLOY and _phase != PHASE_INTERMISSION:
+		return
+	if _phase == PHASE_DEPLOY and _deploy_waiting:
 		return
 	_phase_time = maxf(0.0, _phase_time - dt)
 	if _phase_time > 0.0:
@@ -438,7 +445,10 @@ func _start_early(index: int, rate: float) -> bool:
 		return false
 	var reward := floori(maxf(_phase_time, 0.0) * rate)
 	_spirit += reward
-	_begin_wave(index)
+	if _phase == PHASE_DEPLOY:
+		_release_wave(index)
+	else:
+		_begin_wave(index)
 	return true
 
 

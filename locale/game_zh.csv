@@ -14,7 +14,6 @@ ui.battle.wave_final,第 %d/%d 波\n最后一波
 ui.battle.wave_next,第 %d/%d 波\n下一波 %d 秒
 ui.battle.wave,第 %d/%d 波
 ui.battle.start,开始 +%d
-ui.battle.call_wave,叫下一波 +%d
 ui.battle.hint_default,先点亮色格子，再点下面的角色。中段两格最合适。
 ui.battle.hint_pick_cell,先点亮色格子。
 ui.battle.hint_pick_character,再点下面的角色，放到这一格。

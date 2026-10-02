@@ -2,7 +2,9 @@ class_name CombatCatalog
 extends RefCounted
 
 ## 战斗表和关卡的读取。
-## 原型表在 data/prototype。USE_OFFICIAL_TABLES 保持 false，
+## 关卡文件固定读 data/levels/<关卡 id>.json。「开始」进的是 DEFAULT_LEVEL_ID。
+## data/levels/prologue_01.json 原样复制自 #5（关卡策划），本仓库这边不改它的内容。
+## 战斗表和难度表分两套。USE_OFFICIAL_TABLES 保持 false，
 ## 直到下面三份都合并进 main 再打开：
 ## #4 的 rules.json、characters.json、enemies.json、feel.json，
 ## #5 的 data/levels，#8 的 stats.json 和 level_difficulty.json。
@@ -13,18 +15,18 @@ extends RefCounted
 ## 射程和间隔先认 stats 里嵌套的 attack.range_cells、attack.interval_sec，
 ## 再认扁平的 range_cells、attack_interval_sec，最后才用 characters.json。
 ## 同名上限先认每个角色自己的 max_copies，没有再用规则里的全局值。
-## deploy_wait_for_player 留到切正式序章之前再读。原型关用不上。
 
 const USE_OFFICIAL_TABLES := false
+const DEFAULT_LEVEL_ID := "prologue_01"
+const LEVELS_DIR := "res://data/levels"
+const PROTOTYPE_LEVEL_PATH := "res://data/prototype/levels/prototype_01.json"
 
 const _PROTOTYPE_ROOTS := {
 	"combat_dir": "res://data/prototype/combat",
-	"level_path": "res://data/prototype/levels/prototype_01.json",
 	"difficulty_path": "res://data/prototype/level_difficulty.json",
 }
 const _OFFICIAL_ROOTS := {
 	"combat_dir": "res://data/balance/combat",
-	"level_path": "res://data/levels/prologue_01.json",
 	"difficulty_path": "res://data/balance/level_difficulty.json",
 }
 const _FALLBACK_NAMES := {
@@ -45,6 +47,14 @@ var _enemies: Dictionary = {}
 
 
 static func load_default() -> CombatCatalog:
+	return load_level(level_path(DEFAULT_LEVEL_ID))
+
+
+static func level_path(level_id: String) -> String:
+	return LEVELS_DIR.path_join("%s.json" % level_id)
+
+
+static func load_level(path: String) -> CombatCatalog:
 	var official := USE_OFFICIAL_TABLES
 	var roots: Dictionary = _OFFICIAL_ROOTS if official else _PROTOTYPE_ROOTS
 	var combat_dir := str(roots.combat_dir)
@@ -54,7 +64,7 @@ static func load_default() -> CombatCatalog:
 		_read_json(combat_dir.path_join("characters.json"), official),
 		_read_json(combat_dir.path_join("enemies.json"), official),
 		_read_json(combat_dir.path_join("feel.json"), official),
-		_read_json(str(roots.level_path), official),
+		_read_json(path, true),
 		_read_json(str(roots.difficulty_path), official),
 	)
 	if official:
@@ -104,6 +114,38 @@ static func read_float(value: Variant, fallback: float) -> float:
 			if str(value).is_valid_float():
 				return float(str(value))
 	return fallback
+
+
+## 无头试跑和截图用的开局摆法。关卡有 suggested_opening 就照它；
+## 没有就按 map.slots 的顺序，每格放可放置名单里的第一个角色。不是给玩家的推荐。
+func scripted_opening() -> Array:
+	var scripted: Array = []
+	for opening_v in _level.get("suggested_opening", []):
+		if typeof(opening_v) == TYPE_DICTIONARY:
+			scripted.append(opening_v)
+	if not scripted.is_empty():
+		return scripted
+	var params: Dictionary = _level.get("params", {})
+	var allowed: Array = params.get("available_character_ids", [])
+	if allowed.is_empty():
+		return []
+	var map: Dictionary = _level.get("map", {})
+	var result: Array = []
+	for slot_v in map.get("slots", []):
+		if typeof(slot_v) != TYPE_DICTIONARY:
+			continue
+		var slot: Dictionary = slot_v
+		(
+			result
+			. append(
+				{
+					"character_id": str(allowed[0]),
+					"col": read_int(slot.get("col", -1), -1),
+					"row": read_int(slot.get("row", -1), -1),
+				}
+			)
+		)
+	return result
 
 
 func board() -> Dictionary:
@@ -168,6 +210,7 @@ func tuning() -> Dictionary:
 		"guard_max_hp": maxi(read_int(params.get("lives", guard.get("max_hp", 20)), 20), 1),
 		"deploy_time_sec":
 		maxf(read_float(_level.get("deploy_time_sec", flow.get("deploy_time_sec", 10)), 10.0), 0.0),
+		"deploy_wait_for_player": bool(_level.get("deploy_wait_for_player", false)),
 		"intermission_sec":
 		maxf(read_float(_level.get("intermission_sec", flow.get("intermission_sec", 4)), 4.0), 0.0),
 		"spawn_window_sec": maxf(window, 0.0),

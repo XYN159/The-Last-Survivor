@@ -143,7 +143,7 @@ func test_two_paths_move_apart() -> void:
 
 
 func test_scripted_opening_clears_the_prototype_level() -> void:
-	var catalog := CombatCatalog.load_default()
+	var catalog := CombatCatalog.load_level(CombatCatalog.PROTOTYPE_LEVEL_PATH)
 	var sim := BattleSim.from_catalog(catalog)
 	sim.set_seed(1)
 	for opening_v in catalog.level().get("suggested_opening", []):
@@ -157,7 +157,7 @@ func test_scripted_opening_clears_the_prototype_level() -> void:
 
 
 func test_ignoring_the_cracks_loses_the_prototype_level() -> void:
-	var sim := BattleSim.from_catalog(CombatCatalog.load_default())
+	var sim := BattleSim.from_catalog(CombatCatalog.load_level(CombatCatalog.PROTOTYPE_LEVEL_PATH))
 	var state := _run(sim, 300000)
 	assert_eq(state.outcome, BattleSim.PHASE_DEFEAT)
 

@@ -1,6 +1,6 @@
 extends Control
 
-## 标题画面。开始按钮进入塔防原型。
+## 标题画面。开始按钮进入序章第一关（CombatCatalog.DEFAULT_LEVEL_ID）。
 
 @onready var _start_button: Button = %StartButton
 @onready var _version_label: Label = %VersionLabel
