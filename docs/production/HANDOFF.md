@@ -30,6 +30,16 @@
 
 动效师（第 11 节 `ui-motion-designer`）还没有常驻 agent。带界面的 PR 要审时，按 `ROLES.md` 第 11 节另开一个，评论开头「【动效师审核】」。不要把动效审派给美术策划。#12 这一轮另开的是 [bc-04f23713-8a1c-515d-b28d-8e4e7d211378](https://cursor.com/agents/bc-04f23713-8a1c-515d-b28d-8e4e7d211378)，只审这一轮。
 
+### 0.2 程序 agent
+
+用户要求加一个程序 agent，尽快把能玩的功能做出来。执行制作人按 `ROLES.md` 附录 A 派任务，一张任务一个 PR。程序不改策划文档里的已定规则，也不把已经废弃的车道、加人门、小队人数做回来。
+
+| 角色 | 依据 | agent |
+| --- | --- | --- |
+| 程序 | 附录 A 开发 agent | [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) |
+
+第一张卡：从塔防原型 `b5b3bed` 另开分支，把序章第一关 `prologue_01` 接到「开始」上，打完能结算。不推 PR #12。七关一起接、符卡、三选一都不在这张卡里。
+
 ## 1. 已定，不再问用户
 
 这些已经写进 `DECISIONS_PENDING.md` 的「已定规则」。这里只列接手时必须记住的：
@@ -208,6 +218,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 正在做：
 
 - **#12 第二轮返工**：复审已到齐，汇总是需要返工。只改标题上的「东方 Project 二次创作」，发回 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)。PR 描述里的旧放置顺序和旧费用公式已经由执行制作人改掉。
+- **程序第一张卡**：[bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 从原型另开分支，把 `prologue_01` 接到「开始」上。不改 PR #12。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
