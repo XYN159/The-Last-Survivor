@@ -102,12 +102,12 @@
 - **#2、#3**：这次没有新的已定修改。#2 仍等 #4、#5 进 `main` 再合。
 - **#12、#14**：见第 4、5 节。不在上表的顺序里。
 
-## 4. PR #12（T-00 原型）复审后需要返工
+## 4. PR #12（T-00 原型）标题声明已交，等文案复审
 
 - PR：https://github.com/XYN159/Touhou-forgotten-defense/pull/12
 - 分支：`cursor/battle-core-prototype-d174`
 - 返工 head：`b5b3bed`（已不是草稿）。上一轮「需要返工」看的是 `452f1b3`，不作为这一版的结论。
-- 返工由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到原 PR。`b5b3bed` 上的复审已经到齐，汇总是需要返工。剩下要改的是标题必须出现「东方 Project 二次创作」。放置、波次和费用不要再动。同一 agent 已接这一条。
+- 返工 head 现为 `81c5d04`。`ui.menu.subtitle` 已改成「东方 Project 二次创作」，并加了标题测试。相对 `b5b3bed` 只动了翻译表、`test_scenes.gd` 和 `CHANGELOG.md`。文案复审已发回 [bc-6664af32-85c4-582d-a3d9-10477ad558af](https://cursor.com/agents/bc-6664af32-85c4-582d-a3d9-10477ad558af)，只看这一笔。通过之前不写「可以合并」。
 - 原原型 agent：[bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)
 - 上一轮正式审核：[战斗策划](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132717)、[执行制作人汇总](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812)。评论 `5945898325` 是更早的一份战斗验收，和后来的更正有冲突，不以它为返工清单。
 
@@ -222,11 +222,11 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 已经做完、不要再派：
 
 - **#14 / T-19a**：乱码由 agent [bc-97f23ac2-10b8-503a-917f-c8fc5d4870ca](https://cursor.com/agents/bc-97f23ac2-10b8-503a-917f-c8fc5d4870ca) 在 `01fe51c` 修好。四人 v2 已写进 PR。等用户合并。
-- **#12 的上一轮审核**：针对 `452f1b3`，结论是需要返工。返工已经推到 `b5b3bed`。
+- **#12 的上一轮审核**：针对 `452f1b3`，结论是需要返工。标题声明随后推到了 `81c5d04`。
 
 正在做：
 
-- **#12 第二轮返工**：复审已到齐，汇总是需要返工。只改标题上的「东方 Project 二次创作」，发回 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)。PR 描述里的旧放置顺序和旧费用公式已经由执行制作人改掉。
+- **#12 标题声明**：已由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到 `81c5d04`。等文案对这一笔复审。
 - **程序第一张卡**：[bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 从原型另开分支，把 `prologue_01` 接到「开始」上。不改 PR #12。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
