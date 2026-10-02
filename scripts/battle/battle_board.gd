@@ -143,8 +143,10 @@ func _refresh() -> void:
 	_life_label.text = tr("ui.battle.life") % [int(state.guard_hp), int(state.guard_max_hp)]
 	_wave_label.text = _wave_text(state)
 	_speed_button.text = tr("ui.battle.speed") % _speed
+	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。
+	_call_button.visible = str(state.phase) == BattleSim.PHASE_DEPLOY
 	_call_button.disabled = not bool(state.call_allowed)
-	_call_button.text = _call_text(state)
+	_call_button.text = tr("ui.battle.start") % int(state.call_reward)
 	_refresh_roster(state)
 	_board.call("sync", state, _selected_col, _selected_row, _selected_unit)
 	if _unit_panel.visible:
@@ -199,13 +201,6 @@ func _wave_text(state: Dictionary) -> String:
 	return tr("ui.battle.wave") % [index, total]
 
 
-func _call_text(state: Dictionary) -> String:
-	var reward := int(state.call_reward)
-	if str(state.phase) == BattleSim.PHASE_DEPLOY:
-		return tr("ui.battle.start") % reward
-	return tr("ui.battle.call_wave") % reward
-
-
 func _on_character_pressed(character_id: String) -> void:
 	if _finished:
 		return
@@ -249,7 +244,7 @@ func _on_cell_pressed(col: int, row: int) -> void:
 
 
 func _on_call_pressed() -> void:
-	if _finished:
+	if _finished or str(_sim.view_state().phase) != BattleSim.PHASE_DEPLOY:
 		return
 	_sim.call_next_wave()
 	_refresh()
@@ -421,9 +416,7 @@ func _capture_sequence() -> void:
 
 
 func _place_opening() -> void:
-	for opening_v in _catalog.level().get("suggested_opening", []):
-		if typeof(opening_v) != TYPE_DICTIONARY:
-			continue
+	for opening_v in _catalog.scripted_opening():
 		var opening: Dictionary = opening_v
 		(
 			_sim

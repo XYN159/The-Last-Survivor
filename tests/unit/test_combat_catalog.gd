@@ -3,7 +3,7 @@ extends GutTest
 ## 原型表能读出来，字段和设计文档用的是同一套名字。
 
 
-func test_prototype_level_uses_the_confirmed_opening_numbers() -> void:
+func test_default_level_uses_the_confirmed_opening_numbers() -> void:
 	var catalog := CombatCatalog.load_default()
 	var tune := catalog.tuning()
 	var layout := catalog.board()
@@ -105,7 +105,7 @@ func test_reimu_and_marisa_keep_their_attack_types() -> void:
 
 
 func test_both_paths_stay_on_the_map_and_end_at_the_guard() -> void:
-	var level := CombatCatalog.load_default().level()
+	var level := CombatCatalog.load_level(CombatCatalog.PROTOTYPE_LEVEL_PATH).level()
 	var cells: Array = level.map.cells
 	assert_eq(level.map.paths.size(), 2)
 	for path_v in level.map.paths:

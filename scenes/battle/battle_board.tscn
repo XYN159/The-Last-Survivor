@@ -248,7 +248,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.84, 0.76, 1)
 theme_override_font_sizes/font_size = 34
-text = "level.prototype_01.name"
+text = "level.prologue_01.name"
 horizontal_alignment = 1
 
 [node name="RetryButton" type="Button" parent="ResultPanel/ResultColumn"]
