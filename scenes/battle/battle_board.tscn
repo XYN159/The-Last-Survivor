@@ -1,7 +1,35 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/battle/battle_board.gd" id="1_board"]
 [ext_resource type="Script" path="res://scripts/battle/board_view.gd" id="2_view"]
+[ext_resource type="Script" path="res://scripts/battle/board_motion.gd" id="3_motion"]
+[ext_resource type="Script" path="res://scripts/battle/screen_motion.gd" id="4_screen"]
+[ext_resource type="Script" path="res://scripts/battle/result_seal.gd" id="5_seal"]
+[ext_resource type="Theme" path="res://assets/themes/ofuda.tres" id="6_theme"]
+[ext_resource type="Shader" path="res://assets/shaders/edge_vignette.gdshader" id="7_vignette"]
+
+[sub_resource type="ShaderMaterial" id="vignette_material"]
+shader = ExtResource("7_vignette")
+shader_parameter/rect_size = Vector2(1080, 1920)
+shader_parameter/side_px = 96.0
+shader_parameter/top_px = 0.0
+shader_parameter/bottom_px = 56.0
+
+[sub_resource type="Gradient" id="mote_gradient"]
+offsets = PackedFloat32Array(0, 0.3, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="mote_texture"]
+gradient = SubResource("mote_gradient")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="mote_ramp"]
+offsets = PackedFloat32Array(0, 0.2, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.8, 1, 1, 1, 0)
 
 [node name="BattleBoard" type="Control"]
 layout_mode = 3
@@ -24,6 +52,7 @@ color = Color(0.102, 0.078, 0.125, 1)
 
 [node name="Vignette" type="ColorRect" parent="."]
 unique_name_in_owner = true
+material = SubResource("vignette_material")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -81,6 +110,16 @@ offset_right = 988.0
 offset_bottom = 1676.0
 script = ExtResource("2_view")
 
+[node name="BoardMotion" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 92.0
+offset_top = 140.0
+offset_right = 988.0
+offset_bottom = 1676.0
+mouse_filter = 2
+script = ExtResource("3_motion")
+
 [node name="BottomBar" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -126,6 +165,53 @@ custom_minimum_size = Vector2(240, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "ui.battle.speed"
+
+[node name="EntryOfuda" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 128.0
+offset_top = 216.0
+offset_right = 304.0
+offset_bottom = 736.0
+mouse_filter = 2
+theme = ExtResource("6_theme")
+
+[node name="Cord" type="ColorRect" parent="EntryOfuda"]
+layout_mode = 0
+offset_left = 86.0
+offset_right = 90.0
+offset_bottom = 44.0
+mouse_filter = 2
+color = Color(0.784, 0.196, 0.235, 1)
+
+[node name="Paper" type="PanelContainer" parent="EntryOfuda"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 152.0
+offset_bottom = 120.0
+mouse_filter = 2
+
+[node name="PaperColumn" type="VBoxContainer" parent="EntryOfuda/Paper"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="EntryOfudaLabel" type="Label" parent="EntryOfuda/Paper/PaperColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "level.prologue_01.name"
+horizontal_alignment = 1
+
+[node name="Stamp" type="Panel" parent="EntryOfuda/Paper/PaperColumn"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_type_variation = &"OfudaStamp"
 
 [node name="UnitPanel" type="Control" parent="."]
 unique_name_in_owner = true
@@ -211,6 +297,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Dimmer" type="ColorRect" parent="ResultPanel"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -219,50 +306,141 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.04, 0.07, 0.78)
 
-[node name="ResultColumn" type="VBoxContainer" parent="ResultPanel"]
+[node name="ResultCard" type="Panel" parent="ResultPanel"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -320.0
-offset_right = 360.0
-offset_bottom = 320.0
+offset_left = -390.0
+offset_top = -410.0
+offset_right = 390.0
+offset_bottom = 410.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 24
+theme = ExtResource("6_theme")
+
+[node name="ResultMotes" type="CPUParticles2D" parent="ResultPanel/ResultCard"]
+unique_name_in_owner = true
+show_behind_parent = true
+position = Vector2(390, 410)
+emitting = false
+amount = 16
+lifetime = 3.0
+texture = SubResource("mote_texture")
+emission_shape = 3
+emission_rect_extents = Vector2(540, 760)
+direction = Vector2(0, -1)
+spread = 25.0
+gravity = Vector2(0, -12)
+initial_velocity_min = 18.0
+initial_velocity_max = 46.0
+scale_amount_min = 0.7
+scale_amount_max = 1.4
+color = Color(0.957, 0.851, 0.541, 1)
+color_ramp = SubResource("mote_ramp")
+
+[node name="InnerFrame" type="Panel" parent="ResultPanel/ResultCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"OfudaFrame"
+
+[node name="CornerStamp" type="Panel" parent="ResultPanel/ResultCard"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 84.0
+offset_bottom = 84.0
+rotation = -0.08
+mouse_filter = 2
+theme_type_variation = &"OfudaStamp"
+
+[node name="ResultSeal" type="Control" parent="ResultPanel/ResultCard"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_seal")
+anchor_path = NodePath("../ResultColumn/ResultTitle")
+
+[node name="ResultColumn" type="VBoxContainer" parent="ResultPanel/ResultCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
 alignment = 1
 
-[node name="ResultTitle" type="Label" parent="ResultPanel/ResultColumn"]
+[node name="ResultTitle" type="Label" parent="ResultPanel/ResultCard/ResultColumn"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
-theme_override_font_sizes/font_size = 64
+theme_override_colors/font_color = Color(0.784, 0.196, 0.235, 1)
+theme_override_colors/font_shadow_color = Color(0.169, 0.133, 0.188, 0.25)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 4
+theme_override_font_sizes/font_size = 76
 text = "ui.battle.result_win"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ResultBody" type="Label" parent="ResultPanel/ResultColumn"]
+[node name="ResultBody" type="Label" parent="ResultPanel/ResultCard/ResultColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.84, 0.76, 1)
 theme_override_font_sizes/font_size = 34
 text = "level.prologue_01.name"
 horizontal_alignment = 1
 
-[node name="RetryButton" type="Button" parent="ResultPanel/ResultColumn"]
+[node name="RetryButton" type="Button" parent="ResultPanel/ResultCard/ResultColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(420, 110)
+custom_minimum_size = Vector2(440, 112)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 38
 text = "ui.battle.retry"
 
-[node name="MenuButton" type="Button" parent="ResultPanel/ResultColumn"]
+[node name="MenuButton" type="Button" parent="ResultPanel/ResultCard/ResultColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(420, 110)
+custom_minimum_size = Vector2(440, 112)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 36
+theme_type_variation = &"SecondaryButton"
+theme_override_font_sizes/font_size = 38
 text = "ui.battle.back_to_title"
+
+[node name="EntryVeil" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.059, 0.047, 0.078, 1)
+
+[node name="ScreenMotion" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_screen")

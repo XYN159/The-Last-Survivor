@@ -77,3 +77,78 @@ func test_finishing_the_level_offers_retry_and_title() -> void:
 	assert_true(body.text.begins_with("神社的直路"), body.text)
 	assert_eq((board.get_node("%RetryButton") as Button).text, "再打一次")
 	assert_eq((board.get_node("%MenuButton") as Button).text, "返回标题")
+
+
+func test_entry_opens_with_a_veil_and_the_level_ofuda() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var veil := board.get_node("%EntryVeil") as ColorRect
+	var ofuda := board.get_node("%EntryOfuda") as Control
+	var ofuda_label := board.get_node("%EntryOfudaLabel") as Label
+	assert_true(veil.visible)
+	assert_true(ofuda.visible)
+	assert_eq(ofuda_label.text, "神\n社\n的\n直\n路")
+
+
+func test_ofuda_stays_left_of_the_route_and_below_the_top_bar() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var ofuda := board.get_node("%EntryOfuda") as Control
+	var top_bar := board.get_node("%TopBar") as Control
+	var board_view := board.get_node("%BoardView") as Control
+	var route_left := board_view.position.x + 3.0 * 128.0
+	var slot_left := board_view.position.x + 2.0 * 128.0
+	assert_lt(ofuda.position.x + ofuda.size.x, minf(route_left, slot_left))
+	assert_gt(ofuda.position.y, top_bar.size.y)
+
+
+func test_every_battle_button_has_press_feedback() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	for unique in ["%CallButton", "%SpeedButton", "%RetryButton", "%MenuButton", "%SellButton"]:
+		var button := board.get_node(unique) as Button
+		assert_not_null(button.get_node_or_null("ButtonMotion"), unique)
+	var bar := board.get_node("%CharacterBar") as HBoxContainer
+	assert_not_null(bar.get_child(0).get_node_or_null("ButtonMotion"))
+
+
+func test_placing_plays_the_seal_and_landing() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var motion: Node = board.get_node("%BoardMotion")
+	var before := int(motion.call("active_effect_count"))
+	board._on_cell_pressed(2, 4)
+	board._on_character_pressed("chr_reimu")
+	assert_gt(int(motion.call("active_effect_count")), before)
+	assert_eq((motion.call("unit_scales") as Dictionary).size(), 1)
+
+
+func test_result_card_unrolls_and_tints_the_title() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var sim: BattleSim = board._sim
+	var guard := 0
+	while str(sim.view_state().outcome) == "" and guard < 300000:
+		sim.tick()
+		guard += 1
+	board._show_result(sim.view_state())
+	var card := board.get_node("%ResultCard") as Control
+	var title := board.get_node("%ResultTitle") as Label
+	var motes := board.get_node("%ResultMotes") as CPUParticles2D
+	assert_eq(title.text, "失守了")
+	assert_eq(title.get_theme_color("font_color"), Color("#5A6068"))
+	assert_lt(card.scale.y, 1.0)
+	assert_true(motes.emitting)
+	assert_false((board.get_node("%EntryOfuda") as Control).visible)
+	await wait_seconds(1.0)
+	assert_almost_eq(card.scale.y, 1.0, 0.01)
+
+
+func test_retry_fades_out_before_reloading() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var veil := board.get_node("%EntryVeil") as ColorRect
+	await wait_seconds(0.8)
+	assert_false(veil.visible)
+	board._leave(func() -> void: pass)
+	assert_true(veil.visible)

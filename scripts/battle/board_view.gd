@@ -39,6 +39,11 @@ var _normal_color := Color.WHITE
 var _heavy_color := Color("#FFD23F")
 var _flash_color := Color.WHITE
 var _flash_strength: float = 0.85
+var _heavy_pop: float = 1.4
+var _pop_sec: float = 0.1
+var _pop_from: float = 0.6
+var _fade_sec: float = 0.2
+var _unit_scales: Dictionary = {}
 
 
 func setup(catalog: CombatCatalog) -> void:
@@ -61,6 +66,16 @@ func setup(catalog: CombatCatalog) -> void:
 	_heavy_size = CombatCatalog.read_int(numbers.get("heavy_font_px", 48), 48)
 	_normal_color = Color.html(str(numbers.get("normal_color", "#FFFFFF")))
 	_heavy_color = Color.html(str(numbers.get("heavy_color", "#FFD23F")))
+	_heavy_pop = CombatCatalog.read_float(numbers.get("heavy_pop_scale", 1.4), 1.4)
+	var motion := MotionConfig.load_default()
+	_pop_sec = motion.number("damage_number", "pop_sec", _pop_sec)
+	_pop_from = motion.number("damage_number", "from_scale", _pop_from)
+	_fade_sec = motion.number("damage_number", "fade_sec", _fade_sec)
+
+
+## 放下和升级时角色的缩放，由 BoardMotion 每帧给出。没有记录的角色按 1 倍画。
+func set_unit_scales(scales: Dictionary) -> void:
+	_unit_scales = scales
 
 
 func sync(state: Dictionary, selected_col: int, selected_row: int, selected_id: int) -> void:
@@ -141,8 +156,9 @@ func _draw_units() -> void:
 		var unit: Dictionary = unit_v
 		var center := _cell_center(int(unit.col), int(unit.row))
 		var palette := _unit_colors(str(unit.get("character_id", "")))
-		draw_circle(center, 42.0, palette[0])
-		draw_circle(center, 22.0, palette[1])
+		var unit_scale := float(_unit_scales.get(int(unit.get("id", -1)), 1.0))
+		draw_circle(center, 42.0 * unit_scale, palette[0])
+		draw_circle(center, 22.0 * unit_scale, palette[1])
 		if font == null:
 			continue
 		draw_string(
@@ -240,8 +256,21 @@ func _spawn_number(event: Dictionary) -> void:
 	var origin := Vector2(float(event.x), float(event.y)) * float(_cell) + Vector2(-28, -36)
 	label.position = origin
 	add_child(label)
-	_floaters.append(
-		{"label": label, "age": 0.0, "life": _number_life, "rise": _number_rise, "origin": origin}
+	label.reset_size()
+	label.pivot_offset = label.size * 0.5
+	label.scale = Vector2.ONE * _pop_from
+	(
+		_floaters
+		. append(
+			{
+				"label": label,
+				"age": 0.0,
+				"life": _number_life,
+				"rise": _number_rise,
+				"origin": origin,
+				"peak": _heavy_pop if heavy else 1.0,
+			}
+		)
 	)
 
 
@@ -256,9 +285,22 @@ func _age_floaters(delta: float) -> void:
 			continue
 		var ratio := float(item.age) / float(item.life)
 		label.position = (item.origin as Vector2) + Vector2(0, -float(item.rise) * ratio)
-		label.modulate.a = 1.0 - ratio
+		label.scale = Vector2.ONE * _number_scale(float(item.age), float(item.peak))
+		var left := float(item.life) - float(item.age)
+		label.modulate.a = 1.0 if _fade_sec <= 0.0 else clampf(left / _fade_sec, 0.0, 1.0)
 		kept.append(item)
 	_floaters = kept
+
+
+## 伤害数字先从小弹到峰值（重击更大），再回到 1 倍，之后匀速上飘，最后一段淡出。
+func _number_scale(age: float, peak: float) -> float:
+	if _pop_sec <= 0.0:
+		return 1.0
+	if age < _pop_sec:
+		return lerpf(_pop_from, peak, age / _pop_sec)
+	if age < _pop_sec * 2.0 and peak > 1.0:
+		return lerpf(peak, 1.0, (age - _pop_sec) / _pop_sec)
+	return 1.0
 
 
 func _age_beams(delta: float) -> void:

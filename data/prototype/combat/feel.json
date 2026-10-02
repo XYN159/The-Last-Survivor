@@ -15,9 +15,24 @@
     "heavy_color": "#FFD23F",
     "normal_font_px": 34,
     "heavy_font_px": 48,
+    "heavy_pop_scale": 1.4,
     "rise_px": 60,
     "lifetime_sec": 0.6,
     "max_on_screen": 40
+  },
+  "kill_burst": {
+    "particles_per_kill": 6,
+    "fly_duration_sec": 0.5,
+    "max_active_orbs": 60,
+    "target_anchor": "spirit_counter"
+  },
+  "spirit_counter_bump": {
+    "scale": 1.25,
+    "duration_sec": 0.15
+  },
+  "level_up": {
+    "flash_sec": 0.3,
+    "scale_pop": 1.15
   },
   "guard_damage_vignette": {
     "duration_sec": 0.4,

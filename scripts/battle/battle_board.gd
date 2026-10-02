@@ -1,16 +1,24 @@
 extends Control
 
 ## 塔防对局的画面。规则在 BattleSim，这里只负责按钮、棋盘和结算。
+## 动效在 BoardMotion（棋盘上）和 ScreenMotion（整屏），这里只在操作发生时通知它们。
 
+const BoardMotion := preload("res://scripts/battle/board_motion.gd")
+const ButtonMotion := preload("res://scripts/ui/button_motion.gd")
+const ResultSeal := preload("res://scripts/battle/result_seal.gd")
+const ScreenMotion := preload("res://scripts/battle/screen_motion.gd")
 const MAIN_MENU_SCENE := "res://scenes/main/main_menu.tscn"
 const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
 const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
+const _TITLE_WIN := Color("#C8323C")
+const _TITLE_LOSE := Color("#5A6068")
 
 static var remembered_speed: int = 1
 
 var _catalog: CombatCatalog
+var _motion_config: MotionConfig
 var _sim: BattleSim
 var _speed: int = 1
 var _speed_options: Array[int] = [1, 2]
@@ -27,6 +35,8 @@ var _vignette_duration: float = 0.4
 var _vignette_alpha: float = 0.45
 var _step_seconds: float = 1.0 / 60.0
 var _max_ticks: int = 4
+var _last_wave_key: String = ""
+var _leaving: bool = false
 
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _life_label: Label = %LifeLabel
@@ -49,6 +59,15 @@ var _max_ticks: int = 4
 @onready var _retry_button: Button = %RetryButton
 @onready var _menu_button: Button = %MenuButton
 @onready var _vignette: ColorRect = %Vignette
+@onready var _board_motion: BoardMotion = %BoardMotion
+@onready var _screen_motion: ScreenMotion = %ScreenMotion
+@onready var _entry_veil: ColorRect = %EntryVeil
+@onready var _entry_ofuda: Control = %EntryOfuda
+@onready var _entry_ofuda_label: Label = %EntryOfudaLabel
+@onready var _dimmer: ColorRect = %Dimmer
+@onready var _result_card: Control = %ResultCard
+@onready var _result_seal: ResultSeal = %ResultSeal
+@onready var _result_motes: CPUParticles2D = %ResultMotes
 
 
 func _ready() -> void:
@@ -61,9 +80,16 @@ func _ready() -> void:
 	var vignette: Dictionary = _catalog.feel().get("guard_damage_vignette", {})
 	_vignette_duration = float(vignette.get("duration_sec", 0.4))
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
+	_motion_config = MotionConfig.load_default()
 	_board.call("setup", _catalog)
+	_board_motion.setup(_catalog, _motion_config)
+	_screen_motion.setup(_motion_config, _catalog.feel())
 	_layout_board()
 	_build_roster()
+	_attach_button_motion()
+	_board_motion.orb_arrived.connect(_on_orb_arrived)
+	_vignette.resized.connect(_sync_vignette_size)
+	_sync_vignette_size()
 	_call_button.pressed.connect(_on_call_pressed)
 	_speed_button.pressed.connect(_on_speed_pressed)
 	_upgrade_button.pressed.connect(_on_upgrade_pressed)
@@ -79,18 +105,27 @@ func _ready() -> void:
 	_refresh()
 	if OS.get_environment("BATTLE_CAPTURE") == "1":
 		_capturing = true
+		_screen_motion.skip_entry(_entry_veil, _entry_ofuda)
 		_capture_sequence()
+		return
+	_play_entry()
 
 
 func _process(delta: float) -> void:
 	_fade_vignette(delta)
 	if _capturing:
-		_board.call("advance_fx", delta)
+		_advance_fx(delta)
 		return
 	if not _finished:
 		_run_ticks(delta)
-	_board.call("advance_fx", delta * float(_speed))
+	_advance_fx(delta * float(_speed))
 	_refresh()
+
+
+func _advance_fx(delta: float) -> void:
+	_board_motion.advance(delta)
+	_board.call("set_unit_scales", _board_motion.unit_scales())
+	_board.call("advance_fx", delta)
 
 
 func _run_ticks(delta: float) -> void:
@@ -116,6 +151,8 @@ func _layout_board() -> void:
 	)
 	_board.position = origin
 	_board.size = size
+	_board_motion.position = origin
+	_board_motion.size = size
 	_top_bar.offset_bottom = origin.y
 	_bottom_bar.anchor_top = 0.0
 	_bottom_bar.anchor_bottom = 1.0
@@ -149,6 +186,8 @@ func _refresh() -> void:
 	_call_button.text = tr("ui.battle.start") % int(state.call_reward)
 	_refresh_roster(state)
 	_board.call("sync", state, _selected_col, _selected_row, _selected_unit)
+	_board_motion.sync(state, _selected_col, _selected_row)
+	_note_wave_change(state)
 	if _unit_panel.visible:
 		_fill_unit_panel(state)
 
@@ -207,14 +246,19 @@ func _on_character_pressed(character_id: String) -> void:
 	_selected_unit = -1
 	_unit_panel.visible = false
 	if not _has_selected_cell():
-		_hint_label.text = tr(_HINT_PICK_CELL)
+		_set_hint(_HINT_PICK_CELL, true)
 		_refresh()
 		return
-	if _sim.place(character_id, _selected_col, _selected_row):
+	var col := _selected_col
+	var row := _selected_row
+	if _sim.place(character_id, col, row):
 		_clear_selected_cell()
-		_hint_label.text = tr(_HINT_DEFAULT)
+		_set_hint(_HINT_DEFAULT)
+		var placed := _unit_at(_sim.view_state(), col, row)
+		if not placed.is_empty():
+			_board_motion.play_place(col, row, int(placed.id))
 	else:
-		_hint_label.text = tr(_HINT_PLACE_FAILED)
+		_set_hint(_HINT_PLACE_FAILED, true)
 	_refresh()
 
 
@@ -226,7 +270,7 @@ func _on_cell_pressed(col: int, row: int) -> void:
 	if not unit.is_empty():
 		_clear_selected_cell()
 		_selected_unit = int(unit.id)
-		_unit_panel.visible = true
+		_show_unit_panel()
 		_fill_unit_panel(state)
 		_refresh()
 		return
@@ -234,12 +278,12 @@ func _on_cell_pressed(col: int, row: int) -> void:
 	_unit_panel.visible = false
 	if _cell_mark(col, row) != ".":
 		_clear_selected_cell()
-		_hint_label.text = tr(_HINT_PICK_CELL)
+		_set_hint(_HINT_PICK_CELL, true)
 		_refresh()
 		return
 	_selected_col = col
 	_selected_row = row
-	_hint_label.text = tr(_HINT_PICK_CHARACTER)
+	_set_hint(_HINT_PICK_CHARACTER)
 	_refresh()
 
 
@@ -264,14 +308,19 @@ func _on_speed_pressed() -> void:
 func _on_upgrade_pressed() -> void:
 	if _finished:
 		return
-	_sim.upgrade(_selected_unit)
+	var unit := _unit_by_id(_sim.view_state(), _selected_unit)
+	if _sim.upgrade(_selected_unit) and not unit.is_empty():
+		_board_motion.play_level_up(int(unit.col), int(unit.row), _selected_unit)
 	_refresh()
 
 
 func _on_sell_pressed() -> void:
 	if _finished:
 		return
+	var unit := _unit_by_id(_sim.view_state(), _selected_unit)
 	if _sim.sell(_selected_unit):
+		if not unit.is_empty():
+			_board_motion.play_sell(int(unit.col), int(unit.row))
 		_selected_unit = -1
 		_unit_panel.visible = false
 	_refresh()
@@ -284,20 +333,37 @@ func _on_close_unit_pressed() -> void:
 
 
 func _on_retry_pressed() -> void:
-	get_tree().reload_current_scene()
+	_leave(_reload_scene)
 
 
 func _on_menu_pressed() -> void:
+	_leave(_open_main_menu)
+
+
+func _leave(then: Callable) -> void:
+	if _leaving:
+		return
+	_leaving = true
+	_screen_motion.leave(_entry_veil, then)
+
+
+func _reload_scene() -> void:
+	get_tree().reload_current_scene()
+
+
+func _open_main_menu() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
 
 
 func _show_result(state: Dictionary) -> void:
 	_finished = true
 	_unit_panel.visible = false
+	_screen_motion.hide_now(_entry_ofuda)
 	_result_panel.visible = true
 	var won := str(state.outcome) == BattleSim.PHASE_VICTORY
 	var title_key := "ui.battle.result_win" if won else "ui.battle.result_lose"
 	_result_title.text = tr(title_key)
+	_result_title.add_theme_color_override("font_color", _TITLE_WIN if won else _TITLE_LOSE)
 	_result_body.text = (
 		tr("ui.battle.result_body")
 		% [
@@ -307,6 +373,13 @@ func _show_result(state: Dictionary) -> void:
 			int(state.spirit),
 		]
 	)
+	if _capturing:
+		_result_seal.show_still(won)
+		return
+	var fade_ins: Array[Control] = [_result_body, _retry_button, _menu_button]
+	_screen_motion.play_result(
+		_dimmer, _result_card, _result_title, fade_ins, _result_seal, _result_motes, won
+	)
 
 
 func _note_events(events: Array) -> void:
@@ -315,7 +388,77 @@ func _note_events(events: Array) -> void:
 			continue
 		if str((event_v as Dictionary).get("type", "")) == "leak":
 			_vignette_left = _vignette_duration
+			_screen_motion.hit_life(_life_label)
+	_board_motion.set_spirit_target(_spirit_target())
+	_board_motion.push_events(events)
 	_board.call("push_events", events)
+
+
+func _on_orb_arrived() -> void:
+	_screen_motion.bump(_spirit_label)
+
+
+func _spirit_target() -> Vector2:
+	return _spirit_label.get_global_rect().get_center() - _board_motion.get_global_rect().position
+
+
+func _play_entry() -> void:
+	var bars: Array[Control] = [_top_bar, _bottom_bar]
+	var layers: Array[Control] = [_board, _board_motion]
+	var level_name := str(_sim.view_state().level_name)
+	_screen_motion.play_entry(
+		_entry_veil, bars, layers, _entry_ofuda, _entry_ofuda_label, level_name
+	)
+	var delay := _motion_config.number("entry", "barrier_delay_sec", 0.35)
+	get_tree().create_timer(delay).timeout.connect(_board_motion.play_entry)
+
+
+func _attach_button_motion() -> void:
+	var buttons: Array[Button] = [
+		_call_button,
+		_speed_button,
+		_upgrade_button,
+		_sell_button,
+		_close_unit_button,
+		_retry_button,
+		_menu_button,
+	]
+	for button_v in _buttons.values():
+		buttons.append(button_v as Button)
+	for button in buttons:
+		ButtonMotion.new().bind(button, _motion_config)
+
+
+func _set_hint(key: String, warn: bool = false) -> void:
+	var text := tr(key)
+	var changed := _hint_label.text != text
+	_hint_label.text = text
+	if warn:
+		_screen_motion.warn(_hint_label)
+	elif changed:
+		_screen_motion.fade_in(_hint_label)
+
+
+func _show_unit_panel() -> void:
+	var was_visible := _unit_panel.visible
+	_unit_panel.visible = true
+	if not was_visible:
+		_screen_motion.pop_in(_unit_panel)
+
+
+func _note_wave_change(state: Dictionary) -> void:
+	var key := "%s:%d" % [str(state.phase), int(state.wave_index)]
+	if key == _last_wave_key:
+		return
+	if _last_wave_key != "":
+		_screen_motion.pop(_wave_label)
+	_last_wave_key = key
+
+
+func _sync_vignette_size() -> void:
+	var vignette_material := _vignette.material as ShaderMaterial
+	if vignette_material != null:
+		vignette_material.set_shader_parameter("rect_size", _vignette.size)
 
 
 func _fade_vignette(delta: float) -> void:
