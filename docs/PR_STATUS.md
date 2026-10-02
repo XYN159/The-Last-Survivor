@@ -2,7 +2,7 @@
 
 给制作人看的合并清单。这里只记录状态，不代替各 PR 里的设计正文。
 
-最近整理：2026-10-02 第二轮。基准仍是 `main` 的 `61e80d5`（首页已改成《东方守幻录》）。这一轮 `main` 没有新提交。
+最近整理：2026-10-02 第三轮。基准仍是 `main` 的 `61e80d5`（首页已改成《东方守幻录》）。这一轮 `main` 没有新提交。#2、#3、#6、#11 有新提交，但都还在最新 `main` 上。
 
 这一轮没有合并、没有关闭任何 PR，没有删除分支，也没有推送到 `main`。
 
@@ -12,7 +12,7 @@
 
 这一轮按新开的 **PR #11** 调整顺序。上一轮把战斗（#4）放在数值（#8）前面，是因为 #8 的描述写「先合 #4，表以 #8 为准」。#11 改成先合数值：表的内容仍然以 #8 为准，先合进去之后，#4 和 #5 再改成引用它，少一次同名文件冲突。两种说法都不要用 #4 或 #5 的表覆盖 #8。
 
-**PR #11** 和 **PR #10** 只新增文档，可以随时合，不插入下面的顺序。建议先读 #11 的 `docs/production/PLAN.md`，再按这个顺序点合并。
+**PR #10**、**#11**、**#13** 只新增文档，可以随时合，不插入下面的顺序。#13 自己写了要在 #11 之后或同时合。建议先读 #11 的计划，再读 #13 的角色手册。
 
 1. **PR #7** 安卓导出脚本。不改玩法。合上之后，`main` 才能打出调试 APK，后面的 PR 再跟上 `main` 时，打包检查才会变绿。
 2. **PR #3** 玩法总纲。后面的战斗、关卡、数值都按这里的规则写。
@@ -21,24 +21,27 @@
 5. **PR #5** 关卡表。放在数值表后面。难度表以 #8 为准。它和 #3 都会改 `docs/GDD.md`：不要用 #5 的总纲覆盖 #3。计划还要求它撤掉对总纲的修改。
 6. **PR #2** 叙事和用词。文件不和别人重叠。计划写了要等教学句那条拍板改完再合。
 7. **PR #6** 美术规范。引用战斗和关卡的 ID，放在它们后面。若更新日志和别人撞在一起，两边的条目都留下。
-8. **PR #9** 测试计划。放在最后。合之前把已经对上的问题标成已解决，验收清单才跟得上最终文档。合设计稿之前仍可以先读它的 `DESIGN_ISSUES.md`。
+8. **PR #12** 能玩的塔防原型。这是第一份游戏功能，放在它依赖的设计文档后面。数值在 `data/prototype/`，不要拿它覆盖 #8 的正式表。它会改 `CHANGELOG.md` 和 `docs/ARCHITECTURE.md`，和前面的设计 PR 撞在一起时，更新日志两边都留。
+9. **PR #9** 测试计划。放在最后。合之前把已经对上的问题标成已解决，验收清单才跟得上最终文档。合设计稿之前仍可以先读它的 `DESIGN_ISSUES.md`。
 
 ## 开着的 PR
 
 | PR | 一句话 | 状态 | 更新日志 | CI |
 | --- | --- | --- | --- | --- |
-| [#11](https://github.com/XYN159/Touhou-forgotten-defense/pull/11) | MVP 开发计划和待拍板清单，只新增 `docs/production/`。 | 设计文档，待拍板。已在最新 `main` 上，无冲突。 | 正文写按要求不改；清单勾了已更新，但 diff 里没有这个文件 | `export-android` 失败，另外两项通过 |
+| [#13](https://github.com/XYN159/Touhou-forgotten-defense/pull/13) | 8 个角色的工作手册和 Cursor skill，并写明先读 #11 的计划。 | CI/工程，待审核。已在最新 `main` 上，无冲突。 | 未改 | `export-android` 失败，另外两项通过 |
+| [#12](https://github.com/XYN159/Touhou-forgotten-defense/pull/12) | 标题「开始」进入能玩的 7×12 塔防，灵梦和魔理沙打残影。草稿。数值在 `data/prototype/`。 | 开发、测试，待审核。已在最新 `main` 上，无冲突。 | 已更新 | `export-android` 失败，`lint` 和 `test` 通过 |
+| [#11](https://github.com/XYN159/Touhou-forgotten-defense/pull/11) | MVP 开发计划和待拍板清单。这一轮又改了波次时间轴。 | 设计文档，待拍板。已在最新 `main` 上，无冲突。 | 正文写按要求不改；清单勾了已更新，但 diff 里没有这个文件 | `export-android` 失败，另外两项通过 |
 | [#10](https://github.com/XYN159/Touhou-forgotten-defense/pull/10) | 维护本页：开着的 PR、状态和推荐合并顺序。草稿。 | CI/工程，待审核。从最新 `main` 拉出。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#7](https://github.com/XYN159/Touhou-forgotten-defense/pull/7) | 补上调试 APK 路径少写的 `}`，并让 lint 检查 shell 语法。 | CI/工程，待审核。已在最新 `main` 上。 | 已更新 | `lint`、`test`、`export-android` 都通过 |
 | [#9](https://github.com/XYN159/Touhou-forgotten-defense/pull/9) | 写测试计划、MVP 验收和关卡模拟方案，并列出设计稿之间对不上的地方。草稿。 | 测试，待审核。已在最新 `main` 上。 | 按描述故意未改 | `export-android` 失败，另外两项通过 |
-| [#3](https://github.com/XYN159/Touhou-forgotten-defense/pull/3) | 把总纲和路线图改成竖屏塔防，并记下已经拍板的规则。 | 设计文档，待审核。已合入最新 `main`。 | 已更新 | `export-android` 失败，另外两项通过 |
-| [#2](https://github.com/XYN159/Touhou-forgotten-defense/pull/2) | 叙事初稿、角色加入时机和中文文本表。 | 设计文档，待拍板。已合入最新 `main`，无冲突。 | 未改，描述里还在问要不要补一行 | `export-android` 失败，另外两项通过 |
-| [#6](https://github.com/XYN159/Touhou-forgotten-defense/pull/6) | 美术规范、界面和 MVP 资源清单。框架已确认，文内仍有待确认项。 | 设计文档，待审核。已在最新 `main` 上。 | 已更新 | `export-android` 失败，另外两项通过 |
+| [#3](https://github.com/XYN159/Touhou-forgotten-defense/pull/3) | 把总纲和路线图改成竖屏塔防。这一轮又写了共用符卡条，并锁了序章波数。 | 设计文档，待审核。已在最新 `main` 上。 | 已更新 | `export-android` 失败，另外两项通过 |
+| [#2](https://github.com/XYN159/Touhou-forgotten-defense/pull/2) | 叙事初稿和中文文本表。这一轮按合并前已经定下的加入时机改了一版。 | 设计文档，待拍板。已在最新 `main` 上。 | 仍未改 | `export-android` 失败，另外两项通过 |
+| [#6](https://github.com/XYN159/Touhou-forgotten-defense/pull/6) | 美术规范、MVP 资源清单，以及这一轮补上的音频清单和已定事项。 | 设计文档，待审核。已在最新 `main` 上。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#4](https://github.com/XYN159/Touhou-forgotten-defense/pull/4) | 战斗规则草案和 `data/balance/combat/` 配置表。游戏还不会读这些表。 | 设计文档，待拍板。已合入最新 `main`。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#8](https://github.com/XYN159/Touhou-forgotten-defense/pull/8) | 数值文档、配置表和关卡模拟。草稿。 | 设计文档，待拍板。已在最新 `main` 上。 | 未改，描述里写了要后续补 | `export-android` 失败，另外两项通过 |
 | [#5](https://github.com/XYN159/Touhou-forgotten-defense/pull/5) | 24 关框架和 MVP 七关编组，并带关卡数据测试。 | 设计文档、测试，待拍板。已合入最新 `main`，无冲突。 | 已更新 | `export-android` 失败，另外两项通过 |
 
-描述里的旧仓库名 `The-Last-Survivor` 只出现在 PR #4，上一轮已经改成 `Touhou-forgotten-defense`。#11 的描述没有这个旧链接。
+描述里没有还指向旧仓库名 `The-Last-Survivor` 的链接。#12 和 #13 也没有。
 
 #11 的计划第 3 节还写着合入 `main` 之前的提交号（例如 #3 的 `1c64371`、#4 的 `1956921`、#5 的 `f2212be`、#2 的 `ccdf270`）。那些分支现在的尖端已经含最新 `main`。这一轮没有改计划正文。
 
@@ -48,7 +51,7 @@
 
 ### 和 main 的冲突
 
-这一轮 `main` 没动，#2 到 #11 都已经包含它，没有新的冲突要解。
+这一轮 `main` 没动。#2 到 #13 都已经包含它，没有新的冲突要解。#12、#13 也是直接就能合进 `main`。
 
 上一轮 PR #2、#5 无冲突，已合入。PR #3、#4 的冲突只动了说明文字，没有改玩法规则和战斗数值：
 
@@ -81,4 +84,4 @@
 
 仓库里现在有这些整理用标签：设计文档、开发、CI/工程、测试、待审核、有冲突、待拍板。
 
-「开发」和「有冲突」这一轮没有贴到 PR 上。没有开着的 PR 是在做游戏功能；和 `main` 的冲突已经处理完。
+「有冲突」这一轮没有贴。和 `main` 的冲突已经处理完。PR #12 贴了「开发」，它是目前唯一在做游戏功能的 PR。
