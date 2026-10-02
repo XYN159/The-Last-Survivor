@@ -59,7 +59,7 @@
 
 用户否决了第一版画面。那一版在 `cursor/prologue-01-art-7c67` @ `f8ec58f`：竖屏、米色大框、Q 版贴图。没有开 PR。已让 [bc-7832209d-0ef6-5c7e-8548-a7784afb7c67](https://cursor.com/agents/bc-7832209d-0ef6-5c7e-8548-a7784afb7c67) 停手。不要给这个分支开 PR，也不要在上面接着改。
 
-按用户给的两张参考重画，派给 GPT [bc-da37ddbd-9acb-529b-9638-28c5983f40fd](https://cursor.com/agents/bc-da37ddbd-9acb-529b-9638-28c5983f40fd)。基线是 PR #16，另开分支，不推到 #16 或 #12。
+按用户给的两张参考重画，派给 GPT [bc-da37ddbd-9acb-529b-9638-28c5983f40fd](https://cursor.com/agents/bc-da37ddbd-9acb-529b-9638-28c5983f40fd)。已交 PR #17，分支 `cursor/prologue-01-art-redraw-40fd` @ `394bb13`，基线是 PR #16。等用户看画面。还不能写可以合并。
 
 1. 标题照参考图：横屏，博丽灵梦红白巫女装、红蛙蝶结、御币，站在朱红鸟居前，背后是漂浮神社和樱花。标题是「东方守幻录」，章节是 CHAPTER 0「幻想的序章」。右下是「开始」。
 2. 战斗照参考图：横屏俯视神社庭院，石板路、鸟居、樱花、红灯。角色脚下是阴阳阵和结界圈。左下灵梦立绘，底栏符卡，右下「出击」。暗色、细节多，不要 Q 版，也不要科幻界面。
@@ -67,7 +67,7 @@
 4. 这一轮标题和战斗按参考改成横屏 16:9。整部游戏是否废止竖屏 1080×1920，等用户看过这版再定。先不要改 GDD 里的竖屏结论。
 5. 不使用明日方舟或东方 Project 的官方图。不要把参考图原文件截成贴图。不重画 #14 的四角色概念图，不提前做 T-19b。
 
-动效等这版画面交出来再做。旧动效 [bc-ab5af14e-9289-55ee-a02b-91424c623241](https://cursor.com/agents/bc-ab5af14e-9289-55ee-a02b-91424c623241) 已经推了 `cursor/prologue-01-motion-3241` @ `0c1b444`，按被否决的竖屏做的。不要给这个分支开 PR。新动效另开，用 Opus 5.5，效果跟两张参考：符札、结界、阴阳圈、樱花。不派给美术代做。完整东方字体和 T-20 仍等 #12 合并。
+旧动效 [bc-ab5af14e-9289-55ee-a02b-91424c623241](https://cursor.com/agents/bc-ab5af14e-9289-55ee-a02b-91424c623241) 的分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 按被否决的竖屏做的，不要开 PR。新动效按 PR #17 的横屏另开，用 Opus 5.5：[bc-019d9912-c427-599f-9df9-2c9601251aef](https://cursor.com/agents/bc-019d9912-c427-599f-9df9-2c9601251aef)。效果跟两张参考：符札、结界、阴阳圈、樱花。不重画背景和立绘。完整东方字体和 T-20 仍等 #12 合并。
 
 画面好不好看仍要用户点头。被否决的竖屏和色块都不能当成最终画面。动效师没通过，不能写「可以合并」。
 
@@ -250,15 +250,15 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 - **#12**：`81c5d04` 文案复审通过，汇总是可以合并。等用户点，不要自动合并。
 - **程序第一张卡**：Opus 5.5 已交 PR #16，`cursor/prologue-01-playable-5ab9` @ `127aa5b`。可以玩这一关。PR #12 不是序章。
-- **序章画面重做**：用户否决 `cursor/prologue-01-art-7c67` @ `f8ec58f`。GPT [bc-da37ddbd-9acb-529b-9638-28c5983f40fd](https://cursor.com/agents/bc-da37ddbd-9acb-529b-9638-28c5983f40fd) 按两张参考重画。旧动效分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 不要开 PR。
+- **序章画面重做**：用户否决 `cursor/prologue-01-art-7c67` @ `f8ec58f`。GPT 已交 PR #17，`cursor/prologue-01-art-redraw-40fd` @ `394bb13`。等用户看画面。旧动效分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 不要开 PR。新动效是 [bc-019d9912-c427-599f-9df9-2c9601251aef](https://cursor.com/agents/bc-019d9912-c427-599f-9df9-2c9601251aef)。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
 
 | 任务 | 什么时候派 |
 | --- | --- |
-| 序章第一关的背景图和画面 | 第一版已否决。重画派给 GPT [bc-da37ddbd-9acb-529b-9638-28c5983f40fd](https://cursor.com/agents/bc-da37ddbd-9acb-529b-9638-28c5983f40fd)，按用户的两张横屏参考。不要再派 [bc-7832209d-0ef6-5c7e-8548-a7784afb7c67](https://cursor.com/agents/bc-7832209d-0ef6-5c7e-8548-a7784afb7c67) |
-| 序章第一关的动效 | 等新画面交出来再另开，用 Opus 5.5。旧分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 已交，按竖屏做的，不要开 PR |
+| 序章第一关的背景图和画面 | 已交 PR #17 @ `394bb13`。等用户看。不要再派 [bc-7832209d-0ef6-5c7e-8548-a7784afb7c67](https://cursor.com/agents/bc-7832209d-0ef6-5c7e-8548-a7784afb7c67) |
+| 序章第一关的动效 | 已按 PR #17 另派 [bc-019d9912-c427-599f-9df9-2c9601251aef](https://cursor.com/agents/bc-019d9912-c427-599f-9df9-2c9601251aef)，用 Opus 5.5。旧分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 不要开 PR |
 | T-19b | #14 和 #12 都合并之后 |
 | T-20 | #12 合并之后。字体用东方风格 |
 | T-02 清掉车道占位 | #12 合并之后 |
