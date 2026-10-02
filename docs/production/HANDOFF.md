@@ -102,12 +102,12 @@
 - **#2、#3**：这次没有新的已定修改。#2 仍等 #4、#5 进 `main` 再合。
 - **#12、#14**：见第 4、5 节。不在上表的顺序里。
 
-## 4. PR #12（T-00 原型）标题声明已交，等文案复审
+## 4. PR #12（T-00 原型）可以合并，等用户点
 
 - PR：https://github.com/XYN159/Touhou-forgotten-defense/pull/12
 - 分支：`cursor/battle-core-prototype-d174`
 - 返工 head：`b5b3bed`（已不是草稿）。上一轮「需要返工」看的是 `452f1b3`，不作为这一版的结论。
-- 返工 head 现为 `81c5d04`。`ui.menu.subtitle` 已改成「东方 Project 二次创作」，并加了标题测试。相对 `b5b3bed` 只动了翻译表、`test_scenes.gd` 和 `CHANGELOG.md`。文案复审已发回 [bc-6664af32-85c4-582d-a3d9-10477ad558af](https://cursor.com/agents/bc-6664af32-85c4-582d-a3d9-10477ad558af)，只看这一笔。通过之前不写「可以合并」。
+- head 现为 `81c5d04`。`ui.menu.subtitle` 已是「东方 Project 二次创作」。文案复审通过。执行制作人汇总是可以合并，等用户点。
 - 原原型 agent：[bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)
 - 上一轮正式审核：[战斗策划](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132717)、[执行制作人汇总](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812)。评论 `5945898325` 是更早的一份战斗验收，和后来的更正有冲突，不以它为返工清单。
 
@@ -226,7 +226,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 正在做：
 
-- **#12 标题声明**：已由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到 `81c5d04`。等文案对这一笔复审。
+- **#12**：`81c5d04` 文案复审通过，汇总是可以合并。等用户点，不要自动合并。
 - **程序第一张卡**：[bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 从原型另开分支，把 `prologue_01` 接到「开始」上。不改 PR #12。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 

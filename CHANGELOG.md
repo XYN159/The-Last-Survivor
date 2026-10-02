@@ -8,7 +8,7 @@
 
 - 执行制作人接手六位策划和游戏测试在 #2 #3 #4 #5 #6 #8 #9 上未完成的修改。ch1_04 系数定为 0.74，入场波定为 11。细节在 `docs/production/HANDOFF.md`。
 - 六位策划和游戏测试已有 Cursor agent，名单在 `HANDOFF.md` 第 0.1 节。之后由执行制作人分派。动效师还没有常驻 agent。
-- T-00 的标题副标题已在 PR #12 `81c5d04` 改成「东方 Project 二次创作」，等文案复审。
+- T-00 的标题副标题已在 PR #12 `81c5d04` 改成「东方 Project 二次创作」。文案复审通过，汇总是可以合并，等用户点。
 - 增加常驻程序 agent，第一张卡是把序章第一关接到塔防原型上。名单在 `HANDOFF.md` 第 0.2 节。程序岗位按小团队兼岗，不拆成主程、服务器、引擎等一排 agent。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
