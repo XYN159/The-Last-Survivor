@@ -154,7 +154,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `wave_id` | 和 `id` 相同。战斗读这个 |
 | `delay_sec` | 这一波开始前再等多少秒。第 1 波是 0：布阵倒计时一结束，第一只立即出场。其余波是 4，对应 PR #4 `rules.json` 的 `intermission_sec` |
 | `next_wave_delay_sec` | 战斗字段。等于下一波的 `delay_sec`。最后一波是 0 |
-| `duration_sec` | 固定 20。刷怪窗口，从本波第一只出场算到最后一只出场。窗口结束后空 4 秒再来下一波，不等场上清空。叫波会跳过剩余的窗口和空档。首领关最后一波如果 `ends_when` 是 `boss_defeated`，20 秒仍只是刷怪窗口 |
+| `duration_sec` | 固定 20。刷怪窗口，从本波第一只出场算到最后一只出场。窗口结束后空 4 秒再来下一波，不等场上清空。刷怪窗口内叫波，本波没出的怪照原节奏继续出，和下一波重叠。首领关最后一波如果 `ends_when` 是 `boss_defeated`，20 秒仍只是刷怪窗口 |
 | `ends_when` | `spawn_window` 表示刷怪窗口结束并经过后面的空档，下一波就开始。`boss_defeated` 只用于首领关的最后一波 |
 | `is_boss` | 只有首领入场的那一波为真，用来播一次登场 |
 | `pressure` | 可选。`minion` 或 `boss_phase`。冰之残影关仍交替，但交替不切换符卡 |
@@ -176,7 +176,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 ### 时间轴
 
-普通关：开局布阵倒计时 10 秒，可以点「开始」提前结束。倒计时一结束，第一只立即出场，第 1 波 `delay_sec` 是 0。每一波先用 20 秒把怪刷完，再空 4 秒，然后下一波，不等场上清空。叫波会跳过剩余的窗口和这 4 秒空档。
+普通关：开局布阵倒计时 10 秒，可以点「开始」提前结束。倒计时一结束，第一只立即出场，第 1 波 `delay_sec` 是 0。每一波先用 20 秒把怪刷完，再空 4 秒，然后下一波，不等场上清空。刷怪窗口内叫波，本波没出的怪照原节奏继续出，和下一波重叠。
 
 序章：布阵倒计时停在 10 秒不走，玩家放下第一个角色后才开始倒数。之后和普通关一样，第 1 波不再另加 4 秒。关卡里用 `deploy_wait_for_player: true` 表示这件事。
 
@@ -206,7 +206,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `id` | 例如 `evt_yukari_gap_demo` |
 | `once` | 必须是 true。只演一次 |
 | `wave_id` | 触发波。隙间换位是 `w06` |
-| `trigger` | 触发条件。第 6 波左路第一只硬残影出场，大约在波内第 10 秒 |
+| `trigger` | 触发条件。第 6 波左路第一只硬残影走到路线一半。对齐 #4 的 `evt_yukari_gap_demo` |
 | `target` | 作用对象。这一只硬残影 |
 | `effect` | 隙间打开，把它送回本路起点的裂隙 |
 | `deals_damage` | 这一下是否造成伤害。隙间换位是 false |
@@ -226,13 +226,14 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `display_name` | 给人看的名字 |
 | `character_id` | 例如 `chr_cirno` |
 | `blocks_character_id` | 决斗期间不能放置的角色。不能出现在可放置名单里。冰之残影不锁琪露诺，写 `null` |
-| `enters_at_wave_id` | 从哪一波走进来，例如 `w05` |
-| `enter_wave` | 同一个入场波的整数。冰之残影现在是 5。制作人拍板后改这一个数，并让波次 id、前奏和 `is_boss` 跟它一致 |
+| `enters_at_wave_id` | 从哪一波走进来。冰之残影是 `w11` |
+| `enter_wave` | 同一个入场波的整数。D-01：冰之残影是 11。`enters_at_wave_id`、前奏和 `is_boss` 跟它一致 |
+| `applies_level_hp_multiplier` | 固定 false。首领血量不乘关卡系数。基础血量看 `bosses.<id>.hp` |
 | `entrance_id`、`path_id` | 从哪进、走哪条路 |
-| `prelude_wave_ids` | 入场前的波。琪露诺是前 4 波。这些波不必再被阶段瓜分 |
+| `prelude_wave_ids` | 入场前的波。冰之残影是前 10 波。这些波不必再被阶段瓜分 |
 | `phases` | 2 到 3 个血量阶段，每个阶段一张符卡 |
 | `combat_notes` | 中文列表 |
-| `leak` | 走到守护点后扣命，回到裂缝，再走同一条路。`lives_source` 指向 `stats.json` 里的 `leak_damage`，不抄数字 |
+| `leak` | 走到守护点后扣命，回到裂缝，再走同一条路。`lives_source` 指向 `stats.json` 的 `bosses.<id>.leak_damage`。冰之残影是 `bosses.boss_cirno.leak_damage`。#4 写明 Boss 不在 `enemies` 段，不抄数字 |
 
 一个阶段：
 
@@ -246,7 +247,7 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `cells_ref` | `cell_sets` 里的名字 |
 | `terrain_id` | 可选。冰瀑是 `ter_icicle`，钻石风暴是 `ter_ice` |
 | `duration_sec` | 可选。冰柱 12 秒，冰面 `-1` 表示直到击败 |
-| `status_on_character`、`status_on_shade` | 可选。冻结用 `st_freeze`。减速的状态 id 是 `st_slow`，这一关的符卡不用它 |
+| `status_on_character`、`status_on_shade` | 可选。冻角色用 `st_unit_frozen`，冻残影用 `st_freeze`。减速的状态 id 是 `st_slow`，这一关的符卡不用它 |
 | `note` | 中文 |
 
 `boss_cirno_p2_area` 不是格子数组。她在移动，所以写成 `mode: radius_around_boss`、`radius_cells: 2.5`、`follows: boss_position`。详见 `ch1_04` 的说明。

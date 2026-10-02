@@ -75,7 +75,7 @@
       "name_status": "pending_文案策划",
       "introduced_in": "ch3_01",
       "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_pouncer/threat_points",
-      "note": "玩家看到的名字以文案术语表为准，暂名「扑人残影」。会离开路线去扑村民。威胁点只看上面的引用。"
+      "note": "玩家看到的名字以文案术语表为准，暂名「扑人残影」。会离开路线去扑村民。威胁点引用上面的路径，但 #8 还没有这条。临时威胁点是 3，等数值写入 stats.json 后删掉这句，不能当成定案。"
     },
     {
       "id": "enm_shade_flying",
@@ -84,7 +84,7 @@
       "name_status": "decided",
       "introduced_in": "ch4_01",
       "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_flying/threat_points",
-      "note": "文案定名飞行残影。地上的角色打不到。威胁点只看上面的引用。旧草案用过另一个称呼，玩家文本不要再用。"
+      "note": "文案定名飞行残影。按 PR #4：沿路线飞，无视阻挡，美铃挡不住，地面攻击仍打得到。威胁点引用上面的路径，但 #8 还没有这条。临时威胁点是 2，等数值写入后删掉这句，不能当成定案。旧草案用过另一个称呼，玩家文本不要再用。"
     },
     {
       "id": "boss_cirno",

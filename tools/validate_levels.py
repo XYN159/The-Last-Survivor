@@ -333,8 +333,14 @@ def cirno_problems(level: dict, boss: dict) -> list[str]:
                 problems.append(f"冰面 ({col},{row}) 不是普通路线格")
     if phases[0].get("terrain_id") != "ter_icicle" or phases[0].get("duration_sec") != 12:
         problems.append("冰瀑应引用 ter_icicle，持续 12 秒")
-    if phases[0].get("status_on_character") != "st_freeze":
-        problems.append("冰瀑落在角色身上应引用 st_freeze")
+    if phases[0].get("status_on_character") != "st_unit_frozen":
+        problems.append("冰瀑落在角色身上应引用 st_unit_frozen")
+    if phases[1].get("status_on_character") != "st_unit_frozen":
+        problems.append("完美冻结冻住角色应引用 st_unit_frozen")
+    if phases[1].get("status_on_shade") != "st_freeze":
+        problems.append("完美冻结冻住残影应引用 st_freeze")
+    if boss.get("applies_level_hp_multiplier") is not False:
+        problems.append("冰之残影血量不乘关卡系数（D-01）")
     if phases[2].get("terrain_id") != "ter_ice" or phases[2].get("duration_sec") != -1:
         problems.append("钻石风暴应把格子变成一直存在的 ter_ice")
     return problems
@@ -372,7 +378,7 @@ def threat_problems(level: dict, threats: dict[str, int], row: dict, catalog_ids
         if total != budget:
             extra = ""
             if level["id"] == "ch1_04":
-                extra = "。入场仍是第 5 波，等制作人拍板。建议看 levels.ch1_04.threat_budget_coef_if_boss_fix"
+                extra = "。入场已是第 11 波。编组等 #8 把系数定成最终值后再按 wave_threat_budgets 重排"
             problems.append(f"{wave['id']} 的威胁 {total} 不是难度表里的 {budget}{extra}")
     expected_total = row.get("threat_budget_total")
     if expected_total is None or summed != expected_total:
@@ -469,11 +475,11 @@ def composition_problems(level: dict, threats: dict[str, int]) -> list[str]:
     if level_id == "ch1_04":
         boss = level["bosses"][0]
         enter = boss.get("enter_wave")
-        if enter != 5:
-            problems.append("冰之残影的 enter_wave 现在仍是 5，等制作人拍板后再改")
+        if enter != 11:
+            problems.append("冰之残影的 enter_wave 应为 11（D-01：第 11 波登场，血量不乘关卡系数）")
         if not isinstance(enter, int):
             problems.append("冰之残影要有整数 enter_wave")
-            enter = 5
+            enter = 11
         expected_wave = f"w{enter:02d}"
         if boss["enters_at_wave_id"] != expected_wave:
             problems.append("enters_at_wave_id 要和 enter_wave 是同一波")
@@ -590,6 +596,11 @@ def teaching_problems(level: dict) -> list[str]:
             problems.append("第一章第 1 关的主教学点应该是快残影")
         if "雾" in teaches:
             problems.append("浓雾是第一章的环境，不是第一章第 1 关的教学点")
+    if level["id"] == "ch4_01":
+        if "地面攻击" not in teaches:
+            problems.append("第四章第 1 关要写明飞行残影仍能被地面攻击打到")
+        if "打不到" in json.dumps(level, ensure_ascii=False):
+            problems.append("飞行残影按 #4 仍能被地面攻击打到，不要写打不到")
     return problems
 
 
@@ -608,8 +619,8 @@ def scripted_event_problems(level: dict) -> list[str]:
     if event.get("wave_id") != "w06":
         problems.append("隙间换位应该在第 6 波触发")
     trigger = event.get("trigger", "")
-    if "左路" not in trigger or "硬残影" not in trigger:
-        problems.append("隙间换位应该在第 6 波左路第一只硬残影出场时触发")
+    if "左路" not in trigger or "硬残影" not in trigger or "一半" not in trigger:
+        problems.append("隙间换位应该在第 6 波左路第一只硬残影走到路线一半时触发")
     effect = event.get("effect", "")
     if "送回" not in effect or "裂隙" not in effect:
         problems.append("隙间换位要把这只硬残影送回本路起点的裂隙")
@@ -834,6 +845,14 @@ def catalog_problems(catalog: dict, stats: dict | None = None) -> tuple[list[str
     for enemy_id in ("enm_shade_phantom", "enm_shade_heap", "enm_shade_rift", "enm_shade_flying"):
         if enemy_id not in by_id:
             problems.append(f"缺少预留敌人 {enemy_id}")
+    pouncer_note = by_id.get("enm_shade_pouncer", {}).get("note", "")
+    if "临时" not in pouncer_note or "3" not in pouncer_note:
+        problems.append("扑人残影的威胁点是临时值 3，要写在备注里，不能当成定案")
+    flying_note = by_id.get("enm_shade_flying", {}).get("note", "")
+    if "临时" not in flying_note or "2" not in flying_note:
+        problems.append("飞行残影的威胁点是临时值 2，要写在备注里，不能当成定案")
+    if "打不到" in flying_note or "地面攻击" not in flying_note:
+        problems.append("飞行残影按 #4 仍能被地面攻击打到")
     for enemy_id, display_name in expected_names.items():
         entry = by_id.get(enemy_id)
         if entry is None:

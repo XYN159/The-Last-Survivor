@@ -260,8 +260,15 @@ func test_ch1_03_armored_shades_follow_the_schedule() -> void:
 	var boss_level := _read_dictionary(_LEVEL_DIR + "ch1_04.json")
 	var bosses: Array = boss_level["bosses"]
 	var boss: Dictionary = bosses[0]
-	assert_eq(int(boss["enter_wave"]), 5)
-	assert_eq(str(boss["enters_at_wave_id"]), "w05")
+	assert_eq(int(boss["enter_wave"]), 11)
+	assert_eq(str(boss["enters_at_wave_id"]), "w11")
+	var prelude: Array = boss["prelude_wave_ids"]
+	assert_eq(prelude.size(), 10)
+	assert_false(bool(boss["applies_level_hp_multiplier"]))
+	var phases: Array = boss["phases"]
+	assert_eq(str(phases[0]["status_on_character"]), "st_unit_frozen")
+	assert_eq(str(phases[1]["status_on_character"]), "st_unit_frozen")
+	assert_eq(str(phases[1]["status_on_shade"]), "st_freeze")
 
 
 func test_ch1_03_gap_demo_runs_once() -> void:
@@ -276,6 +283,7 @@ func test_ch1_03_gap_demo_runs_once() -> void:
 	assert_true(bool(event["threat_unchanged"]))
 	assert_eq(str(event["dialogue_status"]), "pending_文案策划")
 	assert_true(str(event["trigger"]).contains("左路"))
+	assert_true(str(event["trigger"]).contains("一半"))
 	assert_true(str(event["effect"]).contains("裂隙"))
 	var index := _read_dictionary(_LEVEL_DIR + "index.json")
 	for entry in index["levels"]:

@@ -484,6 +484,7 @@
         "blocks_character_id",
         "enters_at_wave_id",
         "enter_wave",
+        "applies_level_hp_multiplier",
         "entrance_id",
         "path_id",
         "prelude_wave_ids",
@@ -506,7 +507,11 @@
         "enter_wave": {
           "type": "integer",
           "minimum": 1,
-          "description": "入场是第几波，和 enters_at_wave_id 是同一个数。制作人拍板后改这个整数。"
+          "description": "入场是第几波，和 enters_at_wave_id 是同一个数。D-01：冰之残影是 11。"
+        },
+        "applies_level_hp_multiplier": {
+          "const": false,
+          "description": "D-01：首领血量不乘关卡系数。基础血量看 stats.json 的 bosses.<id>.hp。"
         },
         "entrance_id": {"type": "string", "minLength": 1},
         "path_id": {"type": "string", "minLength": 1},
@@ -536,7 +541,7 @@
             "lives_source": {
               "type": "string",
               "minLength": 1,
-              "description": "指向 data/balance/combat/stats.json 里该首领的 leak_damage。不要把数字抄进关卡。"
+              "description": "指向 data/balance/combat/stats.json 的 bosses.<id>.leak_damage。冰之残影是 bosses.boss_cirno.leak_damage。#4 写明 Boss 不在 enemies 段。不要把数字抄进关卡。"
             }
           }
         }

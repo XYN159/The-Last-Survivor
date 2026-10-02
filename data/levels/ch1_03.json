@@ -369,7 +369,7 @@
       "id": "evt_yukari_gap_demo",
       "once": true,
       "wave_id": "w06",
-      "trigger": "第 6 波左路第一只硬残影出场，大约在波内第 10 秒",
+      "trigger": "第 6 波左路第一只硬残影走到路线一半",
       "target": "这一只硬残影",
       "effect": "隙间打开，把它送回本路起点的裂隙",
       "deals_damage": false,
