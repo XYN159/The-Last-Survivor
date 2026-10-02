@@ -9,6 +9,9 @@ const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
 const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
 const _CARD_FRAME := preload("res://assets/art/prologue_01/card_frame.png")
 const _REIMU_TOKEN := preload("res://assets/art/prologue_01/reimu_token.png")
+const BoardMotion := preload("res://scripts/battle/board_motion.gd")
+const ScreenMotion := preload("res://scripts/battle/screen_motion.gd")
+const PressMotion := preload("res://scripts/ui/press_motion.gd")
 
 static var remembered_speed: int = 1
 
@@ -30,6 +33,7 @@ var _vignette_duration: float = 0.4
 var _vignette_alpha: float = 0.45
 var _step_seconds: float = 1.0 / 60.0
 var _max_ticks: int = 4
+var _call_press: PressMotion
 
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _life_label: Label = %LifeLabel
@@ -50,6 +54,9 @@ var _max_ticks: int = 4
 @onready var _retry_button: Button = %RetryButton
 @onready var _menu_button: Button = %MenuButton
 @onready var _vignette: ColorRect = %Vignette
+@onready var _call_frame: Control = %CallFrame
+@onready var _board_motion: BoardMotion = %BoardMotion
+@onready var _screen_motion: ScreenMotion = %ScreenMotion
 
 
 func _ready() -> void:
@@ -63,6 +70,7 @@ func _ready() -> void:
 	_vignette_duration = float(vignette.get("duration_sec", 0.4))
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
 	_board.call("setup", _catalog)
+	_setup_motion()
 	_build_roster()
 	_call_button.pressed.connect(_on_call_pressed)
 	_speed_button.pressed.connect(_on_speed_pressed)
@@ -85,12 +93,29 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_fade_vignette(delta)
 	if _capturing:
-		_board.call("advance_fx", delta)
+		_advance_board_fx(delta)
 		return
 	if not _finished:
 		_run_ticks(delta)
-	_board.call("advance_fx", delta * float(_speed))
+	_advance_board_fx(delta * float(_speed))
 	_refresh()
+
+
+## 棋盘上的战斗光效跟倍速走；界面动效（ScreenMotion、按钮）按真实时间走。
+func _advance_board_fx(delta: float) -> void:
+	_board.call("advance_fx", delta)
+	_board_motion.advance(delta)
+
+
+func _setup_motion() -> void:
+	var config := MotionConfig.load_default()
+	_board_motion.setup(_board, config, _spirit_label)
+	_board.call("attach_motion", _board_motion)
+	_board_motion.spirit_mote_arrived.connect(_screen_motion.glow_spirit)
+	_call_press = PressMotion.new()
+	_call_press.bind(_call_button, [_call_frame], config)
+	_screen_motion.setup(config)
+	_screen_motion.play_entry()
 
 
 func _run_ticks(delta: float) -> void:
@@ -232,6 +257,8 @@ func _on_character_pressed(character_id: String) -> void:
 		_refresh()
 		return
 	if _sim.place(character_id, _selected_col, _selected_row):
+		var unit := _unit_at(_sim.view_state(), _selected_col, _selected_row)
+		_board_motion.play_place(_selected_col, _selected_row, int(unit.get("id", -1)))
 		_clear_selected_cell()
 		_hint_label.text = tr(_HINT_DEFAULT)
 	else:
@@ -260,6 +287,7 @@ func _on_cell_pressed(col: int, row: int) -> void:
 		return
 	_selected_col = col
 	_selected_row = row
+	_board_motion.play_select(col, row)
 	_hint_label.text = tr(_HINT_PICK_CHARACTER)
 	_refresh()
 
@@ -328,6 +356,7 @@ func _show_result(state: Dictionary) -> void:
 			int(state.spirit),
 		]
 	)
+	_screen_motion.play_result(won)
 
 
 func _note_events(events: Array) -> void:
@@ -336,7 +365,9 @@ func _note_events(events: Array) -> void:
 			continue
 		if str((event_v as Dictionary).get("type", "")) == "leak":
 			_vignette_left = _vignette_duration
+			_screen_motion.shake_life()
 	_board.call("push_events", events)
+	_board_motion.push_events(events)
 
 
 func _fade_vignette(delta: float) -> void:
@@ -411,6 +442,7 @@ func _unit_by_id(state: Dictionary, unit_id: int) -> Dictionary:
 
 
 func _capture_sequence() -> void:
+	_screen_motion.finish_entry()
 	await RenderingServer.frame_post_draw
 	_save_capture("01-deploy")
 	_place_opening()

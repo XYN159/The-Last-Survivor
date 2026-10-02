@@ -18,10 +18,12 @@ scenes/battle/       可玩的塔防棋盘，以及还留着的旧车道画面
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
 scripts/balance/     旧车道数值的读取和计算
-scripts/battle/      塔防规则（不画画面）和棋盘画面
+scripts/battle/      塔防规则（不画画面）、棋盘画面和战斗动效
 scripts/main/        标题场景脚本
 scripts/save/        存档读写
+scripts/ui/          界面动效的公共部分：动效时长表、缓动曲线、按钮按压
 tests/unit/          GUT 测试，文件名以 test_ 开头
+tests/capture/       手动运行的截图脚本，不进 GUT
 ci/                  给 GitHub Actions 用的脚本
 docs/                给人读的文档
 ```
@@ -86,6 +88,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `combat/characters.json` | 灵梦、魔理沙怎么打 |
 | `combat/enemies.json` | 小残影、快残影的体型和击退 |
 | `combat/feel.json` | 闪白和伤害数字 |
+| `ui_motion.json` | 序章动效的时长和幅度（进关、放置、按钮、受击、结算）。全是临时值，见 ADR-0007 |
 | `levels/prototype_01.json` | 旧的两路试验关。「开始」不再进这里，只留给测试 |
 | `level_difficulty.json` | 每关的开局灵力、每波加的灵力和血量倍率。`prologue_01` 这一行是照抄 #8 的临时行 |
 
@@ -96,6 +99,25 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 玩家能看见的字在 `locale/game_zh.csv`，并登记在 `project.godot` 的 `locale/translations`。角色、敌人、关卡、HUD、按钮和结算都用文本 key。日志和 `push_warning` 不走这张表。
 
 一局怎么打在 `BattleSim` 里，不在场景脚本里。画面每帧问它要快照。无头试跑是 `scripts/battle/simulate_level.gd`。
+
+## 动效
+
+动效只读规则发出的事件和快照，不反过来改规则。分成几块（决定记录见 `docs/adr/0007-prologue-motion-overlay.md`）：
+
+| 节点 / 脚本 | 推进方式 | 负责 |
+| --- | --- | --- |
+| `BoardMotion`（`scripts/battle/board_motion.gd`），`BoardView` 的子节点 | 真实时间 × 倍速 | 选格光、盖章、结界圈、小符纸、受击光点、飞向灵力的光点、守护点裂纹 |
+| `ScreenMotion`（`scripts/battle/screen_motion.gd`） | 真实时间 | 进关暗幕和上下栏、生命数字抖动、灵力数字亮一下、结算卡展开 |
+| `ResultMotes`（`scripts/battle/result_motes.gd`） | 真实时间 | 结算卡后面的金色或灰色光点 |
+| `PressMotion`（`scripts/ui/press_motion.gd`），代码挂到按钮下 | 真实时间 | 「开始」和「出击」按下缩小、松开回弹 |
+
+动效节点一律不接收点击（`mouse_filter` 为忽略）。时长和幅度都在 `data/prototype/ui_motion.json`，由 `MotionConfig` 读取。
+
+动效截图用手动脚本，按固定步长推进，每次画面一样：
+
+```bash
+MOTION_CAPTURE_DIR=/tmp/motion godot --path . --resolution 1920x1080 -s tests/capture/motion_capture.gd
+```
 
 新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*` 和 `locale/*`。
 
