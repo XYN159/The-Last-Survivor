@@ -16,6 +16,8 @@ const _ENEMY_TEXTURE := preload("res://assets/art/prologue_01/shade_enemy.png")
 var _columns: int = 7
 var _rows: int = 12
 var _cells: Array = []
+var _route_cells: Array = []
+var _motion: Control
 var _state: Dictionary = {}
 var _selected_col: int = -1
 var _selected_row: int = -1
@@ -41,6 +43,9 @@ func setup(catalog: CombatCatalog) -> void:
 	_rows = int(layout.rows)
 	var map: Dictionary = catalog.level().get("map", {})
 	_cells = map.get("cells", [])
+	var paths: Array = map.get("paths", [])
+	if not paths.is_empty() and typeof(paths[0]) == TYPE_DICTIONARY:
+		_route_cells = (paths[0] as Dictionary).get("cells", [])
 	var feel := catalog.feel()
 	var flash: Dictionary = feel.get("hit_flash", {})
 	var numbers: Dictionary = feel.get("damage_numbers", {})
@@ -62,6 +67,27 @@ func sync(state: Dictionary, selected_col: int, selected_row: int, selected_id: 
 	_selected_row = selected_row
 	_selected_id = selected_id
 	queue_redraw()
+
+
+## 动效层（BoardMotion）在格子标记和角色之间画地面光效，并决定角色盖章时的大小。
+func attach_motion(motion: Control) -> void:
+	_motion = motion
+
+
+func route_points() -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	for cell_v in _route_cells:
+		if typeof(cell_v) != TYPE_ARRAY or (cell_v as Array).size() < 2:
+			continue
+		points.append(cell_center(int(cell_v[0]), int(cell_v[1])))
+	return points
+
+
+func guard_point() -> Vector2:
+	var points := route_points()
+	if points.is_empty():
+		return size * 0.5
+	return points[points.size() - 1]
 
 
 func push_events(events: Array) -> void:
@@ -88,7 +114,7 @@ func _gui_input(event: InputEvent) -> void:
 	var nearest_distance := 86.0
 	for row in _rows:
 		for col in _columns:
-			var distance := mouse.position.distance_to(_cell_center(col, row))
+			var distance := mouse.position.distance_to(cell_center(col, row))
 			if distance < nearest_distance:
 				nearest = Vector2i(col, row)
 				nearest_distance = distance
@@ -100,6 +126,8 @@ func _gui_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	_draw_stage_markers()
+	if _motion != null:
+		_motion.call("draw_ground", self)
 	_draw_range()
 	_draw_units()
 	_draw_enemies()
@@ -111,7 +139,7 @@ func _draw_stage_markers() -> void:
 	for row in _rows:
 		for col in _columns:
 			var mark := _mark(col, row)
-			var center := _cell_center(col, row)
+			var center := cell_center(col, row)
 			if mark == ".":
 				var texture := (
 					_SELECT_TEXTURE
@@ -145,7 +173,7 @@ func _draw_range() -> void:
 		var unit: Dictionary = unit_v
 		if int(unit.get("id", -1)) != _selected_id:
 			continue
-		var center := _cell_center(int(unit.col), int(unit.row))
+		var center := cell_center(int(unit.col), int(unit.row))
 		var radius := float(unit.get("range", 1.0)) * 110.0
 		draw_texture_rect(
 			_RANGE_TEXTURE,
@@ -161,18 +189,17 @@ func _draw_units() -> void:
 		if typeof(unit_v) != TYPE_DICTIONARY:
 			continue
 		var unit: Dictionary = unit_v
-		var center := _cell_center(int(unit.col), int(unit.row))
+		var center := cell_center(int(unit.col), int(unit.row))
 		draw_texture_rect(
 			_UNIT_RING_TEXTURE,
 			Rect2(center - Vector2(78, 70), Vector2(156, 140)),
 			false,
 			Color(1, 0.72, 0.72, 0.9),
 		)
-		draw_texture_rect(
-			_REIMU_TEXTURE,
-			Rect2(center - Vector2(51, 64), Vector2(102, 102)),
-			false,
-		)
+		var stamp := 1.0
+		if _motion != null:
+			stamp = float(_motion.call("unit_scale", int(unit.get("id", -1))))
+		draw_texture_rect(_REIMU_TEXTURE, unit_rect(center, stamp), false)
 		if font == null:
 			continue
 		draw_string(
@@ -186,12 +213,18 @@ func _draw_units() -> void:
 		)
 
 
+## 灵梦小人的绘制范围。stamp 是盖章时的放大倍数，以小人中心为准缩放。
+func unit_rect(center: Vector2, stamp: float) -> Rect2:
+	var half := Vector2(51, 51) * stamp
+	return Rect2(center + Vector2(0, -13) - half, half * 2.0)
+
+
 func _draw_enemies() -> void:
 	for enemy_v in _state.get("enemies", []):
 		if typeof(enemy_v) != TYPE_DICTIONARY:
 			continue
 		var enemy: Dictionary = enemy_v
-		var pos := _logical_point(Vector2(float(enemy.x), float(enemy.y)))
+		var pos := logical_point(Vector2(float(enemy.x), float(enemy.y)))
 		var fast := str(enemy.get("enemy_id", "")) == "enm_shade_fast"
 		var radius := 38.0 if fast else 46.0
 		var tint := Color(0.72, 0.82, 1, 0.92) if fast else Color.WHITE
@@ -217,7 +250,7 @@ func _draw_shots() -> void:
 		if typeof(shot_v) != TYPE_DICTIONARY:
 			continue
 		var shot: Dictionary = shot_v
-		var pos := _logical_point(Vector2(float(shot.x), float(shot.y)))
+		var pos := logical_point(Vector2(float(shot.x), float(shot.y)))
 		draw_texture_rect(
 			_SHOT_TEXTURE,
 			Rect2(pos - Vector2(62, 28), Vector2(124, 56)),
@@ -228,8 +261,8 @@ func _draw_shots() -> void:
 func _draw_beams() -> void:
 	for beam_v in _beams:
 		var beam: Dictionary = beam_v
-		var from := _logical_point(Vector2(float(beam.x0), float(beam.y0)))
-		var to := _logical_point(Vector2(float(beam.x1), float(beam.y1)))
+		var from := logical_point(Vector2(float(beam.x0), float(beam.y0)))
+		var to := logical_point(Vector2(float(beam.x1), float(beam.y1)))
 		draw_line(from, to, Color(1, 0.87, 0.5, 0.9), 6.0)
 		draw_texture_rect(_SHOT_TEXTURE, Rect2(to - Vector2(54, 24), Vector2(108, 48)), false)
 
@@ -276,7 +309,7 @@ func _spawn_number(event: Dictionary) -> void:
 	label.add_theme_color_override("font_color", _heavy_color if heavy else _normal_color)
 	label.add_theme_color_override("font_outline_color", Color("#1A1420"))
 	label.add_theme_constant_override("outline_size", 8)
-	var origin := _logical_point(Vector2(float(event.x), float(event.y))) + Vector2(-28, -46)
+	var origin := logical_point(Vector2(float(event.x), float(event.y))) + Vector2(-28, -46)
 	label.position = origin
 	add_child(label)
 	_floaters.append(
@@ -329,11 +362,11 @@ func _mark(col: int, row: int) -> String:
 	return line.substr(col, 1)
 
 
-func _cell_center(col: int, row: int) -> Vector2:
-	return _logical_point(Vector2(float(col) + 0.5, float(row) + 0.5))
+func cell_center(col: int, row: int) -> Vector2:
+	return logical_point(Vector2(float(col) + 0.5, float(row) + 0.5))
 
 
-func _logical_point(point: Vector2) -> Vector2:
+func logical_point(point: Vector2) -> Vector2:
 	var row_ratio := point.y / float(maxi(_rows, 1))
 	var column_offset := point.x - float(_columns) * 0.5
 	return Vector2(

@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "temporary",
+    "owner": "ui_motion",
+    "doc": "docs/adr/0007-prologue-motion-overlay.md",
+    "note": "临时值：动效师先定的时长和幅度，正式数字等数值策划定。改手感只改这份文件，不要写进脚本"
+  },
+  "entry": {
+    "veil_hold_sec": 0.12,
+    "veil_fade_sec": 0.6,
+    "bar_delay_sec": 0.08,
+    "bar_slide_sec": 0.5,
+    "top_slide_px": 170,
+    "bottom_slide_px": 320
+  },
+  "button": {
+    "press_scale": 0.92,
+    "press_sec": 0.07,
+    "release_sec": 0.26,
+    "overshoot": 1.8
+  },
+  "select": {
+    "flash_sec": 0.36,
+    "glow_strength": 0.9,
+    "ring_from": 0.92,
+    "ring_to": 0.55
+  },
+  "place": {
+    "stamp_sec": 0.2,
+    "stamp_from_scale": 1.35,
+    "stamp_squash": 0.92,
+    "settle_sec": 0.14,
+    "ring_sec": 0.55,
+    "ring_width_px": 160,
+    "ring_height_px": 104,
+    "paper_count": 6,
+    "paper_sec": 0.6,
+    "paper_distance_min_px": 60,
+    "paper_distance_max_px": 105,
+    "paper_spread_deg": 70,
+    "paper_size_px": 28
+  },
+  "hit": {
+    "spark_count": 4,
+    "spark_sec": 0.24,
+    "spark_distance_px": 40,
+    "spark_size_px": 5,
+    "max_sparks": 64
+  },
+  "kill": {
+    "mote_count": 5,
+    "petal_every": 2,
+    "mote_sec": 0.7,
+    "mote_stagger_sec": 0.05,
+    "burst_px": 46,
+    "stop_below_px": 18,
+    "mote_size_px": 7,
+    "max_motes": 40
+  },
+  "leak": {
+    "crack_sec": 0.5,
+    "crack_count": 6,
+    "crack_length_px": 72,
+    "life_shake_px": 9,
+    "life_shake_sec": 0.36,
+    "life_shake_hz": 16
+  },
+  "spirit_glow": {
+    "glow_sec": 0.28,
+    "strength": 0.5
+  },
+  "result": {
+    "dim_sec": 0.3,
+    "unfold_sec": 0.45,
+    "unfold_from_scale": 0.04,
+    "content_delay_sec": 0.3,
+    "content_fade_sec": 0.25,
+    "mote_count": 18,
+    "petal_every": 4,
+    "mote_speed_px": 70,
+    "mote_life_sec": 2.4,
+    "mote_size_px": 7
+  },
+  "layout": {
+    "route_clear_px": 28
+  }
+}
