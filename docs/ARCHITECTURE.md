@@ -88,11 +88,13 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `levels/prototype_01.json` | 这一关的地图和三波怪 |
 | `level_difficulty.json` | 开局 150 灵力，每波再加 20 |
 
-`CombatCatalog` 负责读这些文件。`USE_OFFICIAL_TABLES` 现在是 `false`。等战斗表和关卡表合并进 main 之后，把它改成 `true`，加载器会改去读 `data/balance/combat/`、`data/levels/prologue_01.json` 和 `data/balance/level_difficulty.json`。字段名已经按那两套表来写。
+`CombatCatalog` 负责读这些文件。`USE_OFFICIAL_TABLES` 现在是 `false`。把它改成 `true` 之前，#4（`rules.json`、`characters.json`、`enemies.json`、`feel.json`）、#5（`data/levels`）和 #8（`stats.json`、`level_difficulty.json`）都要先合并。只合了其中一份就打开，会缺文件。开关打开后，缺文件或缺关键字段会 `push_error`，不再悄悄用默认值。关键字段是攻击、费用、射程、间隔、血量、移速、护甲、漏怪伤害、血量倍率。
+
+玩家能看见的字在 `locale/game_zh.csv`，并登记在 `project.godot` 的 `locale/translations`。角色、敌人、关卡、HUD、按钮和结算都用文本 key。日志和 `push_warning` 不走这张表。
 
 一局怎么打在 `BattleSim` 里，不在场景脚本里。画面每帧问它要快照。无头试跑是 `scripts/battle/simulate_level.gd`。
 
-新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*`。
+新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*` 和 `locale/*`。
 
 ## 存档
 

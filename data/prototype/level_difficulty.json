@@ -9,6 +9,8 @@
     "prototype_01": {
       "chapter": "prototype",
       "level_index": 0,
+      "level_number": "1",
+      "hp_multiplier": "1.00",
       "level_role": "teaching",
       "wave_count": 3,
       "reward_spirit_start": 150,

@@ -3,15 +3,21 @@ extends Control
 ## 塔防对局的画面。规则在 BattleSim，这里只负责按钮、棋盘和结算。
 
 const MAIN_MENU_SCENE := "res://scenes/main/main_menu.tscn"
-const _DEFAULT_HINT := "先点下面的角色，再点亮色格子。中段两格最合适。"
+const _HINT_DEFAULT := "ui.battle.hint_default"
+const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
+const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
+const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
 
 static var remembered_speed: int = 1
 
 var _catalog: CombatCatalog
 var _sim: BattleSim
 var _speed: int = 1
+var _speed_options: Array[int] = [1, 2]
+var _remember_speed: bool = true
 var _accumulator: float = 0.0
-var _armed_id: String = ""
+var _selected_col: int = -1
+var _selected_row: int = -1
 var _selected_unit: int = -1
 var _finished: bool = false
 var _capturing: bool = false
@@ -48,7 +54,7 @@ var _max_ticks: int = 4
 func _ready() -> void:
 	_catalog = CombatCatalog.load_default()
 	_sim = BattleSim.from_catalog(_catalog)
-	_speed = 2 if remembered_speed == 2 else 1
+	_apply_speed_rules()
 	var tune := _catalog.tuning()
 	_step_seconds = 1.0 / float(tune.logic_hz)
 	_max_ticks = int(tune.max_ticks_per_frame)
@@ -68,7 +74,8 @@ func _ready() -> void:
 	_board.connect("cell_pressed", _on_cell_pressed)
 	_unit_panel.visible = false
 	_result_panel.visible = false
-	_hint_label.text = _DEFAULT_HINT
+	_apply_static_labels()
+	_hint_label.text = tr(_HINT_DEFAULT)
 	_refresh()
 	if OS.get_environment("BATTLE_CAPTURE") == "1":
 		_capturing = true
@@ -132,14 +139,14 @@ func _build_roster() -> void:
 
 func _refresh() -> void:
 	var state := _sim.view_state()
-	_spirit_label.text = "灵力 %d" % int(state.spirit)
-	_life_label.text = "生命 %d/%d" % [int(state.guard_hp), int(state.guard_max_hp)]
+	_spirit_label.text = tr("ui.battle.spirit") % int(state.spirit)
+	_life_label.text = tr("ui.battle.life") % [int(state.guard_hp), int(state.guard_max_hp)]
 	_wave_label.text = _wave_text(state)
-	_speed_button.text = "倍速 ×%d" % _speed
+	_speed_button.text = tr("ui.battle.speed") % _speed
 	_call_button.disabled = not bool(state.call_allowed)
 	_call_button.text = _call_text(state)
 	_refresh_roster(state)
-	_board.call("sync", state, _armed_id, _selected_unit)
+	_board.call("sync", state, _selected_col, _selected_row, _selected_unit)
 	if _unit_panel.visible:
 		_fill_unit_panel(state)
 
@@ -155,7 +162,7 @@ func _refresh_roster(state: Dictionary) -> void:
 			continue
 		button.text = "%s\n%d" % [str(entry.display_name), int(entry.cost)]
 		button.disabled = not bool(entry.affordable)
-		button.modulate = Color(1, 0.95, 0.7) if _armed_id == character_id else Color.WHITE
+		button.modulate = Color.WHITE
 
 
 func _fill_unit_panel(state: Dictionary) -> void:
@@ -163,15 +170,15 @@ func _fill_unit_panel(state: Dictionary) -> void:
 	if unit.is_empty():
 		_unit_panel.visible = false
 		return
-	_unit_title.text = "%s  %d 级" % [str(unit.display_name), int(unit.level)]
+	_unit_title.text = tr("ui.battle.unit_level") % [str(unit.display_name), int(unit.level)]
 	var cost := int(unit.upgrade_cost)
 	if cost < 0:
-		_upgrade_button.text = "已满级"
+		_upgrade_button.text = tr("ui.battle.upgrade_max")
 		_upgrade_button.disabled = true
 	else:
-		_upgrade_button.text = "升级 %d" % cost
+		_upgrade_button.text = tr("ui.battle.upgrade") % cost
 		_upgrade_button.disabled = not bool(unit.can_upgrade)
-	_sell_button.text = "出售 +%d" % int(unit.sell_refund)
+	_sell_button.text = tr("ui.battle.sell") % int(unit.sell_refund)
 
 
 func _wave_text(state: Dictionary) -> String:
@@ -179,23 +186,24 @@ func _wave_text(state: Dictionary) -> String:
 	var total := int(state.wave_count)
 	var index := int(state.wave_index) + 1
 	if phase == BattleSim.PHASE_DEPLOY:
-		return "布阵 %d 秒" % ceili(float(state.phase_time_left))
+		return tr("ui.battle.deploy") % ceili(float(state.phase_time_left))
 	if phase == BattleSim.PHASE_VICTORY:
-		return "胜利"
+		return tr("ui.battle.victory")
 	if phase == BattleSim.PHASE_DEFEAT:
-		return "失败"
+		return tr("ui.battle.defeat")
 	if phase == BattleSim.PHASE_FINAL:
-		return "第 %d/%d 波\n最后一波" % [index, total]
-	if phase == BattleSim.PHASE_WAITING or phase == BattleSim.PHASE_INTERMISSION:
-		return "第 %d/%d 波\n下一波 %d 秒" % [index, total, ceili(float(state.phase_time_left))]
-	return "第 %d/%d 波" % [index, total]
+		return tr("ui.battle.wave_final") % [index, total]
+	if phase == BattleSim.PHASE_INTERMISSION:
+		var shown := maxi(index, 1)
+		return tr("ui.battle.wave_next") % [shown, total, ceili(float(state.phase_time_left))]
+	return tr("ui.battle.wave") % [index, total]
 
 
 func _call_text(state: Dictionary) -> String:
 	var reward := int(state.call_reward)
 	if str(state.phase) == BattleSim.PHASE_DEPLOY:
-		return "开始 +%d" % reward
-	return "叫下一波 +%d" % reward
+		return tr("ui.battle.start") % reward
+	return tr("ui.battle.call_wave") % reward
 
 
 func _on_character_pressed(character_id: String) -> void:
@@ -203,8 +211,15 @@ func _on_character_pressed(character_id: String) -> void:
 		return
 	_selected_unit = -1
 	_unit_panel.visible = false
-	_armed_id = "" if _armed_id == character_id else character_id
-	_hint_label.text = _DEFAULT_HINT
+	if not _has_selected_cell():
+		_hint_label.text = tr(_HINT_PICK_CELL)
+		_refresh()
+		return
+	if _sim.place(character_id, _selected_col, _selected_row):
+		_clear_selected_cell()
+		_hint_label.text = tr(_HINT_DEFAULT)
+	else:
+		_hint_label.text = tr(_HINT_PLACE_FAILED)
 	_refresh()
 
 
@@ -214,7 +229,7 @@ func _on_cell_pressed(col: int, row: int) -> void:
 	var state := _sim.view_state()
 	var unit := _unit_at(state, col, row)
 	if not unit.is_empty():
-		_armed_id = ""
+		_clear_selected_cell()
 		_selected_unit = int(unit.id)
 		_unit_panel.visible = true
 		_fill_unit_panel(state)
@@ -222,14 +237,14 @@ func _on_cell_pressed(col: int, row: int) -> void:
 		return
 	_selected_unit = -1
 	_unit_panel.visible = false
-	if _armed_id == "":
+	if _cell_mark(col, row) != ".":
+		_clear_selected_cell()
+		_hint_label.text = tr(_HINT_PICK_CELL)
 		_refresh()
 		return
-	if _sim.place(_armed_id, col, row):
-		_armed_id = ""
-		_hint_label.text = _DEFAULT_HINT
-	else:
-		_hint_label.text = "放不下。要亮色格子，并且灵力够。"
+	_selected_col = col
+	_selected_row = row
+	_hint_label.text = tr(_HINT_PICK_CHARACTER)
 	_refresh()
 
 
@@ -241,8 +256,13 @@ func _on_call_pressed() -> void:
 
 
 func _on_speed_pressed() -> void:
-	_speed = 1 if _speed == 2 else 2
-	remembered_speed = _speed
+	if _speed_options.is_empty():
+		return
+	var index := _speed_options.find(_speed)
+	var next_index := 0 if index < 0 else (index + 1) % _speed_options.size()
+	_speed = _speed_options[next_index]
+	if _remember_speed:
+		remembered_speed = _speed
 	_refresh()
 
 
@@ -281,9 +301,10 @@ func _show_result(state: Dictionary) -> void:
 	_unit_panel.visible = false
 	_result_panel.visible = true
 	var won := str(state.outcome) == BattleSim.PHASE_VICTORY
-	_result_title.text = "守住了" if won else "失守了"
+	var title_key := "ui.battle.result_win" if won else "ui.battle.result_lose"
+	_result_title.text = tr(title_key)
 	_result_body.text = (
-		"%s\n生命 %d/%d    灵力 %d"
+		tr("ui.battle.result_body")
 		% [
 			str(state.level_name),
 			int(state.guard_hp),
@@ -309,6 +330,48 @@ func _fade_vignette(delta: float) -> void:
 	_vignette_left = maxf(0.0, _vignette_left - delta * float(_speed))
 	var ratio := 0.0 if _vignette_duration <= 0.0 else _vignette_left / _vignette_duration
 	_vignette.color.a = _vignette_alpha * ratio
+
+
+func _apply_speed_rules() -> void:
+	var scale := _catalog.time_scale()
+	var options: Array = scale.get("options", [1, 2])
+	_speed_options = []
+	for item_v in options:
+		_speed_options.append(int(item_v))
+	if _speed_options.is_empty():
+		_speed_options = [1, 2]
+	_remember_speed = bool(scale.get("remember_last_speed", true))
+	var default_speed := int(scale.get("default_speed", _speed_options[0]))
+	if _remember_speed and _speed_options.has(remembered_speed):
+		_speed = remembered_speed
+		return
+	_speed = default_speed if _speed_options.has(default_speed) else _speed_options[0]
+
+
+func _apply_static_labels() -> void:
+	_close_unit_button.text = tr("ui.battle.close")
+	_retry_button.text = tr("ui.battle.retry")
+	_menu_button.text = tr("ui.battle.back_to_title")
+
+
+func _has_selected_cell() -> bool:
+	return _selected_col >= 0 and _selected_row >= 0
+
+
+func _clear_selected_cell() -> void:
+	_selected_col = -1
+	_selected_row = -1
+
+
+func _cell_mark(col: int, row: int) -> String:
+	var map: Dictionary = _catalog.level().get("map", {})
+	var cells: Array = map.get("cells", [])
+	if row < 0 or row >= cells.size():
+		return ""
+	var line := str(cells[row])
+	if col < 0 or col >= line.length():
+		return ""
+	return line.substr(col, 1)
 
 
 func _unit_at(state: Dictionary, col: int, row: int) -> Dictionary:

@@ -22,7 +22,7 @@ func test_second_copy_costs_more_and_third_is_the_last() -> void:
 	var sim := BattleSim.from_catalog(CombatCatalog.load_default())
 	assert_true(sim.place("chr_reimu", 2, 1))
 	assert_true(sim.place("chr_reimu", 2, 4))
-	assert_eq(int(sim.view_state().roster[0].cost), 113)
+	assert_eq(int(sim.view_state().roster[0].cost), 100)
 	assert_false(sim.place("chr_reimu", 4, 4))
 	assert_eq(sim.view_state().spirit, 25)
 
@@ -51,25 +51,69 @@ func test_armor_hit_uses_the_damage_formula() -> void:
 	assert_almost_eq(float(sim.view_state().enemies[0].hp), 86.0, 0.001)
 
 
-func test_clearing_the_field_shortens_the_gap_to_intermission() -> void:
+func test_clearing_the_field_does_not_change_when_the_next_wave_starts() -> void:
+	var preview := _wave_pair({"hp": 1, "attack": 50.0})
+	assert_true(preview.place("chr_reimu", 1, 5))
+	preview.tick()
+	assert_eq(preview.view_state().phase, BattleSim.PHASE_SPAWNING)
+	assert_eq(preview.view_state().enemies.size(), 0)
+	var fast_ticks := _ticks_with_reimu({"hp": 1, "attack": 50.0})
+	var slow_ticks := _ticks_with_reimu({"hp": 100000, "attack": 1.0})
+	assert_eq(fast_ticks, slow_ticks)
+	assert_almost_eq(float(fast_ticks) / 60.0, 9.0, 0.05)
+
+
+func test_first_wave_delay_is_read_from_the_wave() -> void:
 	var sim := _mini(
 		{
 			"deploy": 0.0,
-			"hp": 1,
-			"attack": 50.0,
-			"gap": 8.0,
-			"intermission": 4.0,
-			"per_wave": 20,
-			"follow_up": true,
+			"wave_delay": 0.5,
+			"count": 1,
+			"spawn_state": 0.0,
+			"speed": 0.0,
 		}
 	)
-	assert_true(sim.place("chr_reimu", 1, 5))
 	sim.tick()
-	var state := sim.view_state()
-	assert_eq(state.phase, BattleSim.PHASE_INTERMISSION)
-	assert_lte(float(state.phase_time_left), 4.0)
-	assert_gt(float(state.phase_time_left), 3.0)
-	assert_eq(state.spirit, 150 - 50 + 5 + 20)
+	assert_eq(sim.view_state().enemies.size(), 0)
+	assert_eq(sim.view_state().phase, BattleSim.PHASE_INTERMISSION)
+	var ticks := 1
+	while ticks < 600 and sim.view_state().enemies.is_empty():
+		sim.tick()
+		ticks += 1
+	assert_almost_eq(float(ticks) / 60.0, 0.5, 0.05)
+
+
+func test_copy_cost_is_linear_and_the_fourth_is_refused() -> void:
+	var sim := _mini({"starting_spirit": 500})
+	assert_true(sim.place("chr_reimu", 1, 1))
+	assert_eq(int(sim.view_state().roster[0].cost), 75)
+	assert_true(sim.place("chr_reimu", 1, 2))
+	assert_eq(int(sim.view_state().roster[0].cost), 100)
+	assert_true(sim.place("chr_reimu", 1, 3))
+	assert_false(sim.place("chr_reimu", 1, 4))
+	assert_eq(sim.view_state().units.size(), 3)
+
+
+func test_character_max_copies_beats_the_global_limit() -> void:
+	var sim := _mini({"starting_spirit": 500, "max_copies": 1})
+	assert_true(sim.place("chr_reimu", 1, 1))
+	assert_false(sim.place("chr_reimu", 1, 2))
+	assert_eq(sim.view_state().units.size(), 1)
+
+
+func test_hp_multiplier_string_scales_enemy_hp() -> void:
+	var sim := _mini(
+		{
+			"deploy": 0.0,
+			"hp": 10,
+			"hp_multiplier": "1.90",
+			"count": 1,
+			"spawn_state": 0.0,
+		}
+	)
+	sim.tick()
+	assert_almost_eq(float(sim.view_state().enemies[0].max_hp), 19.0, 0.001)
+	assert_almost_eq(float(sim.view_state().enemies[0].hp), 19.0, 0.001)
 
 
 func test_a_leak_can_end_the_level() -> void:
@@ -194,7 +238,7 @@ func _mini(options: Dictionary) -> BattleSim:
 		"intermission_sec": float(options.get("intermission", 4.0)),
 		"params":
 		{
-			"starting_spirit_power": 150,
+			"starting_spirit_power": int(options.get("starting_spirit", 150)),
 			"lives": int(options.get("lives", 20)),
 			"available_character_ids": ["chr_reimu"],
 			"reward_spirit_per_wave": int(options.get("per_wave", 20)),
@@ -240,8 +284,38 @@ func _mini(options: Dictionary) -> BattleSim:
 		},
 		"waves": _waves_for(options),
 	}
-	var catalog := CombatCatalog.from_dictionaries(rules, stats, characters, enemies, {}, level, {})
+	if options.has("max_copies"):
+		stats["characters"]["chr_reimu"]["max_copies"] = int(options["max_copies"])
+	var difficulty := {}
+	if options.has("hp_multiplier"):
+		difficulty = {"levels": {"mini": {"hp_multiplier": str(options["hp_multiplier"])}}}
+	var catalog := CombatCatalog.from_dictionaries(
+		rules, stats, characters, enemies, {}, level, difficulty
+	)
 	return BattleSim.from_catalog(catalog)
+
+
+func _wave_pair(options: Dictionary) -> BattleSim:
+	options["deploy"] = 0.0
+	options["gap"] = 8.0
+	options["duration"] = 1.0
+	options["follow_up"] = true
+	options["per_wave"] = 20
+	return _mini(options)
+
+
+func _ticks_with_reimu(options: Dictionary) -> int:
+	var sim := _wave_pair(options)
+	sim.place("chr_reimu", 1, 5)
+	return _ticks_until_wave(sim, 1)
+
+
+func _ticks_until_wave(sim: BattleSim, wave_index: int) -> int:
+	var ticks := 0
+	while ticks < 5000 and int(sim.view_state().wave_index) < wave_index:
+		sim.tick()
+		ticks += 1
+	return ticks
 
 
 func _waves_for(options: Dictionary) -> Array:
@@ -272,9 +346,10 @@ func _waves_for(options: Dictionary) -> Array:
 
 
 func _one_wave(options: Dictionary) -> Dictionary:
-	return {
+	var wave := {
 		"id": "w01",
 		"wave_id": "w01",
+		"duration_sec": float(options.get("duration", 20.0)),
 		"next_wave_delay_sec": float(options.get("gap", 4.0)),
 		"spawns":
 		[
@@ -287,6 +362,9 @@ func _one_wave(options: Dictionary) -> Dictionary:
 			}
 		],
 	}
+	if options.has("wave_delay"):
+		wave["delay_sec"] = float(options["wave_delay"])
+	return wave
 
 
 func _two_paths() -> BattleSim:

@@ -16,3 +16,20 @@ func test_battle_board_shows_spirit_life_and_both_characters() -> void:
 	assert_eq(bar.get_child_count(), 2)
 	var call_button := board.get_node("%CallButton") as Button
 	assert_eq(call_button.text, "开始 +10")
+	var hint := board.get_node("%HintLabel") as Label
+	assert_eq(hint.text, "先点亮色格子，再点下面的角色。中段两格最合适。")
+
+
+func test_placement_selects_a_cell_before_the_character() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	board._on_character_pressed("chr_reimu")
+	var hint := board.get_node("%HintLabel") as Label
+	var spirit := board.get_node("%SpiritLabel") as Label
+	assert_eq(hint.text, "先点亮色格子。")
+	assert_eq(spirit.text, "灵力 150")
+	board._on_cell_pressed(2, 4)
+	assert_eq(hint.text, "再点下面的角色，放到这一格。")
+	board._on_character_pressed("chr_reimu")
+	assert_eq(spirit.text, "灵力 100")
+	assert_eq(hint.text, "先点亮色格子，再点下面的角色。中段两格最合适。")

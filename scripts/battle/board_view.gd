@@ -23,7 +23,8 @@ var _rows: int = 12
 var _cell: int = 128
 var _cells: Array = []
 var _state: Dictionary = {}
-var _armed_id: String = ""
+var _selected_col: int = -1
+var _selected_row: int = -1
 var _selected_id: int = -1
 var _floaters: Array = []
 var _beams: Array = []
@@ -36,6 +37,8 @@ var _normal_size: int = 34
 var _heavy_size: int = 48
 var _normal_color := Color.WHITE
 var _heavy_color := Color("#FFD23F")
+var _flash_color := Color.WHITE
+var _flash_strength: float = 0.85
 
 
 func setup(catalog: CombatCatalog) -> void:
@@ -49,6 +52,8 @@ func setup(catalog: CombatCatalog) -> void:
 	var flash: Dictionary = feel.get("hit_flash", {})
 	var numbers: Dictionary = feel.get("damage_numbers", {})
 	_flash_time = float(flash.get("duration_sec", 0.08))
+	_flash_color = Color.html(str(flash.get("color", "#FFFFFF")))
+	_flash_strength = clampf(float(flash.get("strength", 0.85)), 0.0, 1.0)
 	_number_life = float(numbers.get("lifetime_sec", 0.6))
 	_number_rise = float(numbers.get("rise_px", 60))
 	_max_numbers = maxi(CombatCatalog.read_int(numbers.get("max_on_screen", 40), 40), 1)
@@ -58,9 +63,10 @@ func setup(catalog: CombatCatalog) -> void:
 	_heavy_color = Color.html(str(numbers.get("heavy_color", "#FFD23F")))
 
 
-func sync(state: Dictionary, armed_id: String, selected_id: int) -> void:
+func sync(state: Dictionary, selected_col: int, selected_row: int, selected_id: int) -> void:
 	_state = state
-	_armed_id = armed_id
+	_selected_col = selected_col
+	_selected_row = selected_row
 	_selected_id = selected_id
 	queue_redraw()
 
@@ -108,7 +114,7 @@ func _draw_cells() -> void:
 			var mark := _mark(col, row)
 			var rect := Rect2(col * _cell, row * _cell, _cell, _cell)
 			draw_rect(rect, _cell_color(mark))
-			if mark == "." and _armed_id != "":
+			if mark == "." and col == _selected_col and row == _selected_row:
 				draw_rect(rect.grow(-10), Color(1, 0.95, 0.55, 0.45))
 			draw_rect(rect, Color(0, 0, 0, 0.28), false, 2.0)
 			if mark == "G":
@@ -158,9 +164,10 @@ func _draw_enemies() -> void:
 		var pos := Vector2(float(enemy.x), float(enemy.y)) * float(_cell)
 		var fast := str(enemy.get("enemy_id", "")) == "enm_shade_fast"
 		var radius := 22.0 if fast else 30.0
-		var tint := (
-			Color.WHITE if _flashes.has(int(enemy.id)) else (_COLOR_FAST if fast else _COLOR_BASIC)
-		)
+		var base := _COLOR_FAST if fast else _COLOR_BASIC
+		var tint := base
+		if _flashes.has(int(enemy.id)):
+			tint = base.lerp(_flash_color, _flash_strength)
 		draw_circle(pos, radius, tint)
 		_draw_hp(pos, float(enemy.hp), float(enemy.max_hp), radius)
 

@@ -25,10 +25,8 @@
     "deploy_time_sec": 10,
     "early_start_allowed": true,
     "intermission_sec": 4,
-    "intermission_min_sec": 3,
-    "intermission_max_sec": 5,
     "wave_target_sec": 20,
-    "early_call_allowed_states": ["deploy", "waiting", "intermission"],
+    "early_call_allowed_states": ["deploy", "intermission"],
     "early_call_reward_rounding": "floor"
   },
   "targeting": {

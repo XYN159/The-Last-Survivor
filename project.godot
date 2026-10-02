@@ -33,6 +33,11 @@ window/handheld/orientation=1
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
+[internationalization]
+
+locale/fallback="zh_CN"
+locale/translations=PackedStringArray("res://locale/game_zh.zh_CN.translation")
+
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true

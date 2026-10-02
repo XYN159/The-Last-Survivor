@@ -8,8 +8,18 @@ extends Control
 
 func _ready() -> void:
 	_start_button.pressed.connect(_on_start_pressed)
+	_start_button.text = tr("ui.menu.start")
+	var title := get_node("CenterColumn/TitleLabel") as Label
+	var subtitle := get_node("CenterColumn/SubtitleLabel") as Label
+	var hint := get_node("CenterColumn/HintLabel") as Label
+	if title != null:
+		title.text = tr("ui.menu.title")
+	if subtitle != null:
+		subtitle.text = tr("ui.menu.subtitle")
+	if hint != null:
+		hint.text = tr("ui.menu.hint")
 	var version := str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
-	_version_label.text = "v%s" % version
+	_version_label.text = tr("ui.menu.version") % version
 
 
 func _on_start_pressed() -> void:

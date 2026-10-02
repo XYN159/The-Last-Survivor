@@ -17,11 +17,15 @@
 - 伤害、波次、灵力和胜负的测试直接调用 `BattleSim`，不启动整幅画面。
 - `scripts/battle/simulate_level.gd` 可以用无头 Godot 按关卡里的建议摆位跑完这一关。
 - 原型数据放在 `data/prototype/`，字段名跟战斗表和关卡表一致。`CombatCatalog.USE_OFFICIAL_TABLES` 为 false。改成 true 后改读正式路径。
-- 不改 `docs/design/`、`data/balance/`、`docs/GDD.md`、`docs/ROADMAP.md`。
-- 这一版不做符卡、结界、三选一，也不做「从当前波重来」。失败后只能整关再打，或回标题。
+- 正式路径依赖三份都已经合并：#4 的 `rules.json`、`characters.json`、`enemies.json`、`feel.json`，#5 的 `data/levels`，#8 的 `stats.json` 和 `level_difficulty.json`。只合了其中一份就打开开关，会缺文件。
+- 开关打开时，缺文件或缺关键字段用 `push_error`，不要悄悄填默认值。关键字段是攻击、费用、射程、间隔、血量、移速、护甲、漏怪伤害、血量倍率。
+- 不改 `docs/design/`、`data/balance/`、`docs/GDD.md` 里标成「待你补充」的设定、`docs/ROADMAP.md`。
+- 这一版不做符卡、结界、三选一，也不做「从当前波重来」，也不做刷怪窗口里的提前叫波。失败后只能整关再打，或回标题。
+- `deploy_wait_for_player` 留到切正式序章之前再读。原型关用不上。
 
 ## 后果
 
 - 调这一关的怪和费用，改 JSON 即可，不用改场景。
-- 正式表合并后要改一个开关，并确认正式关卡里没有 `suggested_opening` 这个原型字段。模拟器会忽略不认识的正式字段，缺了的字段用默认值。
-- 旧车道场景还留在仓库里，只是标题不再进入它。
+- 正式表三份都合并后才能把开关改成 true，并确认正式关卡里没有 `suggested_opening` 这个原型字段。开关打开后，缺文件或缺上面列出的关键字段会报错，不再用默认值顶上。
+- 玩家能看见的字走 `locale/game_zh.csv`，在 `project.godot` 里登记。`enm_shade_fast` 的名字是「快残影」，key 是 `enemy.shade_fast.name`。
+- 旧车道场景还留在仓库里，只是标题不再进入它。保护小队人数和物资的旧测试不再保留。

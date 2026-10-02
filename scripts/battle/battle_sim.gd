@@ -3,11 +3,13 @@ extends RefCounted
 
 ## 一局塔防的规则。不画画面。每调用一次 tick，逻辑时间前进 1/60 秒。
 ## 放置、升级、出售和叫波在点击时立刻结算。移动、攻击和胜负只在 tick 里发生。
-## 第一波的 delay_sec 不另加：10 秒布阵结束就出怪。波间用 next_wave_delay_sec。
+## 每一波都读 delay_sec。第 1 波写成 0，布阵结束就出怪，代码不再单独豁免。
+## 出怪窗口用这一波的 duration_sec，从这一波开始时算。窗口结束再空一档，不等清场。
+## 空档优先用下一波的 delay_sec；没有就用上一波的 next_wave_delay_sec，再没有用规则里的 4 秒。
+## 刷怪窗口里先不叫波。以后如果做，不能把这一波还没出的怪丢掉。
 
 const PHASE_DEPLOY := "deploy"
 const PHASE_SPAWNING := "spawning"
-const PHASE_WAITING := "waiting"
 const PHASE_INTERMISSION := "intermission"
 const PHASE_FINAL := "final"
 const PHASE_VICTORY := "victory"
@@ -39,8 +41,10 @@ var _knockback_cooldown: float = 0.25
 var _guard_hp: int = 20
 var _guard_max_hp: int = 20
 var _intermission_sec: float = 4.0
+var _spawn_window_sec: float = 20.0
 var _phase: String = PHASE_DEPLOY
 var _phase_time: float = 10.0
+var _window_left: float = 0.0
 var _wave_index: int = -1
 var _id_serial: int = 1
 var _pending_wave_bonus: bool = false
@@ -72,7 +76,6 @@ func tick() -> Array:
 	_erase_dead()
 	_apply_outcome()
 	_apply_wave_bonus()
-	_apply_intermission()
 	_clear_born()
 	return _events
 
@@ -82,7 +85,7 @@ func place(character_id: String, col: int, row: int) -> bool:
 		return false
 	if _cell_mark(col, row) != "." or _unit_on(col, row) != null:
 		return false
-	if _copy_count(character_id) >= _max_copies:
+	if _copy_count(character_id) >= _copy_limit(character_id):
 		return false
 	var data := _catalog.character(character_id)
 	if data.is_empty():
@@ -138,7 +141,7 @@ func sell(unit_id: int) -> bool:
 func call_next_wave() -> bool:
 	if _phase == PHASE_DEPLOY:
 		return _start_early(0, _early_start_rate)
-	if _phase == PHASE_WAITING or _phase == PHASE_INTERMISSION:
+	if _phase == PHASE_INTERMISSION:
 		return _start_early(_wave_index + 1, _early_call_rate)
 	return false
 
@@ -181,6 +184,7 @@ func _configure(catalog: CombatCatalog) -> void:
 	_guard_max_hp = int(tune.guard_max_hp)
 	_guard_hp = _guard_max_hp
 	_intermission_sec = float(tune.intermission_sec)
+	_spawn_window_sec = float(tune.spawn_window_sec)
 	_phase = PHASE_DEPLOY
 	_phase_time = float(tune.deploy_time_sec)
 	_wave_index = -1
@@ -190,17 +194,17 @@ func _configure(catalog: CombatCatalog) -> void:
 
 
 func _advance_clock(dt: float) -> void:
-	var timed := _phase == PHASE_DEPLOY or _phase == PHASE_WAITING or _phase == PHASE_INTERMISSION
-	if not timed:
+	if _phase == PHASE_SPAWNING:
+		_window_left = maxf(0.0, _window_left - dt)
+		_phase_time = _window_left
+		return
+	if _phase != PHASE_DEPLOY and _phase != PHASE_INTERMISSION:
 		return
 	_phase_time = maxf(0.0, _phase_time - dt)
-	if _phase == PHASE_WAITING and _living_count() == 0:
-		_phase = PHASE_INTERMISSION
-		_phase_time = minf(_phase_time, _intermission_sec)
 	if _phase_time > 0.0:
 		return
 	if _phase == PHASE_DEPLOY:
-		_begin_wave(0)
+		_release_wave(0)
 		return
 	_begin_wave(_wave_index + 1)
 
@@ -210,16 +214,8 @@ func _advance_spawns(dt: float) -> void:
 		return
 	for job_v in _jobs:
 		_spawn_job(job_v, dt)
-	if not _jobs_done():
-		return
-	_pending_wave_bonus = true
-	_jobs.clear()
-	if _wave_index >= _waves.size() - 1:
-		_phase = PHASE_FINAL
-		_phase_time = 0.0
-		return
-	_phase = PHASE_WAITING
-	_phase_time = _next_gap(_wave_index)
+	if _window_left <= 0.0:
+		_close_spawn_window()
 
 
 func _spawn_job(job_v: Variant, dt: float) -> void:
@@ -378,16 +374,19 @@ func _apply_wave_bonus() -> void:
 	_events.append({"type": "spirit", "amount": _spirit_per_wave})
 
 
-func _apply_intermission() -> void:
-	if _phase != PHASE_WAITING or _living_count() != 0:
-		return
-	_phase = PHASE_INTERMISSION
-	_phase_time = minf(_phase_time, _intermission_sec)
-
-
 func _clear_born() -> void:
 	for enemy in _enemies:
 		enemy.born = false
+
+
+func _release_wave(index: int) -> void:
+	var lead := _lead_in(index)
+	if lead <= 0.0:
+		_begin_wave(index)
+		return
+	_phase = PHASE_INTERMISSION
+	_phase_time = lead
+	_wave_index = index - 1
 
 
 func _begin_wave(index: int) -> void:
@@ -396,11 +395,24 @@ func _begin_wave(index: int) -> void:
 	_wave_index = index
 	_phase = PHASE_SPAWNING
 	_jobs.clear()
-	var wave_v: Variant = _waves[index]
-	if typeof(wave_v) != TYPE_DICTIONARY:
-		return
-	for group_v in (wave_v as Dictionary).get("spawns", []):
+	var wave := _wave_dict(index)
+	_window_left = _wave_duration(wave)
+	_phase_time = _window_left
+	for group_v in wave.get("spawns", []):
 		_add_job(group_v)
+
+
+func _close_spawn_window() -> void:
+	_pending_wave_bonus = true
+	_jobs.clear()
+	if _wave_index >= _waves.size() - 1:
+		_phase = PHASE_FINAL
+		_phase_time = 0.0
+		_window_left = 0.0
+		return
+	_phase = PHASE_INTERMISSION
+	_phase_time = _lead_in(_wave_index + 1)
+	_window_left = 0.0
 
 
 func _add_job(group_v: Variant) -> void:
@@ -609,7 +621,8 @@ func _spawn_enemy(enemy_id: String, path_id: String) -> void:
 	enemy.enemy_id = enemy_id
 	enemy.path_id = path_id
 	enemy.path_length = float(path.size() - 1)
-	enemy.max_hp = maxf(float(stats.get("hp", 1)), 1.0)
+	var base_hp := CombatCatalog.read_float(stats.get("hp", 1), 1.0)
+	enemy.max_hp = maxf(base_hp * _catalog.enemy_hp_multiplier(enemy_id), 1.0)
 	enemy.hp = enemy.max_hp
 	enemy.armor = float(stats.get("armor", 0))
 	enemy.speed = float(stats.get("move_speed_cells_per_sec", 1))
@@ -717,10 +730,16 @@ func _live_target(target_id: int) -> BattleEnemy:
 func _next_cost(character_id: String) -> int:
 	var stats: Dictionary = _catalog.character(character_id).get("stats", {})
 	var cost := CombatCatalog.read_int(stats.get("cost", 0), 0)
-	var ratio := float(stats.get("copy_cost_increase_ratio", 0.0))
-	for _copy_index in _copy_count(character_id):
-		cost = roundi(float(cost) * (1.0 + ratio))
-	return cost
+	var ratio := CombatCatalog.read_float(stats.get("copy_cost_increase_ratio", 0.0), 0.0)
+	var placed := _copy_count(character_id)
+	return roundi(float(cost) * (1.0 + ratio * float(placed)))
+
+
+func _copy_limit(character_id: String) -> int:
+	var stats: Dictionary = _catalog.character(character_id).get("stats", {})
+	if stats.has("max_copies"):
+		return maxi(CombatCatalog.read_int(stats.get("max_copies"), _max_copies), 0)
+	return _max_copies
 
 
 func _upgrade_cost(unit: BattleUnit) -> int:
@@ -763,24 +782,40 @@ func _character_allowed(character_id: String) -> bool:
 	return false
 
 
-func _jobs_done() -> bool:
-	for job_v in _jobs:
-		if typeof(job_v) == TYPE_DICTIONARY and int((job_v as Dictionary).left) > 0:
-			return false
-	return true
-
-
-func _next_gap(index: int) -> float:
+func _wave_dict(index: int) -> Dictionary:
+	if index < 0 or index >= _waves.size():
+		return {}
 	var wave_v: Variant = _waves[index]
 	if typeof(wave_v) != TYPE_DICTIONARY:
+		return {}
+	return wave_v
+
+
+func _wave_duration(wave: Dictionary) -> float:
+	if wave.has("duration_sec"):
+		return maxf(CombatCatalog.read_float(wave.get("duration_sec"), 0.0), 0.0)
+	return _spawn_window_sec
+
+
+func _lead_in(index: int) -> float:
+	if index < 0 or index >= _waves.size():
 		return _intermission_sec
-	return maxf(float((wave_v as Dictionary).get("next_wave_delay_sec", _intermission_sec)), 0.0)
+	var wave := _wave_dict(index)
+	if wave.has("delay_sec"):
+		return maxf(CombatCatalog.read_float(wave.get("delay_sec"), 0.0), 0.0)
+	if index > 0:
+		var previous := _wave_dict(index - 1)
+		if previous.has("next_wave_delay_sec"):
+			return maxf(CombatCatalog.read_float(previous.get("next_wave_delay_sec"), 0.0), 0.0)
+	if index == 0:
+		return 0.0
+	return _intermission_sec
 
 
 func _call_allowed() -> bool:
 	if _phase == PHASE_DEPLOY:
 		return true
-	if _phase != PHASE_WAITING and _phase != PHASE_INTERMISSION:
+	if _phase != PHASE_INTERMISSION:
 		return false
 	return _wave_index + 1 < _waves.size()
 
@@ -788,7 +823,7 @@ func _call_allowed() -> bool:
 func _call_reward_now() -> int:
 	if _phase == PHASE_DEPLOY:
 		return floori(maxf(_phase_time, 0.0) * _early_start_rate)
-	if _phase == PHASE_WAITING or _phase == PHASE_INTERMISSION:
+	if _phase == PHASE_INTERMISSION:
 		return floori(maxf(_phase_time, 0.0) * _early_call_rate)
 	return 0
 
@@ -848,7 +883,7 @@ func _roster() -> Array:
 			continue
 		var cost := _next_cost(id)
 		var copies := _copy_count(id)
-		var affordable := copies < _max_copies and _spirit >= cost and not _terminal()
+		var affordable := copies < _copy_limit(id) and _spirit >= cost and not _terminal()
 		(
 			result
 			. append(

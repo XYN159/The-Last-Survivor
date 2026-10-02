@@ -101,18 +101,18 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "左路小残影，间隔拉开。",
+      "note": "左路小残影。6 只摊在 20 秒窗口里，间隔是 20/6。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
           "count": 6,
-          "interval_sec": 3.4,
+          "interval_sec": 3.333,
           "delay_sec": 0,
           "entrance_id": "entrance.left"
         }
@@ -146,13 +146,13 @@
       "duration_sec": 20,
       "ends_when": "spawn_window",
       "is_boss": false,
-      "note": "两条路一起走。什么都不放的话，漏怪会把生命扣光。",
+      "note": "两条路一起走。什么都不放的话，漏怪会把生命扣光。数量摊在 20 秒窗口里。",
       "spawns": [
         {
           "enemy_id": "enm_shade_basic",
           "path_id": "path.left",
           "count": 6,
-          "interval_sec": 3.2,
+          "interval_sec": 3.333,
           "delay_sec": 0,
           "entrance_id": "entrance.left"
         },
