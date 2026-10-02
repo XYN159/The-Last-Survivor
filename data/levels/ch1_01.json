@@ -14,12 +14,11 @@
     "id": "guard.misty_lake_frogs",
     "display_name": "冰雕青蛙"
   },
-  "summary": "薄雾缩短射程。前 5 波只有小残影，第 6 波起快残影大约占三成。琪露诺要通关这一关才加入，这一关还不能放她。",
-  "player_feeling": "换了地图，但比序章最后一关松。前半只有小残影，后半快残影变多。",
-  "teaches": [
-    "雾里只能放在贴着路线的预定槽位",
-    "快残影比小残影更快，但更脆。第 6 波才出现，大约占三成，让玩家感到需要减速",
-    "通关这一关后琪露诺加入，下一关才教她减速"
+  "summary": "主教学点是快残影。前 5 波只有小残影，第 6 波起才出现。浓雾是第一章的环境，这里只提示一句：打雾里的敌人射程减 1。琪露诺要通关这一关才加入，这一关还不能放她。",
+  "player_feeling": "换了地图。前半只有小残影，后半才见到快残影。",
+  "teaches": "快残影比小残影更快，但更脆。第 6 波才出现",
+  "previews": [
+    "浓雾是第一章的环境，这里只用一句提示：打雾里的敌人射程减 1。它不是这一关的学习曲线验收点"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
@@ -213,7 +212,7 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
@@ -457,7 +456,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 1.0,

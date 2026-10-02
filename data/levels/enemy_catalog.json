@@ -1,135 +1,146 @@
 {
   "schema_version": 1,
-  "_owner_note": "生命、护甲、击破灵力、漏怪扣命、击破充能的权威来源是数值策划的 data/balance/combat/stats.json，字段是 enemies 和 bosses。本文件只保留关卡编排要用的 id、显示名、首次出场关和威胁点。关卡校验只读威胁点，不复制属性数字。",
+  "_owner_note": "生命、护甲、击破灵力、漏怪扣命、击破充能和威胁点的权威来源是数值策划的 data/balance/combat/stats.json，字段是 enemies 和 bosses。本文件只保留 id、显示名、文本 key 和引用路径，不复制任何数字。",
   "stat_source": {
     "path": "data/balance/combat/stats.json",
     "enemies_field": "enemies",
     "bosses_field": "bosses",
-    "note": "属性以这份表为准。关卡文件和图鉴都不复制生命、护甲、移速或漏怪扣命。"
+    "threat_field": "threat_points",
+    "note": "属性以这份表为准。关卡文件和图鉴都不复制生命、护甲、移速、漏怪扣命或威胁点。"
   },
   "entries": [
     {
       "id": "enm_shade_basic",
       "display_name": "小残影",
+      "display_name_key": "enemy.enm_shade_basic.name",
+      "name_status": "decided",
       "introduced_in": "prologue_01",
-      "threat_points": 1,
-      "threat_points_status": "confirmed_for_budget",
-      "note": "文案定名小残影。id 仍是 enm_shade_basic。预算威胁点是 1。属性见 stat_source，不在这里抄。"
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_basic/threat_points",
+      "note": "文案定名小残影。id 仍是 enm_shade_basic。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_fast",
       "display_name": "快残影",
+      "display_name_key": "enemy.enm_shade_fast.name",
+      "name_status": "decided",
       "introduced_in": "ch1_01",
-      "threat_points": 1,
-      "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点仍是 1。生命和漏怪扣命见 stat_source，不在这里抄。第一章第 1 关从第 6 波起出现，大约占三成，第 2 关用它教 st_slow。"
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_fast/threat_points",
+      "note": "文案定名快残影。第一章第 1 关从后半才出现。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_armored",
       "display_name": "硬残影",
+      "display_name_key": "enemy.enm_shade_armored.name",
+      "name_status": "decided",
       "introduced_in": "ch1_03",
-      "threat_points": 4,
-      "threat_points_status": "confirmed_for_budget",
-      "note": "预算用的威胁点是 4。MVP 里只在第一章第 3 关少量出现，其他 MVP 关不出。从第二章第 1 关起成为常见敌人。不要另造一条护甲。属性见 stat_source，不在这里抄。"
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_armored/threat_points",
+      "note": "文案定名硬残影。MVP 里只在第一章第 3 关出现，制作人已定。其他 MVP 关不出。从第二章第 1 关起成为常见敌人。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_phantom",
-      "display_name": "遗忘残影",
+      "display_name": "遗忘之影",
+      "display_name_key": "enemy.enm_shade_phantom.name",
+      "name_status": "pending_文案策划",
       "introduced_in": "ch5_01",
-      "threat_points": 3,
-      "threat_points_status": "level_design_placeholder",
-      "note": "文案暂名曾是「遗忘之影」。关卡按「xx残影」暂写「遗忘残影」，待文案定稿。第五章隐形。威胁点还没定，3 只是占位。",
-      "name_status": "pending_文案策划"
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_phantom/threat_points",
+      "note": "玩家看到的名字以文案术语表为准，暂名「遗忘之影」。第五章隐形。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_heap",
-      "display_name": "堆积残影",
+      "display_name": "堆积体",
+      "display_name_key": "enemy.enm_shade_heap.name",
+      "name_status": "pending_文案策划",
       "introduced_in": "ch5_02",
-      "threat_points": 6,
-      "threat_points_status": "level_design_placeholder",
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_heap/threat_points",
       "splits_into": {
         "enemy_id": "enm_shade_fast",
-        "count": 3,
-        "source": "combat_draft"
+        "source": "combat_draft",
+        "note": "被打散时会裂开。裂出哪一种、裂出几只以战斗和数值表为准，不在这里抄。"
       },
-      "note": "文案暂名曾是「堆积体」。关卡按「xx残影」暂写「堆积残影」，待文案定稿。文案写被打散时裂出小残影。战斗草案仍是 3 个快残影，孩子算不算进威胁还没定。",
-      "name_status": "pending_文案策划"
+      "note": "玩家看到的名字以文案术语表为准，暂名「堆积体」。文案写被打散时裂出小残影。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_rift",
-      "display_name": "结界残影",
+      "display_name": "结界之渣",
+      "display_name_key": "enemy.enm_shade_rift.name",
+      "name_status": "pending_文案策划",
       "introduced_in": "ch5_03",
-      "threat_points": 5,
-      "threat_points_status": "level_design_placeholder",
-      "note": "文案暂名曾是「结界之渣」。关卡按「xx残影」暂写「结界残影」，待文案定稿。第五章成群出现，周围可放置格褪色。威胁点还没定。",
-      "name_status": "pending_文案策划"
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_rift/threat_points",
+      "note": "玩家看到的名字以文案术语表为准，暂名「结界之渣」。第五章成群出现，周围可放置格褪色。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_pouncer",
       "display_name": "扑人残影",
-      "introduced_in": "ch3_01",
-      "threat_points": 3,
-      "threat_points_status": "level_design_placeholder",
+      "display_name_key": "enemy.enm_shade_pouncer.name",
       "name_status": "pending_文案策划",
-      "note": "文案暂名。会离开路线去扑村民。威胁点还没定，3 只是占位。"
+      "introduced_in": "ch3_01",
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_pouncer/threat_points",
+      "note": "玩家看到的名字以文案术语表为准，暂名「扑人残影」。会离开路线去扑村民。威胁点只看上面的引用。"
     },
     {
       "id": "enm_shade_flying",
       "display_name": "飞行残影",
-      "introduced_in": "ch4_01",
-      "threat_points": 2,
-      "threat_points_status": "level_design_placeholder",
+      "display_name_key": "enemy.enm_shade_flying.name",
       "name_status": "decided",
-      "note": "文案定名飞行残影。地上的角色打不到。威胁点还没定，2 只是占位。旧草案用过另一个称呼，玩家文本不要再用。"
+      "introduced_in": "ch4_01",
+      "threat_points_source": "data/balance/combat/stats.json#/enemies/enm_shade_flying/threat_points",
+      "note": "文案定名飞行残影。地上的角色打不到。威胁点只看上面的引用。旧草案用过另一个称呼，玩家文本不要再用。"
     },
     {
       "id": "boss_cirno",
       "display_name": "冰之残影",
+      "display_name_key": "enemy.boss_cirno.name",
+      "name_status": "decided",
       "introduced_in": "ch1_04",
-      "threat_points": null,
-      "note": "不占波次预算。显示名是冰之残影：雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人。属性见 stat_source 的 bosses，不在这里抄。"
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_cirno/threat_points",
+      "note": "显示名是冰之残影：雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人。是否占预算看上面的威胁点引用，不在这里抄。"
     },
     {
       "id": "boss_ch2_sakuya_shade",
-      "display_name": "女仆的残影",
-      "introduced_in": "ch2_04",
-      "threat_points": null,
+      "display_name": "红魔的女仆残影",
+      "display_name_key": "enemy.boss_ch2_sakuya_shade.name",
       "name_status": "pending_文案策划",
+      "introduced_in": "ch2_04",
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_ch2_sakuya_shade/threat_points",
       "copies_character_id": "chr_sakuya",
-      "note": "暂名。咲夜的残影复制体，不是咲夜本人。咲夜通关 ch2_04 后才加入。美铃已经在队里，不能当这个首领。"
+      "note": "叙事暂名。咲夜的残影复制体，不是咲夜本人。咲夜通关 ch2_04 后才加入。美铃已经在队里，不能当这个首领。"
     },
     {
       "id": "boss_ch3_mokou_shade",
-      "display_name": "火鸟的残影",
-      "introduced_in": "ch3_04",
-      "threat_points": null,
+      "display_name": "不死鸟的残影",
+      "display_name_key": "enemy.boss_ch3_mokou_shade.name",
       "name_status": "pending_文案策划",
+      "introduced_in": "ch3_04",
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_ch3_mokou_shade/threat_points",
       "copies_character_id": "chr_mokou",
-      "note": "暂名。妹红的残影复制体，不是妹红本人。妹红通关 ch3_04 后才加入。慧音已经在队里，不能当这个首领。"
+      "note": "叙事暂名。妹红的残影复制体，不是妹红本人。妹红通关 ch3_04 后才加入。慧音已经在队里，不能当这个首领。"
     },
     {
       "id": "boss_ch4_sanae_shade",
       "display_name": "风祝的残影",
-      "introduced_in": "ch4_04",
-      "threat_points": null,
+      "display_name_key": "enemy.boss_ch4_sanae_shade.name",
       "name_status": "pending_文案策划",
+      "introduced_in": "ch4_04",
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_ch4_sanae_shade/threat_points",
       "copies_character_id": "chr_sanae",
-      "note": "暂名。早苗的残影复制体，不是早苗本人。和冰之残影同一套。早苗通关 ch4_04 后才加入。"
+      "note": "叙事暂名，用术语表里的「风祝」。早苗的残影复制体，不是早苗本人。早苗通关 ch4_04 后才加入。"
     },
     {
       "id": "boss_ch5_gatekeeper",
-      "display_name": "结界裂缝的守门残影",
-      "introduced_in": "ch5_04",
-      "threat_points": null,
+      "display_name": "守门残影",
+      "display_name_key": "enemy.boss_ch5_gatekeeper.name",
       "name_status": "pending_文案策划",
-      "note": "暂名。忘派来的原创敌人，不是八云紫。召唤分裂和隐形的残影，阶段只开关固定路线的入口，并用 ter_barrier 暂时挡住槽位。"
+      "introduced_in": "ch5_04",
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_ch5_gatekeeper/threat_points",
+      "note": "叙事暂名「守门残影」。忘派来的原创敌人，不是八云紫。召唤会分裂和会隐形的残影。阶段只开关固定路线的入口，并用 ter_barrier 暂时挡住槽位。"
     },
     {
       "id": "boss_wasure",
       "display_name": "落野忘",
-      "introduced_in": "final_01",
-      "threat_points": null,
+      "display_name_key": "enemy.boss_wasure.name",
       "name_status": "pending_文案策划",
+      "introduced_in": "final_01",
+      "threat_points_source": "data/balance/combat/stats.json#/bosses/boss_wasure/threat_points",
       "note": "文案稿用落野忘，气泡名仍是忘。定稿前标 pending_文案策划。终章本关不能放她。"
     }
   ]

@@ -15,8 +15,8 @@
   },
   "summary": "练习顾此失彼。两条避难路都是固定的。慧音从这一关起可放置，是提案，待文案。",
   "player_feeling": "练习顾此失彼。火可以守一条路，慧音去保另一边的人。",
-  "teaches": [
-    "两条避难路要同时看",
+  "teaches": "两条避难路要同时看",
+  "previews": [
     "妹红的火适合贴着一条路放",
     "扑人残影会离开主路去追村民"
   ],
@@ -46,7 +46,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": []
 }

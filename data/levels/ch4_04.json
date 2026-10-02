@@ -7,6 +7,7 @@
   "index_in_chapter": 4,
   "display_name": "风祝的残影",
   "display_name_key": "level.ch4_04.name",
+  "display_name_status": "pending_文案策划",
   "kind": "boss",
   "route_type": "flying",
   "guard_point": {
@@ -15,8 +16,8 @@
   },
   "summary": "首领是早苗的残影复制体，暂名「风祝的残影」，不是早苗本人。早苗通关这一关后才加入。文还不可玩。名字待文案。",
   "player_feeling": "好看，而且会逼人挪位置。天上的入口换一条，地上的人打不到原来的天路。",
-  "teaches": [
-    "飞行路线不在战斗中改道",
+  "teaches": "飞行路线不在战斗中改道",
+  "previews": [
     "符卡可以改哪条入口出怪",
     "首领是风祝的残影。早苗通关后才加入，本关不能放她"
   ],
@@ -47,7 +48,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": [
     "chr_sanae"

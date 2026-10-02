@@ -16,11 +16,12 @@
   },
   "summary": "第一章最难的普通关。一条路分成左右两股再汇合，雾也最浓。",
   "player_feeling": "两边不能只守一边。汇合点是用来补漏的，不是用来偷懒的。",
-  "teaches": [
+  "teaches": "一个入口分成左右两边再汇合",
+  "previews": [
     "分叉前的格子能打到所有残影",
     "分叉中间有障碍时，一座角色打不到两边",
     "汇合后可以补漏，但不能代替两边的人",
-    "硬的东西要交给火力高的角色"
+    "硬残影要交给火力高的角色"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
@@ -363,11 +364,26 @@
       }
     ]
   },
+  "scripted_events": [
+    {
+      "id": "evt_yukari_gap_demo",
+      "once": true,
+      "wave_id": "w06",
+      "trigger": "第 6 波左路第一只硬残影出场，大约在波内第 10 秒",
+      "target": "这一只硬残影",
+      "effect": "隙间打开，把它送回本路起点的裂隙",
+      "deals_damage": false,
+      "threat_unchanged": true,
+      "dialogue_key": "dlg.ch1_03.yukari_gap_demo",
+      "dialogue_status": "pending_文案策划",
+      "note": "只演一次。不造成伤害，威胁点不变。紫从 ch2_01 起首通才能放，重打已通关的关卡也可以放。这一下不是让玩家放置紫。"
+    }
+  ],
   "waves": [
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
@@ -771,7 +787,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 1.0,

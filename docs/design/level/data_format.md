@@ -12,10 +12,10 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `index.json` | 24 关的顺序。这个顺序就是解锁顺序 |
 | `prologue_01.json` … `ch1_04.json` | 画完的 7 关 |
 | `ch2_01.json` … `final_01.json` | 17 关草案，只有说明，没有地图 |
-| `enemy_catalog.json` | 关卡要用的敌人 id、显示名、首次出场、威胁点。生命和移速不在这里 |
+| `enemy_catalog.json` | 关卡要用的敌人 id、显示名、文本 key 和引用路径。生命、移速和威胁点不在这里 |
 | `character_roster.json` | 角色 id、能不能放、从哪一关加入。放置消耗不在这里 |
 | `rating.json` | 星级区间。全游戏共用，不写进每一关 |
-| `data/balance/level_difficulty.json` | 数值策划的难度种子表。他们会整表替换 |
+| `data/balance/level_difficulty.json` | 数值策划的难度表。权威在 PR #8。本 PR 不附带这份文件，要在 #8 之后合并 |
 
 导出过滤器已经是 `data/*`。按现有架构说明，它连子目录里的 JSON 一起打进包。加载器接上之前，玩家还不会看见这些关。
 
@@ -37,13 +37,15 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `index_in_chapter` | 这一章里的第几关，从 1 数 |
 | `display_name` | 给人看的关卡名，例如「神社的直路」 |
 | `display_name_key` | 提案的文本 key，形如 `level.prologue_01.name`。叙事那份 `names_zh.csv` 还没合并，也还没有这些行 |
+| `display_name_status` | 可选。`decided` 或 `pending_文案策划`。玩家看到的暂名还没定稿时用后者 |
 | `kind` | `tutorial` 教学，`normal` 普通，`boss` 章节首领，`final_boss` 终章 |
 | `route_type` | 路线类型，见下表 |
 | `guard_point.id` | 守护点 id，形如 `guard.hakurei_offering_box` |
 | `guard_point.display_name` | 给人看的名字，例如「赛钱箱」 |
 | `summary` | 这一关希望玩家学会什么，一句话 |
 | `player_feeling` | 这一关希望玩家感受到什么 |
-| `teaches` | 学会的要点，字符串数组 |
+| `teaches` | 这一关只有一个主教学点，一句话 |
+| `previews` | 可选。顺带看到的内容，字符串数组。不算学习曲线验收点 |
 | `new_character_ids` | 这一关新给的角色。没有就是空数组。id 用战斗侧的 `chr_` 加叙事角色 id，例如 `chr_reimu` |
 | `new_enemy_ids` | 这一关新出现的残影。没有就是空数组 |
 | `unlock_character_ids` | 通关这一关后加入的角色。下一关的可放置名单才会出现她们。这一关的首通名单不含她们 |
@@ -150,10 +152,10 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | --- | --- |
 | `id` | `w01` 这种两位编号。一关里面不能重复 |
 | `wave_id` | 和 `id` 相同。战斗读这个 |
-| `delay_sec` | 这一波开始前再等多少秒。制作人定波间 3 到 5 秒，关卡写 4。第一波的 4 秒是开战空隙，另外还有 10 秒布阵 |
+| `delay_sec` | 这一波开始前再等多少秒。第 1 波是 0：布阵倒计时一结束，第一只立即出场。其余波是 4，对应 PR #4 `rules.json` 的 `intermission_sec` |
 | `next_wave_delay_sec` | 战斗字段。等于下一波的 `delay_sec`。最后一波是 0 |
-| `duration_sec` | 固定 20。这一波刷怪大约持续 20 秒。首领关最后一波如果 `ends_when` 是 `boss_defeated`，20 秒只是刷怪窗口 |
-| `ends_when` | `spawn_window` 表示刷完并经过波间空隙就结束。`boss_defeated` 只用于首领关的最后一波 |
+| `duration_sec` | 固定 20。刷怪窗口，从本波第一只出场算到最后一只出场。窗口结束后空 4 秒再来下一波，不等场上清空。叫波会跳过剩余的窗口和空档。首领关最后一波如果 `ends_when` 是 `boss_defeated`，20 秒仍只是刷怪窗口 |
+| `ends_when` | `spawn_window` 表示刷怪窗口结束并经过后面的空档，下一波就开始。`boss_defeated` 只用于首领关的最后一波 |
 | `is_boss` | 只有首领入场的那一波为真，用来播一次登场 |
 | `pressure` | 可选。`minion` 或 `boss_phase`。冰之残影关仍交替，但交替不切换符卡 |
 | `note` | 可选。有三选一的那一波要写上「三选一」。少于 5 波的关不要写 |
@@ -170,37 +172,49 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `delay_sec` | 相对这一波开始再等多少秒 |
 | `entrance_id` | 关卡多留的入口 id，必须是这张图上有的 |
 
-画完的关：每一波的敌人威胁要等于难度表里该波的 `wave_threat_budgets`。预算是 `round((10 + 4 × 波次) × threat_budget_coef)`。MVP 七关用数值策划第二轮系数，允许和预算差 1 点。其余关系数仍是 1.0，必须刚好相等。首领不占预算。硬残影只允许出现在第一章第 3 关。
+画完的关：文件 `data/balance/level_difficulty.json` 存在时，每一波的敌人威胁要等于该关的 `wave_threat_budgets`，全关合计要等于 `threat_budget_total`。这份文件由 PR #8 提供。它还不在本 PR 里时，校验只打印警告并跳过这项，不报错。首领不占预算。硬残影只允许出现在第一章第 3 关，共 8 只。
+
+### 时间轴
+
+普通关：开局布阵倒计时 10 秒，可以点「开始」提前结束。倒计时一结束，第一只立即出场，第 1 波 `delay_sec` 是 0。每一波先用 20 秒把怪刷完，再空 4 秒，然后下一波，不等场上清空。叫波会跳过剩余的窗口和这 4 秒空档。
+
+序章：布阵倒计时停在 10 秒不走，玩家放下第一个角色后才开始倒数。之后和普通关一样，第 1 波不再另加 4 秒。关卡里用 `deploy_wait_for_player: true` 表示这件事。
 
 序章前两关可以少于 5 波，现在是 3 波和 4 波，没有三选一。制作人已定：非序章关卡每关 1 到 3 次，最后一波不弹。10 波只有第 5 波后一次。15 波是第 5、10 波后。20 波是第 5、10、15 波后。11 到 14 波同 15 波，16 波同 20 波。波数不改。
 
 ## 难度表 `data/balance/level_difficulty.json`
 
-这张表归数值策划。权威文件在分支 `numeric/touhou-td-framework` 的同名路径。该分支还没有 `tools/numeric/output/level_tables_level_difficulty.csv`，已推送的表仍是上一轮系数，不能覆盖这一轮。等他们推出含这一轮系数的表之后，合并时先合数值 PR；本仓库这份若冲突，再保留他们的版本。本副本里，MVP 七关的系数与每波预算已按第二轮写入，第一章第 3 关是 0.75。其余关仍是系数 1.0 的种子。校验器和测试读这份 JSON。`comments` 里写归属和公式。
+这张表归数值策划，权威文件在 PR #8（分支 `numeric/touhou-td-framework`）的同名路径。本 PR 不附带它，要在 #8 之后合并。系数、每波预算、全关合计和首通剩余生命一律以那份文件为准，这里不抄数字。
 
-约定的每一波预算是 `round((10 + 4 × wave_index) × threat_budget_coef)`，`wave_index` 从 1 起。MVP 系数是序章 0.68、0.69、0.68，第一章 0.67、0.62、0.75、0.70。其余关仍是 1.0。参考值先不要套用：首领约 1.3，下一章第 1 关约 0.85。
+关卡校验在文件存在时，按下面这些字段核对画完的关。文件不存在时只警告并跳过。
 
-首通剩余生命：普通关 11 到 13，首领关大约 10 到 11。这是手感目标，还等制作人确认。它不是星级分档。2 星的占位是剩余至少 50%（10/20）。
-
-| 列 | 含义 |
+| 字段 | 含义 |
 | --- | --- |
-| `levels` 的键 | 关卡 id。对象里不再单列 `level_id` |
-| `chapter` | `prologue`、`ch1` 到 `ch5`、`final` |
-| `level_index` | 解锁顺序，1 到 24 |
-| `level_role` | `teaching`、`practice`、`test`、`boss` |
-| `wave_count` | 几波 |
-| `threat_budget_coef` | MVP 七关是 0.68、0.69、0.68、0.67、0.62、0.75、0.70。其余关仍是 `1.0` |
-| `hp_multiplier` | `1 + 0.15 × (level_index − 1)`，只升不降 |
-| `reward_spirit_start` | 开局灵力 150 |
-| `reward_spirit_per_wave` | 每活过一波加 20 |
-| `wave_threat_budgets` | 每一波的威胁预算。MVP 七关用第二轮系数取整后的整数 |
-| `buff_after_waves` | 三选一的波次数组，例如 20 波关是 `[5, 10, 15]`。最后一波不写进去。少于 5 波则是空数组 |
-| `buff_pick_count` | 有三选一的关是 3。少于 5 波是 0 |
-| `expected_first_clear_lives` | `11-13` 或首领的 `10-11` |
-| `reward_meta_first_clear` | 局外首通奖励。现在是 `pending_numbers`，不要发明数字 |
-| `reward_meta_replay` | 局外重打奖励。一定比首通少。现在也是 `pending_numbers` |
+| `levels.<level_id>.threat_budget_coef` | 这一关的威胁系数 |
+| `levels.<level_id>.wave_threat_budgets` | 每一波的威胁预算 |
+| `levels.<level_id>.threat_budget_total` | 全关威胁合计 |
+| `levels.<level_id>.target_lives_first_clear` | 首通剩余生命。不参与星级 |
 
-生命 20、首领不占预算，写在 `comments` 里，不每关重复。分波预算存在 `wave_threat_budgets`，校验再按公式对一遍。
+旧字段名不要再使用。首通目标只认 `target_lives_first_clear`。
+
+## 剧情事件 `scripted_events`
+
+可选。MVP 里只有 `ch1_03` 有一项。schema 要求写明触发波、触发条件、目标、效果，以及是否造成伤害。
+
+| 字段 | 含义 |
+| --- | --- |
+| `id` | 例如 `evt_yukari_gap_demo` |
+| `once` | 必须是 true。只演一次 |
+| `wave_id` | 触发波。隙间换位是 `w06` |
+| `trigger` | 触发条件。第 6 波左路第一只硬残影出场，大约在波内第 10 秒 |
+| `target` | 作用对象。这一只硬残影 |
+| `effect` | 隙间打开，把它送回本路起点的裂隙 |
+| `deals_damage` | 这一下是否造成伤害。隙间换位是 false |
+| `threat_unchanged` | 为 true 时威胁点不变 |
+| `dialogue_key` | 台词 key。`dlg.ch1_03.yukari_gap_demo` |
+| `dialogue_status` | 固定 `pending_文案策划` |
+
+紫的可放置规则不变：从 `ch2_01` 起首通才能放，重打已通关的关卡也可以放。这段事件不是让玩家放置紫。
 
 ## 首领 `bosses`
 
@@ -257,20 +271,20 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 ## 敌人图鉴 `enemy_catalog.json`
 
-生命、护甲、击破灵力、漏怪扣命、击破充能的权威来源是数值策划的 `data/balance/combat/stats.json`，字段是 `enemies` 和 `bosses`。图鉴用 `stat_source` 指向这份表。这里只留关卡编排要的字段。校验如果看见 `hp`、`move_speed` 或抄来的属性数字，会失败。
+生命、护甲、击破灵力、漏怪扣命、击破充能和威胁点的权威来源是数值策划的 `data/balance/combat/stats.json`，字段是 `enemies` 和 `bosses`。图鉴用 `stat_source` 和 `threat_points_source` 指向这份表。这里只留 id、显示名、文本 key 和引用。校验如果看见 `hp`、`move_speed`、`threat_points` 或抄来的数字，会失败。
 
 | 字段 | 含义 |
 | --- | --- |
 | `id` | `enm_` 或 `boss_` |
-| `display_name` | 中文名 |
+| `display_name` | 中文名。玩家看到的名字以文案术语表为准 |
+| `display_name_key` | `enemy.<战斗ID>.name`，例如 `enemy.enm_shade_basic.name` |
 | `introduced_in` | 第一次出现的关卡。还没有关用到时是 `null` |
-| `threat_points` | 用来对波次预算。小残影和快残影是 1，硬残影是 4。首领是 `null`，不占预算 |
-| `name_status` | 可选。`pending_文案策划` 表示显示名还没定稿。MVP 的冰之残影不用这个 |
-| `threat_points_status` | `confirmed_for_budget` 或 `level_design_placeholder`。预留怪的数字不能当成已确认预算 |
-| `splits_into` | 可选。堆积残影记下战斗草案：死亡分裂出 3 个 `enm_shade_fast` |
+| `threat_points_source` | 指向 `stats.json` 里这一只的 `threat_points`。不在图鉴里抄数字 |
+| `name_status` | `decided` 或 `pending_文案策划` |
+| `splits_into` | 可选。堆积体记下战斗草案：被打散时会裂开。裂出哪一种、裂出几只以战斗和数值表为准 |
 | `note` | 中文 |
 
-以后章节再用，显示名除飞行残影外仍待文案：`enm_shade_pouncer`（扑人残影）、`enm_shade_flying`（飞行残影）、`enm_shade_phantom`（遗忘残影）、`enm_shade_heap`（堆积残影）、`enm_shade_rift`（结界残影）。
+已定名：小残影、快残影、硬残影、飞行残影、冰之残影。暂名、状态 `pending_文案策划`：扑人残影、遗忘之影、堆积体、结界之渣、红魔的女仆残影、不死鸟的残影、风祝的残影、守门残影、落野忘。
 
 ## 角色名单 `character_roster.json`
 
@@ -288,18 +302,16 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 
 | 字段 | 含义 |
 | --- | --- |
-| `max_lives` | 20 |
-| `defeat_lives` | 0。到 0 就是失败 |
+| `lives_source` | 指向 `data/balance/combat/stats.json` 的 `guard.max_hp`。满生命以这一字段为准，这里不抄数字 |
 | `stars_do_not_grant_power` | `true` |
 | `stars_grant` | 现在写了 `cosmetics` 和 `codex_stories`。具体外观和图鉴句子还没做 |
 | `hard_mode` | `later`。这次没有困难倍率 |
-| `win`、`lose` | 最后一波结束还有命即胜，命到 0 即败。首领关相同 |
-| `two_star_lives_ratio` | 2 星要达到的剩余生命比例。现在是 `0.5`，状态 `pending_numbers` |
-| `bands` | 三档。1 星是通关且剩余 1 到 9，2 星是 10 到 19，3 星只有满命 20/20 |
-| `replay` | 已通关的关可以重打，并能补星。局外奖励看难度表那两列 |
+| `win`、`lose` | 最后一波结束还有命即胜，命耗尽即败。首领关相同 |
+| `stars_source` | 指向 `stars.thresholds_lives_left`。`order` 依次是 3 星、2 星、1 星。按剩余生命的绝对值。阈值不在这里抄。首通目标不参与星级 |
+| `first_clear_source` | 指向 PR #8 的 `levels.<level_id>.target_lives_first_clear`。不在这里抄每关该剩多少命 |
+| `replay` | 已通关的关可以重打，并能补星。局外奖励以 PR #8 的难度表为准 |
 | `leak.stored_in_level_data` | `false`。扣几条命不写在关卡里 |
 | `leak.note` | 指向 `data/balance/combat/stats.json` 的 `enemies` 和 `bosses` |
-| `first_clear` | 普通关剩余 `11-13`，首领关 `10-11`。状态是关卡和数值已对齐，等制作人确认 |
 
 ## 这次故意不放进文件的字段
 
@@ -320,6 +332,6 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 python3 tools/validate_levels.py
 ```
 
-它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，每一波威胁等于 `(10 + 4 × 波次) × 系数`，新章第 1 关的威胁合计低于上一章最后一关，非序章每关 1 到 3 次三选一且最后一波不弹，可放置名单跟着 `unlock_character_ids` 走，3 星只有满命 20/20。图鉴里不能再出现生命和移速。
+它会检查：JSON 能解析，符合 schema，地图是 7×12，路径连续，入口是 `S`、守护点是 `G`，每一个 `.` 都是预定槽位并且贴着路线，地形和冰之残影的三组格子符合战斗约定，第 1 波 `delay_sec` 是 0、其余波是 4，非序章每关 1 到 3 次三选一且最后一波不弹，可放置名单跟着 `unlock_character_ids` 走，每一关只有一个主教学点。系数、预算、首通目标、星级阈值、血量和威胁点不写死在校验里：`level_difficulty.json` 或 `stats.json` 在的时候才读它们核对；不在的时候只警告并跳过。图鉴和星级文件里不能再出现这些数字。
 
 Godot 测试 `tests/unit/test_level_data.gd` 再查一遍地图、路径、威胁和星级，不查 schema 文本。CI 的 lint 跑 Python 校验，test 跑 Godot 测试。

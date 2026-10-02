@@ -16,9 +16,9 @@
   },
   "summary": "学会残影会沿路线走向赛钱箱，并把灵梦放在直路旁边。",
   "player_feeling": "安心。路是直的，敌人少，放下去就会自己打。",
-  "teaches": [
+  "teaches": "只能把灵梦放到贴着路线的预定槽位",
+  "previews": [
     "残影沿路线走向守护点",
-    "只能把灵梦放到预定槽位上",
     "角色会自动攻击",
     "点角色查看攻击范围",
     "符卡充满后点一下发动"
@@ -164,7 +164,7 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
@@ -228,14 +228,14 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 2.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": true,
   "intermission_sec": 4,
-  "combat_timing_note": "序章充能 ×2、布阵等玩家放完，用的是战斗草案的建议，不是数值定案。",
+  "combat_timing_note": "序章的布阵倒计时停在 10 秒，玩家放下第一个角色后才开始倒数。倒计时结束或点「开始」后，第一只立即出场。充能倍率沿用战斗规则，不在关卡里另写数字。",
   "unlock_character_ids": [
     "chr_marisa"
   ]

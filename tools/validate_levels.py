@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import json
 import sys
-from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -18,15 +17,13 @@ from jsonschema.exceptions import ValidationError
 ROOT = Path(__file__).resolve().parents[1]
 LEVEL_DIR = ROOT / "data" / "levels"
 BALANCE_PATH = ROOT / "data" / "balance" / "level_difficulty.json"
-CALIBRATED_COEFS = {
-    "prologue_01": Decimal("0.68"),
-    "prologue_02": Decimal("0.69"),
-    "prologue_03": Decimal("0.68"),
-    "ch1_01": Decimal("0.67"),
-    "ch1_02": Decimal("0.62"),
-    "ch1_03": Decimal("0.75"),
-    "ch1_04": Decimal("0.70"),
-}
+STATS_PATH = ROOT / "data" / "balance" / "combat" / "stats.json"
+DIFFICULTY_FIELDS = (
+    "threat_budget_coef",
+    "wave_threat_budgets",
+    "threat_budget_total",
+    "target_lives_first_clear",
+)
 # 第 6–11 波各 1 只，第 12 波左右各 1 只。左、右、左、右、左、右，再左右各一只。
 CH1_03_ARMOR = {
     6: [("path.left", 1)],
@@ -38,12 +35,12 @@ CH1_03_ARMOR = {
     12: [("path.left", 1), ("path.right", 1)],
 }
 SCHEMA_PATH = LEVEL_DIR / "level.schema.json"
-BUDGET_THREATS = {
-    "enm_shade_basic": 1,
-    "enm_shade_fast": 1,
-    "enm_shade_armored": 4,
-    "boss_cirno": None,
-}
+KNOWN_ENEMIES = (
+    "enm_shade_basic",
+    "enm_shade_fast",
+    "enm_shade_armored",
+    "boss_cirno",
+)
 STARTERS = ["chr_reimu"]
 EXPECTED_COUNTS = {
     "prologue": 3,
@@ -67,26 +64,65 @@ def load_json(path: Path):
         raise SystemExit(f"{path}: 不是合法 JSON：{error}") from error
 
 
-def scaled_budget(wave_index: int, coef: Decimal) -> int:
-    raw = Decimal(10 + 4 * wave_index) * coef
-    return int(raw.quantize(Decimal("1"), rounding=ROUND_HALF_UP))
-
-
-def load_difficulty(path: Path) -> dict:
+def load_difficulty(path: Path) -> dict | None:
+    """文件来自 PR #8。合并前不存在时只警告，不把缺文件当成错误。"""
+    if not path.is_file():
+        print(
+            "警告：找不到 data/balance/level_difficulty.json。"
+            "这份文件由 PR #8（分支 numeric/touhou-td-framework）提供，"
+            "本 PR 要在 #8 之后合并。威胁预算核对已跳过。",
+            file=sys.stderr,
+        )
+        return None
     data = load_json(path)
-    comments = data.get("comments", [])
-    if isinstance(comments, list):
-        comments = "\n".join(comments)
-    levels = data["levels"]
-    order = data.get("order") or list(levels)
-    for level_id in order:
-        row = levels[level_id]
-        row["wave_count"] = int(row["wave_count"])
-        row["level_index"] = int(row["level_index"])
-        row["buff_pick_count"] = int(row["buff_pick_count"])
-        row["wave_threat_budgets"] = [int(item) for item in row["wave_threat_budgets"]]
-        row["threat_budget_total"] = int(row["threat_budget_total"])
-    return {"comments": comments, "levels": levels, "order": order}
+    levels = data.get("levels")
+    if not isinstance(levels, dict):
+        raise SystemExit(f"{path}: 缺少 levels")
+    for row in levels.values():
+        if "wave_threat_budgets" in row:
+            row["wave_threat_budgets"] = [int(item) for item in row["wave_threat_budgets"]]
+        if "threat_budget_total" in row:
+            row["threat_budget_total"] = int(row["threat_budget_total"])
+    return {"levels": levels}
+
+
+def load_stats(path: Path) -> dict | None:
+    """属性表来自 PR #8。还不在仓库里时只警告，不把缺文件当成错误。"""
+    if not path.is_file():
+        print(
+            "警告：找不到 data/balance/combat/stats.json。"
+            "星级阈值、敌人威胁点和生命以 PR #8 的这份文件为准。"
+            "本 PR 不附带它，相关数字检查已跳过。",
+            file=sys.stderr,
+        )
+        return None
+    return load_json(path)
+
+
+def threat_table(stats: dict | None) -> dict[str, int] | None:
+    if stats is None:
+        return None
+    table: dict[str, int] = {}
+    for bucket in ("enemies", "bosses"):
+        rows = stats.get(bucket, {})
+        if not isinstance(rows, dict):
+            continue
+        for enemy_id, row in rows.items():
+            if isinstance(row, dict) and row.get("threat_points") is not None:
+                table[enemy_id] = int(row["threat_points"])
+    return table
+
+
+def pointer_value(stats: dict, pointer: str):
+    if "#" not in pointer:
+        return None
+    path = pointer.split("#", 1)[1].strip("/")
+    node = stats
+    for part in path.split("/"):
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node
 
 
 def cell_char(grid: list[str], col: int, row: int) -> str | None:
@@ -316,29 +352,46 @@ def wave_threat(wave: dict, threats: dict[str, int]) -> tuple[int, list[str]]:
     return total, problems
 
 
-def threat_problems(level: dict, threats: dict[str, int], budgets: list[int], catalog_ids: set[str]) -> list[str]:
+def threat_problems(level: dict, threats: dict[str, int], row: dict, catalog_ids: set[str]) -> list[str]:
+    """按 PR #8 的分波预算和全关合计核对。只认 target_lives_first_clear。"""
     problems: list[str] = []
+    for field in DIFFICULTY_FIELDS:
+        if field not in row:
+            problems.append(f"难度行缺少 {field}")
+    budgets = row.get("wave_threat_budgets")
+    if not isinstance(budgets, list):
+        return problems
     if len(level["waves"]) != len(budgets):
         problems.append(f"波次数 {len(level['waves'])} 和难度表的 {len(budgets)} 不一致")
         return problems
+    summed = 0
     for wave, budget in zip(level["waves"], budgets):
         total, missing = wave_threat(wave, threats)
         problems.extend(missing)
-        slack = 1 if level["id"] in CALIBRATED_COEFS else 0
-        if abs(total - budget) > slack:
-            problems.append(f"{wave['id']} 的威胁 {total} 不是难度表里的 {budget}")
+        summed += total
+        if total != budget:
+            extra = ""
+            if level["id"] == "ch1_04":
+                extra = "。入场仍是第 5 波，等制作人拍板。建议看 levels.ch1_04.threat_budget_coef_if_boss_fix"
+            problems.append(f"{wave['id']} 的威胁 {total} 不是难度表里的 {budget}{extra}")
+    expected_total = row.get("threat_budget_total")
+    if expected_total is None or summed != expected_total:
+        problems.append(f"全关威胁 {summed} 不是难度表里的 {expected_total}")
+    elif sum(budgets) != expected_total:
+        problems.append("难度表的分波预算加总不等于 threat_budget_total")
     for boss in level["bosses"]:
         if boss["id"] not in catalog_ids:
             problems.append(f"图鉴里没有首领 {boss['id']}")
-        elif boss["id"] in threats:
+        elif threats.get(boss["id"], 0):
             problems.append(f"{boss['id']} 不该占用波次预算")
     return problems
 
 
-def composition_problems(level: dict, threats: dict[str, int], row: dict) -> list[str]:
+def composition_problems(level: dict, threats: dict[str, int]) -> list[str]:
     problems: list[str] = []
     level_id = level["id"]
-    offers = set(row["buff_after_waves"])
+    wave_count = len(level["waves"])
+    offers = {wave for wave in (5, 10, 15, 20) if wave < wave_count}
     swift_threat = 0
     total_threat = 0
     basic = "enm_shade_basic"
@@ -448,15 +501,21 @@ def timing_problems(level: dict) -> list[str]:
         problems.append("只有序章应该等玩家放完再开始倒计时")
     if level["intermission_sec"] != 4 or level["deploy_time_sec"] != 10:
         problems.append("布阵或波间秒数不是战斗草案的默认值")
-    if prologue and "combat_timing_note" not in level:
-        problems.append("序章要注明充能和等待是战斗草案，不是数值定案")
+    if prologue:
+        note = level.get("combat_timing_note", "")
+        if "10" not in note or "第一个角色" not in note:
+            problems.append("序章要写明倒计时停在 10 秒，放下第一个角色后才倒数")
     waves = level["waves"]
     for index, wave in enumerate(waves):
         last = index == len(waves) - 1
         if wave.get("duration_sec") != 20:
-            problems.append(f"{wave['id']} 的刷怪时长应该是 20 秒")
-        if wave.get("delay_sec") != 4:
-            problems.append(f"{wave['id']} 的波间空隙应该是 4 秒")
+            problems.append(f"{wave['id']} 的刷怪窗口应该是 20 秒")
+        expected_delay = 0 if index == 0 else 4
+        if wave.get("delay_sec") != expected_delay:
+            problems.append(f"{wave['id']} 的 delay_sec 应该是 {expected_delay}")
+        next_delay = 0 if last else waves[index + 1]["delay_sec"]
+        if wave.get("next_wave_delay_sec") != next_delay:
+            problems.append(f"{wave['id']} 的 next_wave_delay_sec 应该等于下一波的 delay_sec")
         boss_last = last and level["id"] == "ch1_04"
         expected_end = "boss_defeated" if boss_last else "spawn_window"
         if wave.get("ends_when") != expected_end:
@@ -482,7 +541,7 @@ def timing_problems(level: dict) -> list[str]:
     return problems
 
 
-def roster_problems(level: dict, playable: dict[str, str]) -> list[str]:
+def roster_problems(level: dict, playable: dict[str, str], stats: dict | None) -> list[str]:
     problems: list[str] = []
     available = level["params"]["available_character_ids"]
     allowed_playable = {"yes", "pending_文案策划"}
@@ -492,171 +551,146 @@ def roster_problems(level: dict, playable: dict[str, str]) -> list[str]:
     for character_id in level["new_character_ids"]:
         if character_id not in available:
             problems.append(f"新角色 {character_id} 不在可放置名单里")
-    if level["params"]["starting_spirit_power"] != 150:
-        problems.append("开局灵力已确认是 150")
+    if stats is not None:
+        expected_spirit = pointer_value(stats, "data/balance/combat/stats.json#/economy/starting_spirit")
+        if expected_spirit is not None and level["params"]["starting_spirit_power"] != expected_spirit:
+            problems.append("开局灵力和 stats.json 的 economy.starting_spirit 不一致")
+        expected_lives = pointer_value(stats, "data/balance/combat/stats.json#/guard/max_hp")
+        if expected_lives is not None and level["params"]["lives"] != expected_lives:
+            problems.append("生命和 stats.json 的 guard.max_hp 不一致")
     for enemy_id in level["new_enemy_ids"]:
         if not enemy_id.startswith(("enm_", "boss_")):
             problems.append(f"新敌人 id 不是战斗侧的命名：{enemy_id}")
     return problems
 
 
-def role_for(level: dict) -> str:
-    if level["kind"] in ("boss", "final_boss"):
-        return "boss"
-    if level["index_in_chapter"] == 1:
-        return "teaching"
-    if level["index_in_chapter"] == 2:
-        return "practice"
-    return "test"
-
-
-def difficulty_problems(order: list[dict], difficulty: dict) -> list[str]:
+def teaching_problems(level: dict) -> list[str]:
+    teaches = level.get("teaches")
     problems: list[str] = []
-    comments = difficulty.get("comments", "")
-    if "owner: 数值策划" not in comments or "status: seed" not in comments:
-        problems.append("难度表要标明归数值策划，并且当前是种子")
-    for phrase in (
-        "(10 + 4 × wave_index) × threat_budget_coef",
-        "1.3",
-        "0.85",
-        "11-13",
-        "10-11",
-        "制作人",
-        "pending_numbers",
-        "重打",
-        "50%",
-        "1 到 3",
-        "20/20",
-    ):
-        if phrase not in comments:
-            problems.append(f"难度表注释缺少：{phrase}")
-    if "2 到 4" in comments:
-        problems.append("三选一次数已由制作人定为每关 1 到 3 次，注释里不要再写 2 到 4")
-    rows = difficulty.get("levels")
-    if not isinstance(rows, dict):
-        return problems + ["难度表缺少数据行"]
-    if difficulty.get("order") != [level["id"] for level in order]:
-        problems.append("难度表的关卡顺序和索引不一致")
+    if not isinstance(teaches, str) or not teaches.strip():
+        problems.append("teaches 应该是一条主教学点")
+        teaches = ""
+    previews = level.get("previews", [])
+    if not isinstance(previews, list) or any(not isinstance(item, str) for item in previews):
+        problems.append("previews 应该是字符串数组")
+    if level["id"] == "ch5_02":
+        if level.get("display_name") != "迟来的岔路":
+            problems.append("ch5_02 的名字暂用「迟来的岔路」")
+        if level.get("display_name_status") != "pending_文案策划":
+            problems.append("ch5_02 的名字要标成 pending_文案策划")
+        if "会移动" in level.get("display_name", "") or "会移动" in teaches:
+            problems.append("路线在战斗中不会移动，不要再叫会移动的路")
+    if level["id"] == "prologue_03":
+        if "三选一" not in teaches:
+            problems.append("序章第 3 关的主教学点应该是第一次三选一")
+        if "拐角" in teaches or "弯路" in teaches:
+            problems.append("弯路和拐角是地图形状，不是序章第 3 关的教学点")
+    if level["id"] == "ch1_01":
+        if "快残影" not in teaches:
+            problems.append("第一章第 1 关的主教学点应该是快残影")
+        if "雾" in teaches:
+            problems.append("浓雾是第一章的环境，不是第一章第 1 关的教学点")
+    return problems
+
+
+def scripted_event_problems(level: dict) -> list[str]:
+    events = level.get("scripted_events", [])
+    if level["id"] != "ch1_03":
+        if events:
+            return [f"{level['id']} 不该有剧情事件。MVP 里只有第一章第 3 关有隙间换位"]
+        return []
+    if len(events) != 1:
+        return ["第一章第 3 关应该只有一段隙间换位"]
+    event = events[0]
+    problems: list[str] = []
+    if event.get("id") != "evt_yukari_gap_demo" or event.get("once") is not True:
+        problems.append("隙间换位的 id 应该是 evt_yukari_gap_demo，并且只演一次")
+    if event.get("wave_id") != "w06":
+        problems.append("隙间换位应该在第 6 波触发")
+    trigger = event.get("trigger", "")
+    if "左路" not in trigger or "硬残影" not in trigger:
+        problems.append("隙间换位应该在第 6 波左路第一只硬残影出场时触发")
+    effect = event.get("effect", "")
+    if "送回" not in effect or "裂隙" not in effect:
+        problems.append("隙间换位要把这只硬残影送回本路起点的裂隙")
+    if event.get("deals_damage") is not False:
+        problems.append("隙间换位不造成伤害")
+    if event.get("threat_unchanged") is not True:
+        problems.append("隙间换位不改变威胁点")
+    if event.get("dialogue_status") != "pending_文案策划":
+        problems.append("隙间换位的台词状态应该是 pending_文案策划")
+    if "ch2_01" not in event.get("note", ""):
+        problems.append("隙间换位要写明紫从 ch2_01 起才能放，这一下不是让玩家放置紫")
+    return problems
+
+
+def json_number_problems(value, path: str, allow_keys: set[str]) -> list[str]:
+    problems: list[str] = []
+    if isinstance(value, bool):
         return problems
-    previous_hp = 0
-    for number, level in enumerate(order, start=1):
-        row = rows[level["id"]]
-        if level.get("difficulty_id") != level["id"]:
-            problems.append(f"{level['id']} 的 difficulty_id 没有指向自己")
-        if row.get("chapter") != level["chapter_id"]:
-            problems.append(f"{level['id']} 的章节列不对")
-        if row.get("level_index") != number:
-            problems.append(f"{level['id']} 的关卡序号不是 {number}")
-        role = role_for(level)
-        if row.get("level_role") != role:
-            problems.append(f"{level['id']} 的难度角色应该是 {role}")
-        coef = Decimal(str(row["threat_budget_coef"]))
-        expected_coef = CALIBRATED_COEFS.get(level["id"], Decimal("1.0"))
-        if coef != expected_coef:
-            problems.append(f"{level['id']} 的威胁系数应该是 {expected_coef}")
-        expected_hp = 100 + 15 * (number - 1)
-        got_hp = int((Decimal(row["hp_multiplier"]) * 100).quantize(Decimal("1")))
-        if got_hp != expected_hp:
-            problems.append(f"{level['id']} 的生命倍率不是 {expected_hp / 100}")
-        if got_hp <= previous_hp:
-            problems.append(f"{level['id']} 的生命倍率没有比上一关更高")
-        previous_hp = got_hp
-        wave_count = len(level["waves"]) if level["status"] == "complete" else level["wave_count"]
-        if row.get("wave_count") != wave_count:
-            problems.append(f"{level['id']} 的波数和难度表不一致")
-        if wave_count < 5:
-            expected_offers: list[int] = []
-            expected_picks = 0
-        else:
-            expected_offers = [wave for wave in (5, 10, 15, 20) if wave < wave_count]
-            expected_picks = 3
-        if row.get("buff_after_waves") != expected_offers or row.get("buff_pick_count") != expected_picks:
-            problems.append(f"{level['id']} 的三选一应该在每 5 波后出现，但最后一波不弹")
-        if row.get("reward_spirit_start") != "150" or row.get("reward_spirit_per_wave") != "20":
-            problems.append(f"{level['id']} 的灵力奖励不是 150 / 20")
-        if row.get("reward_meta_first_clear") != "pending_numbers" or row.get("reward_meta_replay") != "pending_numbers":
-            problems.append(f"{level['id']} 的局外首通和重打奖励应该先写 pending_numbers，不要发明数字")
-        expected_lives = "10-11" if role == "boss" else "11-13"
-        if row.get("expected_first_clear_lives") != expected_lives:
-            problems.append(f"{level['id']} 的首通剩余生命应该是 {expected_lives}")
-        expected_budgets = [scaled_budget(index, coef) for index in range(1, wave_count + 1)]
-        if row.get("wave_threat_budgets") != expected_budgets:
-            problems.append(f"{level['id']} 的分波预算不是 (10 + 4 × 波次) × {coef}")
-        if row.get("threat_budget_total") != sum(expected_budgets):
-            problems.append(f"{level['id']} 的威胁合计不是 {sum(expected_budgets)}")
+    if isinstance(value, (int, float)):
+        problems.append(f"{path} 不该自己带数字")
+        return problems
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in allow_keys:
+                continue
+            problems.extend(json_number_problems(item, f"{path}.{key}", allow_keys))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            problems.extend(json_number_problems(item, f"{path}[{index}]", allow_keys))
     return problems
 
 
-def curve_problems(levels: list[dict], rows: dict) -> list[str]:
+def rating_problems(rating: dict, stats: dict | None) -> list[str]:
     problems: list[str] = []
-    by_chapter: dict[str, list[dict]] = {chapter_id: [] for chapter_id in CHAPTER_ORDER}
-    for level in levels:
-        by_chapter[level["chapter_id"]].append(level)
-    previous_peak = None
-    previous_hp = None
-    previous_id = None
-    for chapter_id in CHAPTER_ORDER:
-        chapter_levels = by_chapter[chapter_id]
-        budgets = [rows[level["id"]]["threat_budget_total"] for level in chapter_levels]
-        for earlier, later in zip(budgets, budgets[1:]):
-            if later <= earlier:
-                problems.append(f"{chapter_id} 的威胁合计没有逐关上升：{budgets}")
-                break
-        if previous_peak is not None and chapter_id != "final":
-            previous_is_boss = previous_id is not None and previous_id.endswith("_04")
-            too_high = budgets[0] > previous_peak or (previous_is_boss and budgets[0] >= previous_peak)
-            if too_high:
-                problems.append(
-                    f"{chapter_levels[0]['id']} 的合计 {budgets[0]} 相对上一章最后一关 {previous_id} 的 {previous_peak} 没有松下来"
-                )
-        if chapter_id == "final" and previous_peak is not None:
-            final_hp = Decimal(rows[chapter_levels[0]["id"]]["hp_multiplier"])
-            if budgets[0] < previous_peak or final_hp <= previous_hp:
-                problems.append("终章的威胁合计或生命倍率没有站在第五章首领之上")
-        previous_peak = budgets[-1]
-        previous_hp = Decimal(rows[chapter_levels[-1]["id"]]["hp_multiplier"])
-        previous_id = chapter_levels[-1]["id"]
-    return problems
-
-
-def rating_problems(rating: dict) -> list[str]:
-    problems: list[str] = []
-    if rating.get("max_lives") != 20 or rating.get("defeat_lives") != 0:
-        problems.append("星级规则的生命上限不是 20，或失败线不是 0")
+    problems.extend(json_number_problems(rating, "rating", {"schema_version"}))
     if rating.get("stars_do_not_grant_power") is not True:
         problems.append("星级必须明确不提供强度")
-    expected = [(1, 1, 9), (2, 10, 19), (3, 20, 20)]
-    got = [
-        (band.get("stars"), band.get("lives_min"), band.get("lives_max"))
-        for band in rating.get("bands", [])
-    ]
-    if got != expected:
-        problems.append(f"星级区间不对：{got}")
-    full = rating.get("bands", [{}, {}, {}])[2] if len(rating.get("bands", [])) == 3 else {}
-    if full.get("rule") != "full_lives":
-        problems.append("3 星必须是满命 20/20")
-    if rating.get("two_star_lives_ratio") != 0.5 or rating.get("two_star_ratio_status") != "pending_numbers":
-        problems.append("2 星比例应该是占位 0.5，并标明等数值确认")
-    if "50%" not in rating.get("two_star_ratio_note", ""):
-        problems.append("2 星说明要写明 50% 是占位")
+    if "bands" in rating or "thresholds_lives_left" in rating or "max_lives" in rating:
+        problems.append("rating.json 不要自己写星级区间或生命上限")
+    stars = rating.get("stars_source", {})
+    if stars.get("path") != "data/balance/combat/stats.json":
+        problems.append("星级要指向 data/balance/combat/stats.json")
+    if stars.get("field") != "stars.thresholds_lives_left":
+        problems.append("星级字段应该是 stars.thresholds_lives_left")
+    if stars.get("order") != ["3星", "2星", "1星"]:
+        problems.append("星级顺序应该是 3 星、2 星、1 星")
+    if "首通目标不参与星级" not in stars.get("note", ""):
+        problems.append("要写明首通目标不参与星级")
+    if "first_clear" in rating or "two_star_lives_ratio" in rating:
+        problems.append("rating.json 不要再写 first_clear 或 two_star_lives_ratio")
+    lives = rating.get("lives_source", {})
+    if lives.get("path") != "data/balance/combat/stats.json" or lives.get("field") != "guard.max_hp":
+        problems.append("满生命要指向 stats.json 的 guard.max_hp")
+    source = rating.get("first_clear_source", {})
+    if source.get("path") != "data/balance/level_difficulty.json":
+        problems.append("首通目标要指向 PR #8 的难度表")
+    if source.get("field") != "levels.<level_id>.target_lives_first_clear":
+        problems.append("首通目标字段应该是 levels.<level_id>.target_lives_first_clear")
+    if "不参与星级" not in source.get("note", ""):
+        problems.append("首通目标说明要写明它不参与星级")
     replay = rating.get("replay", {})
     if replay.get("cleared_levels_anytime") is not True or replay.get("can_earn_missing_stars") is not True:
         problems.append("已通关的关要能重打，并且能补星")
-    if "pending_numbers" not in replay.get("note", "") or "重打" not in replay.get("note", ""):
-        problems.append("重打奖励要指向难度表，并写明数字未定")
-    if "大于 0" not in rating.get("win", "") or "0" not in rating.get("lose", ""):
-        problems.append("胜负要写明：最后一波结束还有命即胜，命到 0 即败")
+    replay_note = replay.get("note", "")
+    if "重打" not in replay_note or "level_difficulty.json" not in replay_note:
+        problems.append("重打奖励要指向 PR #8 的难度表")
+    if "大于零" not in rating.get("win", "") or "耗尽" not in rating.get("lose", ""):
+        problems.append("胜负要写明：最后一波结束还有命即胜，生命耗尽即败")
     leak = rating.get("leak", {})
     if leak.get("stored_in_level_data") is not False:
         problems.append("漏怪扣命不应该写进关卡数据")
     leak_note = leak.get("note", "")
     if "权威" not in leak_note or "lives_on_leak" in leak_note or "stats.json" not in leak_note:
         problems.append("漏怪说明要指向 data/balance/combat/stats.json，不要在关卡里再抄一份")
-    first = rating.get("first_clear", {})
-    if first.get("normal_lives_remaining") != "11-13" or first.get("boss_lives_remaining") != "10-11":
-        problems.append("首通剩余生命应该是普通关 11-13、首领关 10-11")
-    if first.get("status") != "agreed_by_level_and_numbers_pending_producer":
-        problems.append("首通目标要标明：关卡和数值已对齐，等制作人确认")
+    if stats is None:
+        return problems
+    thresholds = pointer_value(stats, "data/balance/combat/stats.json#/stars/thresholds_lives_left")
+    if not isinstance(thresholds, list) or len(thresholds) != 3:
+        print("警告：stats.json 里没有三档星级阈值，星级数字检查已跳过。", file=sys.stderr)
+    elif pointer_value(stats, "data/balance/combat/stats.json#/guard/max_hp") is None:
+        print("警告：stats.json 里没有 guard.max_hp，满生命检查已跳过。", file=sys.stderr)
     return problems
 
 
@@ -734,7 +768,7 @@ def schema_errors(validator: Draft202012Validator, level: dict) -> list[str]:
     return messages
 
 
-def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
+def catalog_problems(catalog: dict, stats: dict | None = None) -> tuple[list[str], dict[str, dict]]:
     problems: list[str] = []
     note = catalog.get("_owner_note", "")
     if "权威" not in note or "stats.json" not in note:
@@ -755,12 +789,23 @@ def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
         "enm_shade_fast": "快残影",
         "enm_shade_armored": "硬残影",
         "enm_shade_flying": "飞行残影",
+        "enm_shade_phantom": "遗忘之影",
+        "enm_shade_heap": "堆积体",
+        "enm_shade_rift": "结界之渣",
+        "enm_shade_pouncer": "扑人残影",
         "boss_cirno": "冰之残影",
-        "boss_ch2_sakuya_shade": "女仆的残影",
-        "boss_ch3_mokou_shade": "火鸟的残影",
+        "boss_ch2_sakuya_shade": "红魔的女仆残影",
+        "boss_ch3_mokou_shade": "不死鸟的残影",
         "boss_ch4_sanae_shade": "风祝的残影",
-        "boss_ch5_gatekeeper": "结界裂缝的守门残影",
+        "boss_ch5_gatekeeper": "守门残影",
         "boss_wasure": "落野忘",
+    }
+    decided_names = {
+        "enm_shade_basic",
+        "enm_shade_fast",
+        "enm_shade_armored",
+        "enm_shade_flying",
+        "boss_cirno",
     }
     by_id: dict[str, dict] = {}
     for entry in catalog.get("entries", []):
@@ -768,24 +813,22 @@ def catalog_problems(catalog: dict) -> tuple[list[str], dict[str, dict]]:
         if enemy_id in by_id:
             problems.append(f"敌人 id 重复：{enemy_id}")
         by_id[enemy_id] = entry
-        if STAT_KEYS & set(entry):
-            problems.append(f"{enemy_id} 不应该再抄生命、移速或护甲")
-        expected = BUDGET_THREATS.get(enemy_id, "missing")
-        if expected != "missing":
-            if entry.get("threat_points") != expected:
-                problems.append(f"{enemy_id} 的威胁点不是 {expected}")
-            if expected is not None and entry.get("threat_points_status") != "confirmed_for_budget":
-                problems.append(f"{enemy_id} 的威胁点应该标成只用于预算")
-        elif enemy_id.startswith("boss_"):
-            if entry.get("threat_points") is not None:
-                problems.append(f"{enemy_id} 是预留首领，威胁点应为空")
-        else:
-            if entry.get("threat_points_status") != "level_design_placeholder":
-                problems.append(f"{enemy_id} 的威胁点还没定，要标成占位")
-            threat = entry.get("threat_points")
-            if not isinstance(threat, int) or threat <= 0:
-                problems.append(f"{enemy_id} 的占位威胁不是正数")
-    for enemy_id in BUDGET_THREATS:
+        if STAT_KEYS & set(entry) or "threat_points" in entry:
+            problems.append(f"{enemy_id} 不应该再抄生命、移速、护甲或威胁点")
+        bucket = "bosses" if enemy_id.startswith("boss_") else "enemies"
+        expected_source = f"data/balance/combat/stats.json#/{bucket}/{enemy_id}/threat_points"
+        if entry.get("threat_points_source") != expected_source:
+            problems.append(f"{enemy_id} 的威胁点要指向 {expected_source}")
+        elif stats is not None and pointer_value(stats, expected_source) is None:
+            print(f"警告：{enemy_id} 在 stats.json 里还没有威胁点，跳过这项核对。", file=sys.stderr)
+        expected_key = f"enemy.{enemy_id}.name"
+        if entry.get("display_name_key") != expected_key:
+            problems.append(f"{enemy_id} 的文本 key 应该是 {expected_key}")
+        expected_status = "decided" if enemy_id in decided_names else "pending_文案策划"
+        if entry.get("name_status") != expected_status:
+            problems.append(f"{enemy_id} 的名字状态应该是 {expected_status}")
+        problems.extend(json_number_problems(entry, enemy_id, set()))
+    for enemy_id in KNOWN_ENEMIES:
         if enemy_id not in by_id:
             problems.append(f"缺少敌人 {enemy_id}")
     for enemy_id in ("enm_shade_phantom", "enm_shade_heap", "enm_shade_rift", "enm_shade_flying"):
@@ -911,12 +954,31 @@ def stub_wave_problems(level: dict) -> list[str]:
     return wave_count_span_problems(level, level["wave_count"])
 
 
+def stale_reference_problems() -> list[str]:
+    """旧的首通字段名不能再出现在关卡数据和说明里。"""
+    needle = "expected_first_clear_" + "lives"
+    problems: list[str] = []
+    paths = [ROOT / "CHANGELOG.md"]
+    for folder in (LEVEL_DIR, ROOT / "docs"):
+        paths.extend(path for path in folder.rglob("*") if path.is_file())
+    for path in paths:
+        if path.suffix not in {".md", ".json", ".gd"}:
+            continue
+        if path.name == "level_difficulty.json":
+            continue
+        text = path.read_text(encoding="utf-8")
+        if needle in text:
+            problems.append(f"{path.relative_to(ROOT)} 还在引用旧的首通字段")
+    return problems
+
+
 def main() -> int:
     schema = load_json(SCHEMA_PATH)
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
     index = load_json(LEVEL_DIR / "index.json")
     difficulty = load_difficulty(BALANCE_PATH)
+    stats = load_stats(STATS_PATH)
     catalog = load_json(LEVEL_DIR / "enemy_catalog.json")
     roster = load_json(LEVEL_DIR / "character_roster.json")
     rating = load_json(LEVEL_DIR / "rating.json")
@@ -926,17 +988,13 @@ def main() -> int:
         for problem in roster_errors:
             print(f"  - {problem}", file=sys.stderr)
         return 1
-    catalog_errors, catalog_ids = catalog_problems(catalog)
+    catalog_errors, catalog_ids = catalog_problems(catalog, stats)
     if catalog_errors:
         print("敌人图鉴:", file=sys.stderr)
         for problem in catalog_errors:
             print(f"  - {problem}", file=sys.stderr)
         return 1
-    threats = {
-        enemy_id: entry["threat_points"]
-        for enemy_id, entry in catalog_ids.items()
-        if entry.get("threat_points") is not None
-    }
+    threats = threat_table(stats)
     playable = {character["id"]: character["playable"] for character in roster["characters"]}
     levels = {}
     failed = False
@@ -953,14 +1011,20 @@ def main() -> int:
             problems.extend(geometry_problems(level))
             problems.extend(boss_problems(level))
             problems.extend(timing_problems(level))
-            row = difficulty.get("levels", {}).get(level["id"], {})
-            budgets = row.get("wave_threat_budgets", [])
-            problems.extend(threat_problems(level, threats, budgets, set(catalog_ids)))
-            if row:
-                problems.extend(composition_problems(level, threats, row))
+            problems.extend(composition_problems(level, threats or {}))
+            problems.extend(scripted_event_problems(level))
+            if difficulty is not None and threats is not None:
+                row = difficulty.get("levels", {}).get(level["id"])
+                if not isinstance(row, dict):
+                    problems.append("难度表里没有这一关")
+                else:
+                    problems.extend(threat_problems(level, threats, row, set(catalog_ids)))
+            elif difficulty is not None:
+                print(f"警告：{level['id']} 有难度表但没有属性表，威胁核对已跳过。", file=sys.stderr)
         else:
             problems.extend(stub_wave_problems(level))
-        problems.extend(roster_problems(level, playable))
+        problems.extend(teaching_problems(level))
+        problems.extend(roster_problems(level, playable, stats))
         problems.extend(boss_identity_problems(level))
         problems.extend(route_plan_problems(level))
         if level["placeholders"].get("_placeholder") is not True:
@@ -975,17 +1039,15 @@ def main() -> int:
     ordered = [levels[entry["id"]] for entry in index["levels"] if entry["id"] in levels]
     problems = index_problems(index, levels)
     problems.extend(unlock_chain_problems(ordered))
-    problems.extend(difficulty_problems(ordered, difficulty))
-    if isinstance(difficulty.get("levels"), dict):
-        problems.extend(curve_problems(ordered, difficulty["levels"]))
-    problems.extend(rating_problems(rating))
+    problems.extend(rating_problems(rating, stats))
+    problems.extend(stale_reference_problems())
     if problems:
         failed = True
-        print("索引 / 曲线 / 星级:", file=sys.stderr)
+        print("索引 / 星级:", file=sys.stderr)
         for problem in problems:
             print(f"  - {problem}", file=sys.stderr)
     else:
-        print("索引、难度曲线、星级: 通过")
+        print("索引、星级: 通过")
     if failed:
         return 1
     print("全部通过")

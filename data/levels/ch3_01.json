@@ -15,8 +15,8 @@
   },
   "summary": "两条固定路线，外加一条短的避难路。有的残影去扑村民，暂名扑人残影，待文案定稿。咲夜从这一关起可放置，慧音要通关这一关才加入，都是提案，待文案。",
   "player_feeling": "比红魔馆首领关松。先只保护一条短路，别的路几乎不闹。",
-  "teaches": [
-    "有的残影会打村民而不是只冲守护点",
+  "teaches": "有的残影会打村民而不是只冲守护点",
+  "previews": [
     "慧音能让村民暂时不被发现",
     "漏掉村民和漏掉守护点不是同一件事"
   ],
@@ -47,7 +47,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": [
     "chr_keine"

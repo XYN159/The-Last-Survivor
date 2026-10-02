@@ -16,8 +16,8 @@
   },
   "summary": "琪露诺加入。第二个入口从这里开始，两种残影各走一门，雾更浓。",
   "player_feeling": "练习看两扇门。把减速放到长直段上。",
-  "teaches": [
-    "通关上一关后可以放琪露诺，减速能接住快残影",
+  "teaches": "通关上一关后可以放琪露诺，减速能接住快残影",
+  "previews": [
     "两个入口同时出怪，路线开战前就固定",
     "雾更浓时，预定槽位更要贴路"
   ],
@@ -367,7 +367,7 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
@@ -679,7 +679,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 1.0,

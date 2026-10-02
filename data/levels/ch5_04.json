@@ -7,18 +7,19 @@
   "index_in_chapter": 4,
   "display_name": "守门残影",
   "display_name_key": "level.ch5_04.name",
+  "display_name_status": "pending_文案策划",
   "kind": "boss",
   "route_type": "fixed_gates",
   "guard_point": {
     "id": "guard.barrier_node",
     "display_name": "结界的结点"
   },
-  "summary": "首领不是八云紫。紫从第一章末就在队里。这是忘派来的原创敌人，暂名「结界裂缝的守门残影」，待文案定名。它召唤会分裂、会隐形的残影，并按阶段开关几条固定路线的入口。",
+  "summary": "首领不是八云紫。紫从第一章末就在队里。这是忘派来的原创敌人，暂名「守门残影」，待文案定名。它召唤会分裂、会隐形的残影，并按阶段开关几条固定路线的入口。",
   "player_feeling": "第五章的总测验。路不挪，但入口和槽位会按阶段变。",
-  "teaches": [
-    "几条固定路线的入口按阶段打开或关掉，格子本身不改",
+  "teaches": "几条固定路线的入口按阶段打开或关掉，格子本身不改",
+  "previews": [
     "符卡可以用 ter_barrier 暂时挡住一些预定槽位",
-    "它会叫出遗忘残影和堆积残影。命到 0 才失败"
+    "它会叫出遗忘之影和堆积体。生命耗尽才失败"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [
@@ -41,14 +42,14 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领 id 是 boss_ch5_gatekeeper，显示名「结界裂缝的守门残影」，状态 pending_文案策划。不能用八云紫。她在 ch1_04 之后已经是盟友。玩法是第五章的综合测验：召唤会分裂的堆积残影和会隐形的遗忘残影。几条路线开战前就画好，阶段只开关入口。符卡把部分预定槽位变成 ter_barrier，持续一段时间，路线格子不动。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
+  "design_notes": "首领 id 是 boss_ch5_gatekeeper，显示名「守门残影」，状态 pending_文案策划。不能用八云紫。她在 ch1_04 之后已经是盟友。玩法是第五章的综合测验：召唤会分裂的堆积体和会隐形的遗忘之影。几条路线开战前就画好，阶段只开关入口。符卡把部分预定槽位变成 ter_barrier，持续一段时间，路线格子不动。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": []
 }

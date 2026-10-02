@@ -85,12 +85,12 @@
   },
   "summary": "和冰之残影符卡决斗。她是雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人。这一关仍能放琪露诺。血量到 66% 和 33% 时换符卡。冰柱占住几个预定槽位，最后一段路结冰。",
   "player_feeling": "热闹、赶，还有一点好笑。雾散开了，看得清哪几格在结冰。",
-  "teaches": [
-    "首领会沿固定路线走进来，并宣言符卡",
+  "teaches": "首领会沿固定路线走进来，并宣言符卡",
+  "previews": [
     "符卡按血量换，会改地形，而不只是放一段动画",
     "冰柱会占住预定槽位并挡住直线，冰面会让残影变快",
     "通关后八云紫加入。重打已经通关的关卡才能放她",
-    "命到 0 才失败。最后一波结束时还有命即胜利，首领关也一样"
+    "生命耗尽才失败。最后一波结束时还有命即胜利，首领关也一样"
   ],
   "new_character_ids": [],
   "new_enemy_ids": [],
@@ -328,7 +328,7 @@
     {
       "id": "w01",
       "wave_id": "w01",
-      "delay_sec": 4.0,
+      "delay_sec": 0,
       "next_wave_delay_sec": 4.0,
       "duration_sec": 20,
       "ends_when": "spawn_window",
@@ -767,7 +767,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 1.0,

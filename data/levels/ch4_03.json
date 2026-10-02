@@ -15,8 +15,8 @@
   },
   "summary": "第四章最难的普通关。飞行路有两段，地面路也不空。",
   "player_feeling": "忙着抬头。漏掉的飞行残影会直接摸到神社。",
-  "teaches": [
-    "反空要占格子，地面也会因此变空",
+  "teaches": "反空要占格子，地面也会因此变空",
+  "previews": [
     "射程和位置是同一道题"
   ],
   "new_character_ids": [],
@@ -44,7 +44,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": []
 }

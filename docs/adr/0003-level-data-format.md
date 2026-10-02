@@ -2,7 +2,7 @@
 
 - 状态：提议
 - 日期：2026-09-27
-- 补充：预定槽位、固定路线和星级见 ADR-0004。星级是通关 1 星、剩余达到数值策划定的比例得 2 星、满命 20/20 得 3 星。这篇里关于「任意空地可放」的说法以 ADR-0004 为准。
+- 补充：预定槽位、固定路线和星级见 ADR-0004。星级按剩余生命的绝对值，阈值以 `stars.thresholds_lives_left` 为准，按顺序对应 3 星、2 星、1 星。首通目标不参与星级。这篇里关于「任意空地可放」的说法以 ADR-0004 为准。
 
 ## 背景
 
@@ -14,10 +14,10 @@
 
 - 关卡放在 `data/levels/`。单关一个 JSON，另有索引、敌人图鉴、角色名单和星级规则。格式写在 `data/levels/level.schema.json`。
 - 给人看的说明写在 `docs/design/level/`。地图上的好位置既出现在说明里，也出现在 JSON 里。
-- 设计期用 `tools/validate_levels.py` 做严校验：地图必须是 7×12，路径必须连续，每一波威胁必须和难度表一致。CI 会跑它。
+- 设计期用 `tools/validate_levels.py` 做严校验：地图必须是 7×12，路径必须连续。难度表在的时候，每一波威胁和全关合计必须和它对上；难度表还不在仓库里时，只警告并跳过这项。CI 会跑它。
 - 游戏内加载器这次不写。以后写的时候要照 `BalanceConfig`：每个字段有默认值和地板，读坏了只警告，不让游戏闪退。严校验留在设计期，宽读取留在运行时。
-- 威胁预算、生命倍率和三选一归数值策划，放在 `data/balance/level_difficulty.json`。权威表在分支 `numeric/touhou-td-framework`。他们还没推出这一轮的整表，已推送的仍是上一轮系数，不能覆盖现在这七关。等新表推出后，合并时先合他们的 PR。约定的每一波预算是 `round((10 + 4 × 波次) × threat_budget_coef)`。MVP 七关已用第二轮系数，其余关的种子仍是 1.0。参考值首领约 1.3、下一章第 1 关约 0.85，先不套用。生命倍率是 `1 + 0.15 × (关卡序号 − 1)`，开局灵力 150，每活过一波加 20。首通剩余生命普通关 11–13、首领关约 10–11，关卡和数值已对齐，等制作人确认。
-- 地图字段跟战斗策划的读图约定一致：`cells` 用 `P` `.` `B` `S` `G`，路线是 `[列, 行]`，地形用 `ter_*`。敌人、角色、状态用 `enm_`、`chr_`、`st_`。生命、护甲和漏怪扣命不写进关卡图鉴。权威表是 `data/balance/combat/stats.json` 的 `enemies` 和 `bosses`。关卡只留威胁点。
+- 威胁预算和首通剩余生命归数值策划，放在 PR #8（分支 `numeric/touhou-td-framework`）的 `data/balance/level_difficulty.json`。本 PR 不附带这份文件，要在 #8 之后合并。用到的字段是 `levels.<level_id>.threat_budget_coef`、`wave_threat_budgets`、`threat_budget_total`、`target_lives_first_clear`。这里不抄系数、预算和首通数字。开局灵力和每活过一波加的灵力以 `data/balance/combat/stats.json` 的 `economy` 为准。
+- 地图字段跟战斗策划的读图约定一致：`cells` 用 `P` `.` `B` `S` `G`，路线是 `[列, 行]`，地形用 `ter_*`。敌人、角色、状态用 `enm_`、`chr_`、`st_`。生命、护甲、漏怪扣命和威胁点不写进关卡图鉴。权威表是 `data/balance/combat/stats.json` 的 `enemies` 和 `bosses`。图鉴只留指向这些字段的路径。
 - 不删除车道场景和旧的 GDD 正文。那些内容已经对不上新关卡，替换等制作人点头。
 
 这次故意不做的：

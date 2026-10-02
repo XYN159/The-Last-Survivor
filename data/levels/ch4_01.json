@@ -15,8 +15,8 @@
   },
   "summary": "地上一路、飞行一路，开战前就定好。地上的人打不到飞行残影。对空角色若是射命丸文并且可玩，通关这一关后加入。文现在不可玩，所以这一关不解锁新人。早苗要等本章首领之后。",
   "player_feeling": "比第三章首领关松。先看懂「地上的人打不到天上」。",
-  "teaches": [
-    "飞行残影不走地面路线",
+  "teaches": "飞行残影不走地面路线",
+  "previews": [
     "覆盖两条路的格子往往更远，射程不够就打空",
     "地上的人够不着飞行路，对空要等以后加入的角色"
   ],
@@ -49,7 +49,7 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20，写在 data/balance/level_difficulty.json。权威表在数值策划分支 numeric/touhou-td-framework，合并时先合他们的 PR，冲突时保留他们的文件。MVP 七关已按数值策划第二轮系数配平，其余关仍是系数 1.0 的种子。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "unlock_character_ids": []
 }
