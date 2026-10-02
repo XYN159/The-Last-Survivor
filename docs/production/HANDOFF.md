@@ -49,7 +49,7 @@
 
 模型：改脚本、场景、测试的程序任务用 Opus 5.5（派工时选 `claude-opus-5-5-high`）。策划、审核、文档和其他不写代码的任务用 Grok（派工时选 `grok-4.7-high`）。动效如果要改场景或脚本，也算写程序，用 Opus 5.5。
 
-正在跑的 [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 是 Grok，这一轮中途换不了模型，停手指令没有送进去。它一停，就让它不要推送、不要开 PR。序章第一关以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准。
+[bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 是 Grok，已经把分支 `cursor/prologue-01-playable-48f3` 推到 `119fe9c`，但没有 PR。不要给这个分支开 PR，也不要派美术和动效到这上面。序章第一关以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准。
 
 第一张卡：从塔防原型最新提交另开分支，把序章第一关 `prologue_01` 接到「开始」上，打完能结算。不推 PR #12。七关一起接、符卡、三选一都不在这张卡里。
 
@@ -238,7 +238,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 正在做：
 
 - **#12**：`81c5d04` 文案复审通过，汇总是可以合并。等用户点，不要自动合并。
-- **程序第一张卡**：以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准。Grok 的 [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 还在跑，停下来之后不要采用它的 PR。
+- **程序第一张卡**：以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准，还在做。Grok 已推 `cursor/prologue-01-playable-48f3` @ `119fe9c`，不给它开 PR。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
