@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "temporary",
+    "owner": "ui_motion",
+    "doc": "docs/design/ui_motion/prologue_01_motion.md",
+    "note": "动效师给的临时时长和幅度。正式数字等数值策划（#8）定，定了只改这份文件"
+  },
+  "entry": {
+    "veil_fade_sec": 0.5,
+    "bar_slide_sec": 0.45,
+    "board_fade_sec": 0.5,
+    "ofuda_delay_sec": 0.3,
+    "ofuda_drop_px": 70,
+    "ofuda_drop_sec": 0.5,
+    "ofuda_hold_sec": 1.6,
+    "ofuda_fade_sec": 0.4,
+    "barrier_delay_sec": 0.35,
+    "barrier_sec": 0.9,
+    "slot_sweep_step_sec": 0.12,
+    "slot_sweep_sec": 0.5
+  },
+  "slot": {
+    "breath_sec": 0.8,
+    "select_snap_sec": 0.14
+  },
+  "place": {
+    "land_sec": 0.25,
+    "land_from_scale": 1.35,
+    "seal_sec": 0.5,
+    "mote_count": 6,
+    "mote_sec": 0.6
+  },
+  "sell": {
+    "mote_count": 6,
+    "mote_sec": 0.5
+  },
+  "button": {
+    "hover_scale": 1.05,
+    "press_scale": 0.94,
+    "press_sec": 0.06,
+    "release_sec": 0.18,
+    "flash_sec": 0.24,
+    "ring_px": 12
+  },
+  "damage_number": {
+    "pop_sec": 0.1,
+    "from_scale": 0.6,
+    "fade_sec": 0.2
+  },
+  "hit": {
+    "spark_count": 3,
+    "spark_sec": 0.22
+  },
+  "kill": {
+    "puff_sec": 0.12
+  },
+  "guard_hit": {
+    "ring_sec": 0.5,
+    "shake_px": 8,
+    "shake_sec": 0.3
+  },
+  "hint": {
+    "shake_px": 10,
+    "shake_sec": 0.25,
+    "fade_sec": 0.15
+  },
+  "wave_label": {
+    "pop_scale": 1.2,
+    "pop_sec": 0.25
+  },
+  "panel": {
+    "pop_sec": 0.15
+  },
+  "result": {
+    "dim_sec": 0.3,
+    "card_sec": 0.4,
+    "title_delay_sec": 0.2,
+    "title_from_scale": 1.4,
+    "title_sec": 0.3,
+    "seal_sec": 0.6,
+    "seal_spin_per_sec": 0.25,
+    "button_delay_sec": 0.45,
+    "button_stagger_sec": 0.08,
+    "button_sec": 0.2
+  },
+  "transition": {
+    "leave_sec": 0.25
+  }
+}
