@@ -35,9 +35,9 @@
 
 截至 2026-10-02（UTC+8）的进度：
 
-- **已改完，可以合并**：#3、#4、#6。#2 的文字也改完了，但要等 #4、#5 合并后再合。
-- **#5**：只差 ch1_04。等 #8 把系数定在 0.70～0.74（数值策划定，不问用户），再把 `enter_wave` 设为 11。
-- **#8**：正在改 ch1_04 系数，以及战斗要的几个字段。D-01 已定（用户，经关卡策划）：第 11 波登场，血量不加成。不再阻塞 MVP。
+- **已改完，可以合并**：#3、#4、#6、#8。#2 的文字也改完了，但要等 #4、#5 合并后再合。#4 的空档已改成窗口结束后固定 4 秒（`ad8ab29`）。#6 的默认符卡已按 D-04 写成定案（`fe0f3d5`）。
+- **#5**：`enter_wave` 已是 11（`822ae26`）。出怪数量还没按 #8 锁定的 0.74 重排。
+- **#8**：ch1_04 系数锁定 0.74（`ac47c18`）。第 11 波登场，血量不加成。叫波一次最多 +20。第 2 到 5 章首领关还没按新规则重跑。
 - **#12**（T-00 原型）：在返工，清单见 [`HANDOFF.md`](HANDOFF.md) 第 4 节。不插进下面的设计文档顺序。
 - **#13**（角色手册）：待用户审核。建议和 #11 一起看，或者紧跟在 #11 后面。
 - **#14**（T-19a 概念图）：用户已选定四人 v2、紫的半褪用 v2。`01fe51c` 已用仓库里的 Noto Sans SC 重画总览中文，并写明选定版本。不插进下面的设计文档顺序。等用户合并。
@@ -48,9 +48,9 @@
 | --- | --- | --- | --- |
 | 1 | #7 修 CI | `cursor/fix-android-export-brace-2717` | 先让 main 的 export-android 变绿 |
 | 2 | #3 GDD / ROADMAP | `docs/gdd-touhou-td` | 已改完，待合并 |
-| 3 | #8 数值 | `numeric/touhou-td-framework` | 正在改 ch1_04 系数和战斗要的字段 |
+| 3 | #8 数值 | `numeric/touhou-td-framework` | 系数 0.74 和战斗字段已写入，待合并 |
 | 4 | #4 战斗 | `cursor/docs-combat-rules-354a` | 已改完，待合并 |
-| 5 | #5 关卡 | `cursor/design-level-framework-01a3` | 等 #8 定下 0.70～0.74 的系数后，把 `enter_wave` 设为 11 |
+| 5 | #5 关卡 | `cursor/design-level-framework-01a3` | `enter_wave` 已是 11。出怪数量还没按 0.74 重排 |
 | 6 | #2 叙事 | `docs/touhou-narrative-draft` | 文字已改完。等 #4、#5 合并后可以合并 |
 | 7 | #6 美术 | `docs/art-framework` | 已改完，待合并 |
 | 8 | #9 QA | `cursor/docs-qa-plan-fc39` | 设计文档齐了再合。合之前把已经关掉的 DI 标成已解决 |
@@ -84,12 +84,12 @@
 4. 删掉「标题画面可能还写着 The Last Survivor」（A-18）。
 5. 加「从当前波重来」的快照字段表（A-11）。
 
-**#8 数值（数值）**：正在改。D-01 已定（用户，经关卡策划），不再问用户。
+**#8 数值（数值）**：`ac47c18` 已写入。系数 0.74，第 11 波，血量不乘倍率，叫波上限 20。
 
 1. 从草稿转为可审。
 2. README §7 差异表里的「#4 冰面 ×1.4」「#4 质变 3 层」已经过时，删掉（A-09）。
 3. `data/characters.csv` 里「灵符「封魔阵」」改成「梦符「封魔阵」」（A-09）。
-4. ch1_04：第 11 波登场，Boss 血量不加成。系数在 0.70～0.74 里由数值定（现在是 0.25），重新生成 `level_difficulty.json`。同时补战斗要的几个字段。
+4. ch1_04：第 11 波登场，Boss 血量不加成。系数锁定 0.74。战斗字段和叫波上限已补进 `stats.json`。
 5. 补一行 `CHANGELOG.md`。
 
 **#4 战斗（战斗，部分跟数值）**：已改完，待合并。合并前核对过这些：
@@ -105,12 +105,12 @@
 9. D-04 拍板后，灵梦默认符卡定稿（`characters.md` 第 14、79 行，`characters.json`）。
 10. `rules.json` 的 `mvp_wave_count_max` 不当成硬上限；§6 第 1 条「GDD 仍是旧车道」删掉（A-18）。
 
-**#5 关卡（关卡，部分跟数值）**：只差 ch1_04，等 #8 换上修正系数。
+**#5 关卡（关卡，部分跟数值）**：`enter_wave` 已是 11（`822ae26`）。出怪数量还没按 0.74 重排。
 
 1. `level_difficulty.json` 以 #8 为准。`tools/validate_levels.py`（`CALIBRATED_COEFS`、`status: seed`）和 `tests/unit/test_level_data.gd` 改成读 #8 的值（A-01）。
 2. `enemy_catalog.json` 和 `rating.json` 不再自带数字，改成引用 #8（A-01、A-06）。
 3. 撤掉对 `docs/GDD.md` 的修改（顶部横幅），以 #3 为准（A-18）。
-4. ch1_04 等 #8 的修正系数。D-01 已定：`enter_wave` 改为 11，`enters_at_wave_id`、`prelude_wave_ids`、`is_boss` 跟着改。Boss 血量不加成。
+4. ch1_04：`enter_wave` 已改为 11，`enters_at_wave_id`、`prelude_wave_ids`、`is_boss` 已跟着改。Boss 血量不加成。系数 0.74 已锁定，编组还没重排。
 5. `prologue_0*.md` 里的旧文本 key 换成新格式（A-16）。
 6. 24 关表的 ch1_03 一行补上硬残影（A-02）。
 7. `teaches` 字段分开写主教学点和「提前看见」（A-14）。
