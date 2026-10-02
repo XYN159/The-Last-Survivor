@@ -14,7 +14,7 @@ assets/models/       三维模型（glb 等）
 assets/textures/     图片
 data/balance/        数值 JSON。调平衡改这里
 scenes/main/         标题等流程场景
-scenes/battle/       战斗场景。现在里面仍是已作废的占位车道，以后换成塔防原型
+scenes/battle/       战斗场景。现在里面仍是已作废的占位车道（目录名暂不改），以后换成塔防原型
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
 scripts/balance/     数值配置的读取和计算
@@ -39,7 +39,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
 | `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」 |
-| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 已作废的占位车道和「返回」。塔防原型会换掉这个场景 |
+| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 已作废的占位车道和「返回」。逻辑先留着，塔防原型会换掉这个场景 |
 
 场景脚本不写 `class_name`，用节点路径和 `%唯一名` 找按钮。纯数据类才写 `class_name`，例如 `BalanceConfig` 和 `SaveGame`，这样测试和其他脚本都能直接用类型。
 
@@ -66,7 +66,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 ## 数值配置
 
-平衡数字放在 `data/balance/`。现在文件还是旧的 `data/balance/starting_balance.json`。下面三个字段来自已经作废的车道设定（小队人数、加人门、物资）。文件先留着，等做塔防原型时再改内容和字段名。这次不动这个文件，也不改 `export_presets.cfg`。
+平衡数字放在 `data/balance/`。现在文件还是旧的 `data/balance/starting_balance.json`。下面这些字段仍是旧占位原型在用（小队人数、加人门、物资），塔防数值以后另写，不要把这里当成新玩法的定案。文件先留着，等做塔防原型时再改内容和字段名。
 
 新玩法的数字以后仍放在 `data/balance/`，不写死在场景脚本里。攻击、护甲、波次这些还没定，不要提前把新数字写进这个旧文件。
 
@@ -107,7 +107,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 Android 预设在 `export_presets.cfg`，预设名是 `Android`。
 
 - 使用引擎自带的调试 APK 模板，不开启 Gradle 自定义构建。这样 CI 不必编译 Java 工程。
-- 包名 `com.xyn159.thelastsurvivor`。
+- 包名 `com.xyn159.touhouforgottendefense`。应用名是「东方守幻录」。游戏还没发布过，改包名没有旧安装包要兼容。
+- 调试 APK 文件名是 `touhou-forgotten-defense-debug.apk`。
 - 只打 `arm64-v8a`，覆盖当前绝大多数手机。
 - 版本名留空，导出时采用 `project.godot` 里的 `application/config/version`。
 - 证书三项都留空。调试证书来自本机 Godot 的编辑器设置，或 CI 里的环境变量 `GODOT_ANDROID_KEYSTORE_DEBUG_PATH`、`GODOT_ANDROID_KEYSTORE_DEBUG_USER`、`GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD`。
@@ -117,12 +118,9 @@ Android 预设在 `export_presets.cfg`，预设名是 `Android`。
 
 ## 工程里的旧名字（以后再改代码）
 
-GitHub 仓库名是 **touhou-forgotten-defense**。改名在仓库设置里由你自己操作。下面这些仍是工程和安装包里的旧名字，这次不改配置：
+GitHub 仓库名已经是 **touhou-forgotten-defense**。`project.godot` 的游戏名、`export_presets.cfg` 的安装包显示名和包名，也已经改成《东方守幻录》和 `com.xyn159.touhouforgottendefense`。调试 APK 文件名是 `touhou-forgotten-defense-debug.apk`。
 
-- `project.godot` 里的游戏名仍是 `The Last Survivor`，描述仍是「竖屏安卓生存策略游戏」。
-- `export_presets.cfg` 里的安装包显示名仍是 `The Last Survivor`，包名仍是 `com.xyn159.thelastsurvivor`。
-
-玩家看见的名字要改成《东方守幻录》时，另开 PR 改这两处，并在那个 PR 里说明安卓包名一改，手机上会当成另一个应用。
+还没改掉的是占位玩法本身：战斗场景仍是旧车道，数值文件里仍是小队人数和物资。这些按上面「方向已经改了」处理，等塔防原型再换，不要按旧字段做新功能。
 
 ## 多人与服务器（已作废）
 

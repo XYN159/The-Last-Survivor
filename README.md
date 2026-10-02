@@ -1,60 +1,62 @@
 # 东方守幻录
 
-GitHub 仓库名是 **touhou-forgotten-defense**（`XYN159/touhou-forgotten-defense`）。游戏暂定名是《东方守幻录》。改名由你在 GitHub 仓库设置里自己操作。
-
 [![CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml/badge.svg)](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)
 
-东方 Project 的同人游戏，个人制作，免费，放在 GitHub 上，不商业化。原作权利归上海爱丽丝幻乐团 / ZUN。本作与官方无关。二次创作遵守 [ZUN 的二次创作指南](https://touhou-project.news/guideline/)（2024 年 5 月 31 日更新）。
+英文仓库名：**touhou-forgotten-defense**
 
-玩法是单机竖屏角色塔防：把角色放到路上守住目标，每打完 5 波从三个强化里选一个。设计总纲在 [`docs/GDD.md`](docs/GDD.md)。以前的末日车道、加人、基地建筑和 SLG 已经作废。
+《东方守幻录》是个人制作的 **东方Project 同人**游戏，免费、非商业，发布在 GitHub。玩法是 **竖屏角色塔防**，局外和局内有轻度 roguelite 增益。它 **不是弹幕射击**。
 
-现在打开工程，看到的还是旧标题和一条占位车道，用来确认 Godot 和自动打包是通的。那条车道的玩法不要再做，以后换成塔防原型。这次只改了文档，场景还没换。
+这是粉丝作品，不是上海爱丽丝幻乐团的官方游戏。创作和发布遵守 ZUN 的[东方二次创作规约](https://touhou-project.news/guideline/)（[英文](https://touhou-project.news/guidelines_en/)）：写明同人身份，不冒充官方，不使用官方游戏素材。手机同人游戏按规约免费发布。本仓库不收费，也不做商业用途。以官方页面为准。
 
-当前引擎版本写在 [`godot-version.txt`](godot-version.txt)：**Godot 4.7.2**。请使用标准版（GDScript），不要用 .NET 版。
+现在能玩的还是占位原型：标题画面，加上一个用来确认场景能切换的旧画面。那条旧车道的玩法已经作废，不要按它继续做。塔防原型正在做。设计总纲在 [`docs/GDD.md`](docs/GDD.md)。
 
-## 在 Windows 上打开并运行
+引擎是 **Godot 4.7.2** 标准版（GDScript），版本写在 [`godot-version.txt`](godot-version.txt)。不要用带 .NET 的编辑器。
 
-完整的安装步骤在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。最短路径：
+仓库地址：<https://github.com/XYN159/touhou-forgotten-defense>
 
-1. 安装 Git（勾选 Git LFS）和 Godot 4.7.2。
-2. 克隆这个仓库。
-3. 用 Godot 打开 `project.godot`。
-4. 按 `F5`。标题画面出现后，点「开始」会进入一条占位车道（旧画面，玩法已作废），再点「返回」。
+## 在电脑上跑起来
 
-想左边放 Cursor、右边放正在跑的游戏，并让 AI 的改动直接进到画面里，按 [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) 做。桌面窗口是 540×960，逻辑分辨率仍是 1080×1920。
+完整步骤在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。最短的做法：
 
-## 从 CI 下载 APK
+1. 安装带 Git LFS 的 Git，以及 Godot 4.7.2。
+2. 克隆本仓库。已经克隆过旧地址时，不必重下，在仓库目录执行 `git remote set-url origin https://github.com/XYN159/touhou-forgotten-defense.git`。
+3. 用 Godot 打开 `project.godot`，按 `F5`。
+4. 标题应是 **东方守幻录**。点「开始」进入占位画面，再点「返回」。
 
-每次向 `main` 推送、以及每个拉取请求，GitHub Actions 都会检查代码、跑测试，并打出一个调试版 APK。
+左边放 Cursor、右边放正在跑的游戏，按 [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md)。桌面窗口是 540×960，游戏逻辑分辨率仍是 1080×1920。
 
-1. 打开 [Actions](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)。
-2. 点开一次成功的 **CI** 运行。
-3. 在页面底部的 **Artifacts** 里下载 `the-last-survivor-android-debug`。这个文件名还写在 CI 里，这次不改。
-4. 解压得到 `the-last-survivor-debug.apk`，传到手机上安装。文件名同样还是旧的。
+## 下载调试 APK
 
-这个 APK 用的是调试证书，只能自己安装试用，不能上传到 Google Play。手机上安装调试包的步骤也写在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。
+每次拉取请求，以及推送到 `main`，GitHub Actions 都会检查代码、跑测试，并打出调试 APK。
 
-打上形如 `v0.1.0` 的标签后，[Release 工作流](.github/workflows/release.yml) 会把同样的调试 APK 挂到对应的 GitHub Release 上。
+1. 打开 [Actions 里的 CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)。
+2. 点开一次成功的运行。
+3. 在页面底部的 **Artifacts** 下载 `touhou-forgotten-defense-android-debug`。
+4. 解压得到 `touhou-forgotten-defense-debug.apk`，拷到手机安装。
 
-## 文档索引
+这个包用调试证书签名，只能自己试用，不能上架 Google Play。手机安装步骤也在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。
+
+打上 `v0.1.0` 这种标签后，[Release 工作流](.github/workflows/release.yml) 会把调试 APK 挂到对应的 GitHub Release，文件名类似 `touhou-forgotten-defense-v0.1.0-debug.apk`。
+
+## 文档
 
 | 文档 | 内容 |
 | --- | --- |
-| [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md) | Windows 上安装 Git、Godot、Cursor，以及怎么跑起来 |
-| [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) | 左边 Cursor、右边游戏：外部编辑器、运行时同步、真机部署、scrcpy、Agent |
+| [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md) | 在 Windows 上安装 Git、Godot、Cursor，并把游戏跑起来 |
+| [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md) | 左边 Cursor、右边游戏：外部编辑器、运行时同步、真机、scrcpy |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 分支、提交、审查、合并、发版 |
-| [`docs/GDD.md`](docs/GDD.md) | 玩法总纲，以及需要你亲自拍板的部分 |
+| [`docs/GDD.md`](docs/GDD.md) | 玩法总纲。标成「待你补充」的部分要你来定 |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | 目录、场景、数值、存档。旧的车道字段和服务器计划已作废 |
 | [`docs/CODING_STYLE.md`](docs/CODING_STYLE.md) | GDScript 写法 |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | 从塔防原型到 7 关 MVP，再到完整 24 关 |
-| [`docs/BRANCH_PROTECTION.md`](docs/BRANCH_PROTECTION.md) | 你需要在 GitHub 网页上亲手打开的分支保护 |
+| [`docs/BRANCH_PROTECTION.md`](docs/BRANCH_PROTECTION.md) | 在 GitHub 网页上打开 `main` 的分支保护 |
 | [`docs/adr/`](docs/adr/) | 已经定下来的技术决定 |
 | [`CHANGELOG.md`](CHANGELOG.md) | 更新日志 |
-| [`AGENTS.md`](AGENTS.md) | 以后帮你写代码的 AI 要遵守的规则 |
+| [`AGENTS.md`](AGENTS.md) | 帮你改代码的 AI 要遵守的规则 |
 
 ## 第三方组件
 
-- [GUT](https://github.com/bitwes/Gut) 9.7.1，单元测试插件，MIT 许可证，见 `addons/gut/LICENSE.md`。不要手改这个目录。
-- [Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC)，界面中文字体。许可证全文在 `assets/fonts/OFL.txt`（英文原文，按许可证要求原样保留）。仓库里放的是只含常用汉字区的子集，方便打包。
+- [GUT](https://github.com/bitwes/Gut) 9.7.1：单元测试插件，MIT 许可证，见 `addons/gut/LICENSE.md`。不要手改这个目录。
+- [Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC)：界面中文字体。许可证原文在 `assets/fonts/OFL.txt`（英文，按许可证要求原样保留）。仓库里是常用汉字区的子集，方便打包。
 
-游戏按制作人的决定免费发布、不商业化。仓库代码用哪一种开源许可证还没定。在你选定之前，不要把仓库改成「默认允许别人拿去商用」。同人作品还要同时遵守文首写的二次创作指南。
+游戏本身的许可证还没定。在你选定之前，不要把仓库改成「默认允许别人随便拿去商用」。

@@ -41,14 +41,14 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
 theme_override_font_sizes/font_size = 64
-text = "The Last Survivor"
+text = "东方守幻录"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.74, 0.42, 1)
 theme_override_font_sizes/font_size = 36
-text = "最后的幸存者"
+text = "Touhou Forgotten Defense"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="CenterColumn"]
@@ -63,7 +63,7 @@ text = "开始"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
 theme_override_font_sizes/font_size = 26
-text = "工程骨架：用来确认编辑器和安装包流程。"
+text = "占位原型。角色塔防正在开发。"
 horizontal_alignment = 1
 autowrap_mode = 3
 
