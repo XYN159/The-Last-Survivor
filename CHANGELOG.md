@@ -11,7 +11,7 @@
 
 ### 新增
 
-- 执行制作人交接写在 `docs/production/HANDOFF.md`。MVP 计划补上 T-19a（已选定 v2；总览中文已在 PR #14 `01fe51c` 重画）、T-19b、T-20，以及 T-00 的返工清单。
+- 执行制作人交接写在 `docs/production/HANDOFF.md`。Grok Bot 暂停后，派工由执行制作人直接发给原来的 Cursor agent。T-19b 等 #14 和 #12 都合并；T-20 和 T-02 等 #12 合并；T-01 等 A-01。
 - 建立 Godot 4.7.2 竖屏工程，包含标题画面和占位战斗车道。
 - 加入 GDScript 格式检查、GUT 单元测试，以及调试版 Android APK 的持续集成。CI 固定在 Ubuntu 24.04 上运行。
 - 写好协作文档、玩法草案、架构说明和架构决定记录。
