@@ -72,7 +72,7 @@ icicle_pillar,地形,一阶段冰柱：落在放置格上，挡直线12秒，灰
 ui_slot_bubble,界面,长按放置格的符纸气泡：显示 label 和 why,最大宽420，高约120-160 / 2倍九宫格,assets/textures/ui/ui_slot_bubble.png,P1,自绘,未开始,例：分叉之前 / 只贴左路。不画常驻角标。待确认8，待制作人定
 ui_guide_highlight,界面,序章引导高亮框：一格大的符纸金框，四角符纸角饰,128×128 / 256×256,assets/textures/ui/ui_guide_highlight.png,P1,自绘,未开始,只罩序章正在讲的推荐格。第一章起不画。待确认8
 portrait_expressions,立绘,立绘表情差分（普通/得意/慌张）,脸部拆件,assets/textures/portraits/,P2,自绘,未开始,
-spell_fx_fantasy_seal,特效,灵符「梦想封印」：7 颗大光弹,按效果,assets/textures/vfx/spell_fx_fantasy_seal.png,P2,自绘,未开始,第二张，优先级比封魔阵降一档。战斗数据 sc_fantasy_seal：7 颗，0.8 秒飞到目标。战斗稿里它仍是灵梦的默认符卡
+spell_fx_fantasy_seal,特效,灵符「梦想封印」：7 颗大光弹,按效果,assets/textures/vfx/spell_fx_fantasy_seal.png,P2,自绘,未开始,第二张，优先级比封魔阵降一档。战斗数据 sc_fantasy_seal：7 颗，0.8 秒飞到目标。默认符卡已定为梦符「封魔阵」
 vfx_batch2,特效,第二批：震屏（程序）、慢动作暗角、连击×N、联动小字、强化质变外观,按效果,assets/textures/vfx/,P2,自绘/程序,未开始,PR #4 第二批
 app_icon,界面,新的应用图标（替换 icon.svg）,512×512,icon.svg,P2,自绘,未开始,改名要另开程序PR
 star_cosmetics_later,外观（星星解锁）,全新服装、小配件替换、立绘边框、界面主题、剧情插图,按类型,待定,P2,自绘,未开始,非MVP。全新服装以后再做，见风格指南第8节
