@@ -6,7 +6,7 @@
 
 ### 变更
 
-- 界面原画二十张已交 PR #19。还没接程序。符纸和个别小字仍有假字。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
+- 用户点头，二十张界面原画可以进游戏。游戏介绍已写进 PR #19 的 `README.md`。接到序章里的程序另派。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 横屏序章动效已交 PR #18，基线是 PR #17。竖屏动效分支仍不另开 PR。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户给出界面模版。先由 GPT 画原画，不写程序。Demo 最小闭环是主界面、关卡选择、编队、战斗、结算、角色详情，加上剧情对话。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户否决序章第一版画面。PR #12 仍是色块原型，序章是 PR #16。GPT 重画已交 PR #17。旧动效分支 `cursor/prologue-01-motion-3241` 不另开 PR。新动效按 PR #17 另派。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
