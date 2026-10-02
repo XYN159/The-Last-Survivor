@@ -50,17 +50,17 @@ Godot 不需要安装到系统里，这个 exe 就是编辑器。Cursor 里写�
 
 ```bash
 cd /c/Users/你的用户名/Documents
-git clone https://github.com/XYN159/touhou-forgotten-defense.git
-cd touhou-forgotten-defense
+git clone https://github.com/XYN159/Touhou-forgotten-defense.git
+cd Touhou-forgotten-defense
 ```
 
 仓库在 GitHub 上改名之后，用上面的地址。电脑里如果已经克隆过旧地址，不必删掉重来。在旧文件夹里执行：
 
 ```bash
-git remote set-url origin https://github.com/XYN159/touhou-forgotten-defense.git
+git remote set-url origin https://github.com/XYN159/Touhou-forgotten-defense.git
 ```
 
-本地文件夹可以继续用原来的名字，也可以自己改成 `touhou-forgotten-defense`。文件夹叫什么不影响游戏。
+本地文件夹可以继续用原来的名字，也可以自己改成 `Touhou-forgotten-defense`。文件夹叫什么不影响游戏。
 
 克隆完成后，`assets/fonts/NotoSansSC-Regular.ttf` 应该是一个大约 7MB 的字体文件，而不是几行 `version https://git-lfs.github.com/spec/v1` 文本。如果是文本，执行 `git lfs pull`。
 

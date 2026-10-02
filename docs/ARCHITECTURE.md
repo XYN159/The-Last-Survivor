@@ -118,7 +118,7 @@ Android 预设在 `export_presets.cfg`，预设名是 `Android`。
 
 ## 工程里的旧名字（以后再改代码）
 
-GitHub 仓库名已经是 **touhou-forgotten-defense**。`project.godot` 的游戏名、`export_presets.cfg` 的安装包显示名和包名，也已经改成《东方守幻录》和 `com.xyn159.touhouforgottendefense`。调试 APK 文件名是 `touhou-forgotten-defense-debug.apk`。
+GitHub 仓库是 **XYN159/Touhou-forgotten-defense**。`project.godot` 的游戏名、`export_presets.cfg` 的安装包显示名和包名，也已经改成《东方守幻录》和 `com.xyn159.touhouforgottendefense`。调试 APK 文件名是 `touhou-forgotten-defense-debug.apk`。
 
 还没改掉的是占位玩法本身：战斗场景仍是旧车道，数值文件里仍是小队人数和物资。这些按上面「方向已经改了」处理，等塔防原型再换，不要按旧字段做新功能。
 

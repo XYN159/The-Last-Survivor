@@ -1,8 +1,8 @@
 # 东方守幻录
 
-[![CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml/badge.svg)](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)
+[![CI](https://github.com/XYN159/Touhou-forgotten-defense/actions/workflows/ci.yml/badge.svg)](https://github.com/XYN159/Touhou-forgotten-defense/actions/workflows/ci.yml)
 
-英文仓库名：**touhou-forgotten-defense**
+仓库：**XYN159/Touhou-forgotten-defense**
 
 《东方守幻录》是个人制作的 **东方Project 同人**游戏，免费、非商业，发布在 GitHub。玩法是 **竖屏角色塔防**，局外和局内有轻度 roguelite 增益。它 **不是弹幕射击**。
 
@@ -12,14 +12,14 @@
 
 引擎是 **Godot 4.7.2** 标准版（GDScript），版本写在 [`godot-version.txt`](godot-version.txt)。不要用带 .NET 的编辑器。
 
-仓库地址：<https://github.com/XYN159/touhou-forgotten-defense>
+仓库地址：<https://github.com/XYN159/Touhou-forgotten-defense>
 
 ## 在电脑上跑起来
 
 完整步骤在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。最短的做法：
 
 1. 安装带 Git LFS 的 Git，以及 Godot 4.7.2。
-2. 克隆本仓库。已经克隆过旧地址时，不必重下，在仓库目录执行 `git remote set-url origin https://github.com/XYN159/touhou-forgotten-defense.git`。
+2. 克隆本仓库。已经克隆过旧地址时，不必重下，在仓库目录执行 `git remote set-url origin https://github.com/XYN159/Touhou-forgotten-defense.git`。
 3. 用 Godot 打开 `project.godot`，按 `F5`。
 4. 标题应是 **东方守幻录**。点「开始」进入占位画面，再点「返回」。
 
@@ -29,7 +29,7 @@
 
 每次拉取请求，以及推送到 `main`，GitHub Actions 都会检查代码、跑测试，并打出调试 APK。
 
-1. 打开 [Actions 里的 CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)。
+1. 打开 [Actions 里的 CI](https://github.com/XYN159/Touhou-forgotten-defense/actions/workflows/ci.yml)。
 2. 点开一次成功的运行。
 3. 在页面底部的 **Artifacts** 下载 `touhou-forgotten-defense-android-debug`。
 4. 解压得到 `touhou-forgotten-defense-debug.apk`，拷到手机安装。
