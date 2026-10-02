@@ -1,7 +1,48 @@
 {
   "schema_version": 1,
   "_owner": "数值策划",
-  "note": "本文件由 tools/numeric/gen_level_json.py 从 data/balance/level_difficulty.csv 生成（数值策划 PR 覆盖关卡策划 PR #5 的同名文件），改数请改 CSV 后重跑。confirmed 段保持关卡策划原样。每波威胁预算 = round((10 + 4 × 波次) × 本关系数)，data/levels 里各关的编组需要按 wave_threat_budgets 重新凑（请关卡策划配合）。",
+  "status": "numbers_calibrated",
+  "comments": [
+    "owner: 数值策划",
+    "status: numbers_calibrated（tools/numeric/gen_level_json.py 从 data/balance/level_difficulty.csv 生成，不再是种子）",
+    "formula: 每一波预算 = (10 + 4 × wave_index) × threat_budget_coef，wave_index 从 1 起，四舍五入（0.5 进位）",
+    "coef: 24 关都按模拟校准；ch1_03 按关卡策划确认锁定 0.75（config.FIX_COEF）。首领关按现行规则校准，如果制作人采纳数值建议的首领修正，改用各关的 threat_budget_coef_if_boss_fix（ch1_04 = 0.75）",
+    "first_clear: 普通关剩余 11-13 条命，首领关 10-11（expected_first_clear_lives）；数值校准目标见 target_lives_first_clear，等制作人确认",
+    "lives: 20",
+    "boss_does_not_consume_wave_budget: true",
+    "hp_multiplier: 1 + 0.15 × (level_index - 1)，level_index 是 1 到 24",
+    "meta_reward: 首通和重打的局外奖励 reward_meta_first_clear、reward_meta_replay 仍写 pending_numbers；数值提议在 reward_meta_proposal（首通 50 + 70 × (序号 − 1)，首领 ×1.5；重打 50% / 30% / 20%），待制作人拍板",
+    "stars: 通关 1 星；剩余生命 ≥ 10/20 为 2 星；满命 20/20 为 3 星",
+    "buff: 制作人已定：非序章关卡每关 1 到 3 次三选一，最后一波不弹",
+    "placement: 只能放在关卡预定槽位"
+  ],
+  "order": [
+    "prologue_01",
+    "prologue_02",
+    "prologue_03",
+    "ch1_01",
+    "ch1_02",
+    "ch1_03",
+    "ch1_04",
+    "ch2_01",
+    "ch2_02",
+    "ch2_03",
+    "ch2_04",
+    "ch3_01",
+    "ch3_02",
+    "ch3_03",
+    "ch3_04",
+    "ch4_01",
+    "ch4_02",
+    "ch4_03",
+    "ch4_04",
+    "ch5_01",
+    "ch5_02",
+    "ch5_03",
+    "ch5_04",
+    "final_01"
+  ],
+  "note": "本文件由 tools/numeric/gen_level_json.py 从 data/balance/level_difficulty.csv 生成（数值策划 PR 覆盖关卡策划 PR #5 的同名文件），改数请改 CSV 后重跑。confirmed 段保持关卡策划原样。每波威胁预算 = (10 + 4 × 波次) × 本关系数，四舍五入（0.5 进位），data/levels 里各关的编组需要按 wave_threat_budgets 重新凑（请关卡策划配合）。",
   "confirmed": {
     "per_wave_threat": "10 + 4 * wave_index",
     "wave_index_starts_at": 1,
@@ -51,7 +92,7 @@
   "alignment_open": [
     {
       "id": "table_path",
-      "note": "PR #5 最新分支的难度表在 data/balance/level_tables/level_difficulty.csv（种子，系数全 1.0），本包的整表替换版在 tools/numeric/output/level_tables_level_difficulty.csv；合并顺序待定。"
+      "note": "PR #5 最新分支（f2212be）已把难度表放回 data/balance/level_difficulty.json（种子：MVP 七关第二轮系数，其余 1.0），并删掉了 data/balance/level_tables/。本文件就是正式输出；tools/numeric/output/level_tables_level_difficulty.csv 只作参考。PR #5 的 tools/validate_levels.py 和 tests/unit/test_level_data.gd 里写死了种子系数和「status: seed」，合并后需要关卡策划按本表更新。"
     },
     {
       "id": "boss_rules",
@@ -63,7 +104,7 @@
     },
     {
       "id": "mvp_enemies",
-      "note": "制作人定：MVP 敌人 = 小残影、快残影，加 ch1_03 少量硬残影（第 6–11 波各 1 只、第 12 波 2 只，共 8 只）；其他 MVP 关不出硬残影。PR #5 的 ch1_03 编组里还没有硬残影，需要关卡策划补。"
+      "note": "制作人定：MVP 敌人 = 小残影、快残影，加 ch1_03 少量硬残影（第 6–11 波各 1 只、第 12 波左右各 1 只，共 8 只）；其他 MVP 关不出硬残影。PR #5 f2212be 的 ch1_03 已按系数 0.75 补上这 8 只，排法一致。"
     },
     {
       "id": "boss_cirno_phases",
@@ -72,20 +113,35 @@
   ],
   "levels": {
     "prologue_01": {
-      "level_number": 1,
-      "role": "tutorial",
+      "chapter": "prologue",
+      "level_index": 1,
+      "level_role": "teaching",
       "wave_count": 3,
-      "threat_budget_coef": 0.68,
+      "threat_budget_coef": "0.68",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1,
+      "hp_multiplier": "1.00",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [],
-      "buff_pick_count": 3,
+      "buff_pick_count": 0,
       "wave_threat_budgets": [
         10,
         12,
         15
       ],
       "threat_budget_total": 37,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 1,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 50,
+        "replay_2nd": 25,
+        "replay_3rd": 15,
+        "replay_floor": 10,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 18,
       "sim_lives_first_clear": 18.4,
       "sim_lives_worst_seed": 17,
@@ -99,14 +155,17 @@
       ]
     },
     "prologue_02": {
-      "level_number": 2,
-      "role": "tutorial",
+      "chapter": "prologue",
+      "level_index": 2,
+      "level_role": "practice",
       "wave_count": 4,
-      "threat_budget_coef": 0.69,
+      "threat_budget_coef": "0.69",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1.15,
+      "hp_multiplier": "1.15",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [],
-      "buff_pick_count": 3,
+      "buff_pick_count": 0,
       "wave_threat_budgets": [
         10,
         12,
@@ -114,6 +173,18 @@
         18
       ],
       "threat_budget_total": 55,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 2,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 120,
+        "replay_2nd": 60,
+        "replay_3rd": 35,
+        "replay_floor": 25,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 17,
       "sim_lives_first_clear": 17,
       "sim_lives_worst_seed": 16,
@@ -127,12 +198,15 @@
       ]
     },
     "prologue_03": {
-      "level_number": 3,
-      "role": "trial",
+      "chapter": "prologue",
+      "level_index": 3,
+      "level_role": "test",
       "wave_count": 10,
-      "threat_budget_coef": 0.68,
+      "threat_budget_coef": "0.68",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1.3,
+      "hp_multiplier": "1.30",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -150,6 +224,18 @@
         34
       ],
       "threat_budget_total": 218,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 3,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 190,
+        "replay_2nd": 95,
+        "replay_3rd": 55,
+        "replay_floor": 40,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 16,
       "sim_lives_first_clear": 15.6,
       "sim_lives_worst_seed": 9,
@@ -160,12 +246,15 @@
       "map_source": "pr5_snapshot"
     },
     "ch1_01": {
-      "level_number": 4,
-      "role": "tutorial",
+      "chapter": "ch1",
+      "level_index": 4,
+      "level_role": "teaching",
       "wave_count": 10,
-      "threat_budget_coef": 0.67,
+      "threat_budget_coef": "0.67",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1.45,
+      "hp_multiplier": "1.45",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -183,6 +272,18 @@
         34
       ],
       "threat_budget_total": 214,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 4,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 260,
+        "replay_2nd": 130,
+        "replay_3rd": 80,
+        "replay_floor": 50,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 14,
       "sim_lives_first_clear": 13.4,
       "sim_lives_worst_seed": 7,
@@ -193,12 +294,15 @@
       "map_source": "pr5_snapshot"
     },
     "ch1_02": {
-      "level_number": 5,
-      "role": "practice",
+      "chapter": "ch1",
+      "level_index": 5,
+      "level_role": "practice",
       "wave_count": 11,
-      "threat_budget_coef": 0.62,
+      "threat_budget_coef": "0.62",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1.6,
+      "hp_multiplier": "1.60",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -218,6 +322,18 @@
         33
       ],
       "threat_budget_total": 233,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 5,
+      "role": "practice",
+      "reward_meta_proposal": {
+        "first_clear": 330,
+        "replay_2nd": 165,
+        "replay_3rd": 100,
+        "replay_floor": 65,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 13,
       "sim_lives_first_clear": 14.6,
       "sim_lives_worst_seed": 13,
@@ -231,12 +347,15 @@
       ]
     },
     "ch1_03": {
-      "level_number": 6,
-      "role": "trial",
+      "chapter": "ch1",
+      "level_index": 6,
+      "level_role": "test",
       "wave_count": 12,
-      "threat_budget_coef": 0.77,
-      "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 1.75,
+      "threat_budget_coef": "0.75",
+      "threat_budget_coef_status": "locked_level_design_confirmed",
+      "hp_multiplier": "1.75",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -253,14 +372,26 @@
         32,
         35,
         38,
-        42,
-        45
+        41,
+        44
       ],
-      "threat_budget_total": 332,
+      "threat_budget_total": 330,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 6,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 400,
+        "replay_2nd": 200,
+        "replay_3rd": 120,
+        "replay_floor": 80,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 12,
-      "sim_lives_first_clear": 10.2,
-      "sim_lives_worst_seed": 7,
-      "sim_star2_share": "60%",
+      "sim_lives_first_clear": 14.8,
+      "sim_lives_worst_seed": 13,
+      "sim_star2_share": "100%",
       "sim_star3_share": "0%",
       "sim_duration_min": 4.9,
       "expected_meta_level_avg": 4.33,
@@ -301,25 +432,37 @@
           },
           {
             "wave": 12,
-            "count": 2,
+            "count": 1,
             "path_id": "path.left"
+          },
+          {
+            "wave": 12,
+            "count": 1,
+            "path_id": "path.right"
           }
         ],
-        "threat_share": 0.096,
+        "threat_share": 0.097,
         "note": "每只硬残影（威胁 4）从同一路线扣掉 4 点威胁的小/快残影，全关总预算不变。制作人定：硬残影进 MVP，只在这一关少量出现"
       },
       "variant_without_armored": {
         "threat_budget_coef": 0.76,
         "note": "对照参考：只有小残影和快残影时的系数"
+      },
+      "threat_budget_coef_lock": {
+        "by": "关卡策划（PR #5 cursor/design-level-framework-01a3，f2212be）",
+        "note": "手动锁定，tools/numeric/config.py 的 FIX_COEF；run_all.py --calibrate 不会改写。自动校准会给 0.77。"
       }
     },
     "ch1_04": {
-      "level_number": 7,
-      "role": "boss",
+      "chapter": "ch1",
+      "level_index": 7,
+      "level_role": "boss",
       "wave_count": 15,
-      "threat_budget_coef": 0.25,
+      "threat_budget_coef": "0.25",
       "threat_budget_coef_status": "numbers_calibrated_target_unreachable_under_current_boss_rules",
-      "hp_multiplier": 1.9,
+      "hp_multiplier": "1.90",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -327,22 +470,34 @@
       "buff_pick_count": 3,
       "wave_threat_budgets": [
         4,
-        4,
+        5,
         6,
-        6,
+        7,
         8,
-        8,
+        9,
         10,
-        10,
+        11,
         12,
-        12,
+        13,
         14,
-        14,
+        15,
         16,
-        16,
+        17,
         18
       ],
-      "threat_budget_total": 158,
+      "threat_budget_total": 165,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 7,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 705,
+        "replay_2nd": 350,
+        "replay_3rd": 210,
+        "replay_floor": 140,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 11,
       "sim_lives_first_clear": -0.4,
       "sim_lives_worst_seed": -1,
@@ -357,12 +512,15 @@
       "sim_lives_if_boss_fix": 12.4
     },
     "ch2_01": {
-      "level_number": 8,
-      "role": "tutorial",
+      "chapter": "ch2",
+      "level_index": 8,
+      "level_role": "teaching",
       "wave_count": 10,
-      "threat_budget_coef": 0.89,
+      "threat_budget_coef": "0.89",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.05,
+      "hp_multiplier": "2.05",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -377,9 +535,21 @@
         34,
         37,
         41,
-        44
+        45
       ],
-      "threat_budget_total": 284,
+      "threat_budget_total": 285,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 8,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 540,
+        "replay_2nd": 270,
+        "replay_3rd": 160,
+        "replay_floor": 110,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 14,
       "sim_lives_first_clear": 12.8,
       "sim_lives_worst_seed": 9,
@@ -393,12 +563,15 @@
       ]
     },
     "ch2_02": {
-      "level_number": 9,
-      "role": "practice",
+      "chapter": "ch2",
+      "level_index": 9,
+      "level_role": "practice",
       "wave_count": 12,
-      "threat_budget_coef": 0.79,
+      "threat_budget_coef": "0.79",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.2,
+      "hp_multiplier": "2.20",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -419,6 +592,18 @@
         46
       ],
       "threat_budget_total": 342,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 9,
+      "role": "practice",
+      "reward_meta_proposal": {
+        "first_clear": 610,
+        "replay_2nd": 305,
+        "replay_3rd": 185,
+        "replay_floor": 120,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 13,
       "sim_lives_first_clear": 13.6,
       "sim_lives_worst_seed": 5,
@@ -432,12 +617,15 @@
       ]
     },
     "ch2_03": {
-      "level_number": 10,
-      "role": "trial",
+      "chapter": "ch2",
+      "level_index": 10,
+      "level_role": "test",
       "wave_count": 14,
-      "threat_budget_coef": 0.64,
+      "threat_budget_coef": "0.64",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.35,
+      "hp_multiplier": "2.35",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -460,6 +648,18 @@
         42
       ],
       "threat_budget_total": 359,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 10,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 680,
+        "replay_2nd": 340,
+        "replay_3rd": 205,
+        "replay_floor": 135,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 12,
       "sim_lives_first_clear": 12.2,
       "sim_lives_worst_seed": 7,
@@ -470,12 +670,15 @@
       "map_source": "reference"
     },
     "ch2_04": {
-      "level_number": 11,
-      "role": "boss",
+      "chapter": "ch2",
+      "level_index": 11,
+      "level_role": "boss",
       "wave_count": 16,
-      "threat_budget_coef": 0.2,
+      "threat_budget_coef": "0.20",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.5,
+      "hp_multiplier": "2.50",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10,
@@ -501,6 +704,18 @@
         15
       ],
       "threat_budget_total": 141,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 11,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 1125,
+        "replay_2nd": 560,
+        "replay_3rd": 340,
+        "replay_floor": 225,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 11,
       "sim_lives_first_clear": 11.8,
       "sim_lives_worst_seed": 10,
@@ -515,12 +730,15 @@
       "sim_lives_if_boss_fix": 10
     },
     "ch3_01": {
-      "level_number": 12,
-      "role": "tutorial",
+      "chapter": "ch3",
+      "level_index": 12,
+      "level_role": "teaching",
       "wave_count": 10,
-      "threat_budget_coef": 0.68,
+      "threat_budget_coef": "0.68",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.65,
+      "hp_multiplier": "2.65",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -538,6 +756,18 @@
         34
       ],
       "threat_budget_total": 218,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 12,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 820,
+        "replay_2nd": 410,
+        "replay_3rd": 245,
+        "replay_floor": 165,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 14,
       "sim_lives_first_clear": 16.8,
       "sim_lives_worst_seed": 12,
@@ -551,12 +781,15 @@
       ]
     },
     "ch3_02": {
-      "level_number": 13,
-      "role": "practice",
+      "chapter": "ch3",
+      "level_index": 13,
+      "level_role": "practice",
       "wave_count": 12,
-      "threat_budget_coef": 0.69,
+      "threat_budget_coef": "0.69",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.8,
+      "hp_multiplier": "2.80",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -572,11 +805,23 @@
         26,
         29,
         32,
-        34,
+        35,
         37,
         40
       ],
-      "threat_budget_total": 297,
+      "threat_budget_total": 298,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 13,
+      "role": "practice",
+      "reward_meta_proposal": {
+        "first_clear": 890,
+        "replay_2nd": 445,
+        "replay_3rd": 265,
+        "replay_floor": 180,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 13,
       "sim_lives_first_clear": 13.8,
       "sim_lives_worst_seed": 8,
@@ -590,12 +835,15 @@
       ]
     },
     "ch3_03": {
-      "level_number": 14,
-      "role": "trial",
+      "chapter": "ch3",
+      "level_index": 14,
+      "level_role": "test",
       "wave_count": 14,
-      "threat_budget_coef": 0.54,
+      "threat_budget_coef": "0.54",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 2.95,
+      "hp_multiplier": "2.95",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -618,6 +866,18 @@
         36
       ],
       "threat_budget_total": 303,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 14,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 960,
+        "replay_2nd": 480,
+        "replay_3rd": 290,
+        "replay_floor": 190,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 12,
       "sim_lives_first_clear": 12.2,
       "sim_lives_worst_seed": 11,
@@ -628,12 +888,15 @@
       "map_source": "reference"
     },
     "ch3_04": {
-      "level_number": 15,
-      "role": "boss",
+      "chapter": "ch3",
+      "level_index": 15,
+      "level_role": "boss",
       "wave_count": 16,
-      "threat_budget_coef": 0.4,
+      "threat_budget_coef": "0.40",
       "threat_budget_coef_status": "numbers_calibrated_target_unreachable_under_current_boss_rules",
-      "hp_multiplier": 3.1,
+      "hp_multiplier": "3.10",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10,
@@ -659,6 +922,18 @@
         30
       ],
       "threat_budget_total": 282,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 15,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 1545,
+        "replay_2nd": 770,
+        "replay_3rd": 465,
+        "replay_floor": 310,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 10.5,
       "sim_lives_first_clear": 8.4,
       "sim_lives_worst_seed": 5,
@@ -673,12 +948,15 @@
       "sim_lives_if_boss_fix": 11.4
     },
     "ch4_01": {
-      "level_number": 16,
-      "role": "tutorial",
+      "chapter": "ch4",
+      "level_index": 16,
+      "level_role": "teaching",
       "wave_count": 10,
-      "threat_budget_coef": 0.65,
+      "threat_budget_coef": "0.65",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 3.25,
+      "hp_multiplier": "3.25",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -693,9 +971,21 @@
         25,
         27,
         30,
-        32
+        33
       ],
-      "threat_budget_total": 208,
+      "threat_budget_total": 209,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 16,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 1100,
+        "replay_2nd": 550,
+        "replay_3rd": 330,
+        "replay_floor": 220,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 14,
       "sim_lives_first_clear": 15,
       "sim_lives_worst_seed": 5,
@@ -709,12 +999,15 @@
       ]
     },
     "ch4_02": {
-      "level_number": 17,
-      "role": "practice",
+      "chapter": "ch4",
+      "level_index": 17,
+      "level_role": "practice",
       "wave_count": 12,
-      "threat_budget_coef": 0.51,
+      "threat_budget_coef": "0.51",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 3.4,
+      "hp_multiplier": "3.40",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -735,6 +1028,18 @@
         30
       ],
       "threat_budget_total": 219,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 17,
+      "role": "practice",
+      "reward_meta_proposal": {
+        "first_clear": 1170,
+        "replay_2nd": 585,
+        "replay_3rd": 350,
+        "replay_floor": 235,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 13,
       "sim_lives_first_clear": 11.2,
       "sim_lives_worst_seed": 9,
@@ -745,12 +1050,15 @@
       "map_source": "reference"
     },
     "ch4_03": {
-      "level_number": 18,
-      "role": "trial",
+      "chapter": "ch4",
+      "level_index": 18,
+      "level_role": "test",
       "wave_count": 14,
-      "threat_budget_coef": 0.51,
+      "threat_budget_coef": "0.51",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 3.55,
+      "hp_multiplier": "3.55",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -773,6 +1081,18 @@
         34
       ],
       "threat_budget_total": 285,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 18,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 1240,
+        "replay_2nd": 620,
+        "replay_3rd": 370,
+        "replay_floor": 250,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 12,
       "sim_lives_first_clear": 10.8,
       "sim_lives_worst_seed": 7,
@@ -783,12 +1103,15 @@
       "map_source": "reference"
     },
     "ch4_04": {
-      "level_number": 19,
-      "role": "boss",
+      "chapter": "ch4",
+      "level_index": 19,
+      "level_role": "boss",
       "wave_count": 16,
-      "threat_budget_coef": 0.4,
+      "threat_budget_coef": "0.40",
       "threat_budget_coef_status": "numbers_calibrated_target_unreachable_under_current_boss_rules",
-      "hp_multiplier": 3.7,
+      "hp_multiplier": "3.70",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10,
@@ -814,6 +1137,18 @@
         30
       ],
       "threat_budget_total": 282,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 19,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 1965,
+        "replay_2nd": 980,
+        "replay_3rd": 590,
+        "replay_floor": 395,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 10.5,
       "sim_lives_first_clear": 0.2,
       "sim_lives_worst_seed": -17,
@@ -828,12 +1163,15 @@
       "sim_lives_if_boss_fix": 11.8
     },
     "ch5_01": {
-      "level_number": 20,
-      "role": "tutorial",
+      "chapter": "ch5",
+      "level_index": 20,
+      "level_role": "teaching",
       "wave_count": 10,
-      "threat_budget_coef": 0.5,
+      "threat_budget_coef": "0.50",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 3.85,
+      "hp_multiplier": "3.85",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5
       ],
@@ -851,6 +1189,18 @@
         25
       ],
       "threat_budget_total": 160,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 20,
+      "role": "tutorial",
+      "reward_meta_proposal": {
+        "first_clear": 1380,
+        "replay_2nd": 690,
+        "replay_3rd": 415,
+        "replay_floor": 275,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 13.5,
       "sim_lives_first_clear": 13.8,
       "sim_lives_worst_seed": 13,
@@ -864,12 +1214,15 @@
       ]
     },
     "ch5_02": {
-      "level_number": 21,
-      "role": "practice",
+      "chapter": "ch5",
+      "level_index": 21,
+      "level_role": "practice",
       "wave_count": 12,
-      "threat_budget_coef": 0.49,
+      "threat_budget_coef": "0.49",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 4,
+      "hp_multiplier": "4.00",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -885,11 +1238,23 @@
         19,
         21,
         23,
-        24,
+        25,
         26,
         28
       ],
-      "threat_budget_total": 213,
+      "threat_budget_total": 214,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 21,
+      "role": "practice",
+      "reward_meta_proposal": {
+        "first_clear": 1450,
+        "replay_2nd": 725,
+        "replay_3rd": 435,
+        "replay_floor": 290,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 12.5,
       "sim_lives_first_clear": 16,
       "sim_lives_worst_seed": 12,
@@ -900,12 +1265,15 @@
       "map_source": "reference"
     },
     "ch5_03": {
-      "level_number": 22,
-      "role": "trial",
+      "chapter": "ch5",
+      "level_index": 22,
+      "level_role": "test",
       "wave_count": 14,
-      "threat_budget_coef": 0.48,
+      "threat_budget_coef": "0.48",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 4.15,
+      "hp_multiplier": "4.15",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10
@@ -928,6 +1296,18 @@
         32
       ],
       "threat_budget_total": 269,
+      "expected_first_clear_lives": "11-13",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 22,
+      "role": "trial",
+      "reward_meta_proposal": {
+        "first_clear": 1520,
+        "replay_2nd": 760,
+        "replay_3rd": 455,
+        "replay_floor": 305,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 11.5,
       "sim_lives_first_clear": 12.2,
       "sim_lives_worst_seed": 6,
@@ -938,12 +1318,15 @@
       "map_source": "reference"
     },
     "ch5_04": {
-      "level_number": 23,
-      "role": "boss",
+      "chapter": "ch5",
+      "level_index": 23,
+      "level_role": "boss",
       "wave_count": 16,
-      "threat_budget_coef": 0.2,
+      "threat_budget_coef": "0.20",
       "threat_budget_coef_status": "numbers_calibrated_target_unreachable_under_current_boss_rules",
-      "hp_multiplier": 4.3,
+      "hp_multiplier": "4.30",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10,
@@ -969,6 +1352,18 @@
         15
       ],
       "threat_budget_total": 141,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 23,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 2385,
+        "replay_2nd": 1190,
+        "replay_3rd": 715,
+        "replay_floor": 475,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 10.5,
       "sim_lives_first_clear": -0.6,
       "sim_lives_worst_seed": -5,
@@ -983,12 +1378,15 @@
       "sim_lives_if_boss_fix": 10.6
     },
     "final_01": {
-      "level_number": 24,
-      "role": "boss",
+      "chapter": "final",
+      "level_index": 24,
+      "level_role": "boss",
       "wave_count": 20,
-      "threat_budget_coef": 0.51,
+      "threat_budget_coef": "0.51",
       "threat_budget_coef_status": "numbers_calibrated",
-      "hp_multiplier": 4.45,
+      "hp_multiplier": "4.45",
+      "reward_spirit_start": "150",
+      "reward_spirit_per_wave": "20",
       "buff_after_waves": [
         5,
         10,
@@ -1018,6 +1416,18 @@
         46
       ],
       "threat_budget_total": 531,
+      "expected_first_clear_lives": "10-11",
+      "reward_meta_first_clear": "pending_numbers",
+      "reward_meta_replay": "pending_numbers",
+      "level_number": 24,
+      "role": "boss",
+      "reward_meta_proposal": {
+        "first_clear": 2490,
+        "replay_2nd": 1245,
+        "replay_3rd": 745,
+        "replay_floor": 500,
+        "status": "numbers_proposal_pending_producer"
+      },
       "target_lives_first_clear": 10,
       "sim_lives_first_clear": 9,
       "sim_lives_worst_seed": 4,

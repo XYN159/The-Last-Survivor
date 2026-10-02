@@ -1,15 +1,15 @@
 # owner: 数值策划
 # status: numbers_calibrated（tools/numeric/gen_level_json.py 生成）
 # formula: 每一波预算 = (10 + 4 × wave_index) × threat_budget_coef，wave_index 从 1 起
-# coef: 按现行首领规则校准；首领关如果采用数值建议的首领修正，改用 data/balance/level_difficulty.csv 的 threat_budget_coef_boss_fix
+# coef: 按现行首领规则校准；ch1_03 按关卡策划确认锁定 0.75；首领关如果采用数值建议的首领修正，改用 data/balance/level_difficulty.csv 的 threat_budget_coef_boss_fix
 # lives: 20
 level_id,chapter,level_index,level_role,wave_count,threat_budget_coef,hp_multiplier,reward_spirit_start,reward_spirit_per_wave,reward_buff_after_waves,reward_buff_pick_count,expected_first_clear_lives,reward_meta_first_clear,reward_meta_replay
 prologue_01,prologue,1,teaching,3,0.68,1.00,150,20,,0,11-13,50,25
-prologue_02,prologue,2,teaching,4,0.69,1.15,150,20,,0,11-13,120,60
+prologue_02,prologue,2,practice,4,0.69,1.15,150,20,,0,11-13,120,60
 prologue_03,prologue,3,test,10,0.68,1.30,150,20,5,3,11-13,190,95
 ch1_01,ch1,4,teaching,10,0.67,1.45,150,20,5,3,11-13,260,130
 ch1_02,ch1,5,practice,11,0.62,1.60,150,20,5;10,3,11-13,330,165
-ch1_03,ch1,6,test,12,0.77,1.75,150,20,5;10,3,11-13,400,200
+ch1_03,ch1,6,test,12,0.75,1.75,150,20,5;10,3,11-13,400,200
 ch1_04,ch1,7,boss,15,0.25,1.90,150,20,5;10,3,10-11,705,350
 ch2_01,ch2,8,teaching,10,0.89,2.05,150,20,5,3,11-13,540,270
 ch2_02,ch2,9,practice,12,0.79,2.20,150,20,5;10,3,11-13,610,305

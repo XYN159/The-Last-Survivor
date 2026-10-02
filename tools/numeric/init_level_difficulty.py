@@ -44,7 +44,7 @@ UNLOCK = {"prologue_01": "reimu", "prologue_02": "marisa", "ch1_02": "cirno", "c
           "ch3_01": "sakuya", "ch3_02": "keine", "ch4_01": "mokou", "ch5_01": "sanae"}
 BANNED = {}
 # 制作人定：硬残影进 MVP，只在 ch1_03 少量出现（波次:只数:路线；每只从同一路线扣 4 点威胁的小/快残影）
-EXTRA = {"ch1_03": "6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:2:path.left"}                                     # 第五章首领改成「守门残影」，不再禁用紫
+EXTRA = {"ch1_03": "6:1:path.left;7:1:path.right;8:1:path.left;9:1:path.right;10:1:path.left;11:1:path.right;12:1:path.left;12:1:path.right"}                                     # 第五章首领改成「守门残影」，不再禁用紫
 NO_BUFF = {"prologue_01", "prologue_02"}          # 序章前两关没有三选一（最终口径）
 MAPPED = {"prologue_01", "prologue_02", "prologue_03", "ch1_01", "ch1_02", "ch1_03", "ch1_04"}
 HEADER = ["level_id", "chapter", "chapter_level", "level_index", "level_role", "level_role_zh", "is_mvp", "wave_count",

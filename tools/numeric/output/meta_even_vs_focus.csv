@@ -4,7 +4,7 @@ prologue_02,17.0,17.0,reimu:1|marisa:1,17.0,16.0,0,reimu:1|marisa:1
 prologue_03,16.0,15.6,reimu:2|marisa:2,15.6,9.0,0,reimu:2|marisa:2
 ch1_01,14.0,13.4,reimu:3|marisa:2,13.4,7.0,0,reimu:3|marisa:2
 ch1_02,13.0,14.6,reimu:4|cirno:3|marisa:3,14.6,13.0,0,reimu:4|cirno:3|marisa:3
-ch1_03,12.0,10.2,reimu:5|cirno:3|marisa:5,10.2,7.0,0,reimu:5|cirno:4|marisa:4
+ch1_03,12.0,14.8,reimu:5|cirno:3|marisa:5,15.0,13.0,0,reimu:5|cirno:4|marisa:4
 ch1_04,11.0,-0.4,reimu:6|cirno:3|marisa:6,-0.6,-1.0,5,reimu:5|cirno:5|marisa:5
 ch2_01,14.0,12.8,reimu:8|cirno:3|marisa:7|yukari:6,13.0,9.0,0,reimu:7|cirno:6|marisa:6|yukari:6
 ch2_02,13.0,13.6,reimu:8|cirno:7|marisa:7|yukari:7|meiling:7,8.6,-4.0,1,reimu:7|cirno:6|marisa:7|yukari:7|meiling:6

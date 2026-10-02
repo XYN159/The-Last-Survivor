@@ -175,6 +175,19 @@ def calibrate(T, level, lineup, meta, target, rules_override=None, info=None):
     return best, ("cliff" if drop < -3 else "ok")
 
 
+def locked_info(T, level, lineup, meta, coef, target, rules_override=None, info=None):
+    """手动锁定的系数（config.FIX_COEF）：不校准，只按校准同样的口径算期望（左右 ±CAL_SMOOTH × CALIBRATE_SEEDS 平均）
+    和「再加 0.05」的剩余，状态写 locked（再加 0.05 掉到目标以下 3 条命以上时写 locked_cliff）。"""
+    fs, sm = C.CAL_FINE_STEP or 0.01, C.CAL_SMOOTH
+    k = int(round(sm / fs))
+    pts = [round(coef + fs * j, 2) for j in range(-k, k + 1)]
+    g = st.mean(mean_hp(simulate_level(T, level, lineup, meta, C.CALIBRATE_SEEDS, c, rules_override)) for c in pts)
+    plus = mean_hp(simulate_level(T, level, lineup, meta, C.CALIBRATE_SEEDS, round(coef + 0.05, 2), rules_override))
+    if info is not None:
+        info.update(smoothed_hp=round(g, 1), plus005_hp=round(plus, 1))
+    return coef, ("locked_cliff" if plus - target < -3 else "locked")
+
+
 def level_up_cost(levels, cid, T):
     lv = levels[cid]
     cost = T["costs"].get(lv, 0)
@@ -229,7 +242,10 @@ def run_campaign(T, scenario="confirmed", do_calibrate=False, alloc="even", unlo
             # 系数和每点伤害充能互相影响：校准系数 → 按新系数下的 D 重算充能 → 再校准一次 → 再重算充能
             for _ in range(2):
                 if lid in C.FIX_COEF:
-                    coef, status = C.FIX_COEF[lid], "fixed"
+                    info = {}
+                    coef, status = locked_info(T, level, squad, meta, C.FIX_COEF[lid],
+                                               tdsim.num(level["target_hp_first_clear"]), info=info)
+                    smoothed = info.get("smoothed_hp", "")
                 else:
                     info = {}
                     coef, status = calibrate(T, level, squad, meta, tdsim.num(level["target_hp_first_clear"]), info=info)

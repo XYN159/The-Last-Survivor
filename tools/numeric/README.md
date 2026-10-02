@@ -22,8 +22,8 @@ Windows 上把 `python` 换成 `py` 也可以。
 
 | 文件 | 内容 |
 | --- | --- |
-| `data/balance/level_difficulty.csv` | 回写 `threat_budget_coef`、`spell_charge_per_damage`、`threat_budget_coef_boss_fix`（仅 `--calibrate`）、`reward_*`、`sim_*`、`expected_meta_level` 列 |
-| `data/balance/level_difficulty.json` | 按 PR #5 最早的结构生成（校准后的系数、每波预算、模拟结果），**不要手改**。PR #5 最新分支已把难度表挪到 `data/balance/level_tables/level_difficulty.csv`，同时导出一份可整表替换的 `tools/numeric/output/level_tables_level_difficulty.csv` |
+| `data/balance/level_difficulty.csv` | 回写 `threat_budget_coef`（`config.py` 的 `FIX_COEF` 里锁定的关不改，目前 ch1_03 = 0.75，关卡策划确认）、`spell_charge_per_damage`、`threat_budget_coef_boss_fix`（仅 `--calibrate`）、`reward_*`、`sim_*`、`expected_meta_level` 列 |
+| `data/balance/level_difficulty.json` | 正式输出（PR #5 的校验器和 GUT 测试也读这个路径），**不要手改**。字段是 PR #5 种子（f2212be）的超集：种子的字段同名同类型，每波预算按 0.5 进位取整；另附校准和模拟结果。`tools/numeric/output/level_tables_level_difficulty.csv` 只作参考 |
 | `data/balance/combat/stats.json` | 战斗策划 PR #4 约定的数值文件（含敌人数值 enemies / bosses），从 CSV 生成，**不要手改** |
 | `data/progression/character_level_cost.csv`、`meta_rules.csv` | 按 `config.py` 的公式重新生成 |
 | `docs/design/numeric/generated/sim_results.md` | 给人看的模拟结果表 |

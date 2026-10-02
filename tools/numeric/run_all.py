@@ -187,7 +187,7 @@ def armored_variant(T, A, levels, cal):
     th = tdsim.num(T["enemies"]["enm_shade_armored"]["threat_points"])
     R = T["rules"]
     main_spec = base.get("extra_spawns", "")
-    tried = [dict(name="主版本（写进表里）：第 6–11 波各 1 只、第 12 波 2 只", spec=main_spec, n=n_armored(main_spec),
+    tried = [dict(name="主版本（写进表里）：第 6–11 波各 1 只、第 12 波左右各 1 只", spec=main_spec, n=n_armored(main_spec),
                   coef=raw["budget_coef"], status=raw["calib"], res=raw["results"], L=base, smoothed=raw.get("smoothed_hp", ""),
                   share=n_armored(main_spec) * th / level_budget(base, raw["budget_coef"], R), main=True)]
     for name, spec in ARMORED_SPECS:
@@ -479,7 +479,7 @@ def main():
           "紫通关 ch1_04 后加入（MVP 首通用不到）。第一章 2–4 关首通时碎片照旧只花在灵梦和魔理沙身上（和上一版首通等级一样），琪露诺停在加入时的 3 级。"
           "MVP 7 关用 PR #5 最新分支的地图（只能放预定槽位，每关 3–5 格）、逐波编组（个数 × 系数）、浓雾（目标在雾格上射程 −1）和 ch1_04 首领三阶段；"
           "每波 20 秒刷怪窗口 + 4 秒空隙，不等清场。"
-          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。"
+          "后面几列用同样的阵容和局外等级、同样的系数，只改一项。校准列 unreachable = 系数怎么调都达不到目标，表里填的是剩余生命最高的那个系数。locked = 关卡策划确认后手动锁定的系数（config.FIX_COEF，目前只有 ch1_03 = 0.75），不再自动校准，期望和 +0.05 按同样的口径另算；locked_cliff = 锁定值再加 0.05 会掉到目标以下 3 条命以上。"
           "校准先按 0.05 粗扫，再在附近按 0.01 细扫；剩余生命随系数是锯齿状的，所以每个系数取左右 ±0.02 共 5 个点 × 5 个种子的平均当「期望」，"
           "选「期望 ≥ 目标 − 0.5」的最大系数（系数太低时灵力少、反而难，所以取大的）。「模拟剩余」是这个系数本身 5 个种子的平均，和期望差 1–3 条命是正常的锯齿；校准列 cliff = 再加 0.05 就掉到目标以下 3 条命以上。\n\n",
           md_table(sa, cols, heads),
@@ -496,7 +496,7 @@ def main():
           md_table(csens, list(csens[0].keys()), ["关卡", "版本", "目标", "系数", "−0.05 剩余", "−0.05 最差", "原系数剩余", "原系数最差",
                                                    "+0.05 剩余", "+0.05 最差"]),
           "\n## ch1_03 的硬残影（enm_shade_armored：200 血 / 0.6 速 / 10 甲 / 漏过扣 2 / 威胁 4）\n\n",
-          "制作人定：硬残影进 MVP，只在 ch1_03 少量出现。主版本（写进难度表）：第 6–11 波各 1 只、第 12 波 2 只，共 8 只，左右两路轮流；"
+          "制作人定：硬残影进 MVP，只在 ch1_03 少量出现。主版本（写进难度表）：第 6–11 波各 1 只、第 12 波左右各 1 只，共 8 只，左右两路轮流；"
           "每只从同一路线扣掉 4 点威胁的小残影（左路）或快残影（右路），全关总预算不变。下面的对照写法都各自重新校准过系数。\n\n",
           md_table(arm_rows, list(arm_rows[0].keys()), ["写法", "出场（波:只数:路线）", "只数", "系数", "校准", "占全关预算", "剩余", "期望(平滑)", "最差种子", "用途"]),
           "\nch1_03 主版本逐波（种子 1 的出怪表；威胁预算 = (10 + 4 × 波次) × 系数，实际刷出的威胁点因为取整和余数滚动会差 1）：\n\n",
