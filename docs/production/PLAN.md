@@ -14,6 +14,7 @@
 | 修 CI（`ci/export_android_debug.sh`） | https://cursor.com/agents/bc-5cebddf9-0607-573d-bec7-3435cd202717 | 进行中，PR #7 | 改名提交 `7818316` 让第 7 行丢了 `}`，main 上 export-android 一直是红的 |
 | GitHub 整理员 | https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344 | 触发例程已暂停 | 状态刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)。只维护 `docs/PR_STATUS.md`，不合并 |
 | 程序（兼玩法、战斗、这一关的客户端） | https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9 | PR #16 @ `127aa5b`，序章第一关能从标题进入 | 画面重画是 PR #17，等用户看。动效已另派。见 [`HANDOFF.md`](HANDOFF.md) 第 0.2 节 |
+| 界面原画 | https://cursor.com/agents/bc-2d625a46-c398-573c-8984-70cbbbff84b6 | 按模版画原画，不写程序 | 字体用东方楷书或明朝，错字改掉。Demo 先不接仓库、基建和肉鸽 |
 
 ## 2. 开发流程与验收
 

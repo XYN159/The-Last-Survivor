@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 用户给出界面模版。先由 GPT 画原画，不写程序。Demo 最小闭环是主界面、关卡选择、编队、战斗、结算、角色详情，加上剧情对话。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户否决序章第一版画面。PR #12 仍是色块原型，序章是 PR #16。GPT 重画已交 PR #17。旧动效分支 `cursor/prologue-01-motion-3241` 不另开 PR。新动效按 PR #17 另派。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 执行制作人接手六位策划和游戏测试在 #2 #3 #4 #5 #6 #8 #9 上未完成的修改。ch1_04 系数定为 0.74，入场波定为 11。细节在 `docs/production/HANDOFF.md`。
 - 六位策划和游戏测试已有 Cursor agent，名单在 `HANDOFF.md` 第 0.1 节。之后由执行制作人分派。动效师还没有常驻 agent。

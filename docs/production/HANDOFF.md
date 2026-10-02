@@ -71,6 +71,10 @@
 
 画面好不好看仍要用户点头。被否决的竖屏和色块都不能当成最终画面。动效师没通过，不能写「可以合并」。
 
+界面原画：用户给了一张十几格的界面模版，要求先出原画，不写程序。排布照模版（明日方舟那种密度），字体改成东方的楷书或明朝，不要圆体和假汉字，错字改掉。肉鸽、仓库、基建、设置、加载、好友、通行证这一轮不画。Demo 最小闭环是主界面 → 关卡选择 → 编队 → 战斗 → 结算 → 角色详情，剧情对话算进去。其余界面以后再补，现在也不派程序去做。
+
+画画派给 GPT [bc-2d625a46-c398-573c-8984-70cbbbff84b6](https://cursor.com/agents/bc-2d625a46-c398-573c-8984-70cbbbff84b6)，从 `docs/art-framework` 另开分支。不派给常驻美术策划，因为画画不用 Grok 或 Claude。
+
 ## 1. 已定，不再问用户
 
 这些已经写进 `DECISIONS_PENDING.md` 的「已定规则」。这里只列接手时必须记住的：
@@ -251,6 +255,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 - **#12**：`81c5d04` 文案复审通过，汇总是可以合并。等用户点，不要自动合并。
 - **程序第一张卡**：Opus 5.5 已交 PR #16，`cursor/prologue-01-playable-5ab9` @ `127aa5b`。可以玩这一关。PR #12 不是序章。
 - **序章画面重做**：用户否决 `cursor/prologue-01-art-7c67` @ `f8ec58f`。GPT 已交 PR #17，`cursor/prologue-01-art-redraw-40fd` @ `394bb13`。等用户看画面。旧动效分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 不要开 PR。新动效是 [bc-019d9912-c427-599f-9df9-2c9601251aef](https://cursor.com/agents/bc-019d9912-c427-599f-9df9-2c9601251aef)。
+- **界面原画**：GPT [bc-2d625a46-c398-573c-8984-70cbbbff84b6](https://cursor.com/agents/bc-2d625a46-c398-573c-8984-70cbbbff84b6) 按用户的模版画二十张原画。不写程序。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
@@ -259,6 +264,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 | --- | --- |
 | 序章第一关的背景图和画面 | 已交 PR #17 @ `394bb13`。等用户看。不要再派 [bc-7832209d-0ef6-5c7e-8548-a7784afb7c67](https://cursor.com/agents/bc-7832209d-0ef6-5c7e-8548-a7784afb7c67) |
 | 序章第一关的动效 | 已按 PR #17 另派 [bc-019d9912-c427-599f-9df9-2c9601251aef](https://cursor.com/agents/bc-019d9912-c427-599f-9df9-2c9601251aef)，用 Opus 5.5。旧分支 `cursor/prologue-01-motion-3241` @ `0c1b444` 不要开 PR |
+| 界面原画（模版里的二十张） | 已派给 GPT [bc-2d625a46-c398-573c-8984-70cbbbff84b6](https://cursor.com/agents/bc-2d625a46-c398-573c-8984-70cbbbff84b6)。只画原画 |
 | T-19b | #14 和 #12 都合并之后 |
 | T-20 | #12 合并之后。字体用东方风格 |
 | T-02 清掉车道占位 | #12 合并之后 |
