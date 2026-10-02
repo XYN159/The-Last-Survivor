@@ -11,6 +11,7 @@
 - T-00 的标题副标题已在 PR #12 `81c5d04` 改成「东方 Project 二次创作」。文案复审通过，汇总是可以合并，等用户点。
 - 增加常驻程序 agent，第一张卡是把序章第一关接到塔防原型上。名单在 `HANDOFF.md` 第 0.2 节。程序岗位按小团队兼岗，不拆成主程、服务器、引擎等一排 agent。
 - 序章第一关交出版本之后，由美术策划优化背景图和画面，并另开动效师做这一关的动效。现在不派。
+- 写程序用 Opus 5.5，策划、审核和文档用 Grok。序章第一关改由 Opus 5.5 的程序 agent 做。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

@@ -37,7 +37,7 @@
 | 岗位 | 现在谁做 | 什么时候再单开 |
 | --- | --- | --- |
 | 主程 | 不单开。技术取舍写在已有的 `docs/ARCHITECTURE.md` 和 `docs/adr/`。执行制作人派任务，不另写一套架构文档 | 战斗或存档的结构真的拆不动时再开 |
-| 玩法程序、战斗程序、客户端里这一关的输入和场景 | [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) | 已经在做。一张任务一个 PR |
+| 玩法程序、战斗程序、客户端里这一关的输入和场景 | [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) | 用 Opus 5.5。一张任务一个 PR |
 | UI 程序 | 先不单开。界面好看归动效师，动效师还没有常驻 agent | T-20 |
 | 系统程序（局外、结算、存档） | 先不单开 | T-10、T-11 开工时，仍优先交给上面同一个程序 agent |
 | 工具程序 | 先不单开。数值生成脚本已经在 #8 | 要做关卡编辑器时再开 |
@@ -47,7 +47,11 @@
 
 执行制作人按 `ROLES.md` 附录 A 派任务。程序不改策划文档里的已定规则，也不把已经废弃的车道、加人门、小队人数做回来。需求落到哪个表、哪个场景，沿用现有的 `docs/GDD.md`、`docs/ARCHITECTURE.md` 和各设计 PR，不另建 `SYSTEMS.md`、`DATA_SCHEMA.md`、`TECH_DESIGN.md`。
 
-第一张卡：从塔防原型 `b5b3bed` 另开分支，把序章第一关 `prologue_01` 接到「开始」上，打完能结算。不推 PR #12。七关一起接、符卡、三选一都不在这张卡里。
+模型：改脚本、场景、测试的程序任务用 Opus 5.5（派工时选 `claude-opus-5-5-high`）。策划、审核、文档和其他不写代码的任务用 Grok（派工时选 `grok-4.7-high`）。动效如果要改场景或脚本，也算写程序，用 Opus 5.5。
+
+正在跑的 [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 是 Grok，这一轮中途换不了模型，停手指令没有送进去。它一停，就让它不要推送、不要开 PR。序章第一关以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准。
+
+第一张卡：从塔防原型最新提交另开分支，把序章第一关 `prologue_01` 接到「开始」上，打完能结算。不推 PR #12。七关一起接、符卡、三选一都不在这张卡里。
 
 程序这张卡交出版本之后，立刻做两件事，现在都不要派：
 
@@ -234,7 +238,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 正在做：
 
 - **#12**：`81c5d04` 文案复审通过，汇总是可以合并。等用户点，不要自动合并。
-- **程序第一张卡**：[bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 从原型另开分支，把 `prologue_01` 接到「开始」上。不改 PR #12。
+- **程序第一张卡**：以 Opus 5.5 的 [bc-c2fac131-4f71-52a1-b1c2-f74302385ab9](https://cursor.com/agents/bc-c2fac131-4f71-52a1-b1c2-f74302385ab9) 为准。Grok 的 [bc-24406a2e-50cf-5dde-a9cd-1106db7248f3](https://cursor.com/agents/bc-24406a2e-50cf-5dde-a9cd-1106db7248f3) 还在跑，停下来之后不要采用它的 PR。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
