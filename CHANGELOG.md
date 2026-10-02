@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 标题画面的副标题改为「东方 Project 二次创作」，仍走文本 key `ui.menu.subtitle`。
 - 塔防原型的放置改成先点亮色格子、再点头像。出怪窗口按每一波的 `duration_sec` 从这一波开始算 20 秒，窗口结束后固定空 4 秒，清场不再缩短空档。第 1 波 `delay_sec` 为 0，代码按数据读取，不再单独豁免第一波。同一角色第 k 个的费用改为部署费 × (1 + 0.5 × (k − 1))。敌人血量乘难度表里的 `hp_multiplier`（按浮点读）。玩家能看见的文字改走 `locale/game_zh.csv`。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
