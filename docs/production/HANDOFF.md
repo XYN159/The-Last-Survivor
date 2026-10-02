@@ -176,7 +176,8 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 正在做：
 
-- **#12 返工**：发回原原型 agent [bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)。不要另开 agent，也不要由制作人改 `scripts/`。
+- **#12 返工**：应发回原原型 agent [bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)。2026-10-02 直接派工时，工具新开了 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)。提示词要求它改原来的 PR #12，不要新开 PR，也不要由制作人改 `scripts/`。
+- **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
 
