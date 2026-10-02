@@ -1,0 +1,32 @@
+id,类型(sfx/bgm),用途说明,触发时机,建议时长,是否循环,优先级(P0/P1/P2),对应特效或界面ID,备注
+bgm_title,bgm,标题和主菜单的轻松和风,打开标题画面,60–90 秒,是,P0,标题界面,采样率 44.1 kHz。综合响度约 -18 LUFS
+bgm_shrine,bgm,序章神社场景,进入 prologue_01 到 prologue_03（chapter_id=prologue）,60–90 秒,是,P0,tiles_shrine,关卡数据：序章三关都是神社
+bgm_lake,bgm,第一章雾之湖场景,进入 ch1_01 到 ch1_03。ch1_04 首领登场后换 bgm_boss,60–90 秒,是,P0,tiles_lake,chapter_id=ch1
+bgm_boss,bgm,首领战,boss_entry 之后，直到 ch1_04 结束,60–90 秒,是,P0,boss_entry,feedback.md：登场音乐切换
+bgm_victory,bgm,胜利短乐句,过关结算出现,2–4 秒,否,P0,ui_result_screens,不循环
+bgm_defeat,bgm,失败短乐句,失败界面出现,2–4 秒,否,P0,ui_result_screens,不循环
+sfx_place,sfx,放置角色,点头像把角色放到选中的格子，落地的那一帧,0.2–0.3 秒,否,P0,place,战斗 core_rules 落地动画 0.25 秒。feel.json 没有单独的放置事件
+sfx_attack,sfx,各角色普攻，先共用一条,角色打出普通攻击的那一帧,0.1–0.2 秒,否,P0,ofuda_white / star_laser_thin / ice_shard_small / gap_slit,四个角色先共用。命中另播 sfx_hit（hit_flash）
+sfx_hit,sfx,残影受击,hit_flash：最终伤害大于 0,0.08 秒,否,P0,hit_flash,feedback.md：同类命中音 0.05 秒内只播一个
+sfx_kill,sfx,残影消散,kill_burst：敌人死亡,0.2–0.4 秒,否,P0,kill_burst,feedback.md：击碎音在死亡时
+sfx_spirit,sfx,灵力粒子飞入灵力条,spirit_bump：光点到达灵力栏,0.15 秒,否,P0,spirit_bump,feel.json kill_burst.target_anchor=spirit_counter。飞行途中不另做一条
+sfx_spell_cutin,sfx,符卡切入,spell_cutin：立绘到位,0.4–0.8 秒,否,P0,spell_cutin,feedback.md：宣言音在立绘到位时
+sfx_evil_sealing_circle,sfx,封魔阵展开,sc_evil_sealing_circle 的效果开始（立绘结束后）,0.6–1.0 秒,否,P0,sc_evil_sealing_circle,第一优先。地面红白符纸方阵。半径 2 格拦住 2 秒，5×5 结界 8 秒
+sfx_freeze,sfx,冻结,freeze_apply：敌人被冻住，或 unit_frozen：角色被冻住,0.2–0.4 秒,否,P0,freeze_apply,feel.json apply_sfx=freeze_crackle。同一帧多个冻结只播一次。冰块覆盖 2 秒，声音只在冻上的瞬间
+sfx_ice_shatter,sfx,冰碎,ice_shatter：冰碎联动触发,0.3–0.5 秒,否,P0,ice_shatter,feel.json shatter_sfx=ice_break。碎冰画面持续 2 秒，声音用短脆响
+sfx_guard_damage,sfx,守护点受伤,guard_damage：漏怪扣血,0.3–0.4 秒,否,P0,guard_damage,feedback.md 扣血音
+sfx_wave_start,sfx,波次开始,wave_banner：每波开始,0.3–0.5 秒,否,P0,wave_banner,feedback.md 波次开始音
+sfx_boss_entry,sfx,首领登场,boss_entry：首领波开始,0.6–1.0 秒,否,P0,boss_entry,和 bgm_boss 的切入错开，不要叠成两段旋律
+sfx_icicle_telegraph,sfx,冰柱预警,冰瀑落点阴影出现，telegraph 0.8 秒,0.3–0.5 秒,否,P0,icicle_pillar,spell_cards.json sc_boss_cirno_icicle_fall telegraph_sec=0.8。挡路仍是 12 秒
+sfx_ui_click,sfx,界面点击,按下按钮（叫波、倍速、暂停、确认）,0.05–0.1 秒,否,P0,界面按钮,通用点击
+sfx_ui_select_cell,sfx,选中格子,点中一个空的放置格,0.05–0.1 秒,否,P0,ui_cell_selected,已定：点格子再点头像
+sfx_ui_cancel,sfx,取消,选中格子后点别处，取消放置,0.05–0.1 秒,否,P0,ui_cell_selected,点另一个空格是改选，播 sfx_ui_select_cell，不播取消
+sfx_buff_offer,sfx,三选一出现,每打完 5 波，三张卡翻起,0.3–0.5 秒,否,P0,三选一界面,rules.json every_n_waves_cleared=5
+sfx_buff_pick,sfx,选中强化,确认三选一里的一张,0.15–0.3 秒,否,P0,三选一界面,普通的「新」和「叠」用这一条
+sfx_fantasy_seal,sfx,梦想封印,sc_fantasy_seal 的光弹飞出,0.4–0.6 秒,否,P1,sc_fantasy_seal,第二张，比封魔阵低一档。7 颗光弹，0.8 秒飞到目标
+sfx_boss_phase,sfx,首领换阶段,boss_hp 过 66% 或 33% 阶段点,0.3–0.5 秒,否,P1,boss_hp,feedback.md：过阶段点时碎裂音
+sfx_route_preview,sfx,延迟路线开启预告,某一波开始前，延迟路线闪 1.0 秒白光,0.4–0.8 秒,否,P1,路线预告光,feedback.md 没有单独事件名。待战斗策划补事件名。旗标点亮 0.25 秒可以共用这一条
+sfx_buff_evolve,sfx,质变强化,buff_threshold：这次选择会叠到 2 层,0.4–0.6 秒,否,P1,buff_threshold,feedback.md 把这项标成第二批。比 sfx_buff_pick 更亮一点
+sfx_star_result,sfx,星级结算,胜利结算弹出星星,0.3–0.6 秒,否,P1,ui_result_screens,0–3 颗可以同一条，按颗数连播
+sfx_dialogue_advance,sfx,对话翻页,玩家点对话框，切到下一句,0.05–0.1 秒,否,P1,ui_dialogue,比通用点击更轻
+sfx_armor_spark,sfx,硬残影护甲被削,armor_spark：有护甲反馈的敌人被削掉一大截,0.15–0.3 秒,否,P1,armor_spark,feedback.md 原注写硬残影不在 MVP。关卡数据 ch1_03 已有 8 只，所以这条放 P1，和护甲火花贴图一起
