@@ -6,7 +6,7 @@
 
 ### 变更
 
-- 用户点头，二十张界面原画可以进游戏。仓库首页介绍 PR #20 已合并进 `main`。服务器选择图的重复名字在 PR #21 改掉并合并。接到序章里的程序另派。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
+- 二十张界面已接到序章，PR #22，基线是 PR #18。登录不建账号。服务器图用的是改过的那张。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 横屏序章动效已交 PR #18，基线是 PR #17。竖屏动效分支仍不另开 PR。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户给出界面模版。先由 GPT 画原画，不写程序。Demo 最小闭环是主界面、关卡选择、编队、战斗、结算、角色详情，加上剧情对话。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户否决序章第一版画面。PR #12 仍是色块原型，序章是 PR #16。GPT 重画已交 PR #17。旧动效分支 `cursor/prologue-01-motion-3241` 不另开 PR。新动效按 PR #17 另派。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
