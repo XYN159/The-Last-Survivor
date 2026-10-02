@@ -114,10 +114,14 @@ func _draw_stage_markers() -> void:
 			var center := _cell_center(col, row)
 			if mark == ".":
 				var texture := (
-					_SELECT_TEXTURE if col == _selected_col and row == _selected_row else _PLACE_TEXTURE
+					_SELECT_TEXTURE
+					if col == _selected_col and row == _selected_row
+					else _PLACE_TEXTURE
 				)
 				var tint := Color.WHITE if texture == _SELECT_TEXTURE else Color(0.75, 0.9, 1, 0.72)
-				draw_texture_rect(texture, Rect2(center - Vector2(84, 62), Vector2(168, 124)), false, tint)
+				draw_texture_rect(
+					texture, Rect2(center - Vector2(84, 62), Vector2(168, 124)), false, tint
+				)
 			elif mark == "S":
 				draw_texture_rect(
 					_UNIT_RING_TEXTURE,
