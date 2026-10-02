@@ -1,22 +1,24 @@
 extends Control
 
-## 棋盘上的色块。格子尺寸来自配置，不在这里写死。
+## 棋盘上的路线、符纸槽位和单位。格子尺寸来自配置，不在这里写死。
 
 signal cell_pressed(col: int, row: int)
 
-const _COLOR_BLOCKED := Color("#24302C")
-const _COLOR_PATH := Color("#C4B49A")
-const _COLOR_PLACE := Color("#E6D39A")
-const _COLOR_SPAWN := Color("#6B4C9A")
-const _COLOR_GUARD := Color("#C23B4A")
+const _COLOR_ROUTE := Color("#E4D2AE")
+const _COLOR_ROUTE_EDGE := Color("#6B3A2E")
+const _COLOR_CHEVRON := Color("#8A5A32")
+const _COLOR_OFUDA := Color("#F7F1E4")
+const _COLOR_SEAL := Color("#C8323C")
+const _COLOR_SELECT := Color("#D4A94F")
 const _COLOR_REIMU := Color("#E24B4B")
 const _COLOR_REIMU_INNER := Color("#F4F0E6")
 const _COLOR_MARISA := Color("#F0C14A")
 const _COLOR_MARISA_INNER := Color("#1A1420")
-const _COLOR_BASIC := Color("#8E97A8")
-const _COLOR_FAST := Color("#5EC8E6")
-const _COLOR_SHOT := Color("#FFF6E8")
+const _COLOR_SHADE := Color("#D9DCE0")
+const _COLOR_SHADE_EDGE := Color("#5A6068")
+const _COLOR_SHOT := Color("#F7F2E8")
 const _COLOR_BEAM := Color("#FFE14A")
+const _REIMU_TOKEN: Texture2D = preload("res://assets/textures/ui/reimu_v2_token.png")
 
 var _columns: int = 7
 var _rows: int = 12
@@ -113,12 +115,10 @@ func _draw_cells() -> void:
 		for col in _columns:
 			var mark := _mark(col, row)
 			var rect := Rect2(col * _cell, row * _cell, _cell, _cell)
-			draw_rect(rect, _cell_color(mark))
-			if mark == "." and col == _selected_col and row == _selected_row:
-				draw_rect(rect.grow(-10), Color(1, 0.95, 0.55, 0.45))
-			draw_rect(rect, Color(0, 0, 0, 0.28), false, 2.0)
-			if mark == "G":
-				_draw_guard(rect)
+			if _is_route(mark):
+				_draw_route_cell(col, row, rect, mark)
+			elif mark == ".":
+				_draw_ofuda(rect, col == _selected_col and row == _selected_row)
 
 
 func _draw_range() -> void:
@@ -140,19 +140,26 @@ func _draw_units() -> void:
 			continue
 		var unit: Dictionary = unit_v
 		var center := _cell_center(int(unit.col), int(unit.row))
-		var palette := _unit_colors(str(unit.get("character_id", "")))
-		draw_circle(center, 42.0, palette[0])
-		draw_circle(center, 22.0, palette[1])
+		_draw_ground_shadow(center, 36.0)
+		if str(unit.get("character_id", "")) == "chr_reimu" and _REIMU_TOKEN != null:
+			var dest := Rect2(center - Vector2(52, 64), Vector2(104, 112))
+			draw_texture_rect(_REIMU_TOKEN, dest, false)
+		else:
+			var palette := _unit_colors(str(unit.get("character_id", "")))
+			draw_circle(center, 42.0, palette[0])
+			draw_circle(center, 22.0, palette[1])
 		if font == null:
 			continue
+		var badge := center + Vector2(34, -46)
+		draw_circle(badge, 16.0, Color(0.12, 0.09, 0.14, 0.88))
 		draw_string(
 			font,
-			center + Vector2(-16, 54),
+			badge + Vector2(-8, 8),
 			str(int(unit.get("level", 1))),
 			HORIZONTAL_ALIGNMENT_LEFT,
 			-1,
-			28,
-			Color.WHITE,
+			24,
+			Color("#F5EDDB")
 		)
 
 
@@ -164,11 +171,23 @@ func _draw_enemies() -> void:
 		var pos := Vector2(float(enemy.x), float(enemy.y)) * float(_cell)
 		var fast := str(enemy.get("enemy_id", "")) == "enm_shade_fast"
 		var radius := 22.0 if fast else 30.0
-		var base := _COLOR_FAST if fast else _COLOR_BASIC
-		var tint := base
+		var tint := _COLOR_SHADE
 		if _flashes.has(int(enemy.id)):
-			tint = base.lerp(_flash_color, _flash_strength)
-		draw_circle(pos, radius, tint)
+			tint = _COLOR_SHADE.lerp(_flash_color, _flash_strength)
+		tint.a = 0.82
+		_draw_ground_shadow(pos, radius * 0.7)
+		if fast:
+			draw_set_transform(pos, 0.0, Vector2(0.72, 1.2))
+			draw_circle(Vector2.ZERO, radius, tint)
+			draw_arc(Vector2.ZERO, radius, 0.0, TAU, 24, _COLOR_SHADE_EDGE, 3.0)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		else:
+			draw_circle(pos, radius, tint)
+			draw_arc(pos, radius, 0.0, TAU, 28, _COLOR_SHADE_EDGE, 3.0)
+			_draw_windup_key(pos + Vector2(0, -radius + 2.0))
+		var eye := pos + (Vector2(0, -4) if not fast else Vector2.ZERO)
+		draw_arc(eye + Vector2(-8, 0), 4.0, 0.0, TAU, 10, _COLOR_SHADE_EDGE, 2.0)
+		draw_arc(eye + Vector2(8, 0), 4.0, 0.0, TAU, 10, _COLOR_SHADE_EDGE, 2.0)
 		_draw_hp(pos, float(enemy.hp), float(enemy.max_hp), radius)
 
 
@@ -178,7 +197,10 @@ func _draw_shots() -> void:
 			continue
 		var shot: Dictionary = shot_v
 		var pos := Vector2(float(shot.x), float(shot.y)) * float(_cell)
-		draw_rect(Rect2(pos - Vector2(8, 12), Vector2(16, 24)), _COLOR_SHOT)
+		var slip := Rect2(pos - Vector2(10, 16), Vector2(20, 32))
+		draw_rect(slip, _COLOR_SHOT)
+		draw_rect(slip, _COLOR_SEAL, false, 2.0)
+		draw_line(slip.position + Vector2(10, 6), slip.position + Vector2(10, 26), _COLOR_SEAL, 2.0)
 
 
 func _draw_beams() -> void:
@@ -189,10 +211,98 @@ func _draw_beams() -> void:
 		draw_line(from, to, _COLOR_BEAM, 10.0)
 
 
-func _draw_guard(rect: Rect2) -> void:
-	var box := Rect2(rect.position + Vector2(34, 36), Vector2(60, 56))
-	draw_rect(box, Color("#F4F0E6"))
-	draw_rect(Rect2(box.position + Vector2(0, 24), Vector2(60, 8)), _COLOR_GUARD)
+func _draw_route_cell(col: int, row: int, rect: Rect2, mark: String) -> void:
+	draw_rect(rect, _COLOR_ROUTE)
+	_draw_route_edge(
+		rect, not _is_route(_mark(col, row - 1)), Vector2(0, 0), Vector2(rect.size.x, 0)
+	)
+	_draw_route_edge(
+		rect,
+		not _is_route(_mark(col, row + 1)),
+		Vector2(0, rect.size.y),
+		Vector2(rect.size.x, rect.size.y)
+	)
+	_draw_route_edge(
+		rect, not _is_route(_mark(col - 1, row)), Vector2(0, 0), Vector2(0, rect.size.y)
+	)
+	_draw_route_edge(
+		rect,
+		not _is_route(_mark(col + 1, row)),
+		Vector2(rect.size.x, 0),
+		Vector2(rect.size.x, rect.size.y)
+	)
+	if mark == "P":
+		_draw_chevron(rect)
+	elif mark == "S":
+		_draw_rift(rect)
+	elif mark == "G":
+		_draw_offering_box(rect)
+
+
+func _draw_route_edge(rect: Rect2, visible: bool, start: Vector2, end: Vector2) -> void:
+	if not visible:
+		return
+	draw_line(rect.position + start, rect.position + end, _COLOR_ROUTE_EDGE, 6.0)
+
+
+func _draw_chevron(rect: Rect2) -> void:
+	var center := rect.get_center() + Vector2(0, 6)
+	var points := PackedVector2Array(
+		[center + Vector2(-16, -12), center + Vector2(16, -12), center + Vector2(0, 14)]
+	)
+	draw_colored_polygon(points, _COLOR_CHEVRON)
+
+
+func _draw_ofuda(rect: Rect2, selected: bool) -> void:
+	var paper := rect.grow(-18)
+	draw_rect(paper, _COLOR_OFUDA)
+	var ink := _COLOR_SELECT if selected else _COLOR_SEAL
+	draw_rect(paper, ink, false, 6.0 if selected else 4.0)
+	var stripe_x := paper.position.x + paper.size.x * 0.5
+	draw_line(
+		Vector2(stripe_x, paper.position.y + 18.0),
+		Vector2(stripe_x, paper.end.y - 18.0),
+		_COLOR_SEAL,
+		3.0
+	)
+	draw_circle(paper.position + Vector2(20, 20), 9.0, _COLOR_SEAL)
+	if selected:
+		draw_rect(rect.grow(-8), _COLOR_SELECT, false, 4.0)
+
+
+func _draw_rift(rect: Rect2) -> void:
+	var center := rect.get_center()
+	draw_circle(center, 40.0, Color(0.36, 0.18, 0.55, 0.92))
+	draw_circle(center, 18.0, Color(0.95, 0.93, 0.98, 0.95))
+	draw_arc(center, 30.0, 0.0, TAU, 28, Color("#2B2230"), 3.0)
+	draw_line(center + Vector2(-22, -6), center + Vector2(6, 2), Color("#F7F2E8"), 4.0)
+	draw_line(center + Vector2(6, 2), center + Vector2(-8, 20), Color("#F7F2E8"), 4.0)
+
+
+func _draw_offering_box(rect: Rect2) -> void:
+	var box := Rect2(rect.position + Vector2(34, 48), Vector2(60, 44))
+	draw_rect(box, Color("#8C5A32"))
+	draw_rect(box, Color("#2B2230"), false, 3.0)
+	var roof := PackedVector2Array(
+		[
+			box.position + Vector2(-6, 6),
+			box.position + Vector2(30, -18),
+			box.position + Vector2(66, 6)
+		]
+	)
+	draw_colored_polygon(roof, _COLOR_SEAL)
+	draw_line(box.position + Vector2(12, 16), box.position + Vector2(48, 16), Color("#2B2230"), 3.0)
+
+
+func _draw_ground_shadow(center: Vector2, radius: float) -> void:
+	draw_set_transform(center + Vector2(0, radius * 0.85), 0.0, Vector2(1.15, 0.38))
+	draw_circle(Vector2.ZERO, radius, Color(0, 0, 0, 0.25))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _draw_windup_key(origin: Vector2) -> void:
+	draw_line(origin, origin + Vector2(0, -16), _COLOR_SHADE_EDGE, 3.0)
+	draw_arc(origin + Vector2(0, -16), 7.0, 0.4, 5.0, 10, _COLOR_SHADE_EDGE, 3.0)
 
 
 func _draw_hp(pos: Vector2, hp: float, max_hp: float, radius: float) -> void:
@@ -281,6 +391,10 @@ func _age_flashes(delta: float) -> void:
 		_flashes.erase(id_v)
 
 
+func _is_route(mark: String) -> bool:
+	return mark == "P" or mark == "S" or mark == "G"
+
+
 func _mark(col: int, row: int) -> String:
 	if row < 0 or row >= _cells.size():
 		return ""
@@ -288,20 +402,6 @@ func _mark(col: int, row: int) -> String:
 	if col < 0 or col >= line.length():
 		return ""
 	return line.substr(col, 1)
-
-
-func _cell_color(mark: String) -> Color:
-	match mark:
-		".":
-			return _COLOR_PLACE
-		"P":
-			return _COLOR_PATH
-		"S":
-			return _COLOR_SPAWN
-		"G":
-			return _COLOR_GUARD
-		_:
-			return _COLOR_BLOCKED
 
 
 func _unit_colors(character_id: String) -> Array:

@@ -14,11 +14,22 @@ func test_battle_board_shows_spirit_life_and_only_reimu() -> void:
 	assert_eq(wave.text, "布阵 10 秒")
 	var bar := board.get_node("%CharacterBar") as HBoxContainer
 	assert_eq(bar.get_child_count(), 1)
-	assert_eq((bar.get_child(0) as Button).text, "灵梦\n50")
+	var card := bar.get_child(0) as Button
+	assert_eq(card.get_node("Row/Info/NameLabel").text, "灵梦")
+	assert_eq(card.get_node("Row/Info/CostLabel").text, "灵力 50")
+	var portrait := card.get_node("Row/Portrait") as TextureRect
+	assert_not_null(portrait.texture)
 	var call_button := board.get_node("%CallButton") as Button
 	assert_eq(call_button.text, "开始 +10")
 	var hint := board.get_node("%HintLabel") as Label
 	assert_eq(hint.text, "先点亮色格子，再点下面的角色。中段两格最合适。")
+
+
+func test_battle_shows_the_shrine_background() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var art := board.get_node("BackgroundArt") as TextureRect
+	assert_not_null(art.texture)
 
 
 func test_placement_selects_a_cell_before_the_character() -> void:

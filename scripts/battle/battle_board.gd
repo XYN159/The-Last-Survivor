@@ -7,6 +7,12 @@ const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
 const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
+const _REIMU_CARD: Texture2D = preload("res://assets/textures/ui/reimu_v2_card.png")
+const _INK := Color("#2B2B33")
+const _SPIRIT_INK := Color("#146887")
+const _PAPER := Color("#F5EFE2")
+const _SEAL := Color("#C8323C")
+const _GOLD := Color("#D4A94F")
 
 static var remembered_speed: int = 1
 
@@ -27,13 +33,19 @@ var _vignette_duration: float = 0.4
 var _vignette_alpha: float = 0.45
 var _step_seconds: float = 1.0 / 60.0
 var _max_ticks: int = 4
+var _style_card: StyleBoxFlat
+var _style_card_ready: StyleBoxFlat
 
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _life_label: Label = %LifeLabel
 @onready var _wave_label: Label = %WaveLabel
 @onready var _board: Control = %BoardView
 @onready var _top_bar: Control = %TopBar
+@onready var _top_plate: ColorRect = %TopPlate
+@onready var _top_line: ColorRect = %TopLine
 @onready var _bottom_bar: Control = %BottomBar
+@onready var _bottom_plate: ColorRect = %BottomPlate
+@onready var _bottom_line: ColorRect = %BottomLine
 @onready var _character_bar: HBoxContainer = %CharacterBar
 @onready var _call_button: Button = %CallButton
 @onready var _speed_button: Button = %SpeedButton
@@ -63,6 +75,8 @@ func _ready() -> void:
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
 	_board.call("setup", _catalog)
 	_layout_board()
+	_style_card = _make_ofuda_style(_SEAL, 4)
+	_style_card_ready = _make_ofuda_style(_GOLD, 6)
 	_build_roster()
 	_call_button.pressed.connect(_on_call_pressed)
 	_speed_button.pressed.connect(_on_speed_pressed)
@@ -72,6 +86,13 @@ func _ready() -> void:
 	_retry_button.pressed.connect(_on_retry_pressed)
 	_menu_button.pressed.connect(_on_menu_pressed)
 	_board.connect("cell_pressed", _on_cell_pressed)
+	_apply_ofuda_button(_call_button)
+	_apply_ofuda_button(_speed_button)
+	_apply_ofuda_button(_upgrade_button)
+	_apply_ofuda_button(_sell_button)
+	_apply_ofuda_button(_close_unit_button)
+	_apply_ofuda_button(_retry_button)
+	_apply_ofuda_button(_menu_button)
 	_unit_panel.visible = false
 	_result_panel.visible = false
 	_apply_static_labels()
@@ -117,10 +138,21 @@ func _layout_board() -> void:
 	_board.position = origin
 	_board.size = size
 	_top_bar.offset_bottom = origin.y
+	_top_plate.offset_bottom = origin.y
+	_top_line.offset_top = origin.y - 4.0
+	_top_line.offset_bottom = origin.y
 	_bottom_bar.anchor_top = 0.0
 	_bottom_bar.anchor_bottom = 1.0
 	_bottom_bar.offset_top = origin.y + size.y
 	_bottom_bar.offset_bottom = 0.0
+	_bottom_plate.anchor_top = 0.0
+	_bottom_plate.anchor_bottom = 1.0
+	_bottom_plate.offset_top = origin.y + size.y
+	_bottom_plate.offset_bottom = 0.0
+	_bottom_line.anchor_top = 0.0
+	_bottom_line.anchor_bottom = 0.0
+	_bottom_line.offset_top = origin.y + size.y
+	_bottom_line.offset_bottom = origin.y + size.y + 4.0
 
 
 func _build_roster() -> void:
@@ -129,9 +161,7 @@ func _build_roster() -> void:
 			continue
 		var entry: Dictionary = entry_v
 		var character_id := str(entry.get("id", ""))
-		var button := Button.new()
-		button.custom_minimum_size = Vector2(250, 110)
-		button.add_theme_font_size_override("font_size", 32)
+		var button := _make_character_card(character_id)
 		button.pressed.connect(_on_character_pressed.bind(character_id))
 		_character_bar.add_child(button)
 		_buttons[character_id] = button
@@ -162,9 +192,18 @@ func _refresh_roster(state: Dictionary) -> void:
 		var button: Button = _buttons.get(character_id)
 		if button == null:
 			continue
-		button.text = "%s\n%d" % [str(entry.display_name), int(entry.cost)]
-		button.disabled = not bool(entry.affordable)
-		button.modulate = Color.WHITE
+		var name_label := button.get_node("Row/Info/NameLabel") as Label
+		var cost_label := button.get_node("Row/Info/CostLabel") as Label
+		name_label.text = str(entry.display_name)
+		cost_label.text = tr("ui.battle.spirit") % int(entry.cost)
+		var affordable := bool(entry.affordable)
+		button.disabled = not affordable
+		button.modulate = Color(1, 1, 1, 1.0 if affordable else 0.5)
+		var highlighted := affordable and _has_selected_cell()
+		if bool(button.get_meta("ready_highlight", false)) != highlighted:
+			button.set_meta("ready_highlight", highlighted)
+			var style := _style_card_ready if highlighted else _style_card
+			_assign_button_style(button, style)
 
 
 func _fill_unit_panel(state: Dictionary) -> void:
@@ -343,6 +382,89 @@ func _apply_speed_rules() -> void:
 	_speed = default_speed if _speed_options.has(default_speed) else _speed_options[0]
 
 
+func _make_character_card(character_id: String) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(500, 128)
+	button.focus_mode = Control.FOCUS_NONE
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_assign_button_style(button, _style_card)
+	var row := HBoxContainer.new()
+	row.name = "Row"
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	row.offset_left = 12.0
+	row.offset_top = 8.0
+	row.offset_right = -12.0
+	row.offset_bottom = -8.0
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 12)
+	button.add_child(row)
+	var portrait := TextureRect.new()
+	portrait.name = "Portrait"
+	portrait.custom_minimum_size = Vector2(112, 112)
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if character_id == "chr_reimu":
+		portrait.texture = _REIMU_CARD
+	row.add_child(portrait)
+	var info := VBoxContainer.new()
+	info.name = "Info"
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.alignment = BoxContainer.ALIGNMENT_CENTER
+	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(info)
+	var name_label := Label.new()
+	name_label.name = "NameLabel"
+	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	name_label.add_theme_font_size_override("font_size", 32)
+	name_label.add_theme_color_override("font_color", _INK)
+	info.add_child(name_label)
+	var cost_label := Label.new()
+	cost_label.name = "CostLabel"
+	cost_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cost_label.add_theme_font_size_override("font_size", 44)
+	cost_label.add_theme_color_override("font_color", _SPIRIT_INK)
+	info.add_child(cost_label)
+	return button
+
+
+func _make_ofuda_style(border: Color, width: int) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = _PAPER
+	box.border_color = border
+	box.set_border_width_all(width)
+	box.set_corner_radius_all(8)
+	box.content_margin_left = 8
+	box.content_margin_right = 8
+	box.content_margin_top = 4
+	box.content_margin_bottom = 4
+	return box
+
+
+func _assign_button_style(button: Button, style: StyleBoxFlat) -> void:
+	for state_name in ["normal", "hover", "pressed", "disabled", "focus"]:
+		button.add_theme_stylebox_override(state_name, style)
+	button.add_theme_color_override("font_color", _INK)
+	button.add_theme_color_override("font_disabled_color", _INK)
+
+
+func _apply_ofuda_button(button: Button) -> void:
+	var normal := _make_ofuda_style(_SEAL, 4)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#E7DCC8")
+	var pressed := normal.duplicate() as StyleBoxFlat
+	pressed.bg_color = Color("#D9CBB0")
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_stylebox_override("disabled", normal)
+	button.add_theme_stylebox_override("focus", normal)
+	button.add_theme_color_override("font_color", _INK)
+	button.add_theme_color_override("font_hover_color", _INK)
+	button.add_theme_color_override("font_pressed_color", _INK)
+	button.add_theme_color_override("font_disabled_color", _INK)
+
+
 func _apply_static_labels() -> void:
 	_close_unit_button.text = tr("ui.battle.close")
 	_retry_button.text = tr("ui.battle.retry")
@@ -390,9 +512,16 @@ func _unit_by_id(state: Dictionary, unit_id: int) -> Dictionary:
 
 
 func _capture_sequence() -> void:
+	get_window().size = Vector2i(1080, 1920)
 	await RenderingServer.frame_post_draw
 	_save_capture("01-deploy")
+	_on_cell_pressed(2, 4)
+	_refresh()
+	await RenderingServer.frame_post_draw
+	_save_capture("01b-slot")
 	_place_opening()
+	_clear_selected_cell()
+	_hint_label.text = tr(_HINT_DEFAULT)
 	_refresh()
 	await RenderingServer.frame_post_draw
 	_save_capture("02-placed")
@@ -409,6 +538,7 @@ func _capture_sequence() -> void:
 		_sim.tick()
 		guard += 1
 	_show_result(_sim.view_state())
+	_board.call("advance_fx", 5.0)
 	_refresh()
 	await RenderingServer.frame_post_draw
 	_save_capture("04-result")

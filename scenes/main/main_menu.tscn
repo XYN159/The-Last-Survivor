@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/main_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/bg_title_shrine.jpg" id="2_bg"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -21,6 +22,50 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.07, 0.1, 0.12, 1)
 
+[node name="BackgroundArt" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitleFrame" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = -360.0
+offset_right = 420.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.784, 0.196, 0.235, 1)
+
+[node name="TitleCard" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -408.0
+offset_top = -348.0
+offset_right = 408.0
+offset_bottom = 348.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.961, 0.937, 0.886, 0.94)
+
 [node name="CenterColumn" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -39,15 +84,15 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
+theme_override_colors/font_color = Color(0.784, 0.196, 0.235, 1)
 theme_override_font_sizes/font_size = 64
 text = "ui.menu.title"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.74, 0.42, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.169, 0.169, 0.2, 1)
+theme_override_font_sizes/font_size = 32
 text = "ui.menu.subtitle"
 horizontal_alignment = 1
 
@@ -61,7 +106,7 @@ text = "ui.menu.start"
 
 [node name="HintLabel" type="Label" parent="CenterColumn"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
+theme_override_colors/font_color = Color(0.169, 0.169, 0.2, 1)
 theme_override_font_sizes/font_size = 26
 text = "ui.menu.hint"
 horizontal_alignment = 1
@@ -77,7 +122,9 @@ anchor_bottom = 1.0
 offset_top = -80.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.6, 0.64, 0.66, 1)
+theme_override_colors/font_color = Color(0.961, 0.933, 0.859, 1)
+theme_override_colors/font_outline_color = Color(0.169, 0.133, 0.188, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 24
 text = "ui.menu.version"
 horizontal_alignment = 1
