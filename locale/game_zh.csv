@@ -1,8 +1,11 @@
 keys,zh_CN
 ui.menu.title,东方守幻录
 ui.menu.subtitle,东方 Project 二次创作
+ui.menu.english_title,Touhou Tower Defense
+ui.menu.chapter,CHAPTER 0
+ui.menu.prologue_title,幻想的序章
+ui.menu.prologue_english,Prologue of Gensokyo
 ui.menu.start,开始
-ui.menu.hint,点「开始」，把角色放到格子上。
 ui.menu.version,v%s
 ui.battle.spirit,灵力 %d
 ui.battle.life,生命 %d/%d
@@ -13,7 +16,7 @@ ui.battle.defeat,失败
 ui.battle.wave_final,第 %d/%d 波\n最后一波
 ui.battle.wave_next,第 %d/%d 波\n下一波 %d 秒
 ui.battle.wave,第 %d/%d 波
-ui.battle.start,开始 +%d
+ui.battle.start,出击 +%d
 ui.battle.hint_default,先点亮色格子，再点下面的角色。中段两格最合适。
 ui.battle.hint_pick_cell,先点亮色格子。
 ui.battle.hint_pick_character,再点下面的角色，放到这一格。

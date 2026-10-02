@@ -16,7 +16,7 @@ func test_battle_board_shows_spirit_life_and_only_reimu() -> void:
 	assert_eq(bar.get_child_count(), 1)
 	assert_eq((bar.get_child(0) as Button).text, "灵梦\n50")
 	var call_button := board.get_node("%CallButton") as Button
-	assert_eq(call_button.text, "开始 +10")
+	assert_eq(call_button.text, "出击 +10")
 	var hint := board.get_node("%HintLabel") as Label
 	assert_eq(hint.text, "先点亮色格子，再点下面的角色。中段两格最合适。")
 

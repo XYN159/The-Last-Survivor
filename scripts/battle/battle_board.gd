@@ -7,6 +7,8 @@ const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
 const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
+const _CARD_FRAME := preload("res://assets/art/prologue_01/card_frame.png")
+const _REIMU_TOKEN := preload("res://assets/art/prologue_01/reimu_token.png")
 
 static var remembered_speed: int = 1
 
@@ -22,6 +24,7 @@ var _selected_unit: int = -1
 var _finished: bool = false
 var _capturing: bool = false
 var _buttons: Dictionary = {}
+var _roster_labels: Dictionary = {}
 var _vignette_left: float = 0.0
 var _vignette_duration: float = 0.4
 var _vignette_alpha: float = 0.45
@@ -32,8 +35,6 @@ var _max_ticks: int = 4
 @onready var _life_label: Label = %LifeLabel
 @onready var _wave_label: Label = %WaveLabel
 @onready var _board: Control = %BoardView
-@onready var _top_bar: Control = %TopBar
-@onready var _bottom_bar: Control = %BottomBar
 @onready var _character_bar: HBoxContainer = %CharacterBar
 @onready var _call_button: Button = %CallButton
 @onready var _speed_button: Button = %SpeedButton
@@ -62,7 +63,6 @@ func _ready() -> void:
 	_vignette_duration = float(vignette.get("duration_sec", 0.4))
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
 	_board.call("setup", _catalog)
-	_layout_board()
 	_build_roster()
 	_call_button.pressed.connect(_on_call_pressed)
 	_speed_button.pressed.connect(_on_speed_pressed)
@@ -107,22 +107,6 @@ func _run_ticks(delta: float) -> void:
 		_accumulator = minf(_accumulator, _step_seconds)
 
 
-func _layout_board() -> void:
-	var layout := _catalog.board()
-	var origin := Vector2(float(layout.offset_x), float(layout.offset_y))
-	var size := Vector2(
-		float(int(layout.cell_size) * int(layout.columns)),
-		float(int(layout.cell_size) * int(layout.rows)),
-	)
-	_board.position = origin
-	_board.size = size
-	_top_bar.offset_bottom = origin.y
-	_bottom_bar.anchor_top = 0.0
-	_bottom_bar.anchor_bottom = 1.0
-	_bottom_bar.offset_top = origin.y + size.y
-	_bottom_bar.offset_bottom = 0.0
-
-
 func _build_roster() -> void:
 	for entry_v in _sim.view_state().roster:
 		if typeof(entry_v) != TYPE_DICTIONARY:
@@ -130,11 +114,45 @@ func _build_roster() -> void:
 		var entry: Dictionary = entry_v
 		var character_id := str(entry.get("id", ""))
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(250, 110)
-		button.add_theme_font_size_override("font_size", 32)
+		button.custom_minimum_size = Vector2(180, 204)
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		button.add_theme_color_override("font_color", Color.TRANSPARENT)
+		button.add_theme_color_override("font_disabled_color", Color.TRANSPARENT)
+		button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		var portrait := TextureRect.new()
+		portrait.position = Vector2(20, 14)
+		portrait.size = Vector2(140, 150)
+		portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		portrait.texture = _REIMU_TOKEN
+		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		button.add_child(portrait)
+		var frame := TextureRect.new()
+		frame.size = Vector2(180, 204)
+		frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		frame.texture = _CARD_FRAME
+		frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		frame.stretch_mode = TextureRect.STRETCH_SCALE
+		button.add_child(frame)
+		var label := Label.new()
+		label.position = Vector2(10, 155)
+		label.size = Vector2(160, 42)
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.add_theme_color_override("font_color", Color("#F8EBDD"))
+		label.add_theme_color_override("font_shadow_color", Color("#16070B"))
+		label.add_theme_constant_override("shadow_offset_x", 2)
+		label.add_theme_constant_override("shadow_offset_y", 2)
+		label.add_theme_font_size_override("font_size", 23)
+		button.add_child(label)
 		button.pressed.connect(_on_character_pressed.bind(character_id))
 		_character_bar.add_child(button)
 		_buttons[character_id] = button
+		_roster_labels[character_id] = label
 
 
 func _refresh() -> void:
@@ -163,8 +181,11 @@ func _refresh_roster(state: Dictionary) -> void:
 		if button == null:
 			continue
 		button.text = "%s\n%d" % [str(entry.display_name), int(entry.cost)]
+		var label: Label = _roster_labels.get(character_id)
+		if label != null:
+			label.text = "%s  ◆%d" % [str(entry.display_name), int(entry.cost)]
 		button.disabled = not bool(entry.affordable)
-		button.modulate = Color.WHITE
+		button.modulate = Color(0.55, 0.55, 0.62, 0.72) if button.disabled else Color.WHITE
 
 
 func _fill_unit_panel(state: Dictionary) -> void:
