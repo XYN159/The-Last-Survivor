@@ -1,0 +1,37 @@
+key,_speaker_key,zh_CN,_note
+combat.armor,,护甲,打在护甲上时飘的字
+combat.synergy_found,,发现联动：%s！,第一次触发联动。%s 换成联动名
+combat.invulnerable,,无效,打在无效状态上的提示
+combat.final_wave,,最后一波,最后一波的横幅
+syn.ice_shatter.name,,冰碎,魔理沙打中冻结的残影
+syn.barrier_bonus.name,,结界加护,打中带结界标记的残影
+syn.ofuda_detonate.name,,符札引爆,魔理沙打中刚被灵梦御札打过的残影
+syn.border_seal.name,,博丽与八云,紫挪动残影时，出口带上结界标记。不在 MVP
+syn.boundary_spark.name,,境界火花,放极限火花时，紫再补一道光。不在 MVP
+syn.fire_and_ice.name,,冰火交加,火焰打中被冰慢住或冻住的残影。不在 MVP
+syn.gatekeeper_line.name,,门番的一条直线,魔理沙打中被美铃挡住的残影。不在 MVP
+syn.frozen_moment.name,,冻结的时刻,咲夜连续打同一只冻住的残影。不在 MVP
+buff.split_shot.name,,断了链的钥匙扣,失物包装。战斗 id：buff_split_shot
+buff.split_shot.desc,,打中后再飞出小子弹。每颗伤害按 {split_damage_ratio}。质变后向四周散开，颗数看 {starfall_sub_bullets}。,不写死数字
+buff.sharp_ofuda.name,,削尖的旧铅笔,失物包装。战斗 id：buff_sharp_ofuda
+buff.sharp_ofuda.desc,,攻击变高。每层加上 {attack_pct_per_stack}。,不写死数字
+buff.rapid_fire.name,,上满弦的发条,失物包装。战斗 id：buff_rapid_fire
+buff.rapid_fire.desc,,打得更快。间隔按 {interval_pct_per_stack}。质变后会连着补打，次数看 {burst_extra_attacks}。,不写死数字
+buff.frost_frog.name,,褪色的发条青蛙,失物包装。战斗 id：buff_frost_frog。MVP 冻结来源之一
+buff.frost_frog.desc,,普通攻击有 {freeze_chance_per_stack} 的几率冻住残影，时长看 {freeze_sec}。质变后碎开会波及旁边，伤害按 {shard_damage_coef}。,不写死数字
+buff.crit_charm.name,,掉漆的招财猫,失物包装。战斗 id：buff_crit_charm
+buff.crit_charm.desc,,更容易打出重击。每层加上 {crit_chance_per_stack}。质变后重击会炸开，伤害按 {explosion_coef}。,不写死数字
+buff.great_barrier.name,,褪色的注连绳,失物包装。战斗 id：buff_great_barrier。需要灵梦
+buff.great_barrier.desc,,结界留得更久。质变后灵梦射程里的路一直是结界，易伤再加 {barrier_vuln_add_at_max}。,不写死数字。需要灵梦
+buff.spell_battery.name,,还剩一格电的旧电池,失物包装。战斗 id：buff_spell_battery
+buff.spell_battery.desc,,符卡充得更快。每层加上 {charge_pct_per_stack}。质变后放完返还 {refund_ratio_at_max} 的能量。,不写死数字
+buff.piercing_star.name,,一颗玻璃弹珠,失物包装。战斗 id：buff_piercing_star
+buff.piercing_star.desc,,子弹能多穿过几个残影。每层多 {pierce_per_stack} 个。,不写死数字
+buff.spirit_greed.name,,空空的存钱罐,失物包装。战斗 id：buff_spirit_greed
+buff.spirit_greed.desc,,击破残影时多掉一点灵力。每个看 {spirit_per_kill_per_stack}。,不写死数字
+buff.guard_mend.name,,缝补过的布偶,失物包装。战斗 id：buff_guard_mend
+buff.guard_mend.desc,,选中时守护点缓一缓，回复看 {guard_heal_per_pick}。质变后漏进来少掉一些，减少看 {leak_reduction_at_max}。,不写死数字
+buff.combo_fever.name,,转个不停的陀螺,失物包装。战斗 id：buff_combo_fever
+buff.combo_fever.desc,,连击叠得越高，全队打得越疼。每一档加上 {attack_pct_per_10_combo}，最多 {cap_pct}。断了就回到原样。,不写死数字
+buff.gap_eye.name,,半张旧车票,失物包装。战斗 id：buff_gap_eye。需要紫
+buff.gap_eye.desc,,换位等得更短，冷却按 {cooldown_pct_per_stack}。质变后一次能多换一对，被换走的那只再吃一击，伤害按 {swap_hit_damage_coef}。,不写死数字。需要紫

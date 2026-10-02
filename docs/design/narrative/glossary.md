@@ -27,7 +27,7 @@
 
 | 术语 | 英文暂译 | 定义 | 使用说明 / 禁用写法 |
 | --- | --- | --- | --- |
-| 符卡 | Spell Card | 角色的主动技能 | 格式 `符种「名字」`，如 灵符「梦想封印」。资料里写“中文译名（原名）”。不写“技能卡”“必杀技”“大招” |
+| 符卡 | Spell Card | 角色的主动技能 | 格式 `符种「名字」`，如 梦符「封魔阵」。资料里写“中文译名（原名）”。不写“技能卡”“必杀技”“大招”。序章和 MVP 里灵梦用封魔阵，梦想封印留到后面 |
 | 符卡宣言 | Spell Card Declaration | 角色喊出符卡名并发动 | 首领在决斗中宣言符卡时显示符卡名 |
 | 符卡决斗 | Spell Card Duel | 每章的首领关，对手沿路线前进、分阶段宣言符卡 | 可简称“决斗”。不写“BOSS 战”“对决”（界面上若需要英文可用 Duel） |
 | 塔 / 角色塔 | Tower / Character Tower | 放置在地图上的角色，自动攻击残影 | 面向玩家的文本里说“角色”，不说“塔”（“把魔理沙放在……”，而不是“建造魔理沙塔”）。“塔”只在策划文档和代码里用 |
@@ -98,12 +98,14 @@
 | 小残影 | `enemy.shade_basic.name` | 战斗 id `enm_shade_basic`。MVP 基础敌人。战斗草案里曾写“普通残影”，玩家文本用“小残影” |
 | 快残影 | `enemy.shade_fast.name` | 战斗 id `enm_shade_fast`。第一章新敌人。战斗草案里的外观叫法“褪色玩具”不要写进玩家文本 |
 | 硬残影 | `enemy.shade_armored.name` | 战斗 id `enm_shade_armored`。`ch1_03` 正式登场，这一关出 8 只。第二章起成为常见敌人。有护甲 |
+| 重残影 | `enemy.shade_heavy.name` | **暂定。** 战斗 id `enm_shade_heavy`。预留，比硬残影更大更硬。不是硬残影，不要并成同一个 key。不在 MVP |
+| 群残影 | `enemy.shade_swarm.name` | **暂定。** 战斗 id `enm_shade_swarm`。预留，成群出现。不在 MVP |
 | 扑人残影 | `enemy.shade_pouncer.name` | **暂定。** 战斗 id `enm_shade_pouncer`。不在 MVP。第三章，会攻击村民 |
 | 飞行残影 | `enemy.shade_flying.name` | 战斗 id `enm_shade_flying`。不在 MVP。第四章。旧草案里的“飞屑”不要写进玩家文本 |
 | 遗忘残影 | `enemy.shade_phantom.name` | **暂定。** 战斗 id `enm_shade_phantom`。原暂名“遗忘之影”。第五章，隐身 |
 | 堆积残影 | `enemy.shade_heap.name` | **暂定。** 战斗 id `enm_shade_heap`。原暂名“堆积体”。第五章，会分裂 |
 | 结界残影 | `enemy.shade_rift.name` | **暂定。** 战斗 id `enm_shade_rift`。原名“结界之渣”。第五章，靠近时周围格子褪色 |
-| 冰之残影 | `enemy.boss_cirno.name` | 战斗 id `boss_cirno`。`ch1_04` 的 Boss。琪露诺的褪色复制体，不是琪露诺。战斗草案的 name_key 写成了 `boss.ice_shade.name`，叙事按 `enemy.<战斗 id>.name` |
+| 冰之残影 | `enemy.boss_cirno.name` | 战斗 id `boss_cirno`。`ch1_04` 的 Boss。琪露诺的褪色复制体，不是琪露诺。战斗 name_key 已对齐为这一条 |
 | 守门残影 | `enemy.boss_ch5_gatekeeper.name` | **暂名。** 关卡 id `boss_ch5_gatekeeper`。`ch5_04` 原创首领。关卡显示名曾写“结界裂缝的守门残影”，玩家文本先用“守门残影” |
 
 ## 状态名
@@ -111,6 +113,18 @@
 | 名字 | 文本 key | 说明 |
 | --- | --- | --- |
 | 半褪 | `state.yukari_halffaded.name` | **暂定。** 八云紫在 `ch1_04` 之后的弱化状态：隙间半合、袖口褪色。说明行是 `state.yukari_halffaded.desc`。美术按局部褪色、主体保持鲜艳来做外观 |
+
+## 界面、联动和强化
+
+这些文本在 [`data/text/ui_zh.csv`](../../../data/text/ui_zh.csv)，表头和对话表一样。
+
+| 类型 | key 规则 | 例子 |
+| --- | --- | --- |
+| 界面 | `combat.<id>` | `combat.armor` → 护甲 |
+| 联动名 | `syn.<id>.name` | `syn.ice_shatter.name` → 冰碎 |
+| 局内强化 | `buff.<id>.name` 和 `buff.<id>.desc` | `buff.frost_frog.name` → 褪色的发条青蛙 |
+
+强化的名字用残影掉落的被遗忘之物来包装，语气轻松。说明只写效果，数字用战斗表里的占位符（如 `{split_damage_ratio}`），不写死。路上敌人的文本 key 仍去掉战斗 ID 的 `enm_` 前缀；Boss 用 `enemy.<战斗 ID>.name`。
 
 ## 标点与格式
 

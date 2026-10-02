@@ -14,7 +14,7 @@
 | `zh_CN` | 简体中文 | 作为 `zh_CN` 的翻译 |
 | `_note` | 触发、演出、给程序和关卡的备注 | 以 `_` 开头，导入时忽略 |
 
-`names_zh.csv` 和 `lostbook_zh.csv` 也是这个格式。失物簿见 [lost_and_found.md](lost_and_found.md)。
+`names_zh.csv`、`lostbook_zh.csv` 和 `ui_zh.csv` 也是这个格式。失物簿见 [lost_and_found.md](lost_and_found.md)。界面、联动和强化在 `ui_zh.csv`。
 
 ### 格式约定
 
@@ -37,7 +37,10 @@
 | 货币 | `currency.<id>` | `currency.reiryoku` → 灵力 |
 | 失物簿 | `lost.<关卡id>.title` / `.p1` / `.p2` | `lost.prologue_01.title` |
 | 章节名 | `stage.<章节>.name` | `stage.ch01.name` |
-| 符卡名 | `spell.<角色id>.<符卡id>.name` | `spell.reimu.fantasy_seal.name` |
+| 符卡名 | `spell.<角色id>.<符卡id>.name` | `spell.reimu.evil_sealing_circle.name` → 梦符「封魔阵」。这是 MVP 默认符卡 |
+| 界面 | `combat.<id>` | `combat.armor` → 护甲。表在 `ui_zh.csv` |
+| 联动名 | `syn.<id>.name` | `syn.ice_shatter.name` → 冰碎 |
+| 局内强化 | `buff.<id>.name` / `.desc` | `buff.frost_frog.name` → 褪色的发条青蛙 |
 
 - **关卡 id**：`prologue_01`–`prologue_03`，`ch1_01`–`ch5_04`，`final_01`。对话按关卡，不再用 `dlg.ch01` 这种整章 key。
 - **阶段**：`pre` 关前，`mid` 关中，`post` 关后。Boss 的符卡宣言并进该关的 `mid` 或 `pre`，不再单独用 `duel`。
@@ -76,9 +79,9 @@
 | `dlg.prologue_01.mid.007` | 灵梦 | 结界？喂，你把话说清楚—— |  |
 | `dlg.prologue_01.mid.008` | 紫 | 说清楚就不好玩了。加油哦，巫女小姐。 | 隙间合上，茶杯一起消失 |
 | `dlg.prologue_01.mid.009` | 灵梦 | ……连杯子都拿走了！ |  |
-| `tut.prologue_01.008` | （无角色） | 符卡充能完毕！先点格子，再点角色头像。 | 灵梦符卡首次充满。建议放慢到玩家发动。放置操作已定：先点格子，再点角色头像 |
-| `dlg.prologue_01.mid.010` | 灵梦 | 麻烦死了，一口气解决！灵符「梦想封印」！ | 玩家首次发动灵梦符卡 |
-| `tut.prologue_01.009` | （无角色） | 符卡威力很大，用完要重新充能。看准时机再用。 |  |
+| `tut.prologue_01.008` | （无角色） | 符卡充能完毕！点下方的符卡按钮。 | 灵梦符卡首次充满。这是放符卡，不是放角色。建议放慢到玩家点底部按钮 |
+| `dlg.prologue_01.mid.010` | 灵梦 | 麻烦死了，一口气解决！梦符「封魔阵」！ | 玩家首次发动灵梦符卡。MVP 默认符卡。战斗 id：sc_evil_sealing_circle |
+| `tut.prologue_01.009` | （无角色） | 符卡能让一片残影变慢。用完要重新充能。 | 对应梦符「封魔阵」。不造成伤害 |
 | `tut.prologue_01.010` | （无角色） | 守住全部波次，这一关就胜利了。 | 最后一波开始 |
 | `dlg.prologue_01.mid.011` | 灵梦 | 最后一批了。守完就能喝茶……如果杯子还在的话。 |  |
 | `dlg.prologue_01.post.001` | 灵梦 | 守住了。……这些灰东西到底是什么？ |  |
@@ -183,6 +186,7 @@
 | `dlg.ch1_03.pre.001` | 琪露诺 | 路分成两边了！决斗也要分两边吗？ |  |
 | `dlg.ch1_03.pre.002` | 灵梦 | 不分。先把两边都守住。 |  |
 | `dlg.ch1_03.pre.003` | 魔理沙 | 硬的来了好几只！ | 硬残影在本章 ch1_03 正式登场 |
+| `tut.ch1_03.001` | 紫 | 硬的来了。我从隙间看一眼，人可不下去。 | 第6波口头提示。紫要到 ch1_04 打完才加入，这一关不能放置，所以不做换位演示 |
 | `dlg.ch1_03.mid.001` | 琪露诺 | 这些走得好慢……最强的我也不怕慢的！ |  |
 | `dlg.ch1_03.mid.002` | 大妖精 | 湖边的花也变灰了…… |  |
 | `dlg.ch1_03.post.001` | 琪露诺 | 下一关！下一关绝对决斗！ |  |

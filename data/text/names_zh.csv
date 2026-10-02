@@ -34,8 +34,8 @@ stage.ch03.name,第三章 人间之里,
 stage.ch04.name,第四章 妖怪之山,
 stage.ch05.name,第五章 结界的尽头,
 stage.final.name,终章 被遗忘者,
-spell.reimu.fantasy_seal.name,灵符「梦想封印」,原名：霊符「夢想封印」
-spell.reimu.evil_sealing_circle.name,梦符「封魔阵」,原名：夢符「封魔陣」
+spell.reimu.fantasy_seal.name,灵符「梦想封印」,原名：霊符「夢想封印」。战斗 id：sc_fantasy_seal。MVP 之后才用
+spell.reimu.evil_sealing_circle.name,梦符「封魔阵」,原名：夢符「封魔陣」。战斗 id：sc_evil_sealing_circle。MVP 里灵梦的默认符卡
 spell.marisa.master_spark.name,恋符「极限火花」,原名：恋符「マスタースパーク」
 spell.marisa.stardust_reverie.name,魔符「星尘幻想」,原名：魔符「スターダストレヴァリエ」
 spell.cirno.icicle_fall.name,冰符「冰瀑」,原名：氷符「アイシクルフォール」
@@ -71,10 +71,12 @@ state.yukari_halffaded.desc,隙间半合，袖口褪了色。人还是鲜艳的�
 enemy.shade_basic.name,小残影,战斗 id：enm_shade_basic。MVP 基础敌人
 enemy.shade_fast.name,快残影,战斗 id：enm_shade_fast。第一章新敌人
 enemy.shade_armored.name,硬残影,战斗 id：enm_shade_armored。ch1_03 正式登场，这一关出 8 只
+enemy.shade_heavy.name,重残影,暂定。战斗 id：enm_shade_heavy。预留兵种，比硬残影更大更硬。不是硬残影。不在 MVP
+enemy.shade_swarm.name,群残影,暂定。战斗 id：enm_shade_swarm。预留兵种，成群出现。不在 MVP
 enemy.shade_pouncer.name,扑人残影,暂定。战斗 id：enm_shade_pouncer。不在 MVP。第三章，会攻击村民
 enemy.shade_flying.name,飞行残影,战斗 id：enm_shade_flying。不在 MVP。第四章
 enemy.shade_phantom.name,遗忘残影,暂定。战斗 id：enm_shade_phantom。原暂名是遗忘之影。第五章，隐身
 enemy.shade_heap.name,堆积残影,暂定。战斗 id：enm_shade_heap。原暂名是堆积体。第五章，会分裂
 enemy.shade_rift.name,结界残影,暂定。战斗 id：enm_shade_rift。原名是结界之渣。第五章，靠近时周围格子褪色
-enemy.boss_cirno.name,冰之残影,战斗 id：boss_cirno。ch1_04 的 Boss。琪露诺的褪色复制体。战斗草案 name_key 写成了 boss.ice_shade.name
+enemy.boss_cirno.name,冰之残影,战斗 id：boss_cirno。ch1_04 的 Boss。琪露诺的褪色复制体。战斗 name_key 已对齐为这一条
 enemy.boss_ch5_gatekeeper.name,守门残影,暂名。关卡 id：boss_ch5_gatekeeper。ch5_04 原创首领。关卡显示名曾写结界裂缝的守门残影
