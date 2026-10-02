@@ -177,6 +177,15 @@ func _slide_bars(bars: Array[Control], seconds: float) -> void:
 		)
 
 
+## 开战后关名符札不再停留，提前淡掉，不和战斗抢注意力。
+func dismiss_ofuda(ofuda: Control) -> void:
+	if not ofuda.visible:
+		return
+	var tween := _fresh(ofuda, "ofuda")
+	tween.tween_property(ofuda, "modulate:a", 0.0, _num("entry", "ofuda_fade_sec", 0.4))
+	tween.tween_callback(ofuda.hide)
+
+
 func hide_now(control: Control) -> void:
 	for channel in ["ofuda", "modulate", "position"]:
 		var key := "%d:%s" % [control.get_instance_id(), channel]

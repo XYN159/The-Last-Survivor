@@ -291,6 +291,7 @@ func _on_call_pressed() -> void:
 	if _finished or str(_sim.view_state().phase) != BattleSim.PHASE_DEPLOY:
 		return
 	_sim.call_next_wave()
+	_screen_motion.dismiss_ofuda(_entry_ofuda)
 	_refresh()
 
 

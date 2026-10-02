@@ -102,6 +102,16 @@ func test_ofuda_stays_left_of_the_route_and_below_the_top_bar() -> void:
 	assert_gt(ofuda.position.y, top_bar.size.y)
 
 
+func test_starting_the_wave_dismisses_the_level_ofuda_early() -> void:
+	var board := BATTLE_SCENE.instantiate()
+	add_child_autofree(board)
+	var ofuda := board.get_node("%EntryOfuda") as Control
+	assert_true(ofuda.visible)
+	board._on_call_pressed()
+	await wait_seconds(0.6)
+	assert_false(ofuda.visible)
+
+
 func test_every_battle_button_has_press_feedback() -> void:
 	var board := BATTLE_SCENE.instantiate()
 	add_child_autofree(board)
