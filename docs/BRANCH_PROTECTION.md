@@ -12,7 +12,7 @@
 
 ## 推荐做法：规则集
 
-1. 打开 <https://github.com/XYN159/touhou-forgotten-defense/settings/rules>。
+1. 打开 <https://github.com/XYN159/Touhou-forgotten-defense/settings/rules>。
 2. 点 **New ruleset**，再点 **New branch ruleset**。
 3. **Ruleset Name** 填 `Protect main`。
 4. **Enforcement status** 选 **Active**。
@@ -36,7 +36,7 @@
 
 如果设置页里你更熟悉 **Branches** 而不是 Rulesets，可以用经典规则，效果对齐：
 
-1. 打开 <https://github.com/XYN159/touhou-forgotten-defense/settings/branches>。
+1. 打开 <https://github.com/XYN159/Touhou-forgotten-defense/settings/branches>。
 2. 点 **Add branch ruleset** 或 **Add classic branch protection rule**。走经典规则时：
 3. **Branch name pattern** 填 `main`。
 4. 勾选 **Require a pull request before merging**。Required approvals 设为 **0**。

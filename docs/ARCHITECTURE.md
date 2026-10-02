@@ -2,6 +2,8 @@
 
 这份文档说明代码放在哪里、数据怎么流。玩法意图在 `docs/GDD.md`，写法约定在 `docs/CODING_STYLE.md`。
 
+> **方向已经改了。** 游戏现在是竖屏角色塔防，见 `docs/GDD.md`。下面只要还出现「车道」「小队人数」「加人门」「物资」「服务器」，说的是**当前代码还没改掉的占位**，或是**已经作废的旧计划**。不是新玩法。换成塔防之前，不要按这些字段做新功能。这次只改文档，不改场景，也不改 `data/`。
+
 ## 目录
 
 ```
@@ -12,7 +14,7 @@ assets/models/       三维模型（glb 等）
 assets/textures/     图片
 data/balance/        数值 JSON。调平衡改这里
 scenes/main/         标题等流程场景
-scenes/battle/       占位战斗场景（旧车道画面，暂不改名）
+scenes/battle/       战斗场景。现在里面仍是已作废的占位车道（目录名暂不改），以后换成塔防原型
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
 scripts/balance/     数值配置的读取和计算
@@ -37,7 +39,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
 | `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」 |
-| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧占位画面和「返回」。逻辑先留着 |
+| `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 已作废的占位车道和「返回」。逻辑先留着，塔防原型会换掉这个场景 |
 
 场景脚本不写 `class_name`，用节点路径和 `%唯一名` 找按钮。纯数据类才写 `class_name`，例如 `BalanceConfig` 和 `SaveGame`，这样测试和其他脚本都能直接用类型。
 
@@ -56,7 +58,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 名称 | 脚本 | 职责 |
 | --- | --- | --- |
 | `AppTheme` | `scripts/autoload/app_theme.gd` | 启动时设置中文字体 |
-| `GameState` | `scripts/autoload/game_state.gd` | 当前小队人数和物资。启动时读数值配置 |
+| `GameState` | `scripts/autoload/game_state.gd` | 当前占位数据：小队人数和物资。这是旧车道留下的，新玩法不用这套。塔防原型再改它负责什么 |
 
 自动加载按 `project.godot` 里的顺序初始化。`AppTheme` 在前，这样主场景出现时字体已经换好。
 
@@ -64,7 +66,9 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 ## 数值配置
 
-平衡数字放在 `data/balance/starting_balance.json`。下面这些字段仍是旧占位原型在用，塔防数值以后另写，不要把这里当成新玩法的定案：
+平衡数字放在 `data/balance/`。现在文件还是旧的 `data/balance/starting_balance.json`。下面这些字段仍是旧占位原型在用（小队人数、加人门、物资），塔防数值以后另写，不要把这里当成新玩法的定案。文件先留着，等做塔防原型时再改内容和字段名。
+
+新玩法的数字以后仍放在 `data/balance/`，不写死在场景脚本里。攻击、护甲、波次这些还没定，不要提前把新数字写进这个旧文件。
 
 | 字段 | 含义 | 当前值 |
 | --- | --- | --- |
@@ -92,7 +96,9 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 `version` 用来以后迁移旧档。读写失败时返回空字典或错误码，不让游戏崩掉。
 
-计划中的落点是玩家设备上的 `user://saves/profile.json`。标题画面和基地在后续 PR 里调用 `SaveGame`，`GameState` 继续只保存这一局内存里的状态。当前占位场景还不会写盘，但测试已经覆盖了来回读写。
+上面这份 `squad_size` / `supplies` 是旧占位。新存档要记关卡进度、局外等级和解锁；具体字段等 `docs/GDD.md` 里的「待你补充」拍板后再改代码。不要按小队人数和基地建筑去设计新存档。
+
+计划中的落点仍是玩家自己设备上的 `user://saves/profile.json`。当前占位场景还不会写盘，但测试已经覆盖了来回读写。`GameState` 继续只保存这一局内存里的状态。
 
 不要把存档写进 `res://`。`res://` 在导出后是只读的。
 
@@ -108,15 +114,16 @@ Android 预设在 `export_presets.cfg`，预设名是 `Android`。
 - 证书三项都留空。调试证书来自本机 Godot 的编辑器设置，或 CI 里的环境变量 `GODOT_ANDROID_KEYSTORE_DEBUG_PATH`、`GODOT_ANDROID_KEYSTORE_DEBUG_USER`、`GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD`。
 - 测试插件和 `tests/` 被排除在安装包之外。
 
-发布到商店需要的正式证书以后再加，并且只放在 GitHub Secrets 或你自己的电脑上。
+本作免费发布，不计划上架商店。正式发布证书先不做。调试证书只留在你自己的电脑或 CI 的临时环境里，不要放进仓库。
 
-## 以后的服务器
+## 工程里的旧名字（以后再改代码）
 
-多人要等单机 MVP 玩起来之后再做。预留的接法是：
+GitHub 仓库是 **XYN159/Touhou-forgotten-defense**。`project.godot` 的游戏名、`export_presets.cfg` 的安装包显示名和包名，也已经改成《东方守幻录》和 `com.xyn159.touhouforgottendefense`。调试 APK 文件名是 `touhou-forgotten-defense-debug.apk`。
 
-- 玩法代码只生产普通字典：小队、资源、建筑等级、已通过的关卡。
-- `SaveGame` 今天把字典写进本地文件。以后可以加一个同样接收这份字典的上传实现，把 JSON 发给你自己的 VPS。
-- 战斗、基地、数值计算不直接打开网络连接。网络只出现在那一个存档出入口。
-- 服务器不负责算这一局怎么打。手机上算出结果，服务器负责保存和以后可能的校验。
+还没改掉的是占位玩法本身：战斗场景仍是旧车道，数值文件里仍是小队人数和物资。这些按上面「方向已经改了」处理，等塔防原型再换，不要按旧字段做新功能。
 
-在单机循环稳定之前，不要加网络自动加载，也不要加账号系统。
+## 多人与服务器（已作废）
+
+以前写过「单机做完再上自己的服务器」。制作人已经确认：**不做多人，不做账号，不做服务器。** 不要再加网络、登录，也不要做存档上传。
+
+若以后真要推翻这个决定，先改 `docs/GDD.md` 的「明确不做」，并新写一篇架构决定记录，再开 PR。在那之前不要开工。

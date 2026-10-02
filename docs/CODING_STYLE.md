@@ -11,6 +11,8 @@ func squad_size_after_gates(gate_count: int) -> int:
 	return starting_squad_size + gate_count
 ```
 
+这个函数名来自已经作废的车道占位代码，这里只用来示范「参数和返回值要写类型」。等塔防原型改掉代码之后，再把示例换成新的函数名。这次不改脚本。
+
 能用具体类型就不用 `Variant`。解析 JSON 时，先放进 `Variant`，再用 `typeof` 确认是字典。
 
 ## 命名
@@ -24,7 +26,7 @@ func squad_size_after_gates(gate_count: int) -> int:
 | 场景里只给脚本用的节点 | 大驼峰，并设成唯一名 | `%StartButton` |
 | 私有成员 | 前导下划线 | `_start_button` |
 
-信号用能听懂的短语，带上参数类型：`signal squad_size_changed(new_size: int)`。
+信号用能听懂的短语，带上参数类型：`signal squad_size_changed(new_size: int)`。`squad_size_changed` 这个名字来自已作废的车道占位，这里只示范写法。
 
 ## 文件里的顺序
 

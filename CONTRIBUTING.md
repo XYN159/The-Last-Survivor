@@ -10,15 +10,15 @@
 
 | 前缀 | 用来做什么 | 例子 |
 | --- | --- | --- |
-| `feature/` | 新玩法或新功能 | `feature/title-screen` |
+| `feature/` | 新玩法或新功能 | `feature/tower-prototype` |
 | `fix/` | 修一个已经存在的问题 | `fix/start-button-overlap` |
 | `chore/` | 工程、工具、CI，不改玩法 | `chore/project-scaffold` |
-| `docs/` | 只改文档 | `docs/windows-setup` |
+| `docs/` | 只改文档 | `docs/gdd-touhou-td` |
 
 ```bash
 git switch main
 git pull origin main
-git switch -c feature/title-screen
+git switch -c feature/tower-prototype
 ```
 
 ## 提交说明
@@ -36,13 +36,13 @@ git switch -c feature/title-screen
 | `chore` | 工具、构建、杂项 |
 | `refactor` | 行为不变的代码整理 |
 
-例子：`feat: show the game title on the main menu`
+例子：`feat: place a character on the tower defense map`
 
 一次提交只做一件事。PR 也保持小：一个 PR 最好只解决一个问题，让你能在几分钟内看完描述并点进游戏确认。
 
 ## 打开 PR
 
-1. 把分支推上去：`git push -u origin feature/title-screen`
+1. 把分支推上去：`git push -u origin feature/tower-prototype`
 2. 在 GitHub 上打开 PR，目标分支是 `main`。
 3. 按模板填写：改了什么、为什么、截图、怎么验证。
 4. 勾选清单。改了玩法就更新 `docs/GDD.md`；改了工程结构就更新 `docs/ARCHITECTURE.md`；任何玩家或工程上的变化都更新 `CHANGELOG.md`。
@@ -63,7 +63,7 @@ git switch -c feature/title-screen
 别人的改动进了 `main` 之后，你的分支要先合入最新 `main` 再继续：
 
 ```bash
-git switch feature/title-screen
+git switch feature/tower-prototype
 git fetch origin
 git merge origin/main
 ```
@@ -120,7 +120,7 @@ git push origin v0.1.0
 
 4. 标签会触发 Release 工作流，把调试签名的 APK 挂到 GitHub Release。
 
-调试签名的包不能上架。以后如果要上 Google Play，再单独做发布证书，并放进 GitHub Secrets，不要放进仓库。那一步会另写决定记录。
+调试签名的包只能自己安装试用。本作按现有决定免费发布、不商业化，不计划上架商店。正式商店证书先不做。
 
 ## 本地跑和 CI 一样的检查
 
