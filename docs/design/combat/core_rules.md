@@ -156,7 +156,7 @@
 2. 在 `spawning` 里叫波：跳过这一波剩下的刷怪窗口和空档，下一波立刻开始。**这一波还没出生的敌人不会被丢掉**，仍按原来的时间表出生，和下一波叠在一起（`battle_flow.early_call_keeps_current_wave_spawns` = true，`early_call_drops_unspawned` = false）。所以叫波是「拿灵力、扛更密的怪」的冒险选择，不能用来跳过敌人。
 3. 在 `intermission` 里叫波：跳过剩下的空档，下一波立刻开始。
 4. 在 `deploy` 里点「开始」：跳过剩下的布阵倒计时。
-5. 叫波奖励 = `min(economy.early_call_reward_cap, floor(本来到下一波开始还剩的秒数 × economy.early_call_reward_per_sec))`。上限是 20。布阵期提前开始仍按 `economy.early_start_reward_per_sec`。叫波功能开不开见 D-18，MVP 可以先不做；上限已经由 #8 写上。
+5. 叫波奖励 = `min(economy.early_call_reward_cap, floor(本来到下一波开始还剩的秒数 × economy.early_call_reward_per_sec))`。上限见 `economy.early_call_reward_cap`，不在本文写数字。布阵期提前开始仍按 `economy.early_start_reward_per_sec`。用户 2026-10-02 定（D-18）：叫波要做。刷怪窗口里可以叫下一波，这一波还没出生的敌人按原时间表照常出生，和下一波叠在一起。T-00 原型这一轮可以后补实现，规则以本节为准。
 
 **和旧稿的差别**：旧稿在布阵 10 秒之后还要再等 4 秒才出第一只。已定去掉这 4 秒：布阵结束，第一只马上出生。PR #5 的 `waves[0].delay_sec` 是 0。
 
@@ -200,7 +200,7 @@
 2. 点头像 → 立刻放置，扣灵力，播放 0.25 秒落地动画。放置后 0.3 秒【草案默认值】开始攻击。
 3. 点别处取消。
 4. 同一角色最多放 3 个（已拍板，2026-09-27）。每个角色的上限和递增比例是 `characters.<id>.max_copies`、`characters.<id>.copy_cost_increase_ratio`【数值·PR #8】，`rules.json` 的 `placement.max_copies_per_character` 只是缺省值。多放一个怎么涨价，公式以 PR #8 为准。
-5. 美铃是阻挡型，也放在 `.` 格，但必须紧贴路线，挡住相邻路线格上的敌人（见 characters.md 和 README 待拍板第 25 条）。
+5. 美铃是阻挡型，也放在 `.` 格，但必须紧贴路线，挡住相邻路线格上的敌人（用户 2026-10-02 定，D-19；见 characters.md）。不能放在路线格 `P` 上。
 
 ### 6.2 已放置的角色
 
@@ -208,7 +208,7 @@
 
 - 升级：每个角色从 1 级升到 3 级，一共升 2 次（`character_levels.max_level` = 3，已和数值策划对齐）。升级费用是 `characters.<id>.upgrade_costs`，每级攻击倍率是 `characters.<id>.level_attack_mult`【数值·PR #8】。每级外观和特效变化见 characters.md。
 - 卖出：返还已花费灵力 × `characters.<id>.sell_refund_ratio`【数值·PR #8】。波次中也能卖。
-- 被冻住的角色（`st_unit_frozen`）不能升级或卖出。能不能连点敲碎冰块还在待拍板（README 第 8 条，DI-13）；数据里先写连点 3 下。
+- 被冻住的角色（`st_unit_frozen`）不能升级或卖出，也不能连点提前破冰（用户 2026-10-02 定，D-05）。冻结走完来源给的时长才结束。点击冰块不产生裂纹，也不缩短时长。
 
 ### 6.3 界面按钮
 

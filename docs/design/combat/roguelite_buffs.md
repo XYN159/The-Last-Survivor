@@ -8,7 +8,7 @@
 
 1. 每 5 波给一次三选一（PR #8 `buff_offer.every_n_waves` = 5、`buff_offer.choices` = 3，和已拍板一致）。时机：第 5、10、15 波的最后一只出生、进入 `intermission` 空档的那一刻弹出（`buff_offers.offer_trigger_point`）。因为空档不等清场（core_rules.md 4.2），这里也不等这一波的敌人打完。这一波如果已经是本关最后一波，不再弹，直接按胜负结算（`skip_offer_on_final_wave`）。
 2. 选择期间逻辑暂停（`buff_select`），空档倒计时也暂停；选完继续。
-3. 抽选规则：从强化池里按 `buffs.<id>.offer_weight` 加权随机抽 `buff_offer.choices` 个**不同**的；已经满层的不出；需要特定角色（比如「大结界」需要灵梦）而本关没带这个角色的不出。随机数用每局种子。
+3. 抽选规则：从强化池里按 `buffs.<id>.offer_weight` 加权随机抽 `buff_offer.choices` 个**不同**的；已经满层的不出；需要特定角色（比如「大结界」需要灵梦）而本关没带这个角色的不出。随机数用每局种子。MVP 只从 `buffs.json` 里 `mvp` 为 true 的强化里抽（`offer_rules.include_only_mvp`）。
 4. **保底**：玩家已经拿到、但层数还没到质变门槛的强化，下一次三选一里保底出现其中一个（`pity_owned_below_threshold`）。有好几个都没到质变时，从里面随机保底一个，另外两格仍按权重抽，并且不和保底的那个重复。
 5. **只管当局**（`buff_offers.scope` = `per_level`）。过关就清空，不带到下一关。同一个强化可以重复选，用来叠层（`allow_repeat_stacks`），满层之后不再出现。
 6. 序章前两关没有三选一（`prologue_levels_without_offer` = 2）。序章第 3 关开始教三选一（`prologue_offer_starts_at_level` = 3）。波数举例见 core_rules.md 第 4.3 节。
@@ -28,7 +28,9 @@
 
 叠加规则：同一个强化的多层之间是**相加**（比如「锐利」2 层 = 2 × `buffs.buff_sharp_ofuda.attack_pct_per_stack`）；不同强化如果都加攻击，按它们的 `attack_category` 分类，同类相加、异类相乘（见伤害流水线第 1 步）。
 
-## 3. 强化清单（12 个，草案）
+## 3. 强化清单（12 个）
+
+用户 2026-10-02 定（D-06）：MVP 三选一只抽这 7 个，`mvp` = true：`buff_frost_frog` 寒气、`buff_split_shot` 分裂弹、`buff_crit_charm` 会心、`buff_sharp_ofuda` 锐利、`buff_rapid_fire` 连射、`buff_spell_battery` 充能、`buff_guard_mend` 修补。大结界、穿透、香火、连击狂热、隙间之眼留在表里，`mvp` = false，MVP 抽不到。
 
 「每层效果」里的数字都在 PR #8 的 `buffs.<id>` 下，表里只写字段名。最多层数是 `max_stacks`，质变层数是 `transform_at_stacks`（都是 2）。
 
@@ -49,7 +51,7 @@
 
 有 2 层质变的强化共 8 个：分裂弹、连射、寒气、会心、大结界、充能、修补、隙间之眼。质变门槛是 2 层（已拍板）。最多层数可以高于门槛（例如最多 3 层的，第 2 层就质变，第 3 层继续叠每层效果）。
 
-PR #8 另外提了 5 个新强化（`buff_boss_slayer`、`buff_armor_break`、`buff_offering_box`、`buff_upgrade_discount`、`buff_spell_power`），只有数值、没有行为。要不要加进强化池见 README 待拍板第 9 条；`buffs.json` 暂时不收。
+PR #8 另外提了 5 个新强化（`buff_boss_slayer`、`buff_armor_break`、`buff_offering_box`、`buff_upgrade_discount`、`buff_spell_power`），只有数值、没有行为。用户 2026-10-02 的 D-06 没有收这 5 个。`buffs.json` 暂时不收，等以后另拍板再补行为。
 
 ## 4. 质变的实现细节
 

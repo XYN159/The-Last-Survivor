@@ -80,7 +80,7 @@
       "id": "syn_ofuda_detonate",
       "draft_name": "符札引爆",
       "name_key": "syn.ofuda_detonate.name",
-      "status": "draft",
+      "status": "confirmed",
       "mvp": true,
       "requires": {
         "characters_all": [

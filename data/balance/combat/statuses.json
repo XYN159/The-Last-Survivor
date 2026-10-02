@@ -312,8 +312,8 @@
         "type": "unit_disable",
         "pause_cooldowns": true,
         "block_upgrade_sell": true,
-        "tap_to_break": 3,
-        "tap_to_break_status": "pending_producer"
+        "tap_to_break_status": "decided_no",
+        "tap_to_break": false
       },
       "duration_source": "attacker",
       "boss_cirno_duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",

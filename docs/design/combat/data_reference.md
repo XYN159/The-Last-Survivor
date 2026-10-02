@@ -291,6 +291,7 @@
 | `id` | 字符串 | — | `st_<名>` |
 | `target_kind` | 字符串 | — | `enemy` / `unit`（角色） |
 | `effect.type` | 字符串 | — | `move_speed_mult` / `hard_stop` / `block_status` / `damage_taken_bucket_add` / `damage_over_time` / `hard_stop_store_damage` / `damage_immune` / `unit_disable` / `marker` / `mark_for_owner_trigger` |
+| `effect.tap_to_break` | 布尔 | — | 仅 `st_unit_frozen`。false = 不能连点破冰（D-05，用户 2026-10-02 定）。`tap_to_break_status` = `decided_no` |
 | `default_duration_sec` | 数字 | 秒 | 非冻结类状态在来源没指定时的时长；0 = 区域绑定 |
 | `zone_bound` | 布尔 | — | 是否跟随区域进出 |
 | `stacking` | 字符串 | — | `strongest_only` / `single_instance` / `single_instance_refcount_zones` |
@@ -348,7 +349,7 @@
 | `discovery.*` | — | 发现提示规则：存进存档、首次弹窗、之后小字节流 |
 | `id` | 字符串 | `syn_<名>` |
 | `draft_name` | 字符串 | 草案中文名，正式文本走 `name_key` |
-| `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案） |
+| `status` | 字符串 | `confirmed_framework`（框架）/ `confirmed`（用户已定，如符札引爆）/ `draft`（草案） |
 | `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
 | `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
 | `mvp_freeze_sources` | 数组 | MVP 冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze`、`chr_cirno`（第一章第 2 关起的琪露诺本人） |
@@ -364,8 +365,9 @@
 
 | 字段 | 类型 | 含义 | 归属 |
 | --- | --- | --- | --- |
-| `offer_rules.*` | — | 三选一规则 | 战斗/系统 |
+| `offer_rules.*` | — | 三选一规则。`include_only_mvp` 为 true 时，MVP 只抽 `mvp` 为 true 的强化 | 战斗/系统 |
 | `id` | 字符串 | `buff_<名>` | 战斗 |
+| `mvp` | 布尔 | 用户 2026-10-02 定（D-06）。true 的 7 个进 MVP 三选一：寒气、分裂弹、会心、锐利、连射、充能、修补 | 战斗 |
 | `mvp_freeze_source` | 布尔 | 可选。为 true 时，该强化是 MVP 冻结来源之一 | 战斗 |
 | `draft_name` / `narrative_item` | 字符串 | 草案名 / 失物包装建议 | 文案/系统 |
 | `name_key` / `desc_key` | 字符串 | `buff.<名>.name` / `.desc`，待文案新增 | 文案 |

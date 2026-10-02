@@ -94,7 +94,7 @@ func resolve_hit(req):
 | `st_barrier_mark` | 敌人 | 易伤桶 + `statuses.st_barrier_mark.vulnerability_add` | 区域绑定：进入结界挂上，离开移除；「博丽与八云」联动会挂一个 4 秒的限时版本 | 单实例，用引用计数：记录「有几个结界区域 + 几个限时来源」在给它挂标记，计数归零才移除。数值只算一次 | 无 | 头顶红白札 | 是 |
 | `st_ofuda_tag` | 敌人 | 标记，供联动「符札引爆」使用 | 1.5 秒 | 单实例，刷新 | — | 身上贴一张小札 | 是 |
 | `st_invulnerable` | 敌人（Boss） | 伤害为 0，不接受新状态，不被击退 | `boss_rules.phase_invuln_sec` | 单实例 | — | 宣言光环 | 是 |
-| `st_unit_frozen` | 角色 | 不攻击、技能和冷却暂停，不能升级卖出；连点破冰待拍板（DI-13，数据先写 3 下） | 由来源决定。冰之残影读 `terrain.ter_ice.stop_on_declare_sec`（用户已确认的值在 PR #8） | 单实例，取较大值 | 结束后挂 `st_unit_freeze_immune` | 角色被冰块包住 | 是（冰之残影） |
+| `st_unit_frozen` | 角色 | 不攻击、技能和冷却暂停，不能升级卖出。不能连点破冰（D-05，用户 2026-10-02 定） | 由来源决定。冰之残影读 `terrain.ter_ice.stop_on_declare_sec`（用户已确认的值在 PR #8） | 单实例，取较大值 | 结束后挂 `st_unit_freeze_immune` | 角色被冰块包住，点击不出现裂纹 | 是（冰之残影） |
 | `st_unit_pounced` | 角色 | 被扑人残影扑中：短暂停止攻击和技能（推荐行为）。不影响升级卖出 | 秒数待 PR #8 补（建议字段 `enemies.enm_shade_pouncer.pounce_disable_sec`） | 单实例，刷新 | — | 灰色手印 | 否（扑人残影，第三章） |
 | `st_unit_freeze_immune` | 角色 | 阻止 `st_unit_frozen` | `statuses.st_unit_freeze_immune.duration_sec` | 单实例 | — | 融水滴 | 是 |
 | `st_burn` | 敌人 | 每 0.5 秒一次持续伤害，每跳系数 `statuses.st_burn.tick_damage_coef`（走流水线第 3–9 步，不暴击、不击退、不附加状态） | 3.0 秒 | 不叠加，取伤害最高的一个；同一来源刷新时长 | 无 | 小火苗 | 否（妹红） |

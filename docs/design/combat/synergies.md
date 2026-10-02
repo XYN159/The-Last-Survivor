@@ -1,6 +1,6 @@
 # 角色联动
 
-> 状态：框架联动 2 条（制作人已验收）+ 新增联动 6 条（**草案**，待制作人确认）。
+> 状态：框架联动 2 条（制作人已验收）。符札引爆由用户在 2026-10-02 定进 MVP（D-06）。其余 5 条新增联动仍是草案，MVP 不做。
 > 对应配置：`data/balance/combat/synergies.json`。联动桶的加成数字在 PR #8 的 `stats.json` → `synergies.<id>.synergy_add`，下表只写字段名。注意 ID 不完全一样：冰火交加在 PR #8 叫 `syn_ice_fire`，早苗特攻在 PR #8 是单独一条 `syn_sanae_outside_object`。判定时机和堆叠规则见 [damage_and_status.md](damage_and_status.md) 第 4 节。
 
 ## 1. 联动一览
@@ -9,7 +9,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | `syn_ice_shatter` | 冰碎 | 魔理沙 + 任意冻结来源 | 魔理沙的命中打在冻结中的敌人身上 | 联动桶 + `synergies.syn_ice_shatter.synergy_add`，强制重击，移除冻结，碎冰特效 | 框架 | 是（第一批） |
 | `syn_barrier_bonus` | 结界加护 | 灵梦 + 任意角色 | 任意攻击打中带结界标记的敌人 | 易伤桶 + `statuses.st_barrier_mark.vulnerability_add`（由结界标记提供，这条只负责「发现」提示） | 框架 | 是 |
-| `syn_ofuda_detonate` | 符札引爆 | 灵梦 + 魔理沙 | 魔理沙打中 1.5 秒内被灵梦御札打过的敌人 | 这一击必定暴击，札爆开 | 草案 | 是（MVP 只有这两人，给她们一个配合点） |
+| `syn_ofuda_detonate` | 符札引爆 | 灵梦 + 魔理沙 | 魔理沙打中 1.5 秒内被灵梦御札打过的敌人 | 这一击必定暴击，札爆开 | 已定（D-06） | 是 |
 | `syn_border_seal` | 博丽与八云 | 灵梦 + 紫 | 紫的隙间换位、神隐送回等位移，场上有灵梦 | 被移动的敌人在出口获得 4 秒结界标记（和结界同样的易伤），不需要站在结界里 | 草案 | 否 |
 | `syn_boundary_spark` | 境界火花 | 魔理沙 + 紫 | 释放恋符「极限火花」时场上有紫 | 0.3 秒后紫张开隙间，从紫的位置朝第二好的方向再射一道 50% 伤害、宽 1.2 格的光束 | 草案 | 否 |
 | `syn_fire_and_ice` | 冰火交加 | 琪露诺 + 妹红 | 火焰伤害打中被冰减速或冻结的敌人 | 联动桶 + `synergies.syn_ice_fire.synergy_add`；若冻结则融化（移除冻结），冒蒸汽 | 草案 | 否 |
