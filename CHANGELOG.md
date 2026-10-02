@@ -6,6 +6,8 @@
 
 ### 变更
 
+- DI-06 改为已定：ch1_04 第 11 波入场，Boss 血量不乘倍率，系数 0.74。漏怪扣命仍见 DI-07。
+- 测试文档记下 2026-10-02 的用户拍板：冰之残影第三阶段用雪符「钻石风暴」，被冻住可以连点破冰；结算画面交给美术（东方风梦幻的 MVP 图，字体要有游戏感和赛博朋克感）；界面和测试先用文本 key `currency.meta`。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 
