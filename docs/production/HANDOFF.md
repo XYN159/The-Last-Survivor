@@ -83,12 +83,12 @@
 - **#2、#3**：这次没有新的已定修改。#2 仍等 #4、#5 进 `main` 再合。
 - **#12、#14**：见第 4、5 节。不在上表的顺序里。
 
-## 4. PR #12（T-00 原型）返工已交，待复审
+## 4. PR #12（T-00 原型）复审后需要返工
 
 - PR：https://github.com/XYN159/Touhou-forgotten-defense/pull/12
 - 分支：`cursor/battle-core-prototype-d174`
 - 返工 head：`b5b3bed`（已不是草稿）。上一轮「需要返工」看的是 `452f1b3`，不作为这一版的结论。
-- 返工由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到原 PR。它说本地 lint 和 GUT 33/33 通过，但没能改 PR 描述，也没能留言。执行制作人还没有汇总。等下面的复审到齐再写「可以合并」或「需要返工」。
+- 返工由 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60) 推到原 PR。`b5b3bed` 上的复审已经到齐，汇总是需要返工。剩下要改的是标题必须出现「东方 Project 二次创作」。放置、波次和费用不要再动。同一 agent 已接这一条。
 - 原原型 agent：[bc-062dec78-83a7-5a85-9366-e6690ee5d174](https://cursor.com/agents/bc-062dec78-83a7-5a85-9366-e6690ee5d174)
 - 上一轮正式审核：[战斗策划](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132717)、[执行制作人汇总](https://github.com/XYN159/Touhou-forgotten-defense/pull/12#issuecomment-5946132812)。评论 `5945898325` 是更早的一份战斗验收，和后来的更正有冲突，不以它为返工清单。
 
@@ -207,7 +207,7 @@ D-01、D-02、D-03、D-04 已定，不要再问。
 
 正在做：
 
-- **#12 复审**：看 `b5b3bed`。这一轮的审核 agent 见第 4 节的表。评论到齐之前，执行制作人不写「可以合并」。
+- **#12 第二轮返工**：复审已到齐，汇总是需要返工。只改标题上的「东方 Project 二次创作」，发回 [bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60](https://cursor.com/agents/bc-d0f2930b-36eb-543e-b3a6-be672f2e2b60)。PR 描述里的旧放置顺序和旧费用公式已经由执行制作人改掉。
 - **状态页**：整理员 [bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344](https://cursor.com/agents/bc-18aea9d7-7507-56b7-93d4-c0f73fb6d344) 没有被原会话叫醒。刷新发给了 [bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee](https://cursor.com/agents/bc-f9b5cac4-b05b-5ecd-a1e0-1dce1ea95eee)，只许改 `docs/PR_STATUS.md`。
 
 先不要派，条件到了再按原文发：
