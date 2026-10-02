@@ -13,7 +13,7 @@
 - 序章第一关交出版本之后，由美术策划优化背景图和画面，并另开动效师做这一关的动效。现在不派。
 - 写程序用 Opus 5.5，策划、审核和文档用 Grok。序章第一关改由 Opus 5.5 的程序 agent 做。
 - 序章第一关的美术和动效：完成度参考明日方舟，风格必须是东方。竖屏，不使用官方素材。等程序交出版本再派。
-- Grok 程序推过 `cursor/prologue-01-playable-48f3`，不给它开 PR。第一关以 Opus 5.5 的程序为准。
+- Grok 程序推过 `cursor/prologue-01-playable-48f3`，不给它开 PR。第一关以 Opus 5.5 的程序为准，PR #16。美术和动效已按这个版本另派。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 
