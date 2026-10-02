@@ -25,7 +25,7 @@
 
 | PR | 一句话 | 状态 | 更新日志 | CI |
 | --- | --- | --- | --- | --- |
-| [#10](https://github.com/XYN159/Touhou-forgotten-defense/pull/10) | 维护本页：开着的 PR、状态和推荐合并顺序。草稿。 | CI/工程，待审核。从最新 `main` 拉出。 | 已更新 | 见下方打包说明 |
+| [#10](https://github.com/XYN159/Touhou-forgotten-defense/pull/10) | 维护本页：开着的 PR、状态和推荐合并顺序。草稿。 | CI/工程，待审核。从最新 `main` 拉出。 | 已更新 | `export-android` 失败，另外两项通过 |
 | [#7](https://github.com/XYN159/Touhou-forgotten-defense/pull/7) | 补上调试 APK 路径少写的 `}`，并让 lint 检查 shell 语法。 | CI/工程，待审核。已在最新 `main` 上。 | 已更新 | `lint`、`test`、`export-android` 都通过 |
 | [#9](https://github.com/XYN159/Touhou-forgotten-defense/pull/9) | 写测试计划、MVP 验收和关卡模拟方案，并列出设计稿之间对不上的地方。草稿。 | 测试，待审核。已在最新 `main` 上。 | 按描述故意未改 | `export-android` 失败，另外两项通过 |
 | [#3](https://github.com/XYN159/Touhou-forgotten-defense/pull/3) | 把总纲和路线图改成竖屏塔防，并记下已经拍板的规则。 | 设计文档，待审核。已合入最新 `main`。 | 已更新 | `export-android` 失败，另外两项通过 |
