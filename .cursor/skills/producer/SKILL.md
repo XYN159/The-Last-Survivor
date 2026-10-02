@@ -9,14 +9,14 @@ description: "Use this when acting as the 执行制作人 (producer) for 东方�
 
 ## 开工
 
-1. 读 `docs/production/ROLES.md` 第 0–4 节，再读 **「11. 执行制作人」** 一节。那里写了职责、负责的路径、必读文档、规则和不做的事。
+1. 读 `docs/production/ROLES.md` 第 0–4 节，再读 **「12. 执行制作人」** 一节。那里写了职责、负责的路径、必读文档、规则和不做的事。
 2. 读 `docs/production/PLAN.md` 和 `docs/production/DECISIONS_PENDING.md`。
 3. 读本角色「必读」里的文档。设计 PR 没合并时，按 `ROLES.md` 第 0 节的分支表到分支上读。
 4. 弄清这次是**拆任务 / 维护计划和决策清单**，还是**汇总某个 PR 的评审**，按下面对应的清单做。
 
 ## 拆任务时
 
-- [ ] 用户的方向拆成任务卡，写进 `PLAN.md` 第 4 节，格式按 `ROLES.md` 第 11 节（目标 / 依赖 / 验收标准 / 卡在 / 验收负责人）
+- [ ] 用户的方向拆成任务卡，写进 `PLAN.md` 第 4 节，格式按 `ROLES.md` 第 12 节（目标 / 依赖 / 验收标准 / 卡在 / 验收负责人）
 - [ ] 一张卡一个 PR，能原样交给开发 agent；卡里不写数字，写字段路径
 - [ ] 验收标准可判定，能写 GUT 断言的写明
 - [ ] 合并顺序（`PLAN.md` 第 3 节）和冲突文件表更新；PR 号、提交 SHA 和 GitHub 一致，时间写 UTC+8
@@ -31,6 +31,7 @@ description: "Use this when acting as the 执行制作人 (producer) for 东方�
 - [ ] 「需要返工」每一点写清角色、文件、要改什么、依据
 - [ ] 没有加新的设计意见；角色冲突按已定规则裁，规则里没有的写成 D-xx
 - [ ] 角色美术的 PR：用户还没确认好看时，结论不能是「可以合并」；概念图 PR 由用户挑选，未选定不放行立绘和棋盘小人
+- [ ] 带界面的 PR 必须有【动效师审核】通过，否则不能给「可以合并」
 - [ ] 各审核评论里的「需用户拍板」「交接」收进 `DECISIONS_PENDING.md` / `PLAN.md`
 - [ ] 没有合并、没有点 Approve、没有改 `docs/PR_STATUS.md`
 

@@ -9,7 +9,7 @@ description: "Use this when acting as the 游戏测试 (QA tester) for 东方守
 
 ## 开工
 
-1. 读 `docs/production/ROLES.md` 第 0–4 节，再读 **「12. 游戏测试」** 一节。那里写了职责、负责的路径、必读文档、规则和不做的事。
+1. 读 `docs/production/ROLES.md` 第 0–4 节，再读 **「13. 游戏测试」** 一节。那里写了职责、负责的路径、必读文档、规则和不做的事。
 2. 读 `docs/production/PLAN.md` 和 `docs/production/DECISIONS_PENDING.md`。
 3. 读本角色「必读」里的文档。设计 PR 没合并时，按 `ROLES.md` 第 0 节的分支表到分支上读。
 4. 弄清这次是**写自己区域的文档 / 数据**，还是**审核别人的 PR**，按下面对应的清单做。
@@ -31,6 +31,7 @@ description: "Use this when acting as the 游戏测试 (QA tester) for 东方守
 - [ ] 代码 bug 放「必须改」；文档矛盾记 DI-xx，不要求开发 agent 自己选
 - [ ] 没有为了让测试通过去改设计文档、配置表或放宽验收标准
 - [ ] 角色美术对照 `ROLES.md` 第 10 节硬性标准：未经用户确认好看不算通过；概念图由用户挑选，测试不替用户下「好看」的结论
+- [ ] 带界面的 PR 必须有【动效师审核】通过
 
 审核评论按 `ROLES.md` 4.1 的格式，标题写「【游戏测试审核】PR #号 @ 提交短 SHA」，一条评论说完。
 

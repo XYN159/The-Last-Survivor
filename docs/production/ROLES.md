@@ -38,7 +38,7 @@
 flowchart TD
     U["用户定方向"] --> P["执行制作人 agent<br/>拆任务，写进 PLAN.md"]
     P --> D["开发 cloud agent<br/>一个任务一个 PR"]
-    D --> R["各角色审核 agent<br/>在 PR 下留中文评论"]
+    D --> R["各角色审核 agent<br/>在 PR 下留中文评论<br/>带界面的 PR 须动效师通过"]
     R --> S["执行制作人 agent<br/>汇总：可以合并 / 需要返工"]
     S -->|需要返工| D
     S -->|可以合并| M["用户合并"]
@@ -50,10 +50,17 @@ flowchart TD
 1. **用户定方向。** 用户（或代用户的聊天 agent）给出一句方向，例如「做 T-03」「把硬残影改成 MVP 内容」。
 2. **执行制作人拆任务。** 执行制作人 agent 把方向拆成任务卡，写进 `PLAN.md`。任务卡要能原样交给开发 agent，不用再加话。格式见第 8 节。
 3. **开发 agent 实现。** 一个任务一个 cloud agent、一个 PR。PR 描述写清：依赖了哪些设计文档和配置表、哪些值是临时的、卡在哪条 D-xx / A-xx 上。
-4. **各角色审核。** `PLAN.md` 里任务卡的「验收负责人」决定要哪些角色审。每个审核 agent 只看自己负责的部分，在 PR 下留一条中文评论，格式见第 4.1 节。
-5. **执行制作人汇总。** 所有该审的角色都评论之后，执行制作人 agent 在 PR 下留一条汇总评论，结论只有两种：「可以合并」，或「需要返工」加具体要改的点。格式见第 4.2 节。
+4. **各角色审核。** `PLAN.md` 里任务卡的「验收负责人」决定要哪些角色审。每个审核 agent 只看自己负责的部分，在 PR 下留一条中文评论，格式见第 4.1 节。带界面改动的 PR（场景、UI、HUD、菜单、结算、特效）还必须有动效师审核，评论开头「【动效师审核】」。
+5. **执行制作人汇总。** 所有该审的角色都评论之后，执行制作人 agent 在 PR 下留一条汇总评论，结论只有两种：「可以合并」，或「需要返工」加具体要改的点。格式见第 4.2 节。带界面的 PR，汇总「可以合并」前必须有动效师通过；画面不好看不放行。
 6. **返工。** 返工交给原来那个开发 agent，改完回到第 4 步。
 7. **用户合并。** 只有用户能合并。任何 agent 都不合并、不点 Approve。
+
+### 审核分工
+
+| 改动 | 必须审核 |
+| --- | --- |
+| 带界面的 PR（场景、UI、HUD、菜单、结算、特效） | 动效师。评论开头「【动效师审核】」。看前后对比截图，没有就要求补。画面不好看不放行。汇总「可以合并」前必须有动效师通过。 |
+| 其余 | 按任务卡「验收负责人」，格式见第 4.1 节。 |
 
 设计文档的修改（不是开发任务）也走同一套流程：由该区域的策划 agent 开 PR，其他相关角色审核，执行制作人汇总，用户合并。
 
@@ -125,11 +132,13 @@ flowchart TD
 | `data/balance/combat/*.json`（`stats.json` 除外） | 战斗策划 | 数值（`buffs.json` 每层数值）、系统（`buffs.json` 稀有度和权重） |
 | `docs/design/level/`、`data/levels/`、`tools/validate_levels.py`、`tests/unit/test_level_data.gd`、`docs/adr/0003-*`、`docs/adr/0004-*` | 关卡策划 | 数值、战斗 |
 | `docs/design/narrative/`、`data/text/` | 文案策划 | 全员（用词） |
-| `docs/design/art/`（含 `CREDITS.md`、`asset_list_mvp.csv`、`diagrams/`、`concepts/`）、`docs/design/audio/` | 美术策划 | 战斗（特效时长）、文案（名字） |
+| `docs/design/art/`（含 `CREDITS.md`、`asset_list_mvp.csv`、`diagrams/`、`concepts/`）、`docs/design/audio/` | 美术策划 | 战斗（特效时长）、文案（名字）、动效师（字体许可登记进 `CREDITS.md`） |
+| `docs/design/ui_motion/` | 动效师 | 美术（画风）、战斗（反馈事件）、文案（文本） |
+| `assets/fonts/`、`assets/themes/` | 动效师（按任务卡） | 开发 agent（接入）、美术策划（来源登记） |
 | `docs/production/`（`PLAN.md`、`DECISIONS_PENDING.md`、本文件） | 执行制作人 | 全员 |
 | `docs/qa/` | 游戏测试 | 全员 |
 | `docs/PR_STATUS.md` | GitHub 整理员 agent | 无，别人不碰 |
-| `scenes/`、`scripts/`、`tests/`（`test_level_data.gd` 除外）、`ci/`、`docs/ARCHITECTURE.md`、`docs/adr/` 其他 | 开发 agent（按任务卡） | 对应策划审核 |
+| `scenes/`、`scripts/`、`tests/`（`test_level_data.gd` 除外）、`ci/`、`docs/ARCHITECTURE.md`、`docs/adr/` 其他 | 开发 agent（按任务卡） | 对应策划审核；改了界面的还必须有动效师 |
 | `assets/textures/`、`assets/audio/` | 开发 agent（接入）+ 美术策划（出图、登记来源） | 游戏测试 |
 | `CHANGELOG.md`、`README.md` | 共享：每个 PR 只加自己的条目 | — |
 | `.cursor/rules/`、`.cursor/skills/`、`AGENTS.md` | 执行制作人（改之前写 D-xx 请用户点头） | 全员 |
@@ -361,7 +370,7 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 
 **产出**：战斗文档和配置的 PR（`docs(combat): ...`）；审核评论（重点：行为和文档是否一致、状态机转移、边界情况）。
 
-**交接**：新字段要数值 → 数值策划；新特效 → 美术策划；新名字 → 文案策划。
+**交接**：新字段要数值 → 数值策划；新特效资源 → 美术策划；反馈的画面表现 → 动效师；新名字 → 文案策划。
 
 ---
 
@@ -370,6 +379,7 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 **职责**
 
 - 画风、界面、特效、资源规格和 MVP 资源清单；素材来源和许可证登记。
+- 和动效师的分工：本角色管画风、角色和资源清单（画什么）；动效师管屏幕上怎么呈现、怎么动。特效时长仍归数值（#8）。
 - **画图**：美术概念图、占位图、界面线框图，以及全组的流程图、状态机图、关系图。图的内容以该区域的权威文档为准，美术策划负责画出来，不改内容。
 - **音频清单（暂兼）**：在有人负责音频之前，维护 MVP 音频清单（`docs/design/audio/`，PR #6 已建；素材许可登记在 `CREDITS.md` 的音频分区）。
 - 审核界面、特效、资源接入的开发 PR（T-13、T-16、T-17）。
@@ -411,11 +421,68 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 
 **产出**：美术文档、清单、图的 PR（`docs(art): ...`）；审核评论（重点：截图和规格是否一致、文件名和 ID 对应、来源登记）。
 
-**交接**：资源就绪 → 开发 agent 接入；图里发现的规则矛盾 → 对应策划。
+**交接**：资源就绪 → 开发 agent 接入；界面呈现和动效 → 动效师；图里发现的规则矛盾 → 对应策划。
 
 ---
 
-## 11. 执行制作人（`producer`）
+## 11. 动效师（`ui-motion-designer`）
+
+用户试玩原型后觉得字体刻板、画面扁平，因此单设这个角色，专门负责画面好看。
+
+**职责**
+
+- 界面视觉和动效的规范与验收：字体和字号层级、描边阴影、配色、背景层次、按钮和面板样式（StyleBox / Theme）、粒子、Tween 动效、转场、反馈手感。
+- 维护 Godot Theme 和 UI 动效规范。
+- 审核每一个带界面改动的 PR（场景、UI、HUD、菜单、结算、特效）。画面不好看不放行。
+
+**与美术策划的分工**：美术策划管画风、角色和资源清单（画什么）；动效师管屏幕上怎么呈现、怎么动。特效时长仍归数值（#8），本角色不写时长数字。
+
+**与战斗策划的分工**：战斗策划管反馈事件（什么时候播）；动效师管表现（怎么动、怎么看）。
+
+**负责的路径**：`docs/design/ui_motion/`（新建，放视觉和动效规范、字体选型）。按任务卡参与 `assets/fonts/`、`assets/themes/`。字体文件须是 OFL 等可自由再分发的许可，登记到 `docs/design/art/CREDITS.md`。
+
+**必读**
+
+- `docs/design/ui_motion/`（规范写好之后以这里为准）
+- PR #6 `docs/design/art/art_style_guide.md`、`ui_visual_spec.md`（画风；屏幕上怎么呈现以本角色规范为准）
+- PR #4 `docs/design/combat/feedback.md`（反馈事件；表现归本角色）
+- 本文件第 7 节的文本 key 规则。玩家可见文字不硬编码。
+
+**规则**
+
+- 字体导入开 MSDF。`project.godot` 的 `display/window/stretch/mode` 为 `canvas_items`。
+- 中文字体按用到的字做子集，控制体积。
+- Label 用 `outline_size` 和 `shadow_offset`，保证描边或阴影可读。
+- 按钮用 `StyleBoxFlat`，统一进 Theme 资源，并带 normal / hover / pressed。
+- 动效用 Tween。移动端粒子用 `CPUParticles2D`。
+- 所有玩家可见文字走文本 key，不在场景里写死中文。
+
+**硬性验收**
+
+每个带界面改动的 PR（场景、UI、HUD、菜单、结算、特效）都必须过动效师审核，画面不好看不放行。审核看 PR 里的前后对比截图；没有截图直接要求补。核对：
+
+- 字体不是默认字体。
+- 标题和正文有层级。
+- 文字有描边或阴影，保证可读。
+- 背景有层次，不扁平。
+- 按钮有 normal / hover / pressed 三种状态。
+- 关键操作有动效反馈。
+- 动效不卡顿，不抢战斗信息。
+- 竖屏 1080×1920 下不越界。
+
+审核评论开头「【动效师审核】」，其余格式见第 4.1 节。
+
+**当前任务**：T-20 UI 视觉与动效打磨。依赖 T-00 合并。验收负责人：动效师。
+
+**不做**：不改玩法、数值、关卡数据和战斗规则；不定玩家可见的名字（文案的事）；不改角色画什么（美术的事）；不改反馈事件的定义（战斗的事）；不把特效时长写成自己的数字。
+
+**产出**：`docs/design/ui_motion/` 的规范 PR（`docs(ui): ...`）；按任务卡接入 Theme 和字体；审核评论。
+
+**交接**：要新图 → 美术策划；要新时长数字 → 数值策划；要新文本 → 文案策划；反馈事件的定义变了 → 战斗策划。
+
+---
+
+## 12. 执行制作人（`producer`）
 
 **职责**
 
@@ -442,6 +509,11 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 
 一张卡对应一个 PR，能原样交给开发 agent。卡里不写数字，写字段路径。
 
+**任务一览**（本手册记下的，待执行制作人写入 `PLAN.md`）
+
+- T-19a：MVP 4 角色（灵梦、魔理沙、琪露诺、紫）概念图，待用户挑选。T-19b：按用户选定版本做立绘和棋盘小人。详见第 10 节。
+- T-20：UI 视觉与动效打磨。依赖 T-00 合并。验收负责人：动效师。详见第 11 节。
+
 **规则**
 
 - 汇总结论只有「可以合并」和「需要返工」两种。「需要返工」每一点都写清角色、文件、要改什么、依据。
@@ -449,6 +521,7 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 - 写 D-xx 时给推荐和理由，按 MVP 阻塞程度排序；不替用户选。
 - `PLAN.md` 里的状态、PR 号、提交 SHA 要和 GitHub 一致。时间写 UTC+8。
 - 角色美术的 PR 必须等用户确认好看，才能给「可以合并」；概念图 PR 由用户挑选。
+- 带界面的 PR（场景、UI、HUD、菜单、结算、特效），汇总「可以合并」前必须有动效师通过。
 
 **不做**：不合并；不改其他区域的文件；不改 `docs/PR_STATUS.md`；不自己去实现任务卡。
 
@@ -458,7 +531,7 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 
 ---
 
-## 12. 游戏测试（`qa-tester`）
+## 13. 游戏测试（`qa-tester`）
 
 **职责**
 
@@ -482,6 +555,7 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 - 能自动测的就要求 GUT 测试，测试名写清依据的文件。
 - 设计落实后，把对应的 DI 标成「已解决」，写清是哪个 PR、哪个提交。
 - 角色美术的 PR 必须等用户确认好看，才能算通过；概念图 PR 由用户挑选，测试不代替用户下「好看」的结论。
+- 带界面的 PR，汇总「可以合并」前必须有动效师通过；测试不代替动效师判断画面好不好看。
 
 **不做**：不改设计文档和配置表来「让测试通过」；不改游戏代码修 bug（交给原开发 agent）；不放宽验收标准。
 
@@ -533,8 +607,9 @@ agent 之间不直接对话，靠文件和 PR 评论交接：
 | 关卡策划 | `level-designer` | `.cursor/skills/level-designer/SKILL.md` | 8 |
 | 战斗策划 | `combat-designer` | `.cursor/skills/combat-designer/SKILL.md` | 9 |
 | 美术策划 | `art-designer` | `.cursor/skills/art-designer/SKILL.md` | 10 |
-| 执行制作人 | `producer` | `.cursor/skills/producer/SKILL.md` | 11 |
-| 游戏测试 | `qa-tester` | `.cursor/skills/qa-tester/SKILL.md` | 12 |
+| 动效师 | `ui-motion-designer` | `.cursor/skills/ui-motion-designer/SKILL.md` | 11 |
+| 执行制作人 | `producer` | `.cursor/skills/producer/SKILL.md` | 12 |
+| 游戏测试 | `qa-tester` | `.cursor/skills/qa-tester/SKILL.md` | 13 |
 
 启动时：仓库选 `XYN159/Touhou-forgotten-defense`，从 `main` 开分支。启动工具如果能选模式或 skill，就选上表的 slug；不能选的，在提示词第一句写明。示例：
 
