@@ -120,10 +120,10 @@
 | 状态 | 进入条件 | 期间允许的操作 | 退出条件 |
 | --- | --- | --- | --- |
 | `deploy` 布阵期 | 关卡载入完成 | 放置、升级、卖出、设为符卡使、「开始」按钮 | 倒计时 `deploy_time_sec`（10 秒）走完，或玩家点「开始」。序章开 `deploy_wait_for_player` 时，玩家放下第一个角色前倒计时不走 |
-| `spawning` 刷怪窗口 | 某一波开始（这一波第一只出生） | 放置、升级、卖出、放符卡；**不能换符卡使**；可以叫下一波（见 4.2） | 这一波最后一只出生 → `intermission`；或玩家叫波 → 下一波 `spawning`（这一波没出生的敌人照常出生） |
-| `intermission` 空档 | 这一波最后一只出生 | 所有操作，包括换符卡使；可以叫下一波（跳过剩下的空档）；第 5、10、15 波进入空档时弹出强化三选一 | 空档固定 `intermission_sec`（4 秒），走到 0 → 下一波 `spawning`（或 `boss_intro`）。**场上还有敌人也照样开始；清场不会缩短空档** |
+| `spawning` 刷怪窗口 | 某一波开始。第一只在窗口开始时出生 | 放置、升级、卖出、放符卡；**不能换符卡使**；可以叫下一波（见 4.2） | 这一波的刷怪窗口（20 秒，`duration_sec`）走完 → `intermission`；或玩家叫波 → 下一波 `spawning`（这一波没出生的敌人照常出生） |
+| `intermission` 空档 | 这一波的 20 秒刷怪窗口结束 | 所有操作，包括换符卡使；可以叫下一波（跳过剩下的空档）；第 5、10、15 波进入空档时弹出强化三选一 | 空档固定 `intermission_sec`（4 秒），走到 0 → 下一波 `spawning`（或 `boss_intro`）。**场上还有敌人也照样开始；清场不会缩短空档** |
 | `boss_intro` Boss 登场 | 下一波是 Boss 波 | 无（立绘演出，逻辑暂停，可跳过） | 演出结束 → `spawning`（Boss 波） |
-| `final` 最后一波 | 最后一波最后一只出生。Boss 关要等 Boss 被击败，这一波才算打完 | 所有操作；没有叫波 | 普通关：场上敌人清空且守护点生命 > 0 → `victory`。Boss 关：Boss 已被击败，并且场上其他敌人也清空 |
+| `final` 最后一波 | 最后一波的刷怪窗口结束。Boss 关要等 Boss 被击败，这一波才算打完 | 所有操作；没有叫波 | 普通关：场上敌人清空且守护点生命 > 0 → `victory`。Boss 关：Boss 已被击败，并且场上其他敌人也清空 |
 | `victory` 胜利 | 见第 5 节 | 无 | 进入结算界面 |
 | `defeat` 失败 | 见第 5 节 | 无 | 失败界面：从当前波重来，或整关重打 |
 
@@ -131,11 +131,11 @@
 
 另有「逻辑暂停原因」集合，和上面的状态并行，只要集合非空逻辑就暂停：`spell_cutin`（符卡立绘）、`boss_cutin`（Boss 换阶段立绘）、`buff_select`（强化三选一）、`menu`（暂停菜单）、`tutorial_hold`（教学等待玩家操作）。
 
-### 4.2 波次时间轴（推荐，待用户拍板，见 README 待拍板第 24 条）
+### 4.2 波次时间轴（D-03 已定）
 
 回应 PR #9 的 DI-03、DI-04。战斗策划和关卡策划已对齐这一版，关卡策划在 PR #5 按同一版写。数值策划 PR #8 的 `stats.json` → `waves`（`advance_mode = spawn_window`、`spawn_window_sec`、`gap_sec`、`deploy_time_sec`）也是这个口径。
 
-**「每波约 20 秒」的意思**：这一波**第一只出生到最后一只出生**的刷怪窗口约 20 秒（`battle_flow.spawn_window_sec`；关卡里是每波的 `duration_sec`）。它不是「出怪 + 清怪」的总时长，也不是每个敌人走路的时间。
+**「每波约 20 秒」的意思**：从这一波开始算 20 秒刷怪窗口（`battle_flow.spawn_window_sec`；关卡里是每波的 `duration_sec`）。第一只在窗口开始时出生，其余按数量摊在这 20 秒里。它不是「出怪 + 清怪」的总时长，也不是「第一只到最后一只」刚好 20 秒，更不是每个敌人走路的时间。
 
 **开局**：
 
@@ -145,7 +145,7 @@
 
 **波与波之间**：
 
-1. 这一波最后一只出生 → 进入 `intermission` 空档，固定 4 秒（`battle_flow.intermission_sec`；关卡里是下一波的 `delay_sec`，允许 3 到 5 秒）。
+1. 这一波的 20 秒窗口走完 → 进入 `intermission` 空档，固定 4 秒（`battle_flow.intermission_sec`；关卡里是下一波的 `delay_sec`）。没有 3 到 5 秒的浮动。空档从窗口结束起算（`gap_starts_at` = `spawn_window_end`），不是从最后一只出生起算。
 2. 空档只按时间走：清场**不会**缩短它（`battle_flow.intermission_shortened_by_clear` = false），4 秒走到 0，下一波开始，**不管场上有没有清空**。上一波没打完的敌人继续留在场上，所以波次重叠是常态，不是只有叫波才重叠。
 3. 下一波是 Boss 波时，先进 `boss_intro`，演出结束再开始。
 4. 清波奖励 `economy.wave_clear_bonus` 在这一波进入空档时发（`battle_flow.wave_clear_bonus_at = intermission_start`），不等这一波的敌人全部离场。
@@ -156,13 +156,13 @@
 2. 在 `spawning` 里叫波：跳过这一波剩下的刷怪窗口和空档，下一波立刻开始。**这一波还没出生的敌人不会被丢掉**，仍按原来的时间表出生，和下一波叠在一起（`battle_flow.early_call_keeps_current_wave_spawns` = true，`early_call_drops_unspawned` = false）。所以叫波是「拿灵力、扛更密的怪」的冒险选择，不能用来跳过敌人。
 3. 在 `intermission` 里叫波：跳过剩下的空档，下一波立刻开始。
 4. 在 `deploy` 里点「开始」：跳过剩下的布阵倒计时。
-5. 奖励 = `floor(本来到下一波开始还剩的秒数 × 每秒奖励)` 灵力【框架】。每秒奖励：叫波 `economy.early_call_reward_per_sec`，布阵期提前开始 `economy.early_start_reward_per_sec`【数值·PR #8】。
+5. 叫波奖励 = `min(economy.early_call_reward_cap, floor(本来到下一波开始还剩的秒数 × economy.early_call_reward_per_sec))`。上限是 20。布阵期提前开始仍按 `economy.early_start_reward_per_sec`。叫波功能开不开见 D-18，MVP 可以先不做；上限已经由 #8 写上。
 
-**和制作人原话的差别**：制作人的说明里，布阵 10 秒之后还要再等 4 秒才出第一只（开局约 14 秒）。我们推荐去掉这 4 秒：布阵本身就是准备时间，再等 4 秒只是空等。PR #5 关卡文件现在 `waves[0].delay_sec` 还是 4，关卡策划会改成 0。
+**和旧稿的差别**：旧稿在布阵 10 秒之后还要再等 4 秒才出第一只。已定去掉这 4 秒：布阵结束，第一只马上出生。PR #5 的 `waves[0].delay_sec` 是 0。
 
 ### 4.3 节奏目标（已拍板，2026-09-27）
 
-- 每波刷怪窗口约 20 秒，波间空档 3 到 5 秒（默认 4 秒，`intermission_min_sec` / `intermission_max_sec`）。计时口径见 4.2。
+- 每波刷怪窗口 20 秒，窗口结束后固定空 4 秒。计时口径见 4.2。
 - 序章可以少于 5 波。其余关卡 10 到 20 波。MVP 关卡多用 10 到 12 波。
 - 时长按波数估：每波约 20 + 4 = 24 秒，10 波约 4 分钟，20 波约 8 分钟，再加开局布阵和最后一波的清场时间。叫波会更快。
 - 举例（关卡策划 [PR #5](https://github.com/XYN159/Touhou-forgotten-defense/pull/5)）：序章 3 关，分别是 3、4、10 波；第一章 4 关，分别是 10、11、12、15 波，第 4 关 `ch1_04` 是冰之残影 Boss 关。15 波落在 10 到 20 波里。

@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 波次空档改为固定 4 秒，从 20 秒刷怪窗口结束起算，不再用 3 到 5 秒，也不再从最后一只出生起算。叫波奖励一次最多 20。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

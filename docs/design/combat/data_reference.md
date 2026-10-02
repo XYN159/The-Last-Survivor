@@ -33,11 +33,11 @@
 | `tick.max_ticks_per_frame` | 整数 | 次 | 一帧最多补跑几个 tick | 程序 |
 | `time_scale.speed_options` | 数组 | 倍 | 可选倍速 [1, 2]【框架】 | 战斗 |
 | `battle_flow.deploy_time_sec` | 数字 | 秒 | 布阵期 10【框架】 | 战斗（关卡可覆盖） |
-| `battle_flow.intermission_sec` | 数字 | 秒 | 空档默认 4，允许 3–5。已拍板。从这一波最后一只出生起算 | 战斗（关卡可覆盖） |
+| `battle_flow.intermission_sec` | 数字 | 秒 | 空档固定 4。从 20 秒刷怪窗口结束起算，清场不缩短 | 战斗（关卡可覆盖） |
 | `battle_flow.advance_mode` | 字符串 | — | `spawn_window`：刷完 + 空档就进下一波，不等清场（推荐，待用户拍板） | 战斗/关卡 |
 | `battle_flow.spawn_window_sec` | 数字 | 秒 | 刷怪窗口约 20：第一只到最后一只出生。替代旧的 `wave_target_sec` | 战斗/关卡 |
 | `battle_flow.wait_for_clear` | 布尔 | — | 是否等清场。false | 战斗 |
-| `battle_flow.gap_starts_at` | 字符串 | — | 空档从哪一刻起算：`last_spawn_of_wave` | 战斗 |
+| `battle_flow.gap_starts_at` | 字符串 | — | 空档从刷怪窗口结束起算：`spawn_window_end`。窗口是 20 秒，不是「最后一只出生」 | 战斗 |
 | `battle_flow.intermission_shortened_by_clear` | 布尔 | — | 清场是否缩短空档。false：空档固定走完 | 战斗 |
 | `battle_flow.first_wave_delay_sec` | 数字 | 秒 | 布阵结束到第一只出生。0（关卡 `waves[0].delay_sec` = 0） | 战斗/关卡 |
 | `battle_flow.deploy_wait_for_player_holds_full_countdown` / `deploy_wait_for_player_releases_on` | 布尔 / 字符串 | — | 序章：放下第一个角色（`first_placement`）前倒计时停在 10 秒 | 战斗 |
