@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### 修复
+
+- 补回 `ci/export_android_debug.sh` 里默认 APK 路径漏掉的 `}`。改名时这一处没闭合，`export-android` 在解析脚本时就退出，产不出 `touhou-forgotten-defense-debug.apk`。
+- `./ci/lint.sh` 会对 `ci/*.sh` 做 `bash -n`，避免同类语法错误留到导出步骤才暴露。
+
 ### 变更
 
 - 首页介绍的启动图去掉左右两块黑色空白，空出来的位置补上神社夜景。标题、灵梦和「点击开始」没有改。
