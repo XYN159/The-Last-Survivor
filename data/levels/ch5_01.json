@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "ch5_01",
+  "difficulty_id": "ch5_01",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 1,
+  "display_name": "缝隙的入口",
+  "display_name_key": "level.ch5_01.name",
+  "kind": "normal",
+  "route_type": "fixed_gates",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "两条固定路线，后半才打开第二个入口。遗忘之影很少。八云紫在第一章首领后已经加入。",
+  "player_feeling": "比守矢首领关松。新东西一次只来一样：先是看不见的残影，路只轻轻动一下。",
+  "teaches": "有的残影需要特殊手段才打得准",
+  "previews": [
+    "路线几何不变，只按波次开关入口",
+    "这一关只多开一个入口，避免比上一章首领还难"
+  ],
+  "new_character_ids": [
+    "chr_sanae"
+  ],
+  "new_enemy_ids": [
+    "enm_shade_phantom"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 10,
+  "design_notes": "路线几何固定，战斗中不挪格子。这一关用两条固定路线，后半才打开第二个入口。隐形的现形规则等战斗策划。八云紫在第一章首领通关后已经加入，本章不再把她当成新角色。遗忘之影用预留 id enm_shade_phantom。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "ch3_01",
+  "difficulty_id": "ch3_01",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 1,
+  "display_name": "寺子屋的孩子",
+  "display_name_key": "level.ch3_01.name",
+  "kind": "normal",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "两条固定路线，外加一条短的避难路。有的残影去扑村民，暂名扑人残影，待文案定稿。咲夜从这一关起可放置，慧音要通关这一关才加入，都是提案，待文案。",
+  "player_feeling": "比红魔馆首领关松。先只保护一条短路，别的路几乎不闹。",
+  "teaches": "有的残影会打村民而不是只冲守护点",
+  "previews": [
+    "慧音能让村民暂时不被发现",
+    "漏掉村民和漏掉守护点不是同一件事"
+  ],
+  "new_character_ids": [
+    "chr_sakuya"
+  ],
+  "new_enemy_ids": [
+    "enm_shade_pouncer"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 10,
+  "design_notes": "两条路线开战前就固定。护送失败条件这次不进地图。提案仍是守护点没血即失败；褪色村民要不要另算失败，等制作人。扑人残影还没有战斗 id，不放进图鉴。咲夜从这一关起可放置。慧音通关后加入。都是提案，待文案。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": [
+    "chr_keine"
+  ]
+}

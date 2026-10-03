@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "ch4_02",
+  "difficulty_id": "ch4_02",
+  "status": "stub",
+  "chapter_id": "ch4",
+  "index_in_chapter": 2,
+  "display_name": "云上的影子",
+  "display_name_key": "level.ch4_02.name",
+  "kind": "normal",
+  "route_type": "flying",
+  "guard_point": {
+    "id": "guard.moriya_shrine",
+    "display_name": "守矢神社"
+  },
+  "summary": "飞行路变长，地面的旧敌人和飞行残影混在一起。这一关没有新角色。",
+  "player_feeling": "练习取舍。想两头都打，就会发现有的格子其实两头都差一点。",
+  "teaches": "飞行路和地面路的交点不一定值得留成预定槽位",
+  "previews": [
+    "旧敌人仍走地面"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "飞行路变长是另一张固定的图，不是战斗中改道。遗忘之影不在本章，放在第五章。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

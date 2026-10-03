@@ -1,0 +1,690 @@
+{
+  "schema_version": 1,
+  "bosses": [],
+  "id": "ch1_02",
+  "difficulty_id": "ch1_02",
+  "status": "complete",
+  "chapter_id": "ch1",
+  "index_in_chapter": 2,
+  "display_name": "雾里的弯道",
+  "display_name_key": "level.ch1_02.name",
+  "kind": "normal",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.misty_lake_frogs",
+    "display_name": "冰雕青蛙"
+  },
+  "summary": "琪露诺加入。第二个入口从这里开始，两种残影各走一门，雾更浓。",
+  "player_feeling": "练习看两扇门。把减速放到长直段上。",
+  "teaches": "通关上一关后可以放琪露诺，减速能接住快残影",
+  "previews": [
+    "两个入口同时出怪，路线开战前就固定",
+    "雾更浓时，预定槽位更要贴路"
+  ],
+  "new_character_ids": [
+    "chr_cirno"
+  ],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "cells": [
+      "BSBBBSB",
+      "BP.BBPB",
+      "BPBBBPB",
+      "BPPPPPB",
+      "BBBB.PB",
+      "BBBBBPB",
+      "BBBB.PB",
+      "BBBBBPB",
+      "BBPPPPB",
+      "BBPBBBB",
+      "BBP.BBB",
+      "BBGBBBB"
+    ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 1,
+        "row": 0
+      },
+      {
+        "id": "entrance.east",
+        "col": 5,
+        "row": 0
+      }
+    ],
+    "guard": {
+      "cell": [
+        2,
+        11
+      ],
+      "id": "guard.misty_lake_frogs",
+      "display_name": "冰雕青蛙"
+    },
+    "paths": [
+      {
+        "path_id": "path.west",
+        "id": "path.west",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ]
+        ]
+      },
+      {
+        "path_id": "path.east",
+        "id": "path.east",
+        "entrance_id": "entrance.east",
+        "kind": "ground",
+        "cells": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ]
+        ]
+      }
+    ],
+    "terrain": [
+      {
+        "terrain_id": "ter_fog",
+        "cells": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            2,
+            11
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "start": "wave_2",
+        "duration_sec": -1,
+        "note": "第 2 波起整条路线盖上浓雾，对应「雾变浓了」。效果是射程减 1，不是旧的倍率。"
+      }
+    ],
+    "cell_sets": {},
+    "slots": [
+      {
+        "id": "slot.upper",
+        "col": 2,
+        "row": 1,
+        "label": "上段直路",
+        "why": "雾比上一关更浓，这一格仍然贴着入口直路，打得到刚下来的残影。"
+      },
+      {
+        "id": "slot.right_top",
+        "col": 4,
+        "row": 4,
+        "label": "右列起点",
+        "why": "残影拐上右边长列的第一格。减速放这里，后面整列都会变慢。"
+      },
+      {
+        "id": "slot.right_mid",
+        "col": 4,
+        "row": 6,
+        "label": "右列中段",
+        "why": "贴着这张图最长的直段。魔理沙打这一列，琪露诺不必挪下来。"
+      },
+      {
+        "id": "slot.before_guard",
+        "col": 3,
+        "row": 10,
+        "label": "青蛙前",
+        "why": "最后一段很短。用来补已经漏过弯道的快残影，不当主阵地。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "wave_id": "w01",
+      "delay_sec": 0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 5,
+          "interval_sec": 5.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 4,
+          "interval_sec": 6.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "wave_id": "w02",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 6,
+          "interval_sec": 4.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 5,
+          "interval_sec": 5.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "wave_id": "w03",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 7,
+          "interval_sec": 3.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 7,
+          "interval_sec": 3.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "wave_id": "w04",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 8,
+          "interval_sec": 2.9,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 8,
+          "interval_sec": 2.9,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "wave_id": "w05",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 10,
+          "interval_sec": 2.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 9,
+          "interval_sec": 2.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "wave_id": "w06",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 11,
+          "interval_sec": 2.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 10,
+          "interval_sec": 2.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "wave_id": "w07",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 12,
+          "interval_sec": 1.8,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 12,
+          "interval_sec": 1.8,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "wave_id": "w08",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "wave_id": "w09",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 15,
+          "interval_sec": 1.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 14,
+          "interval_sec": 1.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "wave_id": "w10",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。本波结束后弹出三选一，三张里选一张。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 16,
+          "interval_sec": 1.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 15,
+          "interval_sec": 1.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    },
+    {
+      "id": "w11",
+      "wave_id": "w11",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "西门出小残影，东门出快残影。两条路开战前就固定。快残影大约占一半。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.west",
+          "count": 17,
+          "interval_sec": 1.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.east",
+          "count": 16,
+          "interval_sec": 1.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.east"
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "spell_energy_start": 0,
+  "spell_charge_mult": 1.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": false,
+  "intermission_sec": 4,
+  "unlock_character_ids": []
+}

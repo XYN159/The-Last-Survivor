@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "ch3_02",
+  "difficulty_id": "ch3_02",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 2,
+  "display_name": "两条避难路",
+  "display_name_key": "level.ch3_02.name",
+  "kind": "normal",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "练习顾此失彼。两条避难路都是固定的。慧音从这一关起可放置，是提案，待文案。",
+  "player_feeling": "练习顾此失彼。火可以守一条路，慧音去保另一边的人。",
+  "teaches": "两条避难路要同时看",
+  "previews": [
+    "妹红的火适合贴着一条路放",
+    "扑人残影会离开主路去追村民"
+  ],
+  "new_character_ids": [
+    "chr_keine"
+  ],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "路线固定，不在战斗中改道。魔理沙的包仍是提案，吸引规则等战斗策划，不写成会改路线的字段。慧音从这一关起可放置，是提案，待文案。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

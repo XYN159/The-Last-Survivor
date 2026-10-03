@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "lives_source": {
+    "path": "data/balance/combat/stats.json",
+    "field": "guard.max_hp",
+    "note": "满生命以这一字段为准。生命耗尽即失败，没有星。这里不抄数字。"
+  },
+  "win": "最后一波结束时守护点生命仍大于零。首领关相同。首领那一波要等首领被击败才算结束。",
+  "lose": "生命耗尽即失败，没有星。首领走到守护点会扣命，然后回到裂缝再沿同一条路走。扣多少看 data/balance/combat/stats.json，不写在关卡里。",
+  "stars_do_not_grant_power": true,
+  "stars_grant": [
+    "cosmetics",
+    "codex_stories"
+  ],
+  "stars_source": {
+    "path": "data/balance/combat/stats.json",
+    "field": "stars.thresholds_lives_left",
+    "order": [
+      "3星",
+      "2星",
+      "1星"
+    ],
+    "note": "按剩余生命的绝对值。数组依次是 3 星、2 星、1 星。首通目标不参与星级。阈值不在这里抄。"
+  },
+  "first_clear_source": {
+    "path": "data/balance/level_difficulty.json",
+    "field": "levels.<level_id>.target_lives_first_clear",
+    "note": "首通该剩多少命看 PR #8 这一列，每关自己的数。它不参与星级。这里不抄数字。"
+  },
+  "hard_mode": "later",
+  "replay": {
+    "cleared_levels_anytime": true,
+    "can_earn_missing_stars": true,
+    "meta_reward_columns": [
+      "reward_meta_first_clear",
+      "reward_meta_replay"
+    ],
+    "note": "重打的局外奖励一定比首通少。数字以 PR #8 的 data/balance/level_difficulty.json 为准，不在这里抄。关卡内的开局灵力和每波灵力也以数值表为准。"
+  },
+  "leak": {
+    "stored_in_level_data": false,
+    "note": "漏几条命的权威数字在 data/balance/combat/stats.json 的 enemies 和 bosses 里，字段是 leak_damage。不写进关卡图鉴，也不在首领的 leak 对象里抄数字。威胁点同样只留引用。扣到耗尽即失败，没有星。"
+  }
+}

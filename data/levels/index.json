@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "game_title": "东方守幻录",
+  "unlock_rule": "sequential_clear",
+  "stars_do_not_grant_power": true,
+  "note": "按 levels 数组的顺序解锁关卡。通关上一关才打开下一关。角色另看每一关的 unlock_character_ids：通关后才加入，下一关的可放置名单才会出现。制作人已定：灵梦开局，魔理沙通关 prologue_01 后加入，琪露诺通关 ch1_01 后加入，八云紫通关 ch1_04 后加入。第二章起的加入节奏是提案，状态 pending_文案策划，见 character_join_proposals。星级不解锁关卡，也不增加强度。已通关的关可以随时重打，局外奖励更少，缺的星还能补。",
+  "chapters": [
+    {
+      "id": "prologue",
+      "display_name": "序章 神社的裂缝",
+      "location": "博丽神社",
+      "guard_point_name": "赛钱箱",
+      "level_ids": [
+        "prologue_01",
+        "prologue_02",
+        "prologue_03"
+      ]
+    },
+    {
+      "id": "ch1",
+      "display_name": "第一章 雾之湖",
+      "location": "雾之湖",
+      "guard_point_name": "冰雕青蛙",
+      "level_ids": [
+        "ch1_01",
+        "ch1_02",
+        "ch1_03",
+        "ch1_04"
+      ]
+    },
+    {
+      "id": "ch2",
+      "display_name": "第二章 红魔馆",
+      "location": "红魔馆",
+      "guard_point_name": "钟楼大钟",
+      "level_ids": [
+        "ch2_01",
+        "ch2_02",
+        "ch2_03",
+        "ch2_04"
+      ]
+    },
+    {
+      "id": "ch3",
+      "display_name": "第三章 人间之里",
+      "location": "人间之里",
+      "guard_point_name": "寺子屋",
+      "level_ids": [
+        "ch3_01",
+        "ch3_02",
+        "ch3_03",
+        "ch3_04"
+      ]
+    },
+    {
+      "id": "ch4",
+      "display_name": "第四章 妖怪之山",
+      "location": "妖怪之山",
+      "guard_point_name": "守矢神社",
+      "level_ids": [
+        "ch4_01",
+        "ch4_02",
+        "ch4_03",
+        "ch4_04"
+      ]
+    },
+    {
+      "id": "ch5",
+      "display_name": "第五章 结界的尽头",
+      "location": "结界的缝隙",
+      "guard_point_name": "结界的结点",
+      "level_ids": [
+        "ch5_01",
+        "ch5_02",
+        "ch5_03",
+        "ch5_04"
+      ]
+    },
+    {
+      "id": "final",
+      "display_name": "终章 被遗忘者",
+      "location": "缝隙深处",
+      "guard_point_name": "缝隙里的鸟居",
+      "level_ids": [
+        "final_01"
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "id": "prologue_01",
+      "file": "prologue_01.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": null
+    },
+    {
+      "id": "prologue_02",
+      "file": "prologue_02.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": "prologue_01"
+    },
+    {
+      "id": "prologue_03",
+      "file": "prologue_03.json",
+      "status": "complete",
+      "chapter_id": "prologue",
+      "unlock_after": "prologue_02"
+    },
+    {
+      "id": "ch1_01",
+      "file": "ch1_01.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "prologue_03"
+    },
+    {
+      "id": "ch1_02",
+      "file": "ch1_02.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_01"
+    },
+    {
+      "id": "ch1_03",
+      "file": "ch1_03.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_02"
+    },
+    {
+      "id": "ch1_04",
+      "file": "ch1_04.json",
+      "status": "complete",
+      "chapter_id": "ch1",
+      "unlock_after": "ch1_03"
+    },
+    {
+      "id": "ch2_01",
+      "file": "ch2_01.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch1_04"
+    },
+    {
+      "id": "ch2_02",
+      "file": "ch2_02.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_01"
+    },
+    {
+      "id": "ch2_03",
+      "file": "ch2_03.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_02"
+    },
+    {
+      "id": "ch2_04",
+      "file": "ch2_04.json",
+      "status": "stub",
+      "chapter_id": "ch2",
+      "unlock_after": "ch2_03"
+    },
+    {
+      "id": "ch3_01",
+      "file": "ch3_01.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch2_04"
+    },
+    {
+      "id": "ch3_02",
+      "file": "ch3_02.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_01"
+    },
+    {
+      "id": "ch3_03",
+      "file": "ch3_03.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_02"
+    },
+    {
+      "id": "ch3_04",
+      "file": "ch3_04.json",
+      "status": "stub",
+      "chapter_id": "ch3",
+      "unlock_after": "ch3_03"
+    },
+    {
+      "id": "ch4_01",
+      "file": "ch4_01.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch3_04"
+    },
+    {
+      "id": "ch4_02",
+      "file": "ch4_02.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_01"
+    },
+    {
+      "id": "ch4_03",
+      "file": "ch4_03.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_02"
+    },
+    {
+      "id": "ch4_04",
+      "file": "ch4_04.json",
+      "status": "stub",
+      "chapter_id": "ch4",
+      "unlock_after": "ch4_03"
+    },
+    {
+      "id": "ch5_01",
+      "file": "ch5_01.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch4_04"
+    },
+    {
+      "id": "ch5_02",
+      "file": "ch5_02.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_01"
+    },
+    {
+      "id": "ch5_03",
+      "file": "ch5_03.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_02"
+    },
+    {
+      "id": "ch5_04",
+      "file": "ch5_04.json",
+      "status": "stub",
+      "chapter_id": "ch5",
+      "unlock_after": "ch5_03"
+    },
+    {
+      "id": "final_01",
+      "file": "final_01.json",
+      "status": "stub",
+      "chapter_id": "final",
+      "unlock_after": "ch5_04"
+    }
+  ],
+  "starting_character_ids": [
+    "chr_reimu"
+  ],
+  "character_join_proposals": [
+    {
+      "id": "chr_meiling",
+      "display_name": "美铃",
+      "unlock_after_clearing": "ch2_01",
+      "first_placeable_level": "ch2_02",
+      "status": "pending_文案策划",
+      "note": "提案：第二章的挡门角色。通关 ch2_01 后加入。"
+    },
+    {
+      "id": "chr_sakuya",
+      "display_name": "咲夜",
+      "unlock_after_clearing": "ch2_04",
+      "first_placeable_level": "ch3_01",
+      "status": "pending_文案策划",
+      "note": "提案：通关 ch2_04 后加入。该关首领是她的残影复制体，不是她本人。"
+    },
+    {
+      "id": "chr_keine",
+      "display_name": "慧音",
+      "unlock_after_clearing": "ch3_01",
+      "first_placeable_level": "ch3_02",
+      "status": "pending_文案策划",
+      "note": "提案：通关 ch3_01 后加入。"
+    },
+    {
+      "id": "chr_mokou",
+      "display_name": "妹红",
+      "unlock_after_clearing": "ch3_04",
+      "first_placeable_level": "ch4_01",
+      "status": "pending_文案策划",
+      "note": "提案：通关 ch3_04 后加入。该关首领是她的残影复制体，不是她本人。"
+    },
+    {
+      "id": "chr_sanae",
+      "display_name": "早苗",
+      "unlock_after_clearing": "ch4_04",
+      "first_placeable_level": "ch5_01",
+      "status": "pending_文案策划",
+      "note": "提案：通关 ch4_04 后加入。该关首领是「风祝的残影」，不是早苗本人。对空位留给文；文还不可玩，所以不进 ch4_01。"
+    },
+    {
+      "id": "chr_aya",
+      "display_name": "文",
+      "unlock_after_clearing": null,
+      "first_placeable_level": null,
+      "status": "pending_文案策划",
+      "note": "还不可玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，负责飞行残影。早苗仍在通关 ch4_04 后加入。"
+    }
+  ],
+  "replay": {
+    "cleared_levels_anytime": true,
+    "reduced_meta_reward": true,
+    "can_earn_missing_stars": true,
+    "reward_table": "data/balance/level_difficulty.json"
+  },
+  "character_joins_decided": [
+    {
+      "id": "chr_reimu",
+      "display_name": "灵梦",
+      "unlock_after_clearing": null,
+      "first_placeable_level": "prologue_01",
+      "status": "decided"
+    },
+    {
+      "id": "chr_marisa",
+      "display_name": "魔理沙",
+      "unlock_after_clearing": "prologue_01",
+      "first_placeable_level": "prologue_02",
+      "status": "decided"
+    },
+    {
+      "id": "chr_cirno",
+      "display_name": "琪露诺",
+      "unlock_after_clearing": "ch1_01",
+      "first_placeable_level": "ch1_02",
+      "status": "decided",
+      "note": "通关 ch1_01 后加入。ch1_01 只用现有角色。ch1_02 起教减速。"
+    },
+    {
+      "id": "chr_yukari",
+      "display_name": "紫",
+      "unlock_after_clearing": "ch1_04",
+      "first_placeable_level": "ch2_01",
+      "status": "decided",
+      "note": "通关 ch1_04 后加入。MVP 七关的首通名单里没有她。"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "ch4_03",
+  "difficulty_id": "ch4_03",
+  "status": "stub",
+  "chapter_id": "ch4",
+  "index_in_chapter": 3,
+  "display_name": "山顶试炼",
+  "display_name_key": "level.ch4_03.name",
+  "kind": "normal",
+  "route_type": "flying",
+  "guard_point": {
+    "id": "guard.moriya_shrine",
+    "display_name": "守矢神社"
+  },
+  "summary": "第四章最难的普通关。飞行路有两段，地面路也不空。",
+  "player_feeling": "忙着抬头。漏掉的飞行残影会直接摸到神社。",
+  "teaches": "反空要占格子，地面也会因此变空",
+  "previews": [
+    "射程和位置是同一道题"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 14,
+  "design_notes": "两个飞行入口做成两条开战前就存在的 flying path。威胁仍要比上一关高、比首领关轻。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

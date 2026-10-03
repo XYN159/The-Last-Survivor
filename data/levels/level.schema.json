@@ -1,0 +1,593 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/XYN159/The-Last-Survivor/data/levels/level.schema.json",
+  "title": "关卡配置",
+  "description": "《东方守幻录》单关配置。完整关的地图字段跟战斗策划的读图约定一致。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，本仓库不附带那份文件。敌人属性的权威来源是 data/balance/combat/stats.json 的 enemies 和 bosses，关卡文件不复制这些数字。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "difficulty_id",
+    "status",
+    "chapter_id",
+    "index_in_chapter",
+    "display_name",
+    "display_name_key",
+    "kind",
+    "route_type",
+    "guard_point",
+    "summary",
+    "player_feeling",
+    "teaches",
+    "new_character_ids",
+    "new_enemy_ids",
+    "unlock_character_ids",
+    "params",
+    "bosses",
+    "placeholders"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {
+      "type": "string",
+      "pattern": "^(prologue_0[1-3]|ch[1-5]_0[1-4]|final_01)$"
+    },
+    "difficulty_id": {
+      "type": "string",
+      "pattern": "^(prologue_0[1-3]|ch[1-5]_0[1-4]|final_01)$",
+      "description": "对应 PR #8 的 data/balance/level_difficulty.json 里 levels 下的同一行。必须和 id 相同。本 PR 不附带那份文件。"
+    },
+    "status": {"enum": ["complete", "stub"]},
+    "chapter_id": {"enum": ["prologue", "ch1", "ch2", "ch3", "ch4", "ch5", "final"]},
+    "index_in_chapter": {"type": "integer", "minimum": 1, "maximum": 4},
+    "display_name": {"type": "string", "minLength": 1},
+    "display_name_key": {"type": "string", "pattern": "^level\\.[a-z0-9_]+\\.name$"},
+    "kind": {"enum": ["tutorial", "normal", "boss", "final_boss"]},
+    "route_type": {
+      "enum": [
+        "straight",
+        "curve",
+        "fork_merge",
+        "double_entrance",
+        "dual_route",
+        "flying",
+        "fixed_gates"
+      ],
+      "description": "路线几何开战前就固定。fixed_gates 表示几条固定路线的入口可以按波次或阶段开关，格子本身不在战斗中改。"
+    },
+    "guard_point": {"$ref": "#/$defs/guardPoint"},
+    "summary": {"type": "string", "minLength": 1},
+    "player_feeling": {"type": "string", "minLength": 1},
+    "teaches": {
+      "type": "string",
+      "minLength": 1,
+      "description": "这一关只有一个主教学点。"
+    },
+    "previews": {
+      "type": "array",
+      "description": "顺带看到的东西。不是这一关的学习曲线验收点。",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "display_name_status": {
+      "enum": ["decided", "pending_文案策划"],
+      "description": "玩家看到的关卡名若还没定稿，标 pending_文案策划。"
+    },
+    "new_character_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+    },
+    "new_enemy_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^(enm|boss)_[a-z0-9_]+$"}
+    },
+    "unlock_character_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "通关这一关后加入的角色。下一关的可放置名单才会出现她们。这一关自己的首通名单不含她们。",
+      "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+    },
+    "params": {"$ref": "#/$defs/params"},
+    "bosses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/boss"}
+    },
+    "placeholders": {"$ref": "#/$defs/placeholders"},
+    "map": {"$ref": "#/$defs/map"},
+    "waves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/wave"}
+    },
+    "wave_count": {"type": "integer", "minimum": 10, "maximum": 20},
+    "design_notes": {"type": "string", "minLength": 1},
+    "spell_energy_start": {"type": "number", "minimum": 0, "maximum": 100},
+    "spell_charge_mult": {"type": "number", "exclusiveMinimum": 0},
+    "deploy_time_sec": {"const": 10},
+    "deploy_wait_for_player": {"type": "boolean"},
+    "intermission_sec": {"type": "number", "minimum": 3, "maximum": 5},
+    "combat_timing_note": {"type": "string", "minLength": 1},
+    "scripted_events": {
+      "type": "array",
+      "description": "只演一次的剧情事件。MVP 里只有第一章第 3 关有一段隙间换位。",
+      "items": {"$ref": "#/$defs/scripted_event"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "complete"}},
+        "required": ["status"]
+      },
+      "then": {
+        "required": [
+          "map",
+          "waves",
+          "spell_energy_start",
+          "spell_charge_mult",
+          "deploy_time_sec",
+          "deploy_wait_for_player",
+          "intermission_sec"
+        ],
+        "properties": {
+          "wave_count": false,
+          "design_notes": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"status": {"const": "stub"}},
+        "required": ["status"]
+      },
+      "then": {
+        "required": ["wave_count", "design_notes"],
+        "properties": {
+          "map": false,
+          "waves": false,
+          "bosses": {"maxItems": 0}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {"const": "complete"},
+          "kind": {"enum": ["boss", "final_boss"]}
+        },
+        "required": ["status", "kind"]
+      },
+      "then": {
+        "properties": {
+          "bosses": {"minItems": 1, "maxItems": 2}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {"const": "complete"},
+          "kind": {"enum": ["tutorial", "normal"]}
+        },
+        "required": ["status", "kind"]
+      },
+      "then": {
+        "properties": {
+          "bosses": {"maxItems": 0}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "guardPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "display_name"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^guard\\.[a-z0-9_]+$"},
+        "display_name": {"type": "string", "minLength": 1}
+      }
+    },
+    "params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["starting_spirit_power", "lives", "available_character_ids"],
+      "properties": {
+        "starting_spirit_power": {"type": "integer", "minimum": 0},
+        "lives": {"const": 20},
+        "available_character_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+        }
+      }
+    },
+    "coord": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "integer", "minimum": 0, "maximum": 6},
+        {"type": "integer", "minimum": 0, "maximum": 11}
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "columns",
+        "rows",
+        "origin",
+        "cells",
+        "cell_legend",
+        "entrances",
+        "guard",
+        "paths",
+        "terrain",
+        "cell_sets",
+        "slots"
+      ],
+      "properties": {
+        "columns": {"const": 7},
+        "rows": {"const": 12},
+        "origin": {"const": "row_0_is_north"},
+        "cells": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {"type": "string", "pattern": "^[P.BSG]{7}$"}
+        },
+        "cell_legend": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["P", ".", "B", "S", "G"],
+          "properties": {
+            "P": {"const": "path"},
+            ".": {"const": "placeable", "description": "战斗侧仍叫可放置。本游戏里每一个 . 都是预定槽位，不能在别的格子放人。"},
+            "B": {"const": "blocked"},
+            "S": {"const": "spawn"},
+            "G": {"const": "guard"}
+          }
+        },
+        "entrances": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "col", "row"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^entrance\\.[a-z0-9_]+$"},
+              "col": {"type": "integer", "minimum": 0, "maximum": 6},
+              "row": {"type": "integer", "minimum": 0, "maximum": 11}
+            }
+          }
+        },
+        "guard": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cell", "id", "display_name"],
+          "properties": {
+            "cell": {"$ref": "#/$defs/coord"},
+            "id": {"type": "string", "pattern": "^guard\\.[a-z0-9_]+$"},
+            "display_name": {"type": "string", "minLength": 1}
+          }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/path"}
+        },
+        "terrain": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/terrain"}
+        },
+        "cell_sets": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {"$ref": "#/$defs/coord"}
+              },
+              {"$ref": "#/$defs/bossRadius"}
+            ]
+          }
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 6,
+          "description": "预定槽位。必须和 cells 里的每一个 . 一一对应。",
+          "items": {"$ref": "#/$defs/goodSpot"}
+        }
+      }
+    },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path_id", "id", "entrance_id", "kind", "cells"],
+      "properties": {
+        "path_id": {"type": "string", "pattern": "^path\\.[a-z0-9_]+$"},
+        "id": {"type": "string", "pattern": "^path\\.[a-z0-9_]+$"},
+        "entrance_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["ground", "flying"]},
+        "cells": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/coord"}
+        }
+      }
+    },
+    "terrain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terrain_id", "start", "duration_sec"],
+      "properties": {
+        "terrain_id": {"enum": ["ter_ice", "ter_icicle", "ter_fog", "ter_barrier"]},
+        "cells": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/coord"}
+        },
+        "rect": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 1},
+            {"type": "integer", "minimum": 1}
+          ],
+          "items": false,
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "start": {"type": "string", "pattern": "^(level_start|wave_[1-9][0-9]*)$"},
+        "duration_sec": {"type": "number"},
+        "note": {"type": "string", "minLength": 1}
+      },
+      "oneOf": [
+        {"required": ["cells"], "not": {"required": ["rect"]}},
+        {"required": ["rect"], "not": {"required": ["cells"]}}
+      ]
+    },
+    "bossRadius": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "radius_cells", "follows", "note"],
+      "properties": {
+        "mode": {"const": "radius_around_boss"},
+        "radius_cells": {"const": 2.5},
+        "follows": {"const": "boss_position"},
+        "note": {"type": "string", "minLength": 1}
+      }
+    },
+    "goodSpot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "col", "row", "label", "why"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^slot\\.[a-z0-9_]+$"},
+        "col": {"type": "integer", "minimum": 0, "maximum": 6},
+        "row": {"type": "integer", "minimum": 0, "maximum": 11},
+        "label": {"type": "string", "minLength": 1},
+        "why": {"type": "string", "minLength": 1}
+      }
+    },
+    "wave": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "wave_id", "delay_sec", "next_wave_delay_sec", "duration_sec", "ends_when", "is_boss", "spawns"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^w[0-9]{2}$"},
+        "wave_id": {"type": "string", "pattern": "^w[0-9]{2}$"},
+        "delay_sec": {"type": "number", "minimum": 0},
+        "next_wave_delay_sec": {"type": "number", "minimum": 0},
+        "duration_sec": {
+          "const": 20,
+          "description": "刷怪窗口 20 秒，从本波第一只出场算到最后一只出场。窗口结束后另有固定空档，不等场上清空。最后一波如果 ends_when 是 boss_defeated，20 秒仍只是刷怪窗口，波次要等首领被击败才结束。"
+        },
+        "ends_when": {
+          "enum": ["spawn_window", "boss_defeated"],
+          "description": "spawn_window 表示刷怪窗口结束，再经过本波之后的空档，下一波就开始，不等场上清空。boss_defeated 只用于首领关的最后一波。"
+        },
+        "is_boss": {"type": "boolean"},
+        "pressure": {"enum": ["minion", "boss_phase"]},
+        "note": {"type": "string", "minLength": 1},
+        "spawns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/spawn"}
+        }
+      }
+    },
+    "scripted_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "剧情事件。写明触发波、触发条件、目标、效果，以及是否造成伤害。台词 key 等文案。",
+      "required": [
+        "id",
+        "once",
+        "wave_id",
+        "trigger",
+        "target",
+        "effect",
+        "deals_damage",
+        "threat_unchanged",
+        "dialogue_key",
+        "dialogue_status"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^evt_[a-z0-9_]+$"},
+        "once": {
+          "const": true,
+          "description": "这一段只演一次。"
+        },
+        "wave_id": {
+          "type": "string",
+          "pattern": "^w[0-9]{2}$",
+          "description": "在哪一波触发。"
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1,
+          "description": "触发条件，例如某一只敌人出场。"
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "这一下作用在谁身上。"
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1,
+          "description": "发生什么。隙间换位是把目标送回本路起点的裂隙。"
+        },
+        "deals_damage": {
+          "type": "boolean",
+          "description": "这一下是否造成伤害。"
+        },
+        "threat_unchanged": {
+          "type": "boolean",
+          "description": "为真时，这一下不改这一波的威胁点。"
+        },
+        "dialogue_key": {"type": "string", "minLength": 1},
+        "dialogue_status": {"const": "pending_文案策划"},
+        "note": {"type": "string", "minLength": 1}
+      }
+    },
+    "spawn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enemy_id", "path_id", "count", "interval_sec", "delay_sec", "entrance_id"],
+      "properties": {
+        "enemy_id": {"type": "string", "pattern": "^enm_[a-z0-9_]+$"},
+        "path_id": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 1},
+        "interval_sec": {"type": "number", "exclusiveMinimum": 0},
+        "delay_sec": {"type": "number", "minimum": 0},
+        "entrance_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "boss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "display_name",
+        "character_id",
+        "blocks_character_id",
+        "enters_at_wave_id",
+        "enter_wave",
+        "applies_level_hp_multiplier",
+        "entrance_id",
+        "path_id",
+        "prelude_wave_ids",
+        "phases",
+        "combat_notes",
+        "leak"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^boss_[a-z0-9_]+$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "character_id": {"type": "string", "pattern": "^chr_[a-z0-9_]+$"},
+        "blocks_character_id": {
+          "description": "决斗期间不能放置的角色。冰之残影不锁琪露诺，所以是 null。",
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^chr_[a-z0-9_]+$"}
+          ]
+        },
+        "enters_at_wave_id": {"type": "string", "minLength": 1},
+        "enter_wave": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "入场是第几波，和 enters_at_wave_id 是同一个数。D-01：冰之残影是 11。"
+        },
+        "applies_level_hp_multiplier": {
+          "const": false,
+          "description": "D-01：首领血量不乘关卡系数。基础血量看 stats.json 的 bosses.<id>.hp。"
+        },
+        "entrance_id": {"type": "string", "minLength": 1},
+        "path_id": {"type": "string", "minLength": 1},
+        "prelude_wave_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/phase"}
+        },
+        "combat_notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "leak": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "首领走到守护点之后怎么处理。扣几条命不写在这里，只指向数值策划的 stats.json。",
+          "required": ["on_reach_guard", "then", "lives_source"],
+          "properties": {
+            "on_reach_guard": {"const": "deduct_lives_and_return_to_rift"},
+            "then": {"const": "walk_the_same_route_again"},
+            "lives_source": {
+              "type": "string",
+              "minLength": 1,
+              "description": "指向 data/balance/combat/stats.json 的 bosses.<id>.leak_damage。冰之残影是 bosses.boss_cirno.leak_damage。#4 写明 Boss 不在 enemies 段。不要把数字抄进关卡。"
+            }
+          }
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "display_name",
+        "spell_card_id",
+        "spell_card_name",
+        "hp_ratio_start",
+        "hp_ratio_end",
+        "cells_ref"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^phase_[1-3]$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "spell_card_id": {"type": "string", "pattern": "^sc_[a-z0-9_]+$"},
+        "spell_card_name": {"type": "string", "minLength": 1},
+        "hp_ratio_start": {"type": "number", "minimum": 0, "maximum": 1},
+        "hp_ratio_end": {"type": "number", "minimum": 0, "maximum": 1},
+        "cells_ref": {"type": "string", "minLength": 1},
+        "terrain_id": {"enum": ["ter_ice", "ter_icicle", "ter_fog", "ter_barrier"]},
+        "duration_sec": {"type": "number"},
+        "status_on_character": {"type": "string", "pattern": "^st_[a-z0-9_]+$"},
+        "status_on_shade": {"type": "string", "pattern": "^st_[a-z0-9_]+$"},
+        "note": {"type": "string", "minLength": 1}
+      }
+    },
+    "placeholders": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_placeholder", "align_with", "note"],
+      "properties": {
+        "_placeholder": {"const": true},
+        "align_with": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["数值策划", "战斗策划"]}
+        },
+        "note": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

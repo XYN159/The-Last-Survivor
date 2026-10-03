@@ -10,7 +10,8 @@ assets/audio/        音效和音乐
 assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
-data/balance/        数值 JSON。调平衡改这里
+data/balance/        数值。关卡难度表 level_difficulty.json 归数值策划，由 PR #8 提供
+data/levels/         塔防关卡 JSON（地图、波次、解锁顺序）。加载器还没写
 scenes/main/         标题等流程场景
 scenes/battle/       占位战斗场景（旧车道画面，暂不改名）
 scenes/ui/           以后可复用的界面碎片（目前还没有）
@@ -73,6 +74,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `starting_supplies` | 开局物资 | 0 |
 
 `BalanceConfig` 负责读取和计算，例如 `squad_size_after_gates()`。场景脚本只问 `GameState` 要结果，不自己解析 JSON。
+
+塔防关卡在 `data/levels/`。一关有多重以 PR #8 的 `data/balance/level_difficulty.json` 为准，归数值策划。本仓库的关卡 PR 不附带那份文件，要在 #8 之后合并。关卡文件只用 id 去对那一行。格式和字段见 `docs/design/level/data_format.md`。设计期用 `tools/validate_levels.py` 做严检查；难度表还不在时，威胁核对只警告并跳过。游戏内加载器还没写；以后写的时候要和 `BalanceConfig` 一样，缺字段或文件坏了只警告并回退，不让游戏闪退。这批关卡描述的是东方 Project 二次创作塔防，不是下面战斗场景里的车道。
 
 新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*`。
 

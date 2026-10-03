@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "ch3_03",
+  "difficulty_id": "ch3_03",
+  "status": "stub",
+  "chapter_id": "ch3",
+  "index_in_chapter": 3,
+  "display_name": "村里的试炼",
+  "display_name_key": "level.ch3_03.name",
+  "kind": "normal",
+  "route_type": "dual_route",
+  "guard_point": {
+    "id": "guard.terakoya",
+    "display_name": "寺子屋"
+  },
+  "summary": "第三章最难的普通关。两条路和村民一起挨打，没有新角色。",
+  "player_feeling": "忙，而且会心疼漏掉的村民。仍然应该守得住。",
+  "teaches": "保护目标和守护点要一起算",
+  "previews": [
+    "汇合前的空档最容易漏人"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 14,
+  "design_notes": "两条固定路线和村民一起挨打。起始灵力不够放满。村民褪色上限等制作人，不写成改路。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

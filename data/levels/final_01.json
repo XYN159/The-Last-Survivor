@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "final_01",
+  "difficulty_id": "final_01",
+  "status": "stub",
+  "chapter_id": "final",
+  "index_in_chapter": 1,
+  "display_name": "灰色的鸟居",
+  "display_name_key": "level.final_01.name",
+  "kind": "final_boss",
+  "route_type": "fixed_gates",
+  "guard_point": {
+    "id": "guard.gap_torii",
+    "display_name": "缝隙里的鸟居"
+  },
+  "summary": "终章首领暂名落野忘，状态 pending_文案策划。通关后才考虑能不能放她，本关不能放。三张符卡各做一件已画好的事：槽位变失物堆、打开一条固定路线的入口、再打开通向鸟居的入口。不反向，也不新挖路。",
+  "player_feeling": "严肃，但是公平。三张牌一件一件来，打完就能把裂缝合上。",
+  "teaches": "三张符卡对应三次入口或地形变化，格子开战前就在",
+  "previews": [
+    "最后一阶段压力叠在一条一开始就画好的直路上",
+    "第五章和终章不加入新角色。忘仍待制作人，不进可放置名单"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "boss_wasure"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 20,
+  "design_notes": "全篇威胁最高的一关。路线开战前就有，战斗中不反向、不新挖路。阶段 1：若干预定槽位变成失物堆，被击散的残影规则等战斗。阶段 2：一条方向不变的固定路线，入口到这一阶段才打开。阶段 3：另一条直通鸟居的固定路线打开入口。终符 id 仍是提案 spell.wasure.final，等战斗改成 sc_。胜负和普通关一样：最后一波结束还有命即胜，命到 0 即败。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

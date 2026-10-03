@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "ch2_03",
+  "difficulty_id": "ch2_03",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 3,
+  "display_name": "钟楼之下",
+  "display_name_key": "level.ch2_03.name",
+  "kind": "normal",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "第二章最难的普通关。两个门同时来人，旧电器比前面多。",
+  "player_feeling": "手忙，但还打得动。挡门和破甲要同时用。",
+  "teaches": "两个入口都会施压",
+  "previews": [
+    "不能把所有人都堆在一个门",
+    "硬目标漏过会很痛"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 14,
+  "design_notes": "两条固定路线都施压。起始灵力故意不够把人放满，逼玩家在预定槽位里挑。回复规则仍未定。美铃从上一关起可放置，是提案，待文案。慧音要等第三章第 1 关通关后才加入，这一关不能放她。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

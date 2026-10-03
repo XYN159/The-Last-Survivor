@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "bosses": [],
+  "id": "ch1_01",
+  "difficulty_id": "ch1_01",
+  "status": "complete",
+  "chapter_id": "ch1",
+  "index_in_chapter": 1,
+  "display_name": "湖畔薄雾",
+  "display_name_key": "level.ch1_01.name",
+  "kind": "normal",
+  "route_type": "curve",
+  "guard_point": {
+    "id": "guard.misty_lake_frogs",
+    "display_name": "冰雕青蛙"
+  },
+  "summary": "主教学点是快残影。前 5 波只有小残影，第 6 波起才出现。浓雾是第一章的环境，这里只提示一句：打雾里的敌人射程减 1。琪露诺要通关这一关才加入，这一关还不能放她。",
+  "player_feeling": "换了地图。前半只有小残影，后半才见到快残影。",
+  "teaches": "快残影比小残影更快，但更脆。第 6 波才出现",
+  "previews": [
+    "浓雾是第一章的环境，这里只用一句提示：打雾里的敌人射程减 1。它不是这一关的学习曲线验收点"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "enm_shade_fast"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa"
+    ]
+  },
+  "map": {
+    "columns": 7,
+    "rows": 12,
+    "origin": "row_0_is_north",
+    "cells": [
+      "BBBSBBB",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBPPBB",
+      "BBBBPBB",
+      "BBB.PBB",
+      "BBBBPBB",
+      "BBBPPBB",
+      "BB.PBBB",
+      "BBBPBBB",
+      "BBBP.BB",
+      "BBBGBBB"
+    ],
+    "cell_legend": {
+      "P": "path",
+      ".": "placeable",
+      "B": "blocked",
+      "S": "spawn",
+      "G": "guard"
+    },
+    "entrances": [
+      {
+        "id": "entrance.north",
+        "col": 3,
+        "row": 0
+      }
+    ],
+    "guard": {
+      "cell": [
+        3,
+        11
+      ],
+      "id": "guard.misty_lake_frogs",
+      "display_name": "冰雕青蛙"
+    },
+    "paths": [
+      {
+        "path_id": "path.main",
+        "id": "path.main",
+        "entrance_id": "entrance.north",
+        "kind": "ground",
+        "cells": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            11
+          ]
+        ]
+      }
+    ],
+    "terrain": [
+      {
+        "terrain_id": "ter_fog",
+        "cells": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "start": "level_start",
+        "duration_sec": -1,
+        "note": "前半段路线有浓雾。雾只让打在雾格上的敌人射程减 1，贴着路放人仍然打得到后半段。"
+      }
+    ],
+    "cell_sets": {},
+    "slots": [
+      {
+        "id": "slot.early",
+        "col": 2,
+        "row": 1,
+        "label": "贴着入口",
+        "why": "雾会缩短射程。这一格紧贴路线，才打得到刚出现的残影。离路线再远一格，雾里就会空放。"
+      },
+      {
+        "id": "slot.bend",
+        "col": 3,
+        "row": 5,
+        "label": "右移后的中段",
+        "why": "路线往右靠了之后，这一格贴着新路线。这一关还不能放琪露诺，只能靠现有角色打。快残影从第 6 波才出现，大约占三成。"
+      },
+      {
+        "id": "slot.lower",
+        "col": 2,
+        "row": 8,
+        "label": "回到中间之后",
+        "why": "路线拐回中列。灵梦放这里守下半段。这一关还不能放琪露诺。"
+      },
+      {
+        "id": "slot.last",
+        "col": 4,
+        "row": 10,
+        "label": "青蛙前面",
+        "why": "守护点前的最后一格，只适合补漏。雾里它覆盖很短，不能当成主输出。"
+      }
+    ]
+  },
+  "waves": [
+    {
+      "id": "w01",
+      "wave_id": "w01",
+      "delay_sec": 0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有小残影。快残影从第 6 波才出现。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 9,
+          "interval_sec": 2.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "wave_id": "w02",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有小残影。快残影从第 6 波才出现。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 12,
+          "interval_sec": 1.8,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "wave_id": "w03",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有小残影。快残影从第 6 波才出现。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 15,
+          "interval_sec": 1.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "wave_id": "w04",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有小残影。快残影从第 6 波才出现。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 17,
+          "interval_sec": 1.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "wave_id": "w05",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "只有小残影。快残影从第 6 波才出现。本波结束后弹出三选一，三张里选一张。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 20,
+          "interval_sec": 1.1,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w06",
+      "wave_id": "w06",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "小残影和快残影一起走。快残影大约占这一关的三成。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 10,
+          "interval_sec": 2.2,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w07",
+      "wave_id": "w07",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "小残影和快残影一起走。快残影大约占这一关的三成。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 14,
+          "interval_sec": 1.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 11,
+          "interval_sec": 2.0,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w08",
+      "wave_id": "w08",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "小残影和快残影一起走。快残影大约占这一关的三成。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 15,
+          "interval_sec": 1.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 13,
+          "interval_sec": 1.7,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w09",
+      "wave_id": "w09",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 4.0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "小残影和快残影一起走。快残影大约占这一关的三成。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 17,
+          "interval_sec": 1.3,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 14,
+          "interval_sec": 1.5,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    },
+    {
+      "id": "w10",
+      "wave_id": "w10",
+      "delay_sec": 4.0,
+      "next_wave_delay_sec": 0,
+      "duration_sec": 20,
+      "ends_when": "spawn_window",
+      "is_boss": false,
+      "note": "小残影和快残影一起走。快残影大约占这一关的三成。",
+      "spawns": [
+        {
+          "enemy_id": "enm_shade_basic",
+          "path_id": "path.main",
+          "count": 19,
+          "interval_sec": 1.1,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        },
+        {
+          "enemy_id": "enm_shade_fast",
+          "path_id": "path.main",
+          "count": 15,
+          "interval_sec": 1.4,
+          "delay_sec": 0,
+          "entrance_id": "entrance.north"
+        }
+      ]
+    }
+  ],
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "spell_energy_start": 0,
+  "spell_charge_mult": 1.0,
+  "deploy_time_sec": 10,
+  "deploy_wait_for_player": false,
+  "intermission_sec": 4,
+  "unlock_character_ids": [
+    "chr_cirno"
+  ]
+}

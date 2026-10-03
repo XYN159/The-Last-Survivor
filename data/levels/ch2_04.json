@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "ch2_04",
+  "difficulty_id": "ch2_04",
+  "status": "stub",
+  "chapter_id": "ch2",
+  "index_in_chapter": 4,
+  "display_name": "红魔的女仆残影",
+  "display_name_key": "level.ch2_04.name",
+  "display_name_status": "pending_文案策划",
+  "kind": "boss",
+  "route_type": "double_entrance",
+  "guard_point": {
+    "id": "guard.scarlet_clock",
+    "display_name": "钟楼大钟"
+  },
+  "summary": "首领是咲夜的残影复制体，暂名「红魔的女仆残影」，不是咲夜本人。美铃已经在队里，不能当首领。咲夜通关这一关后才加入。名字待文案。",
+  "player_feeling": "赶，但看得到入口在开关。美铃留在玩家这边挡门。",
+  "teaches": "符卡可以开关已经画好的入口，不能改格子",
+  "previews": [
+    "停时是战斗效果，不把走廊拉长",
+    "生命耗尽才失败，最后一波结束还有命即胜利"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "boss_ch2_sakuya_shade"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 16,
+  "design_notes": "首领 id 是 boss_ch2_sakuya_shade，显示名「红魔的女仆残影」，状态 pending_文案策划。她模仿即将入队的咲夜，不是盟友本人。美铃在 ch2_01 之后已经可放，不能再做成首领。路线几何开战前固定。阶段只让已经画好的入口出怪，或在路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": [
+    "chr_sakuya"
+  ]
+}

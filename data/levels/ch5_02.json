@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "ch5_02",
+  "difficulty_id": "ch5_02",
+  "status": "stub",
+  "chapter_id": "ch5",
+  "index_in_chapter": 2,
+  "display_name": "迟来的岔路",
+  "display_name_key": "level.ch5_02.name",
+  "display_name_status": "pending_文案策划",
+  "kind": "normal",
+  "route_type": "fixed_gates",
+  "guard_point": {
+    "id": "guard.barrier_node",
+    "display_name": "结界的结点"
+  },
+  "summary": "一条预先画好的岔路到某一波才开始出怪。堆积体会裂开。路线格子不动。名字待文案。",
+  "player_feeling": "练习。岔路是早就画好的，只是晚一点才出怪。",
+  "teaches": "一条预先画好的岔路，到某一波才开始出怪",
+  "previews": [
+    "堆积体被打散会裂开。裂出几只以数值表为准，不在这里抄",
+    "入口打开之前，预定槽位已经在那条路旁边"
+  ],
+  "new_character_ids": [],
+  "new_enemy_ids": [
+    "enm_shade_heap"
+  ],
+  "params": {
+    "starting_spirit_power": 150,
+    "lives": 20,
+    "available_character_ids": [
+      "chr_reimu",
+      "chr_marisa",
+      "chr_cirno",
+      "chr_yukari",
+      "chr_meiling",
+      "chr_sakuya",
+      "chr_keine",
+      "chr_mokou",
+      "chr_sanae"
+    ]
+  },
+  "bosses": [],
+  "wave_count": 12,
+  "design_notes": "名字暂用「迟来的岔路」，状态 pending_文案策划。意思是一条预先画好的路到某一波才开始出怪，战斗中不改格子。堆积体被打散会裂开，裂出几只以数值表为准，不在这里抄。",
+  "placeholders": {
+    "_placeholder": true,
+    "align_with": [
+      "数值策划",
+      "战斗策划"
+    ],
+    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+  },
+  "unlock_character_ids": []
+}

@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "_owner_note": "放置消耗、攻击和符卡数字归数值策划与战斗策划，不在本文件。这里只保留关卡要知道的：id、显示名、能不能放、第一次能放的关、通关哪一关才解锁。id 用战斗侧的 chr_ 加叙事角色 id。playable 为 yes 的是制作人已定的 MVP。playable 为 pending_文案策划 的可以写进后续关卡的可放置名单，但是提案，待文案确认。playable 为 pending_producer 的角色不进可放置名单。",
+  "characters": [
+    {
+      "id": "chr_reimu",
+      "display_name": "灵梦",
+      "playable": "yes",
+      "role": "single_target",
+      "joins_at_level": "prologue_01",
+      "unlocked_by_clearing": null,
+      "join_status": "decided",
+      "join_note": "开局就能放。"
+    },
+    {
+      "id": "chr_marisa",
+      "display_name": "魔理沙",
+      "playable": "yes",
+      "role": "pierce",
+      "joins_at_level": "prologue_02",
+      "unlocked_by_clearing": "prologue_01",
+      "join_status": "decided",
+      "join_note": "通关序章第 1 关后，从序章第 2 关起可放置。"
+    },
+    {
+      "id": "chr_cirno",
+      "display_name": "琪露诺",
+      "playable": "yes",
+      "role": "slow",
+      "joins_at_level": "ch1_02",
+      "unlocked_by_clearing": "ch1_01",
+      "join_status": "decided",
+      "join_note": "制作人已定：通关 ch1_01 后加入，ch1_02 起可放置。ch1_01 只用现有角色。快残影从第 6 波起，大约占三成。第一章首领是冰之残影，不锁放置。"
+    },
+    {
+      "id": "chr_daiyousei",
+      "display_name": "大妖精",
+      "playable": "pending_producer",
+      "role": "support",
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+    },
+    {
+      "id": "chr_meiling",
+      "display_name": "美铃",
+      "playable": "pending_文案策划",
+      "role": "block",
+      "joins_at_level": "ch2_02",
+      "unlocked_by_clearing": "ch2_01",
+      "join_status": "pending_文案策划",
+      "join_note": "全名红美铃。提案，待文案：通关 ch2_01 后加入，ch2_02 起可放置。她已经在队里，不能再当第二章首领。第二章起要不要为她留紧贴路线的「.」格，见 D-19，还没拍板，地图不改。"
+    },
+    {
+      "id": "chr_sakuya",
+      "display_name": "咲夜",
+      "playable": "pending_文案策划",
+      "role": "armor_break",
+      "joins_at_level": "ch3_01",
+      "unlocked_by_clearing": "ch2_04",
+      "join_status": "pending_文案策划",
+      "join_note": "全名十六夜咲夜。提案，待文案：通关 ch2_04 后加入，ch3_01 起可放置。第二章首领是她的残影复制体，不是她本人。"
+    },
+    {
+      "id": "chr_remilia",
+      "display_name": "蕾米莉亚",
+      "playable": "pending_producer",
+      "role": "burst",
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "不是 MVP 定案。哪一关加入仍待制作人和文案，不写进关卡的可放置名单。"
+    },
+    {
+      "id": "chr_keine",
+      "display_name": "慧音",
+      "playable": "pending_文案策划",
+      "role": "protect",
+      "joins_at_level": "ch3_02",
+      "unlocked_by_clearing": "ch3_01",
+      "join_status": "pending_文案策划",
+      "join_note": "全名上白泽慧音。提案，待文案：通关 ch3_01 后加入，ch3_02 起可放置。她已经在队里，不能再当第三章首领。"
+    },
+    {
+      "id": "chr_mokou",
+      "display_name": "妹红",
+      "playable": "pending_文案策划",
+      "role": "lane_damage",
+      "joins_at_level": "ch4_01",
+      "unlocked_by_clearing": "ch3_04",
+      "join_status": "pending_文案策划",
+      "join_note": "全名藤原妹红。提案，待文案：通关 ch3_04 后加入，ch4_01 起可放置。第三章首领是她的残影复制体，不是她本人。"
+    },
+    {
+      "id": "chr_aya",
+      "display_name": "文",
+      "playable": "pending_producer",
+      "role": "reveal",
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "全名射命丸文。还没定能不能玩，不进解锁链。若以后可玩，通关 ch4_01 后加入，负责打飞行残影。不要把已经入队的人再写成首领。"
+    },
+    {
+      "id": "chr_sanae",
+      "display_name": "早苗",
+      "playable": "pending_文案策划",
+      "role": "anti_air",
+      "joins_at_level": "ch5_01",
+      "unlocked_by_clearing": "ch4_04",
+      "join_status": "pending_文案策划",
+      "join_note": "提案，待文案：通关 ch4_04 后加入，ch5_01 起可放置。本章首领是她的残影复制体「风祝的残影」，不是她本人。对空位留给射命丸文；文还不可玩，所以 ch4_01 不解锁新人。"
+    },
+    {
+      "id": "chr_yukari",
+      "display_name": "紫",
+      "playable": "yes",
+      "role": "control",
+      "joins_at_level": "ch2_01",
+      "unlocked_by_clearing": "ch1_04",
+      "join_status": "decided",
+      "join_note": "通关 ch1_04 后加入。MVP 的七关首通名单里没有她，重打已通关关卡才能放。第一次出现在首通名单是 ch2_01。"
+    },
+    {
+      "id": "chr_wasure",
+      "display_name": "忘",
+      "playable": "pending_producer",
+      "role": "convert",
+      "joins_at_level": null,
+      "unlocked_by_clearing": null,
+      "join_status": "pending_producer",
+      "join_note": "全名落野忘，气泡名仍是忘。终章首领用这个暂名，状态 pending_文案策划。通关 final_01 之后才考虑能不能放，本关不能放，也不进当前解锁链。"
+    }
+  ]
+}

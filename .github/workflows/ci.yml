@@ -37,6 +37,9 @@ jobs:
       - name: Check GDScript format and lint
         run: ./ci/lint.sh
 
+      - name: Validate level data
+        run: python3 tools/validate_levels.py
+
   test:
     name: test
     runs-on: ubuntu-24.04
