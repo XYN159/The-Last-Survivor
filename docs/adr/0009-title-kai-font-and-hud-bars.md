@@ -17,7 +17,7 @@ ADR-0007 当时把霞鹜文楷留给 T-20 的全局主题。
 
 - 霞鹜文楷 v1.521 Regular 放进 `assets/fonts/LXGWWenKai-Regular.ttf`，许可证原文在 `assets/fonts/LXGWWenKai-OFL.txt`（SIL OFL 1.1）。
 - 字体只通过场景主题挂在三处：标题画面根节点 `MainMenu`、战斗顶栏 `TopBar`、选中单位面板 `UnitPanel`。全局 `AppTheme` 仍然是 Noto Sans SC，其余战斗文字不变。T-20 统一主题时再决定要不要全局换字体，并另写 ADR。
-- 三条状态条：深色凹槽 `ColorRect`，上面一层从左往右的彩色填充，再盖 `bar_frame.png` 的九宫格（左右锁 72 px），最上面是原来的 `%SpiritLabel`、`%LifeLabel`、`%WaveLabel`。填充长度在 `battle_board.gd` 的 `_refresh_bars()` 里改 `anchor_right`。
+- 三条状态条：深色凹槽 `ColorRect`，上面一层从左往右的填充。业主不要黄、红、青这三块彩色，所以填充改为全透明，画面上只看到古典框和文字；长度仍按剩余比例算，以后若要很淡的刻度再开。再往上盖 `bar_frame.png` 的九宫格（左右锁 72 px），最上面是原来的 `%SpiritLabel`、`%LifeLabel`、`%WaveLabel`。填充长度在 `battle_board.gd` 的 `_refresh_bars()` 里改 `anchor_right`。
   - 生命 = 当前生命 ÷ 最大生命。
   - 灵力 = 当前灵力 ÷ max(开局灵力, 当前灵力)。花掉就变短，攒得比开局多就保持满条。不在数值表里新增灵力上限。
   - 波次／布阵 = 剩余秒数 ÷ 这段计时的总长。`BattleSim.view_state()` 新增只读字段 `phase_duration`，每次给计时器赋新值时一起记下；没有计时（最后一波）时为 0，条显示满。它不参与 `tick()`、奖励和出波时间。
