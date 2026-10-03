@@ -1,0 +1,9 @@
+op,op_id,phase,atk,dmg_type,enemy,enemy_id,enemy_def,enemy_res,damage,hit_floor_5pct
+玫兰莎,char_208_melan,E1满级,738,PHYSICAL,源石虫,enemy_1007_slime,0,0.0,738,False
+玫兰莎,char_208_melan,E1满级,738,PHYSICAL,持盾刀兵,enemy_1029_shdsbr,250,0.0,488,False
+玫兰莎,char_208_melan,E1满级,738,PHYSICAL,重装防御者,enemy_1006_shield,800,0.0,36.9,True
+克洛丝,char_124_kroos,E1满级,375,PHYSICAL,重装防御组长,enemy_1006_shield_2,1000,0.0,18.75,True
+银灰,char_172_svrash,E2满级,713,PHYSICAL,重装防御者,enemy_1006_shield,800,0.0,35.65,True
+艾雅法拉,char_180_amgoat,E2满级,645,MAGICAL,重装防御者,enemy_1006_shield,800,0.0,645.0,False
+艾雅法拉,char_180_amgoat,E2满级,645,MAGICAL,术师,enemy_1011_wizard,50,50.0,322.5,False
+艾雅法拉,char_180_amgoat,E2满级,645,MAGICAL,战术防御者组长,enemy_1142_mershd_2,1000,60.0,258.0,False
