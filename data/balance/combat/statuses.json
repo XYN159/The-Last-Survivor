@@ -312,8 +312,9 @@
         "type": "unit_disable",
         "pause_cooldowns": true,
         "block_upgrade_sell": true,
-        "tap_to_break_status": "decided_no",
-        "tap_to_break": false
+        "tap_to_break_status": "old_draft_not_user_decision",
+        "tap_to_break": false,
+        "tap_to_break_note_zh": "D-05 用户没有拍。tap_to_break 的 false 只是旧稿，不是已定。"
       },
       "duration_source": "attacker",
       "boss_cirno_duration_stats_key": "terrain.ter_ice.stop_on_declare_sec",

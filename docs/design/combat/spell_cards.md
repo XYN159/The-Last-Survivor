@@ -1,14 +1,21 @@
 # 符卡
 
-> 状态：草案（战斗策划）。符卡名来自 PR #2 `data/text/names_zh.csv`。符卡伤害系数、持续时间、范围、数量、充能都是数值，唯一来源是 PR #8 的 `stats.json`（`spell_cards.<id>.*`、`spell_charge.*`）。本文只写行为和字段名。
-> 对应配置：`data/balance/combat/spell_cards.json`、`rules.json` 的 `spell_energy` 和 `spell_cutin` 段。
+> **机制细则待 P2。** 四人怎么放技能、技力怎么回复、范围长什么样，都还没定。下面从第 1 节起是旧稿对照，不要当成定稿。
+> 状态：草案（战斗策划）。符卡名来自 PR #2 `data/text/names_zh.csv`。系数和秒数仍归数值策划，本文不另编一套数字。
+> 对应配置：`data/balance/combat/spell_cards.json`。`rules.json` 里的共用能量字段是旧稿。
 
-## 1. 能量条【战斗策划决定 6】
+## 0. 当前规则（Q5，2026-10-03）
 
-数字全在 PR #8 的 `stats.json` → `spell_charge` 和 `characters.<id>`，本节只写规则。
+- 全队共用的符卡条删除。不再有符卡使，不再有底部那一条共用能量，也不再有「换人清能量」。
+- 符卡名挂到角色自己的技能上。名字仍用 PR #2 已有的符卡名，不在这里改名，也不把每张的范围和回复方式写成定稿。
+- 立绘演出可以留给以后的角色技能用。秒数不在这里改成新数字。
 
-- 全队共用一条能量。满值**不是固定 100**，按当前符卡使读 PR #8 的 `characters.<id>.spell_energy_max`（每人不同，大约 80 到 150；某人没填才用 `spell_charge.energy_max_default`）。配置是 `rules.json` → `spell_energy.max_stats_key`。
-- 换符卡使的规则不变：只能在布阵期和波次空档换，换人时能量清零，所以满值跟着新符卡使变，不用换算旧能量。开局 `spell_charge.energy_start`（关卡可用 `spell_energy_start` 覆盖）。
+## 1. 能量条（旧稿，已删除）
+
+下面整节不再当规则。共用条、危急充能、按伤害充能都随 Q5 删掉。技力回复方式待 P2。
+
+- （旧稿）全队共用一条能量。满值**不是固定 100**，按当前符卡使读 PR #8 的 `characters.<id>.spell_energy_max`（每人不同，大约 80 到 150；某人没填才用 `spell_charge.energy_max_default`）。配置是 `rules.json` → `spell_energy.max_stats_key`。
+- （旧稿）只能在布阵期和波次空档换符卡使，换人时能量清零。这套已经删除，不当规则。
 - 充能来源：
   1. **造成伤害**：每次命中的「有效伤害」（不算溢出）× 每点伤害充能。每点伤害充能按关卡取 `spell_charge.per_damage_by_level.<level_id>`，没有这一关就用 `spell_charge.per_damage`。
   2. **击杀**：每只敌人的 `enemies.<id>.kill_charge`。
@@ -53,7 +60,7 @@
 4. 演出中点击屏幕任意位置立即跳过。
 5. 演出结束的那个 tick，符卡效果开始执行（第 ① 步之后）。
 
-## 3. 符卡使（方案 A+，已拍板，2026-09-27）
+## 3. 符卡使（旧稿。Q5 已删除，不当规则）
 
 框架要求「按钮在底部，充满时发光」，只有一个按钮。制作人拍板用方案 A+：`spell_energy.caster_mode` = `single_caster_switchable`。
 
@@ -71,7 +78,7 @@
 - 符卡使不在场上（没放或被卖了）时，符卡照样能放，从守护点位置发出，立绘照常。
 - 符卡使被冻住（`st_unit_frozen`）时照样能放，并且立刻解冻。
 
-## 4. MVP 符卡详细效果
+## 4. 符卡效果旧稿（机制细则待 P2，不要当成定稿）
 
 ### 4.1 梦符「封魔阵」 `sc_evil_sealing_circle`（灵梦默认，用户已确认）
 
@@ -111,7 +118,7 @@
 
 ## 5. Boss 符卡
 
-冰之残影（`boss_cirno`，琪露诺的复制体）的三张 Boss 符卡详见 [enemies_and_bosses.md](enemies_and_bosses.md) 第 6 节。每张只在进入阶段时放一次；冻结秒数读 PR #8 `terrain.ter_ice.stop_on_declare_sec`，冰柱存在时间读关卡 `phase_1.duration_sec`（12 秒）。显示名称和符卡名归文案策划。Boss 符卡和玩家符卡共用立绘演出规则。
+冰之残影的阶段符卡详见 [enemies_and_bosses.md](enemies_and_bosses.md)。三阶段和钻石风暴是旧稿，待 P4，不是用户已经同意。本节不把它们改写成两阶段定稿。
 
 ## 6. 其他角色符卡（后续章节，概要）
 

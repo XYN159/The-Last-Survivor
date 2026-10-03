@@ -80,7 +80,7 @@
       "id": "syn_ofuda_detonate",
       "draft_name": "符札引爆",
       "name_key": "syn.ofuda_detonate.name",
-      "status": "confirmed",
+      "status": "draft",
       "mvp": true,
       "requires": {
         "characters_all": [
@@ -106,7 +106,8 @@
         "applied_by": "chr_reimu",
         "on": "normal_attack_hit",
         "duration_sec": 1.5
-      }
+      },
+      "note_zh": "D-06 未拍。通用暴击已去掉，force_crit 不当规则，也不另写伤害数字。联动细则待 P2。"
     },
     {
       "id": "syn_border_seal",

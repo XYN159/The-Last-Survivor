@@ -8,7 +8,8 @@
     "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
     "stats_sections": [
       "bosses"
-    ]
+    ],
+    "status_conversion_note_zh": "把冻结改成减速是旧稿里的免疫做法。冻结减半、不免疫待 P4，这里不改成新规则。"
   },
   "bosses": [
     {
@@ -105,7 +106,11 @@
         "defeat_vfx": "ice_shatter_big"
       },
       "stats_path": "bosses.boss_cirno",
-      "phase_hp_ratios_stats_key": "boss_rules.phase_hp_ratios"
+      "phase_hp_ratios_stats_key": "boss_rules.phase_hp_ratios",
+      "life_point_reduce": 2,
+      "life_point_reduce_note_zh": "Q4 已定：漏过扣 2 命。",
+      "phase_plan_status": "old_draft_pending_p4",
+      "phase_plan_note_zh": "三阶段和钻石风暴是旧稿，待 P4，不是用户已同意。两阶段、冻结时长减半、不免疫也待 P4。折返不当已定。"
     }
   ]
 }
