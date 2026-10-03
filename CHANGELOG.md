@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 首页介绍的启动图去掉左右两块黑色空白，空出来的位置补上神社夜景。标题、灵梦和「点击开始」没有改。
 - 服务器选择图里，红魔馆、白玉楼、月之廊各只写一遍。
 - 仓库首页的介绍加上二十张界面原画。登录和选服务器只是画面，不建账号，也不连网。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
