@@ -26,6 +26,7 @@
 | [glossary.md](glossary.md) | 术语表与统一写法（含敌人名、灵力、失物簿） | 全员，写任何文本前先查 |
 | [lost_and_found.md](lost_and_found.md) | 失物簿：星星解锁故事的规则，以及和终章的呼应 | 文案，系统策划 |
 | [dialogue_samples.md](dialogue_samples.md) | 序章、第一章的可读版剧本，以及按关卡 id 的文本 key 规则 | 文案，程序，关卡策划 |
+| [skill_explain_draft.md](skill_explain_draft.md) | 四人技能说明草案，给以后的原型实验看。不是剧情定稿 | 文案，程序，战斗策划 |
 | [`data/text/dialogue_zh.csv`](../../../data/text/dialogue_zh.csv) | 序章、第一章的对话与教学提示文本表 | 程序（接入对话系统） |
 | [`data/text/names_zh.csv`](../../../data/text/names_zh.csv) | 角色名、章节名、符卡名、敌人名、货币名 | 程序，界面 |
 | [`data/text/ui_zh.csv`](../../../data/text/ui_zh.csv) | 界面短句、联动名、局内强化，以及战斗状态、地形、角色技能的名称和说明 | 程序，界面 |
