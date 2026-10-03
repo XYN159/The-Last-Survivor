@@ -47,6 +47,8 @@ var _starting_spirit: int = 0
 @onready var _character_bar: HBoxContainer = %CharacterBar
 @onready var _call_button: Button = %CallButton
 @onready var _speed_button: Button = %SpeedButton
+# Button 不支持字体阴影，倍速文字放在按钮里的 Label 上。
+@onready var _speed_label: Label = %SpeedLabel
 @onready var _hint_label: Label = %HintLabel
 @onready var _unit_panel: Control = %UnitPanel
 @onready var _unit_title: Label = %UnitTitle
@@ -193,7 +195,7 @@ func _refresh() -> void:
 	# 状态条只有一行高，两行的波次文字在条里并成一行。
 	_wave_label.text = _wave_text(state).replace("\n", "  ")
 	_refresh_bars(state)
-	_speed_button.text = tr("ui.battle.speed") % _speed
+	_speed_label.text = tr("ui.battle.speed") % _speed
 	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。
 	_call_button.visible = str(state.phase) == BattleSim.PHASE_DEPLOY
 	_call_button.disabled = not bool(state.call_allowed)

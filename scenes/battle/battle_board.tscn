@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/button_plate.png" id="14_button_plate"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/level_plate.png" id="15_level_plate"]
 [ext_resource type="FontFile" path="res://assets/fonts/LXGWWenKai-Regular.ttf" id="16_kai"]
-[ext_resource type="FontFile" path="res://assets/fonts/WenJinMinchoP0-Regular.ttf" id="17_song"]
+[ext_resource type="FontFile" path="res://assets/fonts/NotoSansCJKsc-Black.otf" id="17_black"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_clear"]
 
@@ -134,10 +134,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
-theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("17_song")
+theme_override_colors/font_color = Color(0.9686275, 0.9568627, 0.9372549, 1)
+theme_override_colors/font_shadow_color = Color(0.1882353, 0.0823529, 0.1137255, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("17_black")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.spirit"
 horizontal_alignment = 1
@@ -195,10 +197,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
-theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("17_song")
+theme_override_colors/font_color = Color(0.9686275, 0.9568627, 0.9372549, 1)
+theme_override_colors/font_shadow_color = Color(0.1882353, 0.0823529, 0.1137255, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("17_black")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.life"
 horizontal_alignment = 1
@@ -256,10 +260,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
-theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("17_song")
+theme_override_colors/font_color = Color(0.9686275, 0.9568627, 0.9372549, 1)
+theme_override_colors/font_shadow_color = Color(0.1882353, 0.0823529, 0.1137255, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("17_black")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.deploy"
 horizontal_alignment = 1
@@ -347,10 +353,12 @@ offset_left = 450.0
 offset_top = 28.0
 offset_right = 1110.0
 offset_bottom = 78.0
-theme_override_colors/font_color = Color(0.9647059, 0.9098039, 0.7882353, 1)
-theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("17_song")
+theme_override_colors/font_color = Color(0.9686275, 0.9568627, 0.9372549, 1)
+theme_override_colors/font_shadow_color = Color(0.1882353, 0.0823529, 0.1137255, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("17_black")
 theme_override_font_sizes/font_size = 22
 text = "ui.battle.hint_default"
 vertical_alignment = 1
@@ -437,16 +445,32 @@ offset_left = 1688.0
 offset_top = 24.0
 offset_right = 1850.0
 offset_bottom = 104.0
-theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
-theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
-theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("17_song")
+theme_override_fonts/font = ExtResource("17_black")
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+
+[node name="SpeedLabel" type="Label" parent="SpeedButton"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.9686275, 0.9568627, 0.9372549, 1)
+theme_override_colors/font_shadow_color = Color(0.1882353, 0.0823529, 0.1137255, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("17_black")
+theme_override_font_sizes/font_size = 25
 text = "ui.battle.speed"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="UnitPanel" type="Control" parent="."]
 unique_name_in_owner = true
