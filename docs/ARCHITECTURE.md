@@ -11,6 +11,7 @@ assets/fonts/        界面字体。Noto Sans SC 子集（许可证见 OFL.txt�
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
 assets/ui/originals/ 二十张界面原画（1920×1080），原样拷自原画分支，不改画面
+assets/video/        过场视频（Theora 编码的 ogv，Git LFS）。现在只有序章第一关的关前视频 prologue_01_pre.ogv
 data/balance/        数值 JSON。调平衡改这里
 data/levels/         正式关卡。现在只有 prologue_01.json，原样复制自关卡 PR #5
 data/prototype/      塔防原型用的数值和旧的两路试验关。正式表合并前先读这里
@@ -34,7 +35,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 空目录里的 `.gitkeep` 只是为了让 Git 记住这个文件夹。放进真正的文件之后可以删掉它。
 
-二进制资源（png、jpg、wav、ogg、mp3、ttf、glb 等）由 Git LFS 管理，规则在 `.gitattributes`。克隆之前要先装好 Git LFS，否则这些文件会变成一小段指针文本，Godot 打不开。
+二进制资源（png、jpg、wav、ogg、ogv、mp3、ttf、glb 等）由 Git LFS 管理，规则在 `.gitattributes`。克隆之前要先装好 Git LFS，否则这些文件会变成一小段指针文本，Godot 打不开。
 
 ## 场景和脚本
 
@@ -42,7 +43,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
-| `scenes/main/original_flow.tscn` | `scripts/main/original_flow.gd` | 启动场景。二十张界面原画串成的流程：启动页、登录、主界面和各个子画面，出击进序章棋盘，打完回结算原画。见下面「界面原画流程」 |
+| `scenes/main/original_flow.tscn` | `scripts/main/original_flow.gd` | 启动场景。二十张界面原画串成的流程：启动页、登录、主界面和各个子画面，出击先进关前视频，再进序章棋盘，打完回结算原画。见下面「界面原画流程」 |
+| `scenes/main/prologue_pre_video.tscn` | `scripts/main/prologue_pre_video.gd` | 序章第一关战斗前的全屏关前视频。点屏幕或右上角「跳过」立刻进棋盘，播完也进棋盘，只换一次场景；视频打不开就警告后直接进棋盘。见 ADR-0010 |
 | `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 旧的序章标题。现在不是启动场景，也没有画面再跳回它 |
 | `scenes/battle/battle_board.tscn` | `scripts/battle/battle_board.gd` | 可玩的塔防棋盘。按钮和结算在这里，规则不在这里 |
 | `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧车道占位。标题已经不进这里 |
@@ -128,7 +130,7 @@ MOTION_CAPTURE_DIR=/tmp/motion godot --path . --resolution 1920x1080 -s tests/ca
 
 - `OriginalScreens`（`scripts/ui/original_screens.gd`）读 `data/ui/original_screens.json`：每个画面用哪张图、哪些地方能点、点了做什么。坐标按原图像素写，`rect` 是 `[左, 上, 宽, 高]`。
 - `original_flow.gd` 把原画放进居中的 1920×1080 舞台，按表在上面盖透明按钮；没有画在原画上的入口（登录页的「服务器」「公告」，主界面的「抽卡」「体力」，角色详情的「装备」）是带字的小按钮，文字走 `ui.originals.*`。除了启动页、登录、主界面和体力弹窗，每屏都有「返回」。
-- 点击动作只有几种：`push` 进下一屏、`back` 回上一屏、`replace` 替换当前屏、`reset` 清空历史只留目标屏、`popup` / `close_popup` 开关弹窗、`battle` 进序章棋盘。
+- 点击动作只有几种：`push` 进下一屏、`back` 回上一屏、`replace` 替换当前屏、`reset` 清空历史只留目标屏、`popup` / `close_popup` 开关弹窗、`battle` 先进关前视频、再进序章棋盘。
 - 战斗结算卡上的「继续」把 `original_flow.gd` 的 `pending_entry` 设成 `result`，回到流程时先显示结算原画，下面垫着主界面。
 - 这一层不写存档、不记账号、不联网，也不碰任何数值。抽卡、商店、邮件、升级只能打开、看、返回。
 

@@ -1,9 +1,11 @@
 extends GutTest
 
-## 二十张界面原画的流程：图都能装上，点击区都能走通，登录不写文件，出击进现有战斗。
+## 二十张界面原画的流程：图都能装上，点击区都能走通，登录不写文件，出击先进关前视频。
 
 const FLOW_SCENE := preload("res://scenes/main/original_flow.tscn")
 const OriginalFlow := preload("res://scripts/main/original_flow.gd")
+const PreVideo := preload("res://scripts/main/prologue_pre_video.gd")
+const PRE_VIDEO_SCENE_PATH := "res://scenes/main/prologue_pre_video.tscn"
 const BATTLE_SCENE_PATH := "res://scenes/battle/battle_board.tscn"
 
 
@@ -108,7 +110,7 @@ func test_back_button_says_back_and_returns() -> void:
 	assert_eq(flow.current_screen_id(), "home")
 
 
-func test_sortie_from_home_enters_the_existing_battle() -> void:
+func test_sortie_from_home_requests_the_pre_video() -> void:
 	var flow := _make_flow()
 	flow.reset_to("home")
 	watch_signals(flow)
@@ -117,15 +119,18 @@ func test_sortie_from_home_enters_the_existing_battle() -> void:
 	assert_eq(flow.current_screen_id(), "dialogue")
 	assert_signal_not_emitted(flow, "scene_change_requested")
 	_press(flow, "continue_dialogue")
-	assert_signal_emitted_with_parameters(flow, "scene_change_requested", [BATTLE_SCENE_PATH])
+	assert_signal_emitted_with_parameters(flow, "scene_change_requested", [PRE_VIDEO_SCENE_PATH])
+	assert_signal_emit_count(flow, "scene_change_requested", 1)
 
 
-func test_battle_target_is_the_prologue_board() -> void:
-	assert_eq(OriginalFlow.BATTLE_SCENE, BATTLE_SCENE_PATH)
+func test_pre_video_then_leads_to_the_prologue_board() -> void:
+	assert_eq(OriginalFlow.PRE_VIDEO_SCENE, PRE_VIDEO_SCENE_PATH)
+	assert_eq(PreVideo.BATTLE_SCENE, BATTLE_SCENE_PATH)
 	var board := (load(BATTLE_SCENE_PATH) as PackedScene).instantiate()
 	add_child_autofree(board)
 	var sim: BattleSim = board._sim
 	assert_eq(str(sim.view_state().level_name), tr("level.prologue_01.name"))
+	assert_eq(tr("level.prologue_01.name"), "神社的直路")
 
 
 func test_stamina_popup_never_blocks_the_sortie() -> void:
@@ -135,7 +140,7 @@ func test_stamina_popup_never_blocks_the_sortie() -> void:
 	watch_signals(flow)
 	flow.start_battle()
 	assert_eq(flow.popup_screen_id(), "")
-	assert_signal_emitted(flow, "scene_change_requested")
+	assert_signal_emitted_with_parameters(flow, "scene_change_requested", [PRE_VIDEO_SCENE_PATH])
 
 
 func test_home_bottom_bar_opens_each_page() -> void:

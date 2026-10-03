@@ -3,7 +3,7 @@ extends SceneTree
 ## 界面原画流程截图。不进 GUT，手动运行：
 ##   godot --path . --resolution 1920x1080 -s tests/capture/originals_capture.gd
 ## 截图写到 ORIGINALS_CAPTURE_DIR（默认 user://originals_capture）。
-## 从启动页一路点到序章战斗，打完后经结算原画回到主界面，中间每一屏截一张。
+## 从启动页一路点到关前视频，跳过后进序章战斗，打完后经结算原画回到主界面，中间每一屏截一张。
 
 const FLOW_SCENE := "res://scenes/main/original_flow.tscn"
 const SETTLE_SEC := 0.3
@@ -47,10 +47,16 @@ func _run() -> void:
 	await _press("stage_node", "stage_detail")
 	await _press("start_operation", "squad")
 	await _press("start_battle", "dialogue")
-	await _press("continue_dialogue", "")
+	await _press("continue_dialogue", "pre_video")
+	await _skip_video()
 	await _finish_battle()
 	await _press("confirm_result", "home_after_result")
 	quit()
+
+
+func _skip_video() -> void:
+	(current_scene.get_node("%SkipButton") as Button).pressed.emit()
+	await _settle()
 
 
 func _finish_battle() -> void:

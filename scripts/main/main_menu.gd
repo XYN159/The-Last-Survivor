@@ -1,9 +1,14 @@
 extends Control
 
-## 标题画面。开始按钮进入序章第一关（CombatCatalog.DEFAULT_LEVEL_ID）。
+## 标题画面。开始按钮先播关前视频，再进入序章第一关（CombatCatalog.DEFAULT_LEVEL_ID）。
+
+signal scene_change_requested(path: String)
 
 const PressMotion := preload("res://scripts/ui/press_motion.gd")
+const PRE_VIDEO_SCENE := "res://scenes/main/prologue_pre_video.tscn"
 
+## 测试里关掉，只看信号，不真的换场景。
+var auto_change_scene: bool = true
 var _start_press: PressMotion
 var _leaving: bool = false
 
@@ -39,4 +44,6 @@ func _on_start_pressed() -> void:
 	_leaving = true
 	# 等松开回弹播完再换场景，不然按钮刚弹起来画面就切走了。
 	await get_tree().create_timer(_start_press.settle_sec()).timeout
-	get_tree().change_scene_to_file("res://scenes/battle/battle_board.tscn")
+	scene_change_requested.emit(PRE_VIDEO_SCENE)
+	if auto_change_scene:
+		get_tree().change_scene_to_file(PRE_VIDEO_SCENE)
