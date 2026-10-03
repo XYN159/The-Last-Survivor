@@ -25,18 +25,28 @@
 
 左边放 Cursor、右边放正在跑的游戏，按 [`docs/DEV_LOOP.md`](docs/DEV_LOOP.md)。桌面窗口是 540×960，游戏逻辑分辨率仍是 1080×1920。
 
-## 下载调试 APK
+## 下载
+
+手机上的图标是灵梦的夜景头像，安卓和以后的 iOS 用同一张。图在 `assets/brand/reimu_app_icon.png`。
+
+### 安卓安装包
 
 每次拉取请求，以及推送到 `main`，GitHub Actions 都会检查代码、跑测试，并打出调试 APK。
 
 1. 打开 [Actions 里的 CI](https://github.com/XYN159/touhou-forgotten-defense/actions/workflows/ci.yml)。
-2. 点开一次成功的运行。
+2. 点开一次成功的运行（名字里有 `export-android`）。
 3. 在页面底部的 **Artifacts** 下载 `touhou-forgotten-defense-android-debug`。
 4. 解压得到 `touhou-forgotten-defense-debug.apk`，拷到手机安装。
 
 这个包用调试证书签名，只能自己试用，不能上架 Google Play。手机安装步骤也在 [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md)。
 
-打上 `v0.1.0` 这种标签后，[Release 工作流](.github/workflows/release.yml) 会把调试 APK 挂到对应的 GitHub Release，文件名类似 `touhou-forgotten-defense-v0.1.0-debug.apk`。
+打上 `v0.1.0` 这种标签后，[Release 工作流](.github/workflows/release.yml) 会把调试 APK 挂到对应的 GitHub Release，文件名类似 `touhou-forgotten-defense-v0.1.0-debug.apk`。那一份是给别人直接下载的安装包。
+
+### iOS TestFlight
+
+TestFlight 测试包必须用你自己的 Apple 开发者账号签名，再上传到 App Store Connect。这个仓库里没有那个账号，也没有证书，所以现在还没有 TestFlight 链接，不能在这里放一个能点的安装按钮。
+
+应用图标已经按灵梦做好。你把 Apple 开发者账号准备好之后，才能打出 TestFlight 包，再把链接补进这一节。
 
 ## 文档
 
