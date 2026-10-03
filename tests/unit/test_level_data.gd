@@ -257,10 +257,15 @@ func test_ch1_03_armored_shades_follow_the_schedule() -> void:
 			assert_eq(left, 0, str(wave["id"]))
 			assert_eq(right, 1, str(wave["id"]))
 	assert_eq(armored_total, 8)
+	assert_eq(
+		str(level["armored_shade_lock"]),
+		"首次出现仍是这一关（Q13）。数量 8 只是旧锁，待按新时间轴重排。"
+	)
 	var boss_level := _read_dictionary(_LEVEL_DIR + "ch1_04.json")
 	var bosses: Array = boss_level["bosses"]
 	var boss: Dictionary = bosses[0]
 	assert_eq(int(boss["enter_wave"]), 11)
+	assert_eq(str(boss["enter_timing_status"]), "待 P10")
 	assert_eq(str(boss["enters_at_wave_id"]), "w11")
 	var prelude: Array = boss["prelude_wave_ids"]
 	assert_eq(prelude.size(), 10)
@@ -269,6 +274,27 @@ func test_ch1_03_armored_shades_follow_the_schedule() -> void:
 	assert_eq(str(phases[0]["status_on_character"]), "st_unit_frozen")
 	assert_eq(str(phases[1]["status_on_character"]), "st_unit_frozen")
 	assert_eq(str(phases[1]["status_on_shade"]), "st_freeze")
+
+
+func test_level_table_placeholders_stay_blank() -> void:
+	var index := _read_dictionary(_LEVEL_DIR + "index.json")
+	var armor_lock := "首次出现仍是这一关（Q13）。数量 8 只是旧锁，待按新时间轴重排。"
+	for entry in index["levels"]:
+		var level := _read_dictionary(_LEVEL_DIR + str(entry["file"]))
+		var level_id := str(level["id"])
+		assert_eq(str(level["battle_problem"]), "待 P1", level_id)
+		assert_eq(str(level["initial_cost"]), "待定", level_id)
+		assert_eq(str(level["max_life_point"]), "待定", level_id)
+		assert_eq(str(level["buildable"]), "待定", level_id)
+		var kind := str(level["kind"])
+		if kind == "boss" or kind == "final_boss":
+			assert_eq(str(level["boss_enter_timing_status"]), "待 P10", level_id)
+		else:
+			assert_false(level.has("boss_enter_timing_status"), level_id)
+		if level_id == "ch1_03":
+			assert_eq(str(level["armored_shade_lock"]), armor_lock)
+		else:
+			assert_false(level.has("armored_shade_lock"), level_id)
 
 
 func test_ch1_03_gap_demo_runs_once() -> void:

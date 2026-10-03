@@ -17,6 +17,11 @@
   "summary": "第一章最难的普通关。一条路分成左右两股再汇合，雾也最浓。",
   "player_feeling": "两边不能只守一边。汇合点是用来补漏的，不是用来偷懒的。",
   "teaches": "一个入口分成左右两边再汇合",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
+  "armored_shade_lock": "首次出现仍是这一关（Q13）。数量 8 只是旧锁，待按新时间轴重排。",
   "previews": [
     "分叉前的格子能打到所有残影",
     "分叉中间有障碍时，一座角色打不到两边",

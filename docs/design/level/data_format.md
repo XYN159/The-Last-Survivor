@@ -45,6 +45,12 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `summary` | 这一关希望玩家学会什么，一句话 |
 | `player_feeling` | 这一关希望玩家感受到什么 |
 | `teaches` | 这一关只有一个主教学点，一句话 |
+| `battle_problem` | 这关考什么。24 关统一写「待 P1」，不要填考题 |
+| `initial_cost` | 开局费用占位。一律「待定」，不要写数字。现有 `params.starting_spirit_power` 仍是旧表 |
+| `max_life_point` | 本关生命上限占位。一律「待定」，不要写数字。现有 `params.lives` 仍是 20 |
+| `buildable` | 格子以后分 melee、ranged、none。一律「待定」。这一次不重画地图，不给格子填类型 |
+| `armored_shade_lock` | 只在 `ch1_03`。硬残影首次出现仍是这一关（Q13）。数量 8 只是旧锁，待按新时间轴重排。出怪表不改 |
+| `boss_enter_timing_status` | 只在首领关。登场波次旁注「待 P10」。不改成关卡前 1/3，也不写血量 |
 | `previews` | 可选。顺带看到的内容，字符串数组。不算学习曲线验收点 |
 | `new_character_ids` | 这一关新给的角色。没有就是空数组。id 用战斗侧的 `chr_` 加叙事角色 id，例如 `chr_reimu` |
 | `new_enemy_ids` | 这一关新出现的残影。没有就是空数组 |
@@ -172,9 +178,11 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `delay_sec` | 相对这一波开始再等多少秒 |
 | `entrance_id` | 关卡多留的入口 id，必须是这张图上有的 |
 
-画完的关：文件 `data/balance/level_difficulty.json` 存在时，每一波的敌人威胁要等于该关的 `wave_threat_budgets`，全关合计要等于 `threat_budget_total`。这份文件由 PR #8 提供。它还不在本 PR 里时，校验只打印警告并跳过这项，不报错。首领不占预算。硬残影只允许出现在第一章第 3 关，共 8 只。
+画完的关：文件 `data/balance/level_difficulty.json` 存在时，每一波的敌人威胁要等于该关的 `wave_threat_budgets`，全关合计要等于 `threat_budget_total`。这份文件由 PR #8 提供。它还不在本 PR 里时，校验只打印警告并跳过这项，不报错。首领不占预算。硬残影首次出现仍是第一章第 3 关（Q13）。数量 8 只是旧锁，待按新时间轴重排，这一次不改只数。
 
 ### 时间轴
+
+这一节记的是现有出怪表。Q2 已用连续时间轴取代 20 秒窗口和 4 秒空档，Q12 已删除主线三选一。这一次不改出怪表。
 
 普通关：开局布阵倒计时 10 秒，可以点「开始」提前结束。倒计时一结束，第一只立即出场，第 1 波 `delay_sec` 是 0。每一波先用 20 秒把怪刷完，再空 4 秒，然后下一波，不等场上清空。刷怪窗口内叫波，本波没出的怪照原节奏继续出，和下一波重叠。
 
@@ -227,7 +235,8 @@ schema 在 `data/levels/level.schema.json`，方言是 JSON Schema 2020-12。
 | `character_id` | 例如 `chr_cirno` |
 | `blocks_character_id` | 决斗期间不能放置的角色。不能出现在可放置名单里。冰之残影不锁琪露诺，写 `null` |
 | `enters_at_wave_id` | 从哪一波走进来。冰之残影是 `w11` |
-| `enter_wave` | 同一个入场波的整数。D-01：冰之残影是 11。`enters_at_wave_id`、前奏和 `is_boss` 跟它一致 |
+| `enter_wave` | 同一个入场波的整数。现表冰之残影仍是 11。`enters_at_wave_id`、前奏和 `is_boss` 跟它一致 |
+| `enter_timing_status` | 登场波次旁的占位，固定「待 P10」。不改 `enter_wave`，也不在这里写血量 |
 | `applies_level_hp_multiplier` | 固定 false。首领血量不乘关卡系数。基础血量看 `bosses.<id>.hp` |
 | `entrance_id`、`path_id` | 从哪进、走哪条路 |
 | `prelude_wave_ids` | 入场前的波。冰之残影是前 10 波。这些波不必再被阶段瓜分 |

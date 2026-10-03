@@ -17,6 +17,10 @@
   "summary": "魔理沙加入。先拐一下，再走一条长直路，让直线穿透打得值。",
   "player_feeling": "痛快。看见一列残影被一起打穿。",
   "teaches": "魔理沙的攻击沿直线穿透",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "长直路的尽头比拐角更适合她",
     "灵梦仍负责拐角和漏过来的零散残影"

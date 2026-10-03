@@ -16,6 +16,10 @@
   "summary": "飞行路变长，地面的旧敌人和飞行残影混在一起。这一关没有新角色。",
   "player_feeling": "练习取舍。想两头都打，就会发现有的格子其实两头都差一点。",
   "teaches": "飞行路和地面路的交点不一定值得留成预定槽位",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "旧敌人仍走地面"
   ],

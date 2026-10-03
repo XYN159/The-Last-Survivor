@@ -16,6 +16,10 @@
   "summary": "第四章最难的普通关。飞行路有两段，地面路也不空。",
   "player_feeling": "忙着抬头。漏掉的飞行残影会直接摸到神社。",
   "teaches": "反空要占格子，地面也会因此变空",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "射程和位置是同一道题"
   ],

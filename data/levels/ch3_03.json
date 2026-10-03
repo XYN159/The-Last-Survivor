@@ -16,6 +16,10 @@
   "summary": "第三章最难的普通关。两条路和村民一起挨打，没有新角色。",
   "player_feeling": "忙，而且会心疼漏掉的村民。仍然应该守得住。",
   "teaches": "保护目标和守护点要一起算",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "汇合前的空档最容易漏人"
   ],

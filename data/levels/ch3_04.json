@@ -17,6 +17,11 @@
   "summary": "首领是妹红的残影复制体，暂名「不死鸟的残影」，不是妹红本人。慧音已经在队里。妹红通关这一关后才加入。名字待文案。",
   "player_feeling": "激烈，但符卡看得懂：关掉一条入口，或在仍开放的路上铺地形。",
   "teaches": "一张符卡改一条已经存在的路的出怪或地形",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
+  "boss_enter_timing_status": "待 P10",
   "previews": [
     "慧音已在名单里。妹红通关后加入。首领不是她们本人",
     "生命耗尽才失败"
@@ -40,7 +45,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领 id 是 boss_ch3_mokou_shade，显示名「不死鸟的残影」，状态 pending_文案策划。她模仿即将入队的妹红，不是盟友本人。慧音在 ch3_01 之后已经可放，不能再做成首领。不在战斗中藏掉或烧掉路线格子。阶段关掉已经画好的入口，或在仍开放的路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
+  "design_notes": "首领 id 是 boss_ch3_mokou_shade，显示名「不死鸟的残影」，状态 pending_文案策划。她模仿即将入队的妹红，不是盟友本人。慧音在 ch3_01 之后已经可放，不能再做成首领。不在战斗中藏掉或烧掉路线格子。阶段关掉已经画好的入口，或在仍开放的路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。登场波次待 P10。这一次不改波次，也不写血量。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

@@ -17,6 +17,11 @@
   "summary": "首领是咲夜的残影复制体，暂名「红魔的女仆残影」，不是咲夜本人。美铃已经在队里，不能当首领。咲夜通关这一关后才加入。名字待文案。",
   "player_feeling": "赶，但看得到入口在开关。美铃留在玩家这边挡门。",
   "teaches": "符卡可以开关已经画好的入口，不能改格子",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
+  "boss_enter_timing_status": "待 P10",
   "previews": [
     "停时是战斗效果，不把走廊拉长",
     "生命耗尽才失败，最后一波结束还有命即胜利"
@@ -38,7 +43,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领 id 是 boss_ch2_sakuya_shade，显示名「红魔的女仆残影」，状态 pending_文案策划。她模仿即将入队的咲夜，不是盟友本人。美铃在 ch2_01 之后已经可放，不能再做成首领。路线几何开战前固定。阶段只让已经画好的入口出怪，或在路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
+  "design_notes": "首领 id 是 boss_ch2_sakuya_shade，显示名「红魔的女仆残影」，状态 pending_文案策划。她模仿即将入队的咲夜，不是盟友本人。美铃在 ch2_01 之后已经可放，不能再做成首领。路线几何开战前固定。阶段只让已经画好的入口出怪，或在路上铺地形。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。登场波次待 P10。这一次不改波次，也不写血量。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [

@@ -17,6 +17,10 @@
   "summary": "学会残影会沿路线走向赛钱箱，并把灵梦放在直路旁边。",
   "player_feeling": "安心。路是直的，敌人少，放下去就会自己打。",
   "teaches": "只能把灵梦放到贴着路线的预定槽位",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "残影沿路线走向守护点",
     "角色会自动攻击",

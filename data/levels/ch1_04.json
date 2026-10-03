@@ -8,6 +8,7 @@
       "blocks_character_id": null,
       "enters_at_wave_id": "w11",
       "enter_wave": 11,
+      "enter_timing_status": "待 P10",
       "entrance_id": "entrance.north",
       "path_id": "path.main",
       "prelude_wave_ids": [
@@ -62,7 +63,7 @@
         }
       ],
       "combat_notes": [
-        "冰之残影从 w11 沿 path.main 入场。D-01 已定：第 11 波登场，血量不乘关卡系数。她是雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人，也不锁放置。只有入场那一波 is_boss 为真。前 10 波是前奏。",
+        "冰之残影从 w11 沿 path.main 入场。D-01 已定：第 11 波登场，血量不乘关卡系数。她是雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人，也不锁放置。只有入场那一波 is_boss 为真。前 10 波是前奏。登场波次旁注「待 P10」，这一次不改波次，也不写血量。",
         "三张符卡按 100%、66%、33% 血量切换。第 11 波起，奇数波是加压、偶数波是小怪，加压不切换符卡。出怪数量仍是旧编组。#8 已把系数锁定为 0.74，还没按那一版的 wave_threat_budgets 重排。",
         "冰瀑落在四个预定槽位上。拐角内侧那一格留着，让玩家改放。完美冻结不写死格子。冻角色用 st_unit_frozen，冻残影用 st_freeze。",
         "走到守护点会扣守护点的命，然后回到裂缝，再沿同一条固定路线走。扣多少看 data/balance/combat/stats.json 的 bosses.boss_cirno.leak_damage，不在这里抄数字。最后一波要等她被击败才结束。duration_sec 仍是 20，那只是刷怪窗口。",
@@ -93,6 +94,11 @@
   "summary": "和冰之残影符卡决斗。她是雾之湖里被遗忘的冰凝成的褪色复制体，不是琪露诺本人。这一关仍能放琪露诺。血量到 66% 和 33% 时换符卡。冰柱占住几个预定槽位，最后一段路结冰。",
   "player_feeling": "热闹、赶，还有一点好笑。雾散开了，看得清哪几格在结冰。",
   "teaches": "首领会沿固定路线走进来，并宣言符卡",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
+  "boss_enter_timing_status": "待 P10",
   "previews": [
     "符卡按血量换，会改地形，而不只是放一段动画",
     "冰柱会占住预定槽位并挡住直线，冰面会让残影变快",

@@ -953,6 +953,31 @@ def route_plan_problems(level: dict) -> list[str]:
     return []
 
 
+def placeholder_problems(level: dict) -> list[str]:
+    """表结构占位。考题、费用、生命和格子类型都还没定，出怪表不在这里改。"""
+    problems: list[str] = []
+    if level.get("battle_problem") != "待 P1":
+        problems.append("battle_problem 应是「待 P1」，不要填写这关考什么")
+    for field in ("initial_cost", "max_life_point", "buildable"):
+        if level.get(field) != "待定":
+            problems.append(f"{field} 应留「待定」，不要编数字")
+    armor_lock = "首次出现仍是这一关（Q13）。数量 8 只是旧锁，待按新时间轴重排。"
+    if level["id"] == "ch1_03":
+        if level.get("armored_shade_lock") != armor_lock:
+            problems.append("ch1_03 的硬残影 8 只应标成旧锁，待按新时间轴重排")
+    elif "armored_shade_lock" in level:
+        problems.append("只有 ch1_03 写硬残影旧锁")
+    if level["kind"] in ("boss", "final_boss"):
+        if level.get("boss_enter_timing_status") != "待 P10":
+            problems.append("首领登场波次旁应注「待 P10」")
+        for boss in level.get("bosses", []):
+            if boss.get("enter_timing_status") != "待 P10":
+                problems.append("首领对象的登场波次旁应注「待 P10」")
+    elif "boss_enter_timing_status" in level:
+        problems.append("非首领关不要写登场波次占位")
+    return problems
+
+
 def boss_identity_problems(level: dict) -> list[str]:
     expected = {
         "ch2_04": "boss_ch2_sakuya_shade",
@@ -1045,6 +1070,7 @@ def main() -> int:
         problems.extend(teaching_problems(level))
         problems.extend(roster_problems(level, playable, stats))
         problems.extend(boss_identity_problems(level))
+        problems.extend(placeholder_problems(level))
         problems.extend(route_plan_problems(level))
         if level["placeholders"].get("_placeholder") is not True:
             problems.append("缺少占位标记")

@@ -16,6 +16,10 @@
   "summary": "第五章最难的普通关。隐形、分裂和按波次开关的入口叠在一起，结界之渣开始成群出现。路线几何不变。",
   "player_feeling": "综合考试。没有新角色，要把前面的手段一起用。",
   "teaches": "结界之渣会让旁边的预定槽位暂时不能放人",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "槽位可能在战斗中失效，要有备用槽位"
   ],

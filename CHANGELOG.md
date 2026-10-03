@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 关卡表加占位，不出新数字，也不改出怪表和地图。24 关的 `battle_problem` 一律写「待 P1」。`initial_cost`、`max_life_point`、`buildable` 一律写「待定」。总览写明：20 秒窗口和 4 秒空档已被 Q2 取代，主线三选一已被 Q12 删除。第一章第 3 关硬残影首次出现仍是这一关（Q13），8 只标成旧锁，待按新时间轴重排。首领登场波次旁注「待 P10」，波次不改。MVP 每一关须能用灵梦、魔理沙、琪露诺三人通过，紫不是必要条件。
 - 对外名称从 The Last Survivor（最后的幸存者）改为《东方守幻录》。英文仓库名是 touhou-forgotten-defense。定位改为东方Project 同人、个人免费非商业的竖屏角色塔防，不是弹幕射击。调试 APK 文件名改为 `touhou-forgotten-defense-*`，Android 包名改为 `com.xyn159.touhouforgottendefense`。
 - GitHub 首页的 `README.md` 整份改写成《东方守幻录》的介绍。
 

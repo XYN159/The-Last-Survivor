@@ -16,6 +16,10 @@
   "summary": "第二章最难的普通关。两个门同时来人，旧电器比前面多。",
   "player_feeling": "手忙，但还打得动。挡门和破甲要同时用。",
   "teaches": "两个入口都会施压",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
   "previews": [
     "不能把所有人都堆在一个门",
     "硬目标漏过会很痛"

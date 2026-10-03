@@ -17,6 +17,11 @@
   "summary": "首领不是八云紫。紫从第一章末就在队里。这是忘派来的原创敌人，暂名「守门残影」，待文案定名。它召唤会分裂、会隐形的残影，并按阶段开关几条固定路线的入口。",
   "player_feeling": "第五章的总测验。路不挪，但入口和槽位会按阶段变。",
   "teaches": "几条固定路线的入口按阶段打开或关掉，格子本身不改",
+  "battle_problem": "待 P1",
+  "initial_cost": "待定",
+  "max_life_point": "待定",
+  "buildable": "待定",
+  "boss_enter_timing_status": "待 P10",
   "previews": [
     "符卡可以用 ter_barrier 暂时挡住一些预定槽位",
     "它会叫出遗忘之影和堆积体。生命耗尽才失败"
@@ -42,7 +47,7 @@
   },
   "bosses": [],
   "wave_count": 16,
-  "design_notes": "首领 id 是 boss_ch5_gatekeeper，显示名「守门残影」，状态 pending_文案策划。不能用八云紫。她在 ch1_04 之后已经是盟友。玩法是第五章的综合测验：召唤会分裂的堆积体和会隐形的遗忘之影。几条路线开战前就画好，阶段只开关入口。符卡把部分预定槽位变成 ter_barrier，持续一段时间，路线格子不动。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。",
+  "design_notes": "首领 id 是 boss_ch5_gatekeeper，显示名「守门残影」，状态 pending_文案策划。不能用八云紫。她在 ch1_04 之后已经是盟友。玩法是第五章的综合测验：召唤会分裂的堆积体和会隐形的遗忘之影。几条路线开战前就画好，阶段只开关入口。符卡把部分预定槽位变成 ter_barrier，持续一段时间，路线格子不动。胜负和普通关一样。漏怪扣命看 stats.json，不在这里抄数字。登场波次待 P10。这一次不改波次，也不写血量。",
   "placeholders": {
     "_placeholder": true,
     "align_with": [
