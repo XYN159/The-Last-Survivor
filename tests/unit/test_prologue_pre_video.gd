@@ -1,7 +1,9 @@
 extends GutTest
 
-## 序章第一关的关前视频：全屏铺满、不循环，右上角有真按钮「跳过」，
-## 点屏幕、点跳过、播完都只进一次战斗；视频打不开也照样进战斗。
+## 序章第一关的关前视频：整幅放进屏幕、不裁边不拉伸，16:9 屏幕正好铺满，
+## 更宽或更高的屏幕留黑边，底下烧进去的台词看得全；不循环。
+## 只有右上角真按钮「跳过」能跳过，点画面其余地方不跳；点跳过、播完都只进一次战斗；
+## 视频打不开也照样进战斗。
 
 const VIDEO_SCENE := preload("res://scenes/main/prologue_pre_video.tscn")
 const MENU_SCENE := preload("res://scenes/main/main_menu.tscn")
@@ -28,13 +30,34 @@ func test_video_fills_a_1920_by_1080_screen() -> void:
 	assert_eq(player.get_rect(), Rect2(Vector2.ZERO, Vector2(1920, 1080)))
 
 
-func test_video_covers_a_wider_screen_without_stretching() -> void:
+func test_video_fits_inside_a_wider_screen_without_cropping() -> void:
 	var video := _make_video_on_screen(Vector2(2400, 1080))
 	await wait_process_frames(2)
 	var player := video.get_node("%VideoPlayer") as VideoStreamPlayer
 	var rect := player.get_rect()
-	assert_true(rect.encloses(Rect2(Vector2.ZERO, video.size)), str(rect))
+	var screen := Rect2(Vector2.ZERO, video.size)
+	assert_true(screen.encloses(rect), str(rect))
 	assert_almost_eq(rect.size.x / rect.size.y, 16.0 / 9.0, 0.01)
+	# 上下都不越出屏幕，底下的台词不会被裁掉；高度正好顶满，左右留黑边。
+	assert_gte(rect.position.y, 0.0)
+	assert_lte(rect.end.y, screen.end.y)
+	assert_almost_eq(rect.size.y, screen.size.y, 0.5)
+	assert_gt(rect.position.x, 0.0)
+	assert_almost_eq(rect.position.x, screen.end.x - rect.end.x, 0.5)
+
+
+func test_video_fits_inside_a_taller_screen_with_bars_above_and_below() -> void:
+	var video := _make_video_on_screen(Vector2(1920, 1200))
+	await wait_process_frames(2)
+	var player := video.get_node("%VideoPlayer") as VideoStreamPlayer
+	var rect := player.get_rect()
+	var screen := Rect2(Vector2.ZERO, video.size)
+	assert_true(screen.encloses(rect), str(rect))
+	assert_almost_eq(rect.size.x / rect.size.y, 16.0 / 9.0, 0.01)
+	assert_almost_eq(rect.size.x, screen.size.x, 0.5)
+	# 上下留同样宽的黑边，而不是把画面放大后裁掉。
+	assert_gt(rect.position.y, 0.0)
+	assert_almost_eq(rect.position.y, screen.end.y - rect.end.y, 0.5)
 
 
 func test_skip_button_sits_at_the_top_right() -> void:
@@ -63,15 +86,21 @@ func test_skip_button_enters_the_battle_once() -> void:
 	assert_false((video.get_node("%VideoPlayer") as VideoStreamPlayer).is_playing())
 
 
-func test_click_anywhere_skips() -> void:
+func test_clicking_the_picture_does_not_skip() -> void:
 	var video := _make_video()
+	await wait_process_frames(1)
 	watch_signals(video)
-	var click := InputEventMouseButton.new()
-	click.button_index = MOUSE_BUTTON_LEFT
-	click.pressed = true
-	click.position = Vector2(960, 540)
-	video.call("_gui_input", click)
-	assert_signal_emitted_with_parameters(video, "scene_change_requested", [BATTLE_SCENE_PATH])
+	var reached: Array[InputEvent] = []
+	video.gui_input.connect(func(event: InputEvent) -> void: reached.append(event))
+	# 走视口的真实点击流程，脚本里要是还留着 _gui_input，这一下就会被它收到。
+	var at := video.get_global_rect().get_center()
+	get_viewport().push_input(_left_click(at, true), true)
+	get_viewport().push_input(_left_click(at, false), true)
+	await wait_process_frames(1)
+	assert_gt(reached.size(), 0, "点击应该落到视频画面上")
+	assert_signal_not_emitted(video, "scene_change_requested")
+	assert_false(video.call("is_leaving"))
+	assert_true((video.get_node("%VideoPlayer") as VideoStreamPlayer).is_playing())
 
 
 func test_finishing_then_clicking_enters_the_battle_once() -> void:
@@ -122,3 +151,12 @@ func _make_video_on_screen(screen_size: Vector2) -> Control:
 	video.auto_change_scene = false
 	screen.add_child(video)
 	return video
+
+
+func _left_click(at: Vector2, pressed: bool) -> InputEventMouseButton:
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = pressed
+	click.position = at
+	click.global_position = at
+	return click

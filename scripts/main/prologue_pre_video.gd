@@ -1,7 +1,8 @@
 extends Control
 
 ## 序章第一关战斗前的全屏关前视频。台词已经烧进画面，这里不再叠字。
-## 点屏幕任意处或右上角「跳过」立刻进战斗；播完也进战斗。无论哪条路，只换一次场景。
+## 画面整幅放进屏幕，不裁边；比例对不上的屏幕在黑底上留黑边，底下的台词始终看得全。
+## 只有点右上角真按钮「跳过」才立刻进战斗，点画面其余地方不跳；播完也进战斗。无论哪条路，只换一次场景。
 ## 视频打不开时只警告，照样进战斗，免得卡死在黑屏上。
 
 signal scene_change_requested(path: String)
@@ -23,14 +24,14 @@ func _ready() -> void:
 	_skip_button.text = tr("ui.pre_video.skip")
 	_skip_button.pressed.connect(skip)
 	_player.finished.connect(_enter_battle)
-	resized.connect(_fit_cover)
+	resized.connect(_fit_inside)
 	_player.loop = false
 	if not _open_stream():
 		push_warning("关前视频打不开，直接进战斗：%s" % video_path)
 		_enter_battle.call_deferred()
 		return
 	_player.play()
-	_fit_cover()
+	_fit_inside()
 
 
 func skip() -> void:
@@ -39,13 +40,6 @@ func skip() -> void:
 
 func is_leaving() -> bool:
 	return _leaving
-
-
-func _gui_input(event: InputEvent) -> void:
-	var click := event as InputEventMouseButton
-	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
-		accept_event()
-		skip()
 
 
 func _open_stream() -> bool:
@@ -67,8 +61,9 @@ func _enter_battle() -> void:
 		get_tree().change_scene_to_file(BATTLE_SCENE)
 
 
-## 按「铺满」缩放：保持视频比例，放大到盖满整个屏幕，多出来的边裁掉，不留黑边。
-func _fit_cover() -> void:
+## 按「整幅放进去」缩放：保持视频比例，放到碰到屏幕较近的一对边为止，居中摆在黑底上。
+## 16:9 屏幕正好铺满；更宽或更高的屏幕两侧或上下留黑边，不裁掉画面，也不拉伸。
+func _fit_inside() -> void:
 	var video_size := Vector2.ZERO
 	var texture := _player.get_video_texture()
 	if texture != null:
@@ -77,7 +72,7 @@ func _fit_cover() -> void:
 		video_size = size
 	if video_size.x <= 0.0 or video_size.y <= 0.0:
 		return
-	var scale_factor := maxf(size.x / video_size.x, size.y / video_size.y)
+	var scale_factor := minf(size.x / video_size.x, size.y / video_size.y)
 	var fitted := video_size * scale_factor
 	_player.position = (size - fitted) * 0.5
 	_player.size = fitted
