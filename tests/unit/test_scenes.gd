@@ -52,3 +52,19 @@ func test_prologue_scenes_use_redrawn_backgrounds() -> void:
 		courtyard.texture.resource_path,
 		"res://assets/art/prologue_01/prologue_battle_courtyard.jpg",
 	)
+
+
+func test_title_lines_use_kai_and_never_overlap() -> void:
+	var menu := MAIN_MENU_SCENE.instantiate()
+	add_child_autofree(menu)
+	var title_block := menu.get_node("TitleBlock") as VBoxContainer
+	var center_column := menu.get_node("CenterColumn") as VBoxContainer
+	assert_gte(title_block.get_theme_constant("separation"), 0)
+	assert_gte(title_block.get_theme_constant("separation"), 14)
+	assert_gte(center_column.get_theme_constant("separation"), 14)
+	var title := menu.get_node("%TitleLabel") as Label
+	assert_eq(title.get_theme_color("font_color"), Color("#F3E5C2"))
+	var kai := "res://assets/fonts/LXGWWenKai-Regular.ttf"
+	for path in ["%TitleLabel", "%EnglishTitleLabel", "%PrologueEnglishLabel", "%StartButton"]:
+		var control := menu.get_node(path) as Control
+		assert_eq(control.get_theme_font("font").resource_path, kai, path)

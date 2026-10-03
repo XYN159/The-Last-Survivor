@@ -2,7 +2,7 @@ extends Control
 
 ## 塔防对局的画面。规则在 BattleSim，这里只负责按钮、棋盘和结算。
 
-const MAIN_MENU_SCENE := "res://scenes/main/main_menu.tscn"
+const FLOW_SCENE := "res://scenes/main/original_flow.tscn"
 const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
@@ -12,6 +12,7 @@ const _REIMU_TOKEN := preload("res://assets/art/prologue_01/reimu_token.png")
 const BoardMotion := preload("res://scripts/battle/board_motion.gd")
 const ScreenMotion := preload("res://scripts/battle/screen_motion.gd")
 const PressMotion := preload("res://scripts/ui/press_motion.gd")
+const OriginalFlow := preload("res://scripts/main/original_flow.gd")
 
 static var remembered_speed: int = 1
 
@@ -34,14 +35,20 @@ var _vignette_alpha: float = 0.45
 var _step_seconds: float = 1.0 / 60.0
 var _max_ticks: int = 4
 var _call_press: PressMotion
+var _starting_spirit: int = 0
 
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _life_label: Label = %LifeLabel
 @onready var _wave_label: Label = %WaveLabel
+@onready var _spirit_fill: Control = %SpiritFill
+@onready var _life_fill: Control = %LifeFill
+@onready var _wave_fill: Control = %WaveFill
 @onready var _board: Control = %BoardView
 @onready var _character_bar: HBoxContainer = %CharacterBar
 @onready var _call_button: Button = %CallButton
 @onready var _speed_button: Button = %SpeedButton
+# Button 不支持字体阴影，倍速文字放在按钮里的 Label 上。
+@onready var _speed_label: Label = %SpeedLabel
 @onready var _hint_label: Label = %HintLabel
 @onready var _unit_panel: Control = %UnitPanel
 @onready var _unit_title: Label = %UnitTitle
@@ -66,6 +73,7 @@ func _ready() -> void:
 	var tune := _catalog.tuning()
 	_step_seconds = 1.0 / float(tune.logic_hz)
 	_max_ticks = int(tune.max_ticks_per_frame)
+	_starting_spirit = int(tune.starting_spirit)
 	var vignette: Dictionary = _catalog.feel().get("guard_damage_vignette", {})
 	_vignette_duration = float(vignette.get("duration_sec", 0.4))
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
@@ -184,8 +192,10 @@ func _refresh() -> void:
 	var state := _sim.view_state()
 	_spirit_label.text = tr("ui.battle.spirit") % int(state.spirit)
 	_life_label.text = tr("ui.battle.life") % [int(state.guard_hp), int(state.guard_max_hp)]
-	_wave_label.text = _wave_text(state)
-	_speed_button.text = tr("ui.battle.speed") % _speed
+	# 状态条只有一行高，两行的波次文字在条里并成一行。
+	_wave_label.text = _wave_text(state).replace("\n", "  ")
+	_refresh_bars(state)
+	_speed_label.text = tr("ui.battle.speed") % _speed
 	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。
 	_call_button.visible = str(state.phase) == BattleSim.PHASE_DEPLOY
 	_call_button.disabled = not bool(state.call_allowed)
@@ -194,6 +204,24 @@ func _refresh() -> void:
 	_board.call("sync", state, _selected_col, _selected_row, _selected_unit)
 	if _unit_panel.visible:
 		_fill_unit_panel(state)
+
+
+## 三条状态条的填充长度。灵力以开局灵力为满，花掉就变短，攒得比开局多时保持满条。
+func _refresh_bars(state: Dictionary) -> void:
+	var spirit := float(state.spirit)
+	_spirit_fill.anchor_right = fill_ratio(spirit, maxf(float(_starting_spirit), spirit))
+	_life_fill.anchor_right = fill_ratio(float(state.guard_hp), float(state.guard_max_hp))
+	var duration := float(state.get("phase_duration", 0.0))
+	var wave_ratio := 1.0
+	if duration > 0.0:
+		wave_ratio = fill_ratio(float(state.phase_time_left), duration)
+	_wave_fill.anchor_right = wave_ratio
+
+
+static func fill_ratio(value: float, full: float) -> float:
+	if full <= 0.0:
+		return 0.0
+	return clampf(value / full, 0.0, 1.0)
 
 
 func _refresh_roster(state: Dictionary) -> void:
@@ -337,7 +365,9 @@ func _on_retry_pressed() -> void:
 
 
 func _on_menu_pressed() -> void:
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	# 守住或失守都先看结算原画，再从那里回主界面。
+	OriginalFlow.pending_entry = OriginalFlow.RESULT_SCREEN
+	get_tree().change_scene_to_file(FLOW_SCENE)
 
 
 func _show_result(state: Dictionary) -> void:
@@ -398,7 +428,7 @@ func _apply_speed_rules() -> void:
 func _apply_static_labels() -> void:
 	_close_unit_button.text = tr("ui.battle.close")
 	_retry_button.text = tr("ui.battle.retry")
-	_menu_button.text = tr("ui.battle.back_to_title")
+	_menu_button.text = tr("ui.battle.continue")
 
 
 func _has_selected_cell() -> bool:

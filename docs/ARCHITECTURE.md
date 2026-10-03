@@ -7,21 +7,23 @@
 ```
 addons/gut/          GUT 测试插件（第三方，不要手改）
 assets/audio/        音效和音乐
-assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
+assets/fonts/        界面字体。Noto Sans SC 子集（许可证见 OFL.txt）；霞鹜文楷（许可证见 LXGWWenKai-OFL.txt）
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
+assets/ui/originals/ 二十张界面原画（1920×1080），原样拷自原画分支，不改画面
 data/balance/        数值 JSON。调平衡改这里
 data/levels/         正式关卡。现在只有 prologue_01.json，原样复制自关卡 PR #5
 data/prototype/      塔防原型用的数值和旧的两路试验关。正式表合并前先读这里
+data/ui/             界面原画的点击区表（只有坐标和跳转，没有数值）
 scenes/main/         标题等流程场景
 scenes/battle/       可玩的塔防棋盘，以及还留着的旧车道画面
 scenes/ui/           以后可复用的界面碎片（目前还没有）
 scripts/autoload/    自动加载的全局节点
 scripts/balance/     旧车道数值的读取和计算
 scripts/battle/      塔防规则（不画画面）、棋盘画面和战斗动效
-scripts/main/        标题场景脚本
+scripts/main/        启动流程和标题场景脚本
 scripts/save/        存档读写
-scripts/ui/          界面动效的公共部分：动效时长表、缓动曲线、按钮按压
+scripts/ui/          界面动效的公共部分（动效时长表、缓动曲线、按钮按压）和界面原画的点击区表
 tests/unit/          GUT 测试，文件名以 test_ 开头
 tests/capture/       手动运行的截图脚本，不进 GUT
 ci/                  给 GitHub Actions 用的脚本
@@ -40,7 +42,8 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
-| `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 标题和「开始」 |
+| `scenes/main/original_flow.tscn` | `scripts/main/original_flow.gd` | 启动场景。二十张界面原画串成的流程：启动页、登录、主界面和各个子画面，出击进序章棋盘，打完回结算原画。见下面「界面原画流程」 |
+| `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 旧的序章标题。现在不是启动场景，也没有画面再跳回它 |
 | `scenes/battle/battle_board.tscn` | `scripts/battle/battle_board.gd` | 可玩的塔防棋盘。按钮和结算在这里，规则不在这里 |
 | `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧车道占位。标题已经不进这里 |
 
@@ -88,7 +91,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `combat/characters.json` | 灵梦、魔理沙怎么打 |
 | `combat/enemies.json` | 小残影、快残影的体型和击退 |
 | `combat/feel.json` | 闪白和伤害数字 |
-| `ui_motion.json` | 序章动效的时长和幅度（进关、放置、按钮、受击、结算）。全是临时值，见 ADR-0007 |
+| `ui_motion.json` | 序章动效的时长和幅度（进关、放置、按钮、受击、结算），以及界面原画换页的淡入时长。全是临时值，见 ADR-0007 |
 | `levels/prototype_01.json` | 旧的两路试验关。「开始」不再进这里，只留给测试 |
 | `level_difficulty.json` | 每关的开局灵力、每波加的灵力和血量倍率。`prologue_01` 这一行是照抄 #8 的临时行 |
 
@@ -117,6 +120,22 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 
 ```bash
 MOTION_CAPTURE_DIR=/tmp/motion godot --path . --resolution 1920x1080 -s tests/capture/motion_capture.gd
+```
+
+## 界面原画流程
+
+二十张 1920×1080 界面原画放在 `assets/ui/originals/`，内容和原画分支 `docs/design/art/ui_originals/` 一模一样，不改画面。决定记录见 `docs/adr/0008-ui-originals-as-placeholder-screens.md`。
+
+- `OriginalScreens`（`scripts/ui/original_screens.gd`）读 `data/ui/original_screens.json`：每个画面用哪张图、哪些地方能点、点了做什么。坐标按原图像素写，`rect` 是 `[左, 上, 宽, 高]`。
+- `original_flow.gd` 把原画放进居中的 1920×1080 舞台，按表在上面盖透明按钮；没有画在原画上的入口（登录页的「服务器」「公告」，主界面的「抽卡」「体力」，角色详情的「装备」）是带字的小按钮，文字走 `ui.originals.*`。除了启动页、登录、主界面和体力弹窗，每屏都有「返回」。
+- 点击动作只有几种：`push` 进下一屏、`back` 回上一屏、`replace` 替换当前屏、`reset` 清空历史只留目标屏、`popup` / `close_popup` 开关弹窗、`battle` 进序章棋盘。
+- 战斗结算卡上的「继续」把 `original_flow.gd` 的 `pending_entry` 设成 `result`，回到流程时先显示结算原画，下面垫着主界面。
+- 这一层不写存档、不记账号、不联网，也不碰任何数值。抽卡、商店、邮件、升级只能打开、看、返回。
+
+流程截图同样用手动脚本，从启动页一路点到战斗，再经结算回主界面：
+
+```bash
+ORIGINALS_CAPTURE_DIR=/tmp/originals godot --path . --resolution 1920x1080 -s tests/capture/originals_capture.gd
 ```
 
 新增一种 JSON 时，记得在 `export_presets.cfg` 的 `include_filter` 里能匹配到它。Godot 默认只打包它认识的资源；JSON 这种纯文本要靠 include filter 才能进 APK。当前规则是 `data/*` 和 `locale/*`。

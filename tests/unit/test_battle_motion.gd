@@ -33,7 +33,7 @@ func test_entry_settles_and_leaves_nothing_in_the_way() -> void:
 	assert_false(screen.call("is_entry_playing"))
 	assert_false(veil.visible)
 	assert_eq(veil.color.a, 0.0)
-	for node_name in ["TopFrame", "TopBar", "SpeedButton", "BottomBar"]:
+	for node_name in ["TopBar", "SpeedButton", "BottomBar"]:
 		var node := board.get_node("%" + node_name) as Control
 		assert_eq(node.position, screen.call("base_position", node), node_name)
 

@@ -36,6 +36,21 @@ func test_early_start_pays_the_remaining_deploy_seconds() -> void:
 	assert_false(sim.call_next_wave())
 
 
+func test_phase_duration_follows_each_timer() -> void:
+	var sim := BattleSim.from_catalog(CombatCatalog.load_default())
+	var state := sim.view_state()
+	assert_eq(float(state.phase_duration), 10.0)
+	assert_eq(float(state.phase_time_left), 10.0)
+	assert_true(sim.call_next_wave())
+	state = sim.view_state()
+	assert_eq(state.phase, BattleSim.PHASE_SPAWNING)
+	assert_gt(float(state.phase_duration), 0.0)
+	assert_eq(float(state.phase_duration), float(state.phase_time_left))
+	sim.tick()
+	state = sim.view_state()
+	assert_lt(float(state.phase_time_left), float(state.phase_duration))
+
+
 func test_armor_hit_uses_the_damage_formula() -> void:
 	var sim := _mini(
 		{
