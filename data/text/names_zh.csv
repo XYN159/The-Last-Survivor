@@ -1,0 +1,82 @@
+key,zh_CN,_note
+game.title,东方守幻录,暂定名，待制作人定稿
+game.fanwork_notice,东方 Project 二次创作,标题画面必须显示
+char.reimu.name,灵梦,气泡名
+char.reimu.fullname,博丽灵梦,
+char.marisa.name,魔理沙,气泡名
+char.marisa.fullname,雾雨魔理沙,
+char.cirno.name,琪露诺,气泡名
+char.cirno.fullname,琪露诺,
+char.daiyousei.name,大妖精,气泡名
+char.daiyousei.fullname,大妖精,是否可玩待制作人决定
+char.meiling.name,美铃,气泡名
+char.meiling.fullname,红美铃,
+char.sakuya.name,咲夜,气泡名
+char.sakuya.fullname,十六夜咲夜,
+char.remilia.name,蕾米莉亚,气泡名
+char.remilia.fullname,蕾米莉亚·斯卡雷特,是否可玩待制作人决定
+char.keine.name,慧音,气泡名
+char.keine.fullname,上白泽慧音,
+char.mokou.name,妹红,气泡名
+char.mokou.fullname,藤原妹红,
+char.aya.name,文,气泡名
+char.aya.fullname,射命丸文,是否可玩待制作人决定
+char.sanae.name,早苗,气泡名
+char.sanae.fullname,东风谷早苗,
+char.yukari.name,紫,气泡名
+char.yukari.fullname,八云紫,
+char.wasure.name,忘,气泡名
+char.wasure.fullname,落野忘,
+stage.prologue.name,序章 神社的裂缝,
+stage.ch01.name,第一章 雾之湖,
+stage.ch02.name,第二章 红魔馆,
+stage.ch03.name,第三章 人间之里,
+stage.ch04.name,第四章 妖怪之山,
+stage.ch05.name,第五章 结界的尽头,
+stage.final.name,终章 被遗忘者,
+spell.reimu.fantasy_seal.name,灵符「梦想封印」,原名：霊符「夢想封印」。战斗 id：sc_fantasy_seal。MVP 之后才用
+spell.reimu.evil_sealing_circle.name,梦符「封魔阵」,原名：夢符「封魔陣」。战斗 id：sc_evil_sealing_circle。MVP 里灵梦的默认符卡
+spell.marisa.master_spark.name,恋符「极限火花」,原名：恋符「マスタースパーク」
+spell.marisa.stardust_reverie.name,魔符「星尘幻想」,原名：魔符「スターダストレヴァリエ」
+spell.cirno.icicle_fall.name,冰符「冰瀑」,原名：氷符「アイシクルフォール」
+spell.cirno.perfect_freeze.name,冻符「完美冻结」,原名：凍符「パーフェクトフリーズ」
+spell.cirno.diamond_blizzard.name,雪符「钻石风暴」,原名：雪符「ダイヤモンドブリザード」。战斗符卡 id：sc_boss_cirno_diamond_blizzard。冰之残影第3阶段
+spell.daiyousei.morning_mist.name,湖符「晨雾之湖」,本作原创。大妖精是否可玩待定
+spell.meiling.rainbow_dance.name,彩符「彩光乱舞」,原名：彩符「彩光乱舞」
+spell.meiling.extreme_typhoon.name,彩符「极彩台风」,原名：彩符「極彩颱風」
+spell.sakuya.killing_doll.name,幻符「杀人玩偶」,原名：幻符「殺人ドール」
+spell.sakuya.the_world.name,幻世「世界」,原名：幻世「ザ・ワールド」
+spell.remilia.gungnir.name,神枪「冈格尼尔」,原名：神槍「スピア・ザ・グングニル」。是否可玩待定
+spell.remilia.red_magic.name,红符「不夜城红」,原名：紅符「不夜城レッド」。是否可玩待定
+spell.keine.legend_of_gensokyo.name,虚史「幻想乡传说」,原名：虚史「幻想郷伝説」
+spell.keine.modoribashi.name,转世「一条归桥」,原名：転世「一条戻り橋」
+spell.mokou.phoenix_wings.name,不死「火鸟 -凤翼天翔-」,原名：不死「火の鳥　－鳳翼天翔－」
+spell.mokou.phoenix_rebirth.name,「凤凰再诞」,原名：「フェニックス再誕」
+spell.aya.gensou_fuubi.name,「幻想风靡」,原名：「幻想風靡」。是否可玩待定
+spell.aya.autumn_leaf_fan.name,旋符「红叶扇风」,原名：旋符「紅葉扇風」。是否可玩待定
+spell.sanae.gray_thaumaturgy.name,秘术「灰色奇术」,原名：秘術「グレイソーマタージ」
+spell.sanae.yasaka_divine_wind.name,大奇迹「八坂之神风」,原名：大奇跡「八坂の神風」
+spell.yukari.spiriting_away.name,罔两「八云紫的神隐」,原名：罔両「八雲紫の神隠し」
+spell.yukari.quadruple_barrier.name,境符「四重结界」,原名：境符「四重結界」
+spell.wasure.lost_and_found.name,拾遗「无人认领的失物招领处」,本作原创
+spell.wasure.forgotten_song.name,忘却「谁也记不起的歌」,本作原创
+spell.wasure.final.name,终符「百代的归处」,本作原创。仅终章首领使用
+spell.boss_ch5_gatekeeper.closed_gate.name,封符「先关上的门」,本作原创。暂定。守门残影第1张。暂时封住一部分放置格
+spell.boss_ch5_gatekeeper.door_queue.name,裂符「门口的排队」,本作原创。暂定。召唤堆积残影
+spell.boss_ch5_gatekeeper.crack_shadow.name,隐符「门缝里的影子」,本作原创。暂定。召唤遗忘残影
+currency.reiryoku,灵力,局内货币。已定
+currency.meta,待定,局外通用资源。候选：忆晶（推荐）/ 赛钱 / 幻想碎片。定名前界面不要写死
+state.yukari_halffaded.name,半褪,暂定。隙间半合、袖口褪色。美术按局部褪色、主体保持鲜艳。战斗状态表里没有这一条，不并进 status.*
+state.yukari_halffaded.desc,隙间半合，袖口褪了色。人还是鲜艳的。,暂定。弱化状态的短说明
+enemy.shade_basic.name,小残影,战斗 id：enm_shade_basic。MVP 基础敌人
+enemy.shade_fast.name,快残影,战斗 id：enm_shade_fast。第一章新敌人
+enemy.shade_armored.name,硬残影,战斗 id：enm_shade_armored。ch1_03 正式登场，这一关出 8 只
+enemy.shade_heavy.name,重残影,暂定。战斗 id：enm_shade_heavy。预留兵种，比硬残影更大更硬。不是硬残影。不在 MVP
+enemy.shade_swarm.name,群残影,暂定。战斗 id：enm_shade_swarm。预留兵种，成群出现。不在 MVP
+enemy.shade_pouncer.name,扑人残影,暂定。战斗 id：enm_shade_pouncer。不在 MVP。第三章，会攻击村民
+enemy.shade_flying.name,飞行残影,战斗 id：enm_shade_flying。不在 MVP。第四章
+enemy.shade_phantom.name,遗忘残影,暂定。战斗 id：enm_shade_phantom。原暂名是遗忘之影。第五章，隐身
+enemy.shade_heap.name,堆积残影,暂定。战斗 id：enm_shade_heap。原暂名是堆积体。第五章，会分裂
+enemy.shade_rift.name,结界残影,暂定。战斗 id：enm_shade_rift。原名是结界之渣。第五章，靠近时周围格子褪色
+enemy.boss_cirno.name,冰之残影,战斗 id：boss_cirno。ch1_04 的 Boss。琪露诺的褪色复制体。战斗 name_key 已对齐为这一条
+enemy.boss_ch5_gatekeeper.name,守门残影,暂名。关卡 id：boss_ch5_gatekeeper。ch5_04 原创首领。关卡显示名曾写结界裂缝的守门残影
