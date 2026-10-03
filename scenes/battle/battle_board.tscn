@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/battle/battle_board.gd" id="1_board"]
 [ext_resource type="Script" path="res://scripts/battle/board_view.gd" id="2_view"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/button_plate.png" id="14_button_plate"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/level_plate.png" id="15_level_plate"]
 [ext_resource type="FontFile" path="res://assets/fonts/LXGWWenKai-Regular.ttf" id="16_kai"]
+[ext_resource type="FontFile" path="res://assets/fonts/WenJinMinchoP0-Regular.ttf" id="17_song"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_clear"]
 
@@ -133,9 +134,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
-theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
-theme_override_constants/outline_size = 4
+theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
+theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("17_song")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.spirit"
 horizontal_alignment = 1
@@ -193,9 +195,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
-theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
-theme_override_constants/outline_size = 4
+theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
+theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("17_song")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.life"
 horizontal_alignment = 1
@@ -253,9 +256,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
-theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
-theme_override_constants/outline_size = 4
+theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
+theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("17_song")
 theme_override_font_sizes/font_size = 27
 text = "ui.battle.deploy"
 horizontal_alignment = 1
@@ -343,7 +347,10 @@ offset_left = 450.0
 offset_top = 28.0
 offset_right = 1110.0
 offset_bottom = 78.0
-theme_override_colors/font_color = Color(0.9, 0.88, 0.82, 1)
+theme_override_colors/font_color = Color(0.9647059, 0.9098039, 0.7882353, 1)
+theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("17_song")
 theme_override_font_sizes/font_size = 22
 text = "ui.battle.hint_default"
 vertical_alignment = 1
@@ -430,7 +437,10 @@ offset_left = 1688.0
 offset_top = 24.0
 offset_right = 1850.0
 offset_bottom = 104.0
-theme_override_colors/font_color = Color(0.94, 0.9, 0.84, 1)
+theme_override_colors/font_color = Color(0.9568627, 0.8352941, 0.5529412, 1)
+theme_override_colors/font_outline_color = Color(0.1647059, 0.0823529, 0.0745098, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("17_song")
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")

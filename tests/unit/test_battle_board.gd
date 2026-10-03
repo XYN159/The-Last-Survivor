@@ -3,6 +3,7 @@ extends GutTest
 const BATTLE_SCENE := preload("res://scenes/battle/battle_board.tscn")
 const PORTRAIT_PATH := "res://assets/art/prologue_01/reimu_portrait.png"
 const KAI_FONT_PATH := "res://assets/fonts/LXGWWenKai-Regular.ttf"
+const SONG_FONT_PATH := "res://assets/fonts/WenJinMinchoP0-Regular.ttf"
 
 
 func test_battle_board_shows_spirit_life_and_only_reimu() -> void:
@@ -114,8 +115,11 @@ func test_status_bars_fill_from_the_state() -> void:
 	board._on_character_pressed("chr_reimu")
 	assert_eq(spirit.text, "灵力 100")
 	assert_almost_eq(spirit_fill.anchor_right, 100.0 / 150.0, 0.001)
-	for label in [spirit, life, wave]:
-		assert_eq((label as Label).get_theme_font("font").resource_path, KAI_FONT_PATH)
+	var hint := board.get_node("%HintLabel") as Control
+	var speed := board.get_node("%SpeedButton") as Control
+	for control in [spirit, life, wave, hint, speed]:
+		assert_eq((control as Control).get_theme_font("font").resource_path, SONG_FONT_PATH)
+		assert_eq((control as Control).get_theme_constant("outline_size"), 2)
 
 
 func test_fill_ratio_stays_between_empty_and_full() -> void:
