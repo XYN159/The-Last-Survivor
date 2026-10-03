@@ -1,17 +1,20 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/battle/battle_board.gd" id="1_board"]
 [ext_resource type="Script" path="res://scripts/battle/board_view.gd" id="2_view"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/prologue_battle_courtyard.jpg" id="3_background"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/hud_frame.png" id="4_hud"]
-[ext_resource type="Texture2D" path="res://assets/art/prologue_01/reimu_portrait.jpg" id="5_portrait"]
-[ext_resource type="Texture2D" path="res://assets/art/prologue_01/portrait_frame.png" id="6_portrait_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/reimu_portrait.png" id="5_portrait"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/card_frame.png" id="7_card"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/deploy_frame.png" id="8_deploy"]
 [ext_resource type="Script" path="res://scripts/battle/board_motion.gd" id="9_board_motion"]
 [ext_resource type="Script" path="res://scripts/battle/screen_motion.gd" id="10_screen_motion"]
 [ext_resource type="Script" path="res://scripts/battle/result_motes.gd" id="11_result_motes"]
 [ext_resource type="Texture2D" path="res://assets/art/prologue_01/yin_yang_gold.png" id="12_seal"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/bar_frame.png" id="13_bar_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/button_plate.png" id="14_button_plate"]
+[ext_resource type="Texture2D" path="res://assets/art/prologue_01/level_plate.png" id="15_level_plate"]
+[ext_resource type="FontFile" path="res://assets/fonts/LXGWWenKai-Regular.ttf" id="16_kai"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_clear"]
 
@@ -21,6 +24,17 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="Theme" id="Theme_kai"]
+default_font = ExtResource("16_kai")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_portrait"]
+bg_color = Color(0.0470588, 0.0627451, 0.0980392, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.72, 0.53, 0.27, 1)
 
 [node name="BattleBoard" type="Control"]
 layout_mode = 3
@@ -44,18 +58,6 @@ texture = ExtResource("3_background")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TopFrame" type="TextureRect" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 366.0
-offset_top = -20.0
-offset_right = 1554.0
-offset_bottom = 146.0
-mouse_filter = 2
-texture = ExtResource("4_hud")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="Vignette" type="ColorRect" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -70,19 +72,71 @@ color = Color(1, 0, 0, 0)
 [node name="TopBar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 430.0
-offset_top = 22.0
-offset_right = 1488.0
-offset_bottom = 112.0
-theme_override_constants/separation = 18
+offset_left = 360.0
+offset_top = 14.0
+offset_right = 1620.0
+offset_bottom = 110.0
+mouse_filter = 2
+theme = SubResource("Theme_kai")
+theme_override_constants/separation = 24
 alignment = 1
 
-[node name="SpiritLabel" type="Label" parent="TopBar"]
-unique_name_in_owner = true
+[node name="SpiritSlot" type="Control" parent="TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
-theme_override_font_sizes/font_size = 31
+mouse_filter = 2
+
+[node name="SpiritTrough" type="ColorRect" parent="TopBar/SpiritSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = 25.0
+offset_right = -56.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0470588, 0.0627451, 0.0980392, 0.88)
+
+[node name="SpiritFill" type="ColorRect" parent="TopBar/SpiritSlot/SpiritTrough"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.8431373, 0.6392157, 0.2392157, 1)
+
+[node name="SpiritFrame" type="NinePatchRect" parent="TopBar/SpiritSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("13_bar_frame")
+patch_margin_left = 72
+patch_margin_top = 24
+patch_margin_right = 72
+patch_margin_bottom = 24
+
+[node name="SpiritLabel" type="Label" parent="TopBar/SpiritSlot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 27
 text = "ui.battle.spirit"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -92,6 +146,45 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
+[node name="LifeTrough" type="ColorRect" parent="TopBar/LifeSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = 25.0
+offset_right = -56.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0470588, 0.0627451, 0.0980392, 0.88)
+
+[node name="LifeFill" type="ColorRect" parent="TopBar/LifeSlot/LifeTrough"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.7254902, 0.227451, 0.2745098, 1)
+
+[node name="LifeFrame" type="NinePatchRect" parent="TopBar/LifeSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("13_bar_frame")
+patch_margin_left = 72
+patch_margin_top = 24
+patch_margin_right = 72
+patch_margin_bottom = 24
+
 [node name="LifeLabel" type="Label" parent="TopBar/LifeSlot"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -100,18 +193,70 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.93, 0.45, 0.42, 1)
-theme_override_font_sizes/font_size = 31
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 27
 text = "ui.battle.life"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="WaveLabel" type="Label" parent="TopBar"]
-unique_name_in_owner = true
+[node name="WaveSlot" type="Control" parent="TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.88, 0.74, 0.42, 1)
-theme_override_font_sizes/font_size = 31
+mouse_filter = 2
+
+[node name="WaveTrough" type="ColorRect" parent="TopBar/WaveSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = 25.0
+offset_right = -56.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0470588, 0.0627451, 0.0980392, 0.88)
+
+[node name="WaveFill" type="ColorRect" parent="TopBar/WaveSlot/WaveTrough"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.2470588, 0.6078431, 0.5686275, 1)
+
+[node name="WaveFrame" type="NinePatchRect" parent="TopBar/WaveSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("13_bar_frame")
+patch_margin_left = 72
+patch_margin_top = 24
+patch_margin_right = 72
+patch_margin_bottom = 24
+
+[node name="WaveLabel" type="Label" parent="TopBar/WaveSlot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 27
 text = "ui.battle.deploy"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -155,41 +300,41 @@ texture = ExtResource("4_hud")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PortraitImage" type="TextureRect" parent="BottomBar"]
+[node name="PortraitBacking" type="Panel" parent="BottomBar"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 13.0
-offset_right = 416.0
+offset_top = 6.0
+offset_right = 232.0
 offset_bottom = 294.0
 mouse_filter = 2
-texture = ExtResource("5_portrait")
-expand_mode = 1
-stretch_mode = 6
+theme_override_styles/panel = SubResource("StyleBoxFlat_portrait")
 
-[node name="PortraitFrame" type="TextureRect" parent="BottomBar"]
+[node name="PortraitImage" type="TextureRect" parent="BottomBar"]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 8.0
-offset_top = 6.0
-offset_right = 426.0
-offset_bottom = 298.0
+offset_left = 18.0
+offset_top = 10.0
+offset_right = 228.0
+offset_bottom = 290.0
 mouse_filter = 2
-texture = ExtResource("6_portrait_frame")
+texture = ExtResource("5_portrait")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="PortraitName" type="Label" parent="BottomBar"]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 238.0
-offset_top = 206.0
-offset_right = 408.0
-offset_bottom = 280.0
+offset_left = 246.0
+offset_top = 222.0
+offset_right = 440.0
+offset_bottom = 284.0
 theme_override_colors/font_color = Color(0.98, 0.94, 0.9, 1)
 theme_override_colors/font_shadow_color = Color(0.08, 0.02, 0.04, 1)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 3
 theme_override_font_sizes/font_size = 26
 text = "char.reimu.name"
-horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="HintLabel" type="Label" parent="BottomBar"]
 unique_name_in_owner = true
@@ -301,14 +446,29 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -420.0
-offset_top = -520.0
-offset_right = 420.0
+offset_left = -480.0
+offset_top = -540.0
+offset_right = 480.0
 offset_bottom = -300.0
 grow_horizontal = 2
 grow_vertical = 0
+theme = SubResource("Theme_kai")
 
-[node name="PanelBackground" type="TextureRect" parent="UnitPanel"]
+[node name="PanelPaper" type="ColorRect" parent="UnitPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0470588, 0.0627451, 0.0980392, 0.88)
+
+[node name="PanelBackground" type="NinePatchRect" parent="UnitPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -317,56 +477,158 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_hud")
-expand_mode = 1
-stretch_mode = 5
+patch_margin_left = 64
+patch_margin_top = 48
+patch_margin_right = 64
+patch_margin_bottom = 48
 
 [node name="UnitColumn" type="VBoxContainer" parent="UnitPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 12.0
-offset_right = -16.0
-offset_bottom = -12.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
 alignment = 1
 
-[node name="UnitTitle" type="Label" parent="UnitPanel/UnitColumn"]
-unique_name_in_owner = true
+[node name="UnitTitlePlate" type="NinePatchRect" parent="UnitPanel/UnitColumn"]
+custom_minimum_size = Vector2(512, 80)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.86, 1)
-theme_override_font_sizes/font_size = 32
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("15_level_plate")
+patch_margin_left = 68
+patch_margin_top = 24
+patch_margin_right = 68
+patch_margin_bottom = 24
+
+[node name="UnitTitle" type="Label" parent="UnitPanel/UnitColumn/UnitTitlePlate"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 28
 text = "ui.battle.unit_level"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="UnitButtons" type="HBoxContainer" parent="UnitPanel/UnitColumn"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 20
 alignment = 1
 
 [node name="UpgradeButton" type="Button" parent="UnitPanel/UnitColumn/UnitButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 90)
+custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
 text = "ui.battle.upgrade"
+
+[node name="UpgradeButtonPlate" type="TextureRect" parent="UnitPanel/UnitColumn/UnitButtons/UpgradeButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SellButton" type="Button" parent="UnitPanel/UnitColumn/UnitButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 90)
+custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
 text = "ui.battle.sell"
+
+[node name="SellButtonPlate" type="TextureRect" parent="UnitPanel/UnitColumn/UnitButtons/SellButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="CloseUnitButton" type="Button" parent="UnitPanel/UnitColumn/UnitButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 90)
+custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
 text = "ui.battle.close"
+
+[node name="CloseUnitButtonPlate" type="TextureRect" parent="UnitPanel/UnitColumn/UnitButtons/CloseUnitButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="EntryVeil" type="ColorRect" parent="."]
 unique_name_in_owner = true

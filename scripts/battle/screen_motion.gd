@@ -36,7 +36,6 @@ var _glow_age: float = -1.0
 var _result_age: float = -1.0
 
 @onready var _veil: ColorRect = %EntryVeil
-@onready var _top_frame: Control = %TopFrame
 @onready var _top_bar: Control = %TopBar
 @onready var _speed_button: Control = %SpeedButton
 @onready var _bottom_bar: Control = %BottomBar
@@ -66,7 +65,7 @@ func setup(config: MotionConfig) -> void:
 	_unfold_from = config.number("result", "unfold_from_scale", _unfold_from)
 	_content_delay = config.number("result", "content_delay_sec", _content_delay)
 	_content_fade = config.number("result", "content_fade_sec", _content_fade)
-	_top_nodes = [_top_frame, _top_bar, _speed_button]
+	_top_nodes = [_top_bar, _speed_button]
 	_bottom_nodes = [_bottom_bar]
 	for node in _top_nodes + _bottom_nodes:
 		_bases[node] = node.position

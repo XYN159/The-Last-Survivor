@@ -7,7 +7,7 @@
 ```
 addons/gut/          GUT 测试插件（第三方，不要手改）
 assets/audio/        音效和音乐
-assets/fonts/        界面字体。Noto Sans SC 子集，许可证见 OFL.txt
+assets/fonts/        界面字体。Noto Sans SC 子集（许可证见 OFL.txt）；霞鹜文楷（许可证见 LXGWWenKai-OFL.txt）
 assets/models/       三维模型（glb 等）
 assets/textures/     图片
 assets/ui/originals/ 二十张界面原画（1920×1080），原样拷自原画分支，不改画面

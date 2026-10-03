@@ -35,10 +35,14 @@ var _vignette_alpha: float = 0.45
 var _step_seconds: float = 1.0 / 60.0
 var _max_ticks: int = 4
 var _call_press: PressMotion
+var _starting_spirit: int = 0
 
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _life_label: Label = %LifeLabel
 @onready var _wave_label: Label = %WaveLabel
+@onready var _spirit_fill: Control = %SpiritFill
+@onready var _life_fill: Control = %LifeFill
+@onready var _wave_fill: Control = %WaveFill
 @onready var _board: Control = %BoardView
 @onready var _character_bar: HBoxContainer = %CharacterBar
 @onready var _call_button: Button = %CallButton
@@ -67,6 +71,7 @@ func _ready() -> void:
 	var tune := _catalog.tuning()
 	_step_seconds = 1.0 / float(tune.logic_hz)
 	_max_ticks = int(tune.max_ticks_per_frame)
+	_starting_spirit = int(tune.starting_spirit)
 	var vignette: Dictionary = _catalog.feel().get("guard_damage_vignette", {})
 	_vignette_duration = float(vignette.get("duration_sec", 0.4))
 	_vignette_alpha = float(vignette.get("max_alpha", 0.45))
@@ -185,7 +190,9 @@ func _refresh() -> void:
 	var state := _sim.view_state()
 	_spirit_label.text = tr("ui.battle.spirit") % int(state.spirit)
 	_life_label.text = tr("ui.battle.life") % [int(state.guard_hp), int(state.guard_max_hp)]
-	_wave_label.text = _wave_text(state)
+	# 状态条只有一行高，两行的波次文字在条里并成一行。
+	_wave_label.text = _wave_text(state).replace("\n", "  ")
+	_refresh_bars(state)
 	_speed_button.text = tr("ui.battle.speed") % _speed
 	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。
 	_call_button.visible = str(state.phase) == BattleSim.PHASE_DEPLOY
@@ -195,6 +202,24 @@ func _refresh() -> void:
 	_board.call("sync", state, _selected_col, _selected_row, _selected_unit)
 	if _unit_panel.visible:
 		_fill_unit_panel(state)
+
+
+## 三条状态条的填充长度。灵力以开局灵力为满，花掉就变短，攒得比开局多时保持满条。
+func _refresh_bars(state: Dictionary) -> void:
+	var spirit := float(state.spirit)
+	_spirit_fill.anchor_right = fill_ratio(spirit, maxf(float(_starting_spirit), spirit))
+	_life_fill.anchor_right = fill_ratio(float(state.guard_hp), float(state.guard_max_hp))
+	var duration := float(state.get("phase_duration", 0.0))
+	var wave_ratio := 1.0
+	if duration > 0.0:
+		wave_ratio = fill_ratio(float(state.phase_time_left), duration)
+	_wave_fill.anchor_right = wave_ratio
+
+
+static func fill_ratio(value: float, full: float) -> float:
+	if full <= 0.0:
+		return 0.0
+	return clampf(value / full, 0.0, 1.0)
 
 
 func _refresh_roster(state: Dictionary) -> void:

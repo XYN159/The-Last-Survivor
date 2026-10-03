@@ -58,5 +58,6 @@
 
 - [GUT](https://github.com/bitwes/Gut) 9.7.1：单元测试插件，MIT 许可证，见 `addons/gut/LICENSE.md`。不要手改这个目录。
 - [Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC)：界面中文字体。许可证原文在 `assets/fonts/OFL.txt`（英文，按许可证要求原样保留）。仓库里是常用汉字区的子集，方便打包。
+- [霞鹜文楷 LXGW WenKai](https://github.com/lxgw/LxgwWenKai) v1.521：标题画面、战斗状态条和单位面板的字体。许可证原文在 `assets/fonts/LXGWWenKai-OFL.txt`（SIL OFL 1.1，按许可证要求原样保留）。
 
 游戏本身的许可证还没定。在你选定之前，不要把仓库改成「默认允许别人随便拿去商用」。

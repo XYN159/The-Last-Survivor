@@ -45,6 +45,8 @@ var _intermission_sec: float = 4.0
 var _spawn_window_sec: float = 20.0
 var _phase: String = PHASE_DEPLOY
 var _phase_time: float = 10.0
+## 当前这段计时开始时的总长，只给画面算倒计时条，不参与结算。0 表示这段没有计时。
+var _phase_duration: float = 10.0
 var _window_left: float = 0.0
 var _wave_index: int = -1
 var _id_serial: int = 1
@@ -156,6 +158,7 @@ func view_state() -> Dictionary:
 		"guard_max_hp": _guard_max_hp,
 		"phase": _phase,
 		"phase_time_left": maxf(_phase_time, 0.0),
+		"phase_duration": _phase_duration,
 		"deploy_waiting": _deploy_waiting,
 		"wave_index": _wave_index,
 		"wave_count": _waves.size(),
@@ -191,6 +194,7 @@ func _configure(catalog: CombatCatalog) -> void:
 	_spawn_window_sec = float(tune.spawn_window_sec)
 	_phase = PHASE_DEPLOY
 	_phase_time = float(tune.deploy_time_sec)
+	_phase_duration = _phase_time
 	_deploy_waiting = bool(tune.deploy_wait_for_player)
 	_wave_index = -1
 	_waves = _level.get("waves", [])
@@ -393,6 +397,7 @@ func _release_wave(index: int) -> void:
 		return
 	_phase = PHASE_INTERMISSION
 	_phase_time = lead
+	_phase_duration = lead
 	_wave_index = index - 1
 
 
@@ -405,6 +410,7 @@ func _begin_wave(index: int) -> void:
 	var wave := _wave_dict(index)
 	_window_left = _wave_duration(wave)
 	_phase_time = _window_left
+	_phase_duration = _window_left
 	for group_v in wave.get("spawns", []):
 		_add_job(group_v)
 
@@ -415,10 +421,12 @@ func _close_spawn_window() -> void:
 	if _wave_index >= _waves.size() - 1:
 		_phase = PHASE_FINAL
 		_phase_time = 0.0
+		_phase_duration = 0.0
 		_window_left = 0.0
 		return
 	_phase = PHASE_INTERMISSION
 	_phase_time = _lead_in(_wave_index + 1)
+	_phase_duration = _phase_time
 	_window_left = 0.0
 
 
