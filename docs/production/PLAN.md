@@ -18,7 +18,7 @@
 
 ## 2. 开发流程与验收
 
-1. **任务下发**：开发任务由执行制作人拆定，直接发给对应的 Cursor cloud agent。Grok Bot 从 2026-10-02 起暂停，不再转交。
+1. **任务下发**：开发任务由执行制作人拆定，直接发给对应的 Cursor cloud agent。Grok Bot 从 2026-10-02 起不再转交派工。2026-10-03 起，战前动画和其他视频仍交给 Grok Bot 做：静帧由 GPT 画，成片由 Grok Bot 出。做法见 [`LEVEL_PIPELINE.md`](LEVEL_PIPELINE.md)。
 2. **PR 验收**：每个开发 PR 开出后，由执行制作人分派给对应策划的 Cursor agent 一起验收。名单在 [`HANDOFF.md`](HANDOFF.md) 第 0.1 节。动效师还没有 agent，需要时另开。
    - 分工：战斗规则 → 战斗策划；数值 → 数值策划；关卡 → 关卡策划；画面 → 美术策划；文字 → 文案策划。
    - 游戏测试对照验收清单（PR #9 `docs/qa/MVP_ACCEPTANCE.md`）查 bug。
@@ -144,6 +144,8 @@
 **#9 QA（游戏测试）**：A-xx / D-xx 落实之后，在 `DESIGN_ISSUES.md` 里把对应的 DI 标成已解决，再合。
 
 ## 4. MVP 开发任务
+
+下一关、抽卡池和战前视频不再每样重想一套做法，按 [`LEVEL_PIPELINE.md`](LEVEL_PIPELINE.md)。抽卡规则还没填，现在不派能抽的程序。
 
 T-00 是 PR #12，`81c5d04` 可以合并，等用户点。下面 T-01 起都排在它合并之后，按顺序开工。每个任务一个 Cursor cloud agent、一个 PR。
 
