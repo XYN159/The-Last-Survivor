@@ -6,6 +6,7 @@
 
 ### 变更
 
+- 序章第一关战斗前先播关前视频，可跳过。台词和现有剧情的冲突记在 `docs/production/DECISIONS_PENDING.md` 的 D-20、D-21，等用户拍板。视频本身不在这条文档分支上。
 - 二十张界面已接到序章，PR #22，基线是 PR #18。登录不建账号。服务器图用的是改过的那张。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 横屏序章动效已交 PR #18，基线是 PR #17。竖屏动效分支仍不另开 PR。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 用户给出界面模版。先由 GPT 画原画，不写程序。Demo 最小闭环是主界面、关卡选择、编队、战斗、结算、角色详情，加上剧情对话。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
