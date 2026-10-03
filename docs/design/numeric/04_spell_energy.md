@@ -1,5 +1,8 @@
 # 04 符卡充能 【规则来自战斗策划 PR #4 / 数值提议】
 
+> **2026-10-03 重构（`USER_DECISIONS.md` 高于下文旧口径）**：伤害保底改为攻击的 5%（Q14，`armor_floor_ratio = 0.05`）。旧的 20% 和「至少 1」已被 Q14 取代。局内升级（Q6）、共用符卡条（Q5）、同名份数上限（Q3）、波次窗口 10/20/4（Q2）、危机充能和主线三选一（Q12）标为废止，表里留下的数字是旧值。`copy_cost_increase_ratio` 不改名，待 P6。`initial_cost`、`cost_regen_per_sec`、`max_cost` 为空，待 P7。五个章 Boss 的 3000 和终章 4000 是旧锁，待 P10。重甲残影 25 甲仍在 ch2_02，待 P11。`growth_tier` 待 P3，不写 A/B/C 的等级上限。Boss 两阶段和冻结减半待 P4，没有写进敌人表。
+
+
 > 配置：`data/balance/battle_rules.csv`（`spell_*`、`crisis_*`）、`data/enemies.csv` 的 `charge_on_kill`、`data/characters.csv` 的 `spell_energy_max`、`data/balance/level_difficulty.csv` 的 `spell_charge_per_damage`。生成到 `data/balance/combat/stats.json` 的 `spell_charge` 段。
 > 这一版取代了早先「每次命中得固定能量」的设计，改用战斗策划 PR #4（`docs/design/combat/spell_cards.md`）的规则。「符卡能量靠攻击积攒、手动释放、自动释放是全局开关且默认关闭」不变（系统策划 PR #3）。换符卡使清空充能（`caster_switch_clears_charge = true`）。
 

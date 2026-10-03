@@ -1,5 +1,8 @@
 # 08 roguelite 强化池（每 5 波三选一）
 
+> **2026-10-03 重构（`USER_DECISIONS.md` 高于下文旧口径）**：伤害保底改为攻击的 5%（Q14，`armor_floor_ratio = 0.05`）。旧的 20% 和「至少 1」已被 Q14 取代。局内升级（Q6）、共用符卡条（Q5）、同名份数上限（Q3）、波次窗口 10/20/4（Q2）、危机充能和主线三选一（Q12）标为废止，表里留下的数字是旧值。`copy_cost_increase_ratio` 不改名，待 P6。`initial_cost`、`cost_regen_per_sec`、`max_cost` 为空，待 P7。五个章 Boss 的 3000 和终章 4000 是旧锁，待 P10。重甲残影 25 甲仍在 ch2_02，待 P11。`growth_tier` 待 P3，不写 A/B/C 的等级上限。Boss 两阶段和冻结减半待 P4，没有写进敌人表。
+
+
 > 配置表：`data/roguelite_buffs.csv`（数值和权重），生成到 `data/balance/combat/stats.json` 的 `buffs` 段。强化的**行为**（怎么生效、满层变身效果）按战斗策划 PR #4 的 `data/balance/combat/buffs.json` 和 `docs/design/combat/roguelite_buffs.md`。
 > 三选一的规则（每 5 波一次、3 个选项）是用户【已确认】；池子里每项的数值、权重都是【提议】。叙事包装和名字请文案/系统策划改，改名字不影响数值。
 > 这一版把早先数值这边自拟的 20 项池子换成了 **PR #4 的 12 项**（保留他的 ID），另外补了 5 项数值这边觉得缺的（标「数值补充」，行为要战斗策划认可才进游戏）。

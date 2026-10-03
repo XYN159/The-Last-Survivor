@@ -2,55 +2,55 @@ rule_key,value,unit,status,description_zh
 start_spirit,150,spirit,confirmed,开局灵力
 wave_clear_bonus,20,spirit,confirmed,每撑过一波额外获得的灵力
 base_hp,20,hp,confirmed,基地（守护点）生命
-armor_floor_ratio,0.2,ratio,confirmed,"伤害下限：护甲后伤害 = max(攻击 − 护甲, 攻击 × 0.2)（= PR #4 rules.json 的 damage.armor_floor_ratio）"
-min_damage,1,hp,proposal,单次命中最终伤害最少 1（PR #4 流水线第 5 步），四舍五入远离 0
+armor_floor_ratio,0.05,ratio,confirmed,"Q14：护甲后伤害 = max(攻击 − 护甲, 攻击 × 0.05)。旧的 20% 保底已被 Q14 取代。"
+min_damage,0,hp,superseded_by_q14,旧的「单次至少 1 点」已被 Q14 取代。写成 0 表示不再另设最少 1 点；现行保底只看 armor_floor_ratio = 0.05。
 budget_base,10,threat,confirmed,每波威胁预算 = (budget_base + budget_per_wave × 波次) × 本关 threat_budget_coef
 budget_per_wave,4,threat,confirmed,同上
 hp_mult_per_level,0.15,ratio,confirmed,敌人血量倍率 = 1 + 0.15 × (全局关卡序号 − 1)，线性
-upgrade_cost_1,50,spirit,confirmed,局内第 1 次升级花费
-upgrade_cost_2,100,spirit,confirmed,局内第 2 次升级花费
-upgrade_attack_pct,0.4,ratio,confirmed,每次局内升级攻击 +40%，按 1 级基础加法叠加：升 2 次 = ×1.8（不是 ×1.96）
-buff_pick_every_waves,5,wave,confirmed,每 5 波三选一（第 5、10、15 波打完后；最后一波正好是 5 的倍数时也给，按关卡策划口径）。序章第 1、2 关没有三选一，序章第 3 关起有（最终口径）。PR #4 占位每 3 波，以 5 为准
-buff_offer_count,3,count,confirmed,每次给几个选项
-buff_transform_stacks,2,stack,confirmed,同一强化叠到 2 层就「质变」（制作人定，原来 3 层）
-buff_guarantee_untransformed,1,flag,confirmed,已拥有但还没质变的强化，下一次三选一保底出现其中一个（制作人定）
+upgrade_cost_1,50,spirit,abolished,废止（Q6：局内升级废止）。旧值保留，不是现行定案。原说明：局内第 1 次升级花费
+upgrade_cost_2,100,spirit,abolished,废止（Q6：局内升级废止）。旧值保留，不是现行定案。原说明：局内第 2 次升级花费
+upgrade_attack_pct,0.4,ratio,abolished,废止（Q6：局内升级废止）。旧值保留，不是现行定案。原说明：每次局内升级攻击 +40%，按 1 级基础加法叠加：升 2 次 = ×1.8（不是 ×1.96）
+buff_pick_every_waves,5,wave,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：每 5 波三选一（第 5、10、15 波打完后；最后一波正好是 5 的倍数时也给，按关卡策划口径）。序章第 1、2 关没有三选一，序章第 3 关起有（最终口径）。PR #4 占位每 3 波，以 5 为准
+buff_offer_count,3,count,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：每次给几个选项
+buff_transform_stacks,2,stack,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：同一强化叠到 2 层就「质变」（制作人定，原来 3 层）
+buff_guarantee_untransformed,1,flag,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：已拥有但还没质变的强化，下一次三选一保底出现其中一个（制作人定）
 meta_attack_per_level,0.08,ratio,confirmed,局外等级攻击倍率 = 1 + 0.08 × (等级 − 1)
 meta_level_max,20,level,confirmed,局外等级上限
 meta_hp_scaling,1,flag,proposal,提议：阻挡型角色（美铃）的生命也按局外等级倍率成长（1 开 0 关）
 squad_cap,8,count,proposal,提议：每关最多带 8 名角色进场（同名角色的多个副本不占名额；见 max_copies_per_character）
-blocker_redeploy_cooldown,15,sec,proposal,提议：美铃被打倒后 15 秒可重新部署，花费为部署费用的一半，局内升级保留
-wave_advance_mode,spawn_window,rule,confirmed,PR #5 ends_when = spawn_window：每波刷怪窗口 20 秒结束 + 4 秒空隙后下一波开始，不等清场（上一波剩下的敌人会和下一波叠在一起）。首领关最后一波要等首领被击败。旧口径 clear = 清场后才下一波
-wave_gap_after_clear,4,sec,proposal,波间空隙 4 秒（PR #5 每波 delay_sec = 4，制作人定 3–5 秒）
-wave_force_next_after_spawn,12,sec,proposal,旧规则（只在 wave_advance_mode = clear 时用）：一波最后一只刷出 12 秒后，即使场上还有敌人也开始下一波
-first_wave_prep,10,sec,confirmed,布阵 10 秒（PR #5 deploy_time_sec），第 1 波前另有 4 秒开战空隙；模拟里视为布阵完再开打
-wave_spawn_window_base,20,sec,confirmed,每波刷怪窗口固定 20 秒（PR #5 duration_sec = 20）。MVP 7 关的出怪时间照关卡文件；其他关把本波敌人在 20 秒里按 √威胁点 摊开
-wave_spawn_window_per_wave,0,sec,confirmed,同上（旧口径 16 + 0.3 × 波次，已作废）
-wave_spawn_window_max,20,sec,confirmed,同上
+blocker_redeploy_cooldown,15,sec,proposal,提议：美铃被打倒后 15 秒可重新部署，花费为部署费用的一半，局内升级保留。局内升级已由 Q6 废止，句中「局内升级保留」不再有效。
+wave_advance_mode,spawn_window,rule,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：PR #5 ends_when = spawn_window：每波刷怪窗口 20 秒结束 + 4 秒空隙后下一波开始，不等清场（上一波剩下的敌人会和下一波叠在一起）。首领关最后一波要等首领被击败。旧口径 clear = 清场后才下一波
+wave_gap_after_clear,4,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：波间空隙 4 秒（PR #5 每波 delay_sec = 4，制作人定 3–5 秒）
+wave_force_next_after_spawn,12,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：旧规则（只在 wave_advance_mode = clear 时用）：一波最后一只刷出 12 秒后，即使场上还有敌人也开始下一波
+first_wave_prep,10,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：布阵 10 秒（PR #5 deploy_time_sec），第 1 波前另有 4 秒开战空隙；模拟里视为布阵完再开打
+wave_spawn_window_base,20,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：每波刷怪窗口固定 20 秒（PR #5 duration_sec = 20）。MVP 7 关的出怪时间照关卡文件；其他关把本波敌人在 20 秒里按 √威胁点 摊开
+wave_spawn_window_per_wave,0,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：同上（旧口径 16 + 0.3 × 波次，已作废）
+wave_spawn_window_max,20,sec,abolished,废止（Q2：连续时间轴取代 10/20/4 波次窗口）。旧值保留，不是现行定案。原说明：同上
 boss_threat,0,threat,confirmed,Boss 不占所在波次的预算（关卡策划 PR #5 口径），stats.json 里 Boss 的 threat_points 写 0
 star_thresholds,20|10|1,hp,confirmed,星级：满生命 20/20（不漏怪）3 星；剩余生命 ≥ 10（50%）2 星；通关 1 星（最终口径，旧的 18–20 三星作废）
 proposed_start_spirit_formula,150*sqrt(hp_multiplier),spirit,proposal,【仅建议方案 B】开局灵力 = 150 × √血量倍率，取整到 10（第 1 关仍是 150）；每关的值在 level_difficulty.csv 的 proposed_start_spirit 列
-max_copies_per_character,3,count,proposal,同名角色最多放 3 个（PR #4 建议；个别角色在 characters.csv 的 max_copies 里更少：美铃 2、紫 1）
-copy_cost_increase_ratio,0.5,ratio,proposal,第 k 个同名角色的费用 = 部署费用 × (1 + 0.5 × (k − 1))：第 2 个 1.5 倍、第 3 个 2 倍（紫 1.0）
+max_copies_per_character,3,count,abolished,废止（Q3：一个角色只能部署一个，同名份数上限废止）。旧值保留，不是现行定案。原说明：同名角色最多放 3 个（PR #4 建议；个别角色在 characters.csv 的 max_copies 里更少：美铃 2、紫 1）
+copy_cost_increase_ratio,0.5,ratio,pending_p6,待 P6。列名保持 copy_cost_increase_ratio，不改成 redeploy_cost_step，再部署惩罚还不是定案。旧公式仍写在这里：第 k 个 = 部署费 × (1 + 0.5 × (k − 1))。
 sell_refund_ratio,0.7,ratio,proposal,卖出返还 = 这个角色已花的灵力（部署 + 升级）× 70%（文 90%），波次中也能卖
 crit_chance_default,0.05,ratio,proposal,默认暴击率 5%（咲夜、文、蕾米莉亚 10%），持续伤害不暴击
 crit_mult_default,1.8,ratio,proposal,默认暴击倍率 ×1.8（蕾米莉亚 ×2.0）。5% × 0.8 = 平均输出只多 4%，暴击主要是手感
 early_call_reward_per_sec,2,spirit/sec,proposal,提前叫波：每剩余 1 秒加 2 灵力，再和 early_call_reward_cap 取较小值。功能开不开见 D-18，MVP 可以先不做叫波
-early_call_reward_cap,20,spirit,numbers_set,叫波一次最多加 20 灵力。奖励 = min(20, floor(剩余秒数 × early_call_reward_per_sec))。10 秒倒计时、每秒 2，正好顶到 20，和撑过一波的 +20 一样。这是上限，不是把叫波功能打开
+early_call_reward_cap,20,spirit,numbers_set,"叫波一次最多加 20 灵力。奖励 = min(20, floor(剩余秒数 × early_call_reward_per_sec))。10 秒倒计时、每秒 2，正好顶到 20，和撑过一波的 +20 一样。这是上限，不是把叫波功能打开"
 early_start_reward_per_sec,1,spirit/sec,proposal,布阵期提前开始：奖励 floor(剩余秒数 × 1)，布阵期 10 秒，最多 +10
-spell_energy_max_default,100,energy,proposal,全队共用一条能量条；满能量随「符卡使」变化（characters.csv 的 spell_energy_max，标准 100）
-spell_charge_damage_share,0.7,ratio,proposal,PR #4 规则：约 70% 能量来自造成伤害
-spell_charge_kill_share,0.3,ratio,proposal,PR #4 规则：约 30% 能量来自击杀
-spell_target_full_sec,60,sec,proposal,普通波次约 60 秒充满（满能量 100 时）
-spell_charge_per_damage_base,0.02,energy/hp,proposal,每点有效伤害充能的基准值（血量倍率 = 1 时）；每关实际值 = 基准 ÷ 血量倍率（敌人越肉，每点伤害给的能量越少，充满时间保持稳定）。由模拟校准，见 04 文档
-spell_charge_per_kill_scale,1.0,ratio,proposal,每次击杀充能 = 敌人的 charge_on_kill × 这个系数（enemies.csv）
-crisis_charge_mult,1.5,ratio,proposal,危急（有敌人进入最后 3 行，或守护点生命 ≤ 30%）时充能 ×1.5，约 40 秒充满（PR #4 规则）
-crisis_rows_from_bottom,3,row,proposal,危急判定：敌人进入最后 3 行（PR #4）
-crisis_guard_hp_ratio,0.3,ratio,proposal,危急判定：守护点生命 ≤ 30%（PR #4）
-auto_release_min_enemies,8,count,proposal,自动释放（开关打开时）：能量满，并且场上敌人 ≥ 8 或有敌人进入最后 3 行（PR #4）
-manual_release_min_enemies,6,count,proposal,模拟「合理的手动玩家」：能量满后，满足下面任一条就在 1 秒反应时间后放：有敌人进入最后 3 行或守护点生命 ≤ 30%；场上有 Boss；场上敌人 ≥ 6；满了 8 秒还没放且场上 ≥ 3 个敌人
-manual_release_wait_sec,8,sec,proposal,同上
-manual_release_reaction_sec,1,sec,proposal,同上
-caster_switch_clears_charge,1,flag,confirmed,换符卡施放者时充能清零（PR #4 已写入 stats.json 顶层，数值侧同意 = true）。模拟里的玩家只在刚放完符卡、能量 ≤ 15% 时才换人
+spell_energy_max_default,100,energy,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：全队共用一条能量条；满能量随「符卡使」变化（characters.csv 的 spell_energy_max，标准 100）
+spell_charge_damage_share,0.7,ratio,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：PR #4 规则：约 70% 能量来自造成伤害
+spell_charge_kill_share,0.3,ratio,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：PR #4 规则：约 30% 能量来自击杀
+spell_target_full_sec,60,sec,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：普通波次约 60 秒充满（满能量 100 时）
+spell_charge_per_damage_base,0.02,energy/hp,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：每点有效伤害充能的基准值（血量倍率 = 1 时）；每关实际值 = 基准 ÷ 血量倍率（敌人越肉，每点伤害给的能量越少，充满时间保持稳定）。由模拟校准，见 04 文档
+spell_charge_per_kill_scale,1.0,ratio,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：每次击杀充能 = 敌人的 charge_on_kill × 这个系数（enemies.csv）
+crisis_charge_mult,1.5,ratio,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：危急（有敌人进入最后 3 行，或守护点生命 ≤ 30%）时充能 ×1.5，约 40 秒充满（PR #4 规则）
+crisis_rows_from_bottom,3,row,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：危急判定：敌人进入最后 3 行（PR #4）
+crisis_guard_hp_ratio,0.3,ratio,abolished,废止（Q12：主线三选一和危机充能倍率废止，三选一留给后期肉鸽）。旧值保留，不是现行定案。原说明：危急判定：守护点生命 ≤ 30%（PR #4）
+auto_release_min_enemies,8,count,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：自动释放（开关打开时）：能量满，并且场上敌人 ≥ 8 或有敌人进入最后 3 行（PR #4）
+manual_release_min_enemies,6,count,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：模拟「合理的手动玩家」：能量满后，满足下面任一条就在 1 秒反应时间后放：有敌人进入最后 3 行或守护点生命 ≤ 30%；场上有 Boss；场上敌人 ≥ 6；满了 8 秒还没放且场上 ≥ 3 个敌人
+manual_release_wait_sec,8,sec,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：同上
+manual_release_reaction_sec,1,sec,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：同上
+caster_switch_clears_charge,1,flag,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：换符卡施放者时充能清零（PR #4 已写入 stats.json 顶层，数值侧同意 = true）。模拟里的玩家只在刚放完符卡、能量 ≤ 15% 时才换人
 barrier_vulnerability_add,0.2,ratio,proposal,灵梦结界里的敌人受到伤害 +20%（易伤桶）
 burn_tick_sec,0.5,sec,proposal,灼烧每 0.5 秒一跳，持续 3 秒，不叠加（PR #4）
 boss_enter_waves_from_end,10,wave,proposal,除 ch1_04 外，章节 Boss 仍按「总波数 − 10」入场。ch1_04 不套这条偏移，D-01 直接写成第 11 波
@@ -61,7 +61,12 @@ ter_ice_speed_mult,1.5,ratio,confirmed,冰面 ter_ice：敌人（含 Boss）移�
 ice_stop_on_declare_sec,2,sec,proposal,琪露诺 Boss 第 2 阶段「完美冻结」：宣言时以她为圆心 2.5 格内的角色和残影都冻结 2 秒（PR #5 cell_sets.boss_cirno_p2_area；秒数取用户确认的「完美冻结 冻 2 秒」）
 fog_min_range,1.0,cell,proposal,浓雾：目标站在雾格上时，角色射程 −1 格（PR #5 最新分支和 PR #4 rules.json 一致），最低 1 格。旧写法「射程 × fog_range_mult」只留给还没有雾格的参考地图
 fog_range_minus,1,cell,confirmed,浓雾：目标站在雾格上时射程减多少格（PR #5 terrain ter_fog 的说明「射程减 1」）
-spell_energy_start,0,energy,proposal,开局符卡能量（PR #4 默认 0；数值建议 30–50，待拍板，模拟按 0）
-auto_release_default_on,0,flag,confirmed,符卡自动释放是全局开关，默认关闭，局内可切换（系统策划规则 12）。模拟主结果按「合理的手动玩家」，另跑一组自动释放对照
+spell_energy_start,0,energy,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：开局符卡能量（PR #4 默认 0；数值建议 30–50，待拍板，模拟按 0）
+auto_release_default_on,0,flag,abolished,废止（Q5：共用符卡条废止，改为每人独立技力）。旧值保留，不是现行定案。原说明：符卡自动释放是全局开关，默认关闭，局内可切换（系统策划规则 12）。模拟主结果按「合理的手动玩家」，另跑一组自动释放对照
 boss_hp_uses_level_mult,0,flag,confirmed,D-01 已定：Boss 实战血量不乘本关 hp_multiplier，表里的 hp 就是实战值。ch1_04 已按这条规则重跑并锁定系数。第 2 到 5 章首领关的系数仍是「要乘倍率」时校准的，还没重跑
 proposed_boss_enter_waves_from_end,5,wave,superseded,旧建议的偏移：总波数减这个数。15 波减 5 是第 10 波，不是第 11 波。ch1_04 不用它，D-01 写成第 11 波。其他首领关的入场波还没改
+initial_cost,,spirit,pending_p7,待 P7。只留空参数，不填 1、5、10 或 50。
+cost_regen_per_sec,,spirit/sec,pending_p7,待 P7。只留空参数，不填每秒回复。
+max_cost,,spirit,pending_p7,待 P7。只留空参数，不填费用上限。
+boss_phase_count,,count,pending_p4,待 P4。两阶段尚未拍板，不要写进敌人表当成已定。
+boss_freeze_on_boss_mult,,ratio,pending_p4,待 P4。我方冻结对 Boss 是否减半尚未拍板，不要写进敌人表当成已定。

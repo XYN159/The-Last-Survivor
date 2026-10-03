@@ -21,8 +21,18 @@ def n(v):
     return int(f) if f.is_integer() else round(f, 6)
 
 
+def blank_or_num(rules: dict, key: str):
+    """空参数保持 null。待 P7 的费用字段不能填 1、5、10 或 50。"""
+    v = rules.get(key, "")
+    if v is None or v == "":
+        return None
+    return n(v)
+
+
 def main():
     R = tdsim.load_rules()
+    rule_rows = tdsim.read_csv(tdsim.DATA / "balance" / "battle_rules.csv")
+    rule_status = {r["rule_key"]: r["status"] for r in rule_rows}
     chars = tdsim.load_characters()
     enemies = tdsim.load_enemies()
     buffs = tdsim.load_buffs()
@@ -48,7 +58,10 @@ def main():
             "range_cells": n(c["range"]),
             "attack": {"range_cells": n(c["range"]), "interval_sec": n(c["attack_interval"])},
             "spell_energy_max": n(c["spell_energy_max"]),
+            "growth_tier": c.get("growth_tier") or "待 P3",
             "value_status": c["status"],
+            "max_copies_status": "abolished_q3",
+            "copy_cost_status": "pending_p6",
         }
         if float(c["max_hp"] or 0) > 0:
             d["max_hp"] = n(c["max_hp"])
@@ -66,6 +79,8 @@ def main():
              "spirit_drop": n(e["spirit_drop"]), "leak_damage": n(e["leak_damage"]),
              "threat_points": n(e["threat_points"]), "kill_charge": n(e["kill_charge"])}
         extra = {"first_level_id": e["first_level_id"], "value_status": e["status"]}
+        if e.get("balance_hold"):
+            extra["balance_hold"] = e["balance_hold"]
         if float(e.get("block_dps") or 0) > 0:
             extra["block_dps"] = n(e["block_dps"])
         d.update(extra)
@@ -107,7 +122,13 @@ def main():
                               "data/balance/battle_rules.csv", "data/balance/combat_coefficients.csv",
                               "data/balance/level_difficulty.csv"],
             "note_zh": "本文件由脚本从 CSV 生成，改数请改 CSV 后重跑 run_all.py 或 gen_stats_json.py，不要手改。"
-                       "用户已确认的值与 PR #4 占位冲突时一律以用户确认值为准（如灵梦攻击 20、硬残影护甲 10）。",
+                       "2026-10-03 USER_DECISIONS 高于旧口径：armor_floor_ratio = 0.05（Q14）。"
+                       "min_damage 的「至少 1」和旧的 20% 已被 Q14 取代。"
+                       "status 为 abolished 的规则（局内升级、共用符卡、同名上限、10/20/4 波次窗口、危机充能、主线三选一）不是现行定案，数字只是旧值。"
+                       "copy_cost_increase_ratio 不改名，待 P6。initial_cost、cost_regen_per_sec、max_cost 为空，待 P7。"
+                       "Boss 血量 balance_hold=待 P10 是旧锁。重甲残影待 P11。growth_tier 待 P3。"
+                       "boss_phase_count 与 boss_freeze_on_boss_mult 待 P4，未写入敌人数值。",
+            "rule_status": rule_status,
             "added_fields_zh": "相对 PR #4 占位新增：顶层 armor_floor_ratio / min_damage / caster_switch_clears_charge、level_scaling、"
                                "in_battle_upgrade、economy.early_call_reward_cap、"
                                "characters.*.max_copies/attack_interval_sec/range_cells/attack.{range_cells,interval_sec}/spell_energy_max/max_hp/block_count、"
@@ -120,6 +141,7 @@ def main():
         },
         "armor_floor_ratio": n(R["armor_floor_ratio"]),
         "min_damage": n(R["min_damage"]),
+        "min_damage_status": rule_status.get("min_damage", ""),
         "caster_switch_clears_charge": bool(int(float(R.get("caster_switch_clears_charge", 1)))),
         "rounding": "round_half_away_from_zero",
         "guard": {"max_hp": n(R["base_hp"])},
@@ -131,7 +153,13 @@ def main():
             "early_start_reward_per_sec": n(R["early_start_reward_per_sec"]),
             "sell_refund_ratio_default": n(R["sell_refund_ratio"]),
             "copy_cost_increase_ratio_default": n(R["copy_cost_increase_ratio"]),
+            "copy_cost_status": "pending_p6",
             "max_copies_per_character": n(R["max_copies_per_character"]),
+            "max_copies_status": "abolished_q3",
+            "initial_cost": blank_or_num(R, "initial_cost"),
+            "cost_regen_per_sec": blank_or_num(R, "cost_regen_per_sec"),
+            "max_cost": blank_or_num(R, "max_cost"),
+            "cost_params_status": "pending_p7",
         },
         "spell_charge": {
             "energy_max_default": n(R["spell_energy_max_default"]),
@@ -147,6 +175,7 @@ def main():
             "kill_share": n(R["spell_charge_kill_share"]),
             "target_full_sec_normal": n(R["spell_target_full_sec"]),
             "crisis_charge_mult": n(R["crisis_charge_mult"]),
+            "design_status": "abolished_q5",
         },
         "stars": {"thresholds_lives_left": [n(x) for x in str(R["star_thresholds"]).split("|")],
                   "rule_zh": "满生命 20/20 = 3 星；剩余 ≥10 = 2 星；通关 = 1 星。星星只解锁外观和故事，不给资源",
@@ -154,10 +183,12 @@ def main():
         "buff_offer": {"every_n_waves": n(R["buff_pick_every_waves"]), "choices": n(R["buff_offer_count"]),
                        "transform_at_stacks_default": n(R["buff_transform_stacks"]),
                        "guarantee_owned_untransformed": bool(int(float(R["buff_guarantee_untransformed"]))),
-                       "rule_zh": "已拥有但还没质变的强化，下一次三选一保底出现其中一个；最后一波之后那次三选一对本局无效"},
+                       "rule_zh": "已拥有但还没质变的强化，下一次三选一保底出现其中一个；最后一波之后那次三选一对本局无效",
+                       "design_status": "abolished_q12"},
         "waves": {"advance_mode": R.get("wave_advance_mode", "spawn_window"), "spawn_window_sec": n(R["wave_spawn_window_base"]),
                   "gap_sec": n(R["wave_gap_after_clear"]), "deploy_time_sec": 10,
-                  "rule_zh": "每波刷怪窗口 20 秒，窗口结束 + 4 秒后下一波，不等清场（关卡策划 PR #5 ends_when = spawn_window）"},
+                  "rule_zh": "旧窗口：每波刷怪 20 秒，窗口结束 + 4 秒后下一波。Q2 已废止，不是现行节奏。",
+                  "design_status": "abolished_q2"},
         "boss_rules": {"enter_waves_from_end": n(R["boss_enter_waves_from_end"]), "on_reach_guard": R["boss_on_reach_guard"],
                        "phase_hp_ratios": [n(x) for x in str(R["boss_phase_hp_ratios"]).split("|")],
                        "phase_invuln_sec": n(R["boss_phase_invuln_sec"]),
@@ -169,7 +200,8 @@ def main():
             "max_level": 1 + len(up),
             "costs": up,
             "attack_mult_by_level": lvl_mult,
-            "note_zh": "局内从 1 级升到 max_level。costs 是第 1 次、第 2 次升级的灵力。attack_mult_by_level 下标 0 是 1 级。和每个角色上的 upgrade_costs、level_attack_mult 相同。",
+            "note_zh": "废止（Q6）。旧的局内升级费用和倍率留在这里，不是现行定案。",
+            "design_status": "abolished_q6",
         },
         "level_scaling": {
             "enemy_hp_mult_per_level": n(R["hp_mult_per_level"]),

@@ -3,6 +3,7 @@
 > 配置：`data/balance/level_difficulty.csv`（主表）→ 生成 `data/balance/level_difficulty.json`，另导出一份按关卡策划新表格式的 `tools/numeric/output/level_tables_level_difficulty.csv`（PR #5 最新分支把难度表挪到了 `data/balance/level_tables/level_difficulty.csv`，写明「数值策划会整表替换」）。
 > 关卡结构【已确认】：序章 3 关 + 第一至第五章每章 4 关 + 终章 1 关 = **24 关**；每章 教学 / 练习 / 考验 / Boss。**MVP = 序章 + 第一章共 7 关**。
 > 本页数字全部来自 `python tools/numeric/run_all.py --calibrate`（5 个种子，2026-09-27 按方案 B 重跑），完整表在 `generated/sim_results.md`，扫描表在 `generated/mvp_coef_sweep.md`。
+> 2026-10-03 起，页里的 10/20/4 波次窗口、局内升级、同名多份、共用符卡和主线三选一是这次模拟用过的旧假设，已标废止，没有按新规则重跑。Boss 血量仍按表内旧锁，待 P10。
 
 ## 0. 这次改了什么（方案 B 重新校准）
 
