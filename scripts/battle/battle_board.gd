@@ -206,6 +206,7 @@ func _refresh() -> void:
 		_fill_unit_panel(state)
 
 
+# 填充仍按剩余比例改长度，但颜色是全透明的，画面上只留古典框和数字。
 ## 三条状态条的填充长度。灵力以开局灵力为满，花掉就变短，攒得比开局多时保持满条。
 func _refresh_bars(state: Dictionary) -> void:
 	var spirit := float(state.spirit)
