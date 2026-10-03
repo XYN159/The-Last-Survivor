@@ -6,7 +6,7 @@
 
 ### 变更
 
-- 把序章第一关的做法收成后续关卡、抽卡和战前视频的流程，见 `docs/production/LEVEL_PIPELINE.md`。静帧由 GPT 画，视频由 Grok Bot 做。抽卡池等用户填，现在不派程序。
+- 把序章第一关的做法收成后续关卡、抽卡和战前视频的流程，见 `docs/production/LEVEL_PIPELINE.md`。静帧由 GPT 画，视频由 Grok Bot 做。抽卡池等用户填，现在不派程序。2026-10-03 已和 Grok Bot 执行制作人对齐，它只出视频，不改玩法。
 - 序章第一关战斗前先播关前视频，可跳过。台词和现有剧情的冲突记在 `docs/production/DECISIONS_PENDING.md` 的 D-20、D-21，等用户拍板。视频本身不在这条文档分支上。
 - 二十张界面已接到序章，PR #22，基线是 PR #18。登录不建账号。服务器图用的是改过的那张。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
 - 横屏序章动效已交 PR #18，基线是 PR #17。竖屏动效分支仍不另开 PR。细节在 `docs/production/HANDOFF.md` 第 0.2 节。
