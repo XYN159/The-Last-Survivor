@@ -45,10 +45,10 @@ func test_skip_button_sits_at_the_top_right() -> void:
 	assert_eq(button.anchor_left, 1.0)
 	assert_eq(button.anchor_right, 1.0)
 	assert_eq(button.anchor_top, 0.0)
-	assert_eq(button.size, Vector2(160, 64))
+	assert_eq(button.size, Vector2(122, 52))
 	var rect := button.get_global_rect()
 	var screen := video.get_global_rect()
-	assert_eq(rect.position.y - screen.position.y, 28.0)
+	assert_eq(rect.position.y - screen.position.y, 30.0)
 	assert_eq(screen.end.x - rect.end.x, 28.0)
 
 
