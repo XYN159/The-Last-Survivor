@@ -1,13 +1,14 @@
 extends Control
 
-## 用二十张界面原画串起来的流程：启动页 → 登录 → 主界面 → 出击 → 序章战斗 → 结算 → 主界面。
+## 用二十张界面原画串起来的流程：启动页 → 登录 → 主界面 → 出击 → 关前视频 → 序章战斗 → 结算 → 主界面。
 ## 每张原画按 1920×1080 铺满舞台；能点的地方盖透明按钮，坐标在 data/ui/original_screens.json。
 ## 这里只换画面：不写存档、不记账号、不联网，也不改任何数值。
 
 signal screen_shown(screen_id: String)
 signal scene_change_requested(path: String)
 
-const BATTLE_SCENE := "res://scenes/battle/battle_board.tscn"
+## 出击先进关前视频，视频播完或跳过后由它自己进战斗。
+const PRE_VIDEO_SCENE := "res://scenes/main/prologue_pre_video.tscn"
 const FIRST_SCREEN := "splash"
 const HOME_SCREEN := "home"
 const RESULT_SCREEN := "result"
@@ -121,9 +122,9 @@ func start_battle() -> void:
 	_leaving = true
 	# 体力弹窗不拦出击：进战斗前一律关掉。
 	close_popup()
-	scene_change_requested.emit(BATTLE_SCENE)
+	scene_change_requested.emit(PRE_VIDEO_SCENE)
 	if auto_change_scene:
-		get_tree().change_scene_to_file(BATTLE_SCENE)
+		get_tree().change_scene_to_file(PRE_VIDEO_SCENE)
 
 
 func _render_page() -> void:
