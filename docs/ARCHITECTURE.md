@@ -44,7 +44,7 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | 场景 | 脚本 | 作用 |
 | --- | --- | --- |
 | `scenes/main/original_flow.tscn` | `scripts/main/original_flow.gd` | 启动场景。二十张界面原画串成的流程：启动页、登录、主界面和各个子画面，出击先进关前视频，再进序章棋盘，打完回结算原画。见下面「界面原画流程」 |
-| `scenes/main/prologue_pre_video.tscn` | `scripts/main/prologue_pre_video.gd` | 序章第一关战斗前的全屏关前视频。点屏幕或右上角「跳过」立刻进棋盘，播完也进棋盘，只换一次场景；视频打不开就警告后直接进棋盘。见 ADR-0010 |
+| `scenes/main/prologue_pre_video.tscn` | `scripts/main/prologue_pre_video.gd` | 序章第一关战斗前的全屏关前视频。画面整幅放进屏幕、不裁边，只有点右上角「跳过」才立刻进棋盘，播完也进棋盘，只换一次场景；视频打不开就警告后直接进棋盘。见 ADR-0010 |
 | `scenes/main/main_menu.tscn` | `scripts/main/main_menu.gd` | 旧的序章标题。现在不是启动场景，也没有画面再跳回它 |
 | `scenes/battle/battle_board.tscn` | `scripts/battle/battle_board.gd` | 可玩的塔防棋盘。按钮和结算在这里，规则不在这里 |
 | `scenes/battle/battle_lane.tscn` | `scripts/battle/battle_lane.gd` | 旧车道占位。标题已经不进这里 |
