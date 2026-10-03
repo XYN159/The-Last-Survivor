@@ -4,11 +4,15 @@
 > 叙事包装采用 PR #2 的建议：残影被击散后留下的「被遗忘之物」，角色捡起来借用它的力量。下表「失物」一栏是建议名，待文案和系统策划确认。
 > 对应配置：`data/balance/combat/buffs.json`。
 
-## 1. 什么时候给强化（已拍板，2026-09-27）
+## 1. 主线不用这套（Q12，2026-10-03）
 
-1. 每 5 波给一次三选一（PR #8 `buff_offer.every_n_waves` = 5、`buff_offer.choices` = 3，和已拍板一致）。时机：第 5、10、15 波的最后一只出生、进入 `intermission` 空档的那一刻弹出（`buff_offers.offer_trigger_point`）。因为空档不等清场（core_rules.md 4.2），这里也不等这一波的敌人打完。这一波如果已经是本关最后一波，不再弹，直接按胜负结算（`skip_offer_on_final_wave`）。
+主线删除三选一，也没有局内强化池。这一池子留给后期肉鸽。D-06 把局内强化写成 MVP 已定，和 Q6（删除局内升级）、Q12（主线不要三选一）冲突。用户没有拍 D-06。下面的时机和名单是肉鸽旧稿，不要写进主线关卡。
+
+### 1.1 旧稿里的触发方式（不当主线规则）
+
+1. （旧稿）每 5 波给一次三选一（PR #8 `buff_offer.every_n_waves` = 5、`buff_offer.choices` = 3，和已拍板一致）。时机：第 5、10、15 波的最后一只出生、进入 `intermission` 空档的那一刻弹出（`buff_offers.offer_trigger_point`）。因为空档不等清场（core_rules.md 4.2），这里也不等这一波的敌人打完。这一波如果已经是本关最后一波，不再弹，直接按胜负结算（`skip_offer_on_final_wave`）。
 2. 选择期间逻辑暂停（`buff_select`），空档倒计时也暂停；选完继续。
-3. 抽选规则：从强化池里按 `buffs.<id>.offer_weight` 加权随机抽 `buff_offer.choices` 个**不同**的；已经满层的不出；需要特定角色（比如「大结界」需要灵梦）而本关没带这个角色的不出。随机数用每局种子。
+3. 抽选规则：从强化池里按 `buffs.<id>.offer_weight` 加权随机抽 `buff_offer.choices` 个**不同**的；已经满层的不出；需要特定角色（比如「大结界」需要灵梦）而本关没带这个角色的不出。随机数用每局种子。MVP 只从 `buffs.json` 里 `mvp` 为 true 的强化里抽（`offer_rules.include_only_mvp`）。
 4. **保底**：玩家已经拿到、但层数还没到质变门槛的强化，下一次三选一里保底出现其中一个（`pity_owned_below_threshold`）。有好几个都没到质变时，从里面随机保底一个，另外两格仍按权重抽，并且不和保底的那个重复。
 5. **只管当局**（`buff_offers.scope` = `per_level`）。过关就清空，不带到下一关。同一个强化可以重复选，用来叠层（`allow_repeat_stacks`），满层之后不再出现。
 6. 序章前两关没有三选一（`prologue_levels_without_offer` = 2）。序章第 3 关开始教三选一（`prologue_offer_starts_at_level` = 3）。波数举例见 core_rules.md 第 4.3 节。
@@ -28,7 +32,9 @@
 
 叠加规则：同一个强化的多层之间是**相加**（比如「锐利」2 层 = 2 × `buffs.buff_sharp_ofuda.attack_pct_per_stack`）；不同强化如果都加攻击，按它们的 `attack_category` 分类，同类相加、异类相乘（见伤害流水线第 1 步）。
 
-## 3. 强化清单（12 个，草案）
+## 3. 强化清单（12 个）
+
+旧稿曾把这 7 个标成 MVP 三选一（D-06）：寒气、分裂弹、会心、锐利、连射、充能、修补。用户没有拍。会心依赖通用暴击，暴击已经去掉（Q14），不另写暴击数字。主线不抽这池子（Q12）。
 
 「每层效果」里的数字都在 PR #8 的 `buffs.<id>` 下，表里只写字段名。最多层数是 `max_stacks`，质变层数是 `transform_at_stacks`（都是 2）。
 
@@ -37,7 +43,7 @@
 | `buff_split_shot` | 分裂弹 | 断了链的钥匙扣 | 普通攻击命中后分裂出 1 颗小子弹（每层 +1 颗），扇形 60 度飞出，每颗伤害 × `split_damage_ratio`，小子弹不再分裂。小子弹是额外伤害，不从原攻击里分 | **「满天星」**：每次命中改为向四周 360 度分裂 `starfall_sub_bullets` 颗，小子弹还能再分裂一次（最多两代）。满屏子弹【框架例子】 |
 | `buff_sharp_ofuda` | 锐利 | 削尖的旧铅笔 | 攻击 + `attack_pct_per_stack`（`buff` 类） | 无 |
 | `buff_rapid_fire` | 连射 | 上满弦的发条 | 攻击间隔 + `interval_pct_per_stack`（负数 = 变快） | **「三连发」**：每第 5 次攻击立刻再追加 `burst_extra_attacks` 次（间隔 0.08 秒） |
-| `buff_frost_frog` | 寒气 | 褪色的发条青蛙（PR #2 的例子） | 普通攻击命中有 `freeze_chance_per_stack` 几率冻结（秒数 `freeze_sec`，PR #8 待补；受冻结免疫限制）。**MVP 冻结来源之一**（另有第一章第 2 关起的琪露诺本人，以及冰之残影二阶段） | **「青蛙冰雕」**：冻结中的敌人被冰碎或死亡时炸成冰片，1 格内敌人受到 攻击 × `shard_damage_coef` 的伤害并冻结（同一个 `freeze_sec`）；连锁最多 3 层。连锁冻结仍算寒气这一条来源 |
+| `buff_frost_frog` | 寒气 | 褪色的发条青蛙（PR #2 的例子） | 普通攻击命中有 `freeze_chance_per_stack` 几率冻结（秒数 `freeze_sec`，PR #8 待补；受冻结免疫限制）。这是肉鸽旧稿，不是主线已定的冻结来源（Q12） | **「青蛙冰雕」**：冻结中的敌人被冰碎或死亡时炸成冰片，1 格内敌人受到 攻击 × `shard_damage_coef` 的伤害并冻结（同一个 `freeze_sec`）；连锁最多 3 层。连锁冻结仍算寒气这一条来源 |
 | `buff_crit_charm` | 会心 | 掉漆的招财猫 | 暴击率 + `crit_chance_per_stack` | **「必中之符」**：每次暴击在目标处爆炸，0.8 格范围伤害 × `explosion_coef`（爆炸本身不暴击） |
 | `buff_great_barrier` | 大结界 | 褪色的注连绳 | 需要灵梦。结界持续时间 +2 秒 | **「常驻大结界」**：灵梦射程内的所有路线格永久是结界，结界易伤再 + `barrier_vuln_add_at_max` |
 | `buff_spell_battery` | 充能 | 还剩一格电的旧电池 | 符卡充能 + `charge_pct_per_stack` | **「连续宣言」**：每次放完符卡返还 `refund_ratio_at_max` 能量 |
@@ -49,7 +55,7 @@
 
 有 2 层质变的强化共 8 个：分裂弹、连射、寒气、会心、大结界、充能、修补、隙间之眼。质变门槛是 2 层（已拍板）。最多层数可以高于门槛（例如最多 3 层的，第 2 层就质变，第 3 层继续叠每层效果）。
 
-PR #8 另外提了 5 个新强化（`buff_boss_slayer`、`buff_armor_break`、`buff_offering_box`、`buff_upgrade_discount`、`buff_spell_power`），只有数值、没有行为。要不要加进强化池见 README 待拍板第 9 条；`buffs.json` 暂时不收。
+PR #8 另外提了 5 个新强化（`buff_boss_slayer`、`buff_armor_break`、`buff_offering_box`、`buff_upgrade_discount`、`buff_spell_power`），只有数值、没有行为。`buffs.json` 暂时不收。要不要进肉鸽，以后再定，不靠 D-06。
 
 ## 4. 质变的实现细节
 

@@ -3,7 +3,8 @@
 > JSON 不能写注释，所以每个字段的含义写在这里。
 > 「归属」列：**战斗** = 战斗策划（行为和手感）；**数值** = 数值策划（数字只在 PR #8 的 `stats.json`）；**关卡** = 关卡策划；**文案** = 文案策划；**程序** = 实现细节。
 > 所有文件都在 `data/balance/combat/`，UTF-8，字段英文小写下划线。每个文件都有 `meta` 段：`schema_version`（整数，结构改了就 +1）、`status`（`draft` / `placeholder_pending_balance_design`）、`owner`、`doc`（对应文档）。
-> 注意：Godot 的 `JSON.parse` 把所有数字读成浮点数，程序取整数字段时要 `int()`。
+> 注意：Godot 的 `JSON.parse` 把所有数字读成浮点数，程序取整数字段时要 `int()`。伤害结算本身用浮点（Q14），只在飘字时取整。
+> 2026-10-03 口径：Q2 连续时间轴；Q3 同名一个；Q3b 点格子 → 点头像 → 选方向；Q4 Boss 漏过扣 2 命；Q5 删除共用符卡条；Q6 删除局内升级；Q12 主线无三选一；Q14 保底 5%，通用暴击去掉。下面仍出现的「最多 3 个」「符卡使」「三选一已定」「D-05/D-06/D-18/D-19 已定」「三阶段折返」如果和这句冲突，以这句为准，那些是旧字段说明，不当当前规则。四人机制细则待 P2。
 
 ## 文件归属总览
 
@@ -76,7 +77,7 @@
 | `spell_energy.auto_release_disabled_in_tutorial` | 布尔 | — | 教学关不锁死自动释放。值为 false：开局是关，局内可以打开 | 战斗 |
 | `spell_energy.auto_release_min_enemies` | 整数 | 只 | 自动释放条件之一：场上 ≥ 8 只 | 战斗 |
 | `spell_energy.auto_release_rows_from_bottom` | 整数 | 行 | 自动释放条件之二：有敌人进入最后 3 行 | 战斗 |
-| `spell_energy.caster_mode` | 字符串 | — | 已定为 `single_caster_switchable`（方案 A+，2026-09-27） | 制作人 |
+| `spell_energy.caster_mode` | 字符串 | — | 旧稿 `single_caster_switchable`。Q5 已删除共用符卡条，不当规则 | 战斗 |
 | `spell_energy.caster_switch_allowed_states` | 数组 | — | 允许换符卡使的状态：`deploy`、`intermission` | 战斗 |
 | `spell_energy.caster_switch_clears_charge` | 布尔 | — | 换符卡使时能量清零。数值策划已确认为 true | 战斗/数值 |
 | `spell_energy.caster_absent_origin` | 字符串 | — | 符卡使不在场时从哪里发出（守护点） | 战斗 |
@@ -92,21 +93,21 @@
 | `damage.armor_feedback_ratio` / `_throttle_sec` | 数字 | 比例 / 秒 | 削掉 ≥ 50% 提示「护甲」，0.5 秒一次 | 战斗 |
 | `damage.attack_mult_categories` | 数组 | — | 攻击加成的分类（同类加、异类乘） | 战斗 |
 | `damage.damage_mult_buckets` | 数组 | — | 伤害倍率桶：易伤、联动 | 战斗 |
-| `damage.multi_shot_split` | 对象 | — | 多发总伤害不变：每发攻击和护甲都 ÷ 发数，暴击每发各掷。见 damage_and_status.md 2.2 | 战斗 |
+| `damage.multi_shot_split` | 对象 | — | 多发总伤害不变：每发攻击和护甲都 ÷ 发数。通用暴击已去掉，不再每发掷暴击。见 damage_and_status.md 2.2 | 战斗 |
 | `placement.place_delay_sec` | 数字 | 秒 | 放置后多久开始攻击 | 战斗 |
-| `placement.max_copies_per_character` | 整数 | 个 | 同一角色最多放几个的缺省值，已定为 3（2026-09-27） | 制作人 |
+| `placement.max_copies_per_character` | 整数 | 个 | 旧稿缺省 3。Q3 改为同名只能一个，这个字段不再当规则 | 战斗 |
 | `placement.per_character_max_copies_stats_key` | 字符串 | — | 每个角色自己的上限 `characters.<id>.max_copies` | 数值 |
 | `character_levels.max_level` | 整数 | 级 | 局内最高 3 级，即每个角色升 2 次。已和数值策划对齐 | 战斗/数值 |
-| `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 每 5 波三选一。已拍板，和 PR #8 `buff_offer` 一致 | 战斗/系统 |
+| `buff_offers.every_n_waves_cleared` / `choices` | 整数 | 波 / 个 | 旧稿每 5 波三选一。Q12 起主线不用，留给肉鸽 | 战斗 |
 | `buff_offers.offer_trigger_point` | 字符串 | — | 第 5、10、15 波刷完、进入空档那一刻弹出，不等清场 | 战斗 |
 | `buff_offers.transform_at_stacks_stats_key` / `_default_stats_key` | 字符串 | — | 质变层数指向 `buffs.<id>.transform_at_stacks`，缺省 `buff_offer.transform_at_stacks_default`（2 层） | 数值 |
 | `buff_offers.scope` | 字符串 | — | 强化只管当局，`per_level`。过关清空。已拍板 | 制作人/系统 |
-| `buff_offers.clear_on_level_end` | 布尔 | — | 过关清空强化。已定为 true | 战斗/系统 |
-| `buff_offers.allow_repeat_stacks` | 布尔 | — | 同一强化可以重复叠加。已定为 true | 战斗 |
-| `buff_offers.prologue_levels_without_offer` | 整数 | 关 | 序章前几关没有三选一。已定为 2 | 战斗 |
-| `buff_offers.prologue_offer_starts_at_level` | 整数 | 关 | 序章从第几关开始教三选一。已定为 3 | 战斗 |
-| `buff_offers.pity_owned_below_threshold` | 布尔 | — | 已拥有但未到质变层数的强化，下次三选一保底出现其中一个。已定为 true | 战斗 |
-| `buff_offers.skip_offer_on_final_wave` | 布尔 | — | 最后一波打完不再给三选一。已定为 true | 战斗 |
+| `buff_offers.clear_on_level_end` | 布尔 | — | 旧稿：过关清空强化。主线不用（Q12） | 战斗 |
+| `buff_offers.allow_repeat_stacks` | 布尔 | — | 旧稿：同一强化可以重复叠加。主线不用（Q12） | 战斗 |
+| `buff_offers.prologue_levels_without_offer` | 整数 | 关 | 旧稿：序章前几关没有三选一。主线整段不用（Q12） | 战斗 |
+| `buff_offers.prologue_offer_starts_at_level` | 整数 | 关 | 旧稿：序章从第几关教三选一。主线不用（Q12） | 战斗 |
+| `buff_offers.pity_owned_below_threshold` | 布尔 | — | 旧稿保底。主线不用（Q12） | 战斗 |
+| `buff_offers.skip_offer_on_final_wave` | 布尔 | — | 旧稿：最后一波后不再给三选一。主线不用（Q12） | 战斗 |
 | `placement.allowed_cell_mark` | 字符串 | — | 只能放在地图里标成 `.` 的预定槽位。路线是 `P`。字母表和关卡策划 PR #5 一致 | 战斗/关卡 |
 | `placement.routes_fixed_during_level` | 布尔 | — | 一关的路线中途不变。已定为 true | 战斗/关卡 |
 | `retry.on_defeat` | 数组 | — | 失败后可选 `restart_wave`（从当前波重来）或 `restart_level`（整关重打） | 战斗 |
@@ -195,7 +196,7 @@
 | `role` | 字符串 | — | 定位标签，只给人看 | 战斗 |
 | `tags` | 数组 | — | 机制标签，如 `fade_immune` | 战斗 |
 | `attack.type` | 字符串 | — | 攻击类型，见 characters.md 第 3 节 | 战斗 |
-| `attack.range_stats_key` | 字符串 | — | 射程（圆形），指向 `characters.<id>.range_cells` | 数值 |
+| `attack.range_stats_key` | 字符串 | — | 射程格子，指向 `characters.<id>.range_cells`。形状是格子加朝向，不是圆形。具体哪一组合待 P2 | 数值 |
 | `attack.interval_stats_key` | 字符串 | — | 攻击间隔，指向 `characters.<id>.attack_interval_sec` | 数值 |
 | `attack.initial_delay_sec` | 数字 | 秒 | 放置后第一次攻击的延迟 | 战斗 |
 | `attack.targeting` | 字符串 | — | 选敌规则：`closest_to_guard` / `highest_current_hp` / `highest_max_hp` | 战斗 |
@@ -269,9 +270,9 @@
 | `status_conversions[]` | 数组 | — | 状态转换：`from` 状态改成 `to` 状态，`strength` 强度，`keep_duration` 是否保留时长；`to: "none"` = 直接免疫 | 战斗 |
 | `immune_to_effects` | 数组 | — | 免疫的效果类型（隙间换位、送回） | 战斗 |
 | `affected_by_terrain` | 布尔 | — | 是否受地形影响 | 战斗 |
-| `on_reach_guard` | 字符串 | — | 已定为 `loop_to_spawn`：扣血后回到裂缝（2026-09-27） | 战斗 |
-| `reach_guard_deals_leak_damage` | 布尔 | — | 走到守护点时是否扣 `leak_damage`。已定为 true | 战斗 |
-| `reach_guard_keeps_hp_and_phase` | 布尔 | — | 折返时是否保持当前血量和阶段。已定为 true | 战斗 |
+| `on_reach_guard` | 字符串 | — | 旧稿 `loop_to_spawn`（折返）。Q4 已定的是漏过扣 2 命。折返待 P4，不是已定 | 战斗 |
+| `reach_guard_deals_leak_damage` | 布尔 | — | Boss 漏过扣 2 命（Q4）。旧的 `leak_damage` 数字不当这条的扣命 | 战斗 |
+| `reach_guard_keeps_hp_and_phase` | 布尔 | — | 折返是旧稿，待 P4。不要把「保持血量和阶段」写成已定 | 战斗 |
 | `victory` | 字符串 | — | Boss 关胜利条件。已定为 `must_defeat` | 战斗 |
 | `phase_transition.clamp_hp_at_threshold` | 布尔 | — | 血量卡在阈值 | 战斗 |
 | `phase_transition.invulnerable_sec_stats_key` | 字符串 | — | 切阶段无敌秒数，指向 `boss_rules.phase_invuln_sec` | 数值 |
@@ -291,6 +292,7 @@
 | `id` | 字符串 | — | `st_<名>` |
 | `target_kind` | 字符串 | — | `enemy` / `unit`（角色） |
 | `effect.type` | 字符串 | — | `move_speed_mult` / `hard_stop` / `block_status` / `damage_taken_bucket_add` / `damage_over_time` / `hard_stop_store_damage` / `damage_immune` / `unit_disable` / `marker` / `mark_for_owner_trigger` |
+| `effect.tap_to_break` | 布尔 | — | 仅 `st_unit_frozen`。D-05 未拍。`tap_to_break_status` = `old_draft_not_user_decision`。false 只是旧稿，不是已定 |
 | `default_duration_sec` | 数字 | 秒 | 非冻结类状态在来源没指定时的时长；0 = 区域绑定 |
 | `zone_bound` | 布尔 | — | 是否跟随区域进出 |
 | `stacking` | 字符串 | — | `strongest_only` / `single_instance` / `single_instance_refcount_zones` |
@@ -348,7 +350,7 @@
 | `discovery.*` | — | 发现提示规则：存进存档、首次弹窗、之后小字节流 |
 | `id` | 字符串 | `syn_<名>` |
 | `draft_name` | 字符串 | 草案中文名，正式文本走 `name_key` |
-| `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案） |
+| `status` | 字符串 | `confirmed_framework`（框架）/ `draft`（草案）。`confirmed` 不再表示用户已定。符札引爆是 draft，D-06 未拍 |
 | `requires.characters_any` / `characters_all` | 数组 | 需要场上有其中任一 / 全部角色 |
 | `requires.freeze_source` | 布尔 | 需要某种冻结来源 |
 | `mvp_freeze_sources` | 数组 | MVP 冻结来源 ID。已定为 `buff_frost_frog`、`sc_boss_cirno_perfect_freeze`、`chr_cirno`（第一章第 2 关起的琪露诺本人） |
@@ -364,8 +366,9 @@
 
 | 字段 | 类型 | 含义 | 归属 |
 | --- | --- | --- | --- |
-| `offer_rules.*` | — | 三选一规则 | 战斗/系统 |
+| `offer_rules.*` | — | 三选一规则。`include_only_mvp` 为 true 时，MVP 只抽 `mvp` 为 true 的强化 | 战斗/系统 |
 | `id` | 字符串 | `buff_<名>` | 战斗 |
+| `mvp` | 布尔 | 旧稿筛选。D-06 未拍。主线不抽三选一（Q12）。true 不表示用户已定 | 战斗 |
 | `mvp_freeze_source` | 布尔 | 可选。为 true 时，该强化是 MVP 冻结来源之一 | 战斗 |
 | `draft_name` / `narrative_item` | 字符串 | 草案名 / 失物包装建议 | 文案/系统 |
 | `name_key` / `desc_key` | 字符串 | `buff.<名>.name` / `.desc`，待文案新增 | 文案 |

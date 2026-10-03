@@ -5,7 +5,9 @@
     "owner": "combat_design",
     "doc": "docs/design/combat/roguelite_buffs.md",
     "stats_file": "data/balance/combat/stats.json",
-    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "in_mainline": false,
+    "pool_note_zh": "Q12：主线没有三选一，这池子留给肉鸽。D-06 的 7 个强化不是用户已定。include_only_mvp 只是旧稿筛选。"
   },
   "offer_rules": {
     "trigger": "every_n_waves_cleared",
@@ -21,7 +23,8 @@
     "clear_on_level_end": true,
     "prologue_levels_without_offer": 2,
     "prologue_offer_starts_at_level": 3,
-    "skip_offer_on_final_wave": true
+    "skip_offer_on_final_wave": true,
+    "include_only_mvp": true
   },
   "buffs": [
     {
@@ -58,7 +61,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_split_shot.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_sharp_ofuda",
@@ -78,7 +82,8 @@
           "stats_key": "buffs.buff_sharp_ofuda.attack_pct_per_stack"
         }
       ],
-      "thresholds": []
+      "thresholds": [],
+      "mvp": true
     },
     {
       "id": "buff_rapid_fire",
@@ -112,7 +117,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_rapid_fire.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_frost_frog",
@@ -158,7 +164,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_frost_frog.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_crit_charm",
@@ -191,7 +198,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_crit_charm.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_great_barrier",
@@ -227,7 +235,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_great_barrier.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": false
     },
     {
       "id": "buff_spell_battery",
@@ -257,7 +266,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_spell_battery.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_piercing_star",
@@ -275,7 +285,8 @@
           "stats_key": "buffs.buff_piercing_star.pierce_per_stack"
         }
       ],
-      "thresholds": []
+      "thresholds": [],
+      "mvp": false
     },
     {
       "id": "buff_spirit_greed",
@@ -293,7 +304,8 @@
           "stats_key": "buffs.buff_spirit_greed.spirit_per_kill_per_stack"
         }
       ],
-      "thresholds": []
+      "thresholds": [],
+      "mvp": false
     },
     {
       "id": "buff_guard_mend",
@@ -324,7 +336,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_guard_mend.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": true
     },
     {
       "id": "buff_combo_fever",
@@ -344,7 +357,8 @@
           "cap_stats_key": "buffs.buff_combo_fever.cap_pct"
         }
       ],
-      "thresholds": []
+      "thresholds": [],
+      "mvp": false
     },
     {
       "id": "buff_gap_eye",
@@ -385,7 +399,8 @@
           "feedback_event": "buff_threshold_reached",
           "stacks_stats_key": "buffs.buff_gap_eye.transform_at_stacks"
         }
-      ]
+      ],
+      "mvp": false
     }
   ]
 }

@@ -6,7 +6,8 @@
     "doc": "docs/design/combat/characters.md",
     "stats_file": "data/balance/combat/stats.json",
     "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
-    "numbers_from_stats_zh": "射程 range_cells、攻击间隔 attack_interval_sec、费用、攻击、暴击、同名上限、满能量、美铃的 max_hp / block_count、普攻附带效果数值都在 stats.json 的 characters.<id>"
+    "numbers_from_stats_zh": "射程 range_cells、攻击间隔 attack_interval_sec、费用、攻击、暴击、同名上限、满能量、美铃的 max_hp / block_count、普攻附带效果数值都在 stats.json 的 characters.<id>",
+    "mechanism_note_zh": "机制细则待 P2。不要把站位、阻挡数、范围形状、技能回复方式或 can_crit 当成已定。同名只能一个（Q3）。没有局内升级（Q6）。符卡名挂在角色技能上（Q5）。美铃不是 MVP 角色。"
   },
   "characters": [
     {

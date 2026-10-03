@@ -5,7 +5,8 @@
     "owner": "combat_design",
     "doc": "docs/design/combat/core_rules.md",
     "stats_file": "data/balance/combat/stats.json",
-    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用"
+    "stats_owner_zh": "数值以数值策划 PR #8 生成的 stats.json 为唯一来源；本文件只写行为，数字用 *_stats_key 引用",
+    "superseded_note_zh": "2026-10-03：Q2 连续时间轴取代波次钟；Q3 同名只能一个；Q3b 点格子、点头像、选方向；Q5 删除共用符卡条；Q6 删除局内升级；Q12 主线无三选一；Q14 保底 0.05，通用暴击去掉。本文件里仍留着的 max_copies、upgrade、buff_offers、spell 能量、crit_roll 是旧字段，不当当前规则。"
   },
   "grid": {
     "columns": 7,
@@ -154,9 +155,12 @@
       "rule": "total_damage_unchanged",
       "per_shot_skill_coef": "1/count",
       "per_shot_armor": "armor/count",
-      "crit_roll": "per_shot",
-      "applies_to": "attack.count > 1"
-    }
+      "crit_roll": "removed",
+      "applies_to": "attack.count > 1",
+      "crit_note_zh": "通用暴击已去掉（Q14），不再每发掷暴击。"
+    },
+    "armor_floor_ratio": 0.05,
+    "armor_floor_note_zh": "Q14：保底 5%。不另写别的伤害数字。结算用浮点。"
   },
   "placement": {
     "place_delay_sec": 0.3,
