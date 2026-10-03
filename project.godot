@@ -10,7 +10,7 @@ config/description="东方Project 同人角色塔防。个人制作，免费，�
 config/version="0.1.0"
 run/main_scene="res://scenes/main/original_flow.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://assets/brand/reimu_app_icon.png"
 run/flush_stdout_on_print=true
 
 [autoload]
