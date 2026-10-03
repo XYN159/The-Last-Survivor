@@ -1,0 +1,102 @@
+
+## E1 规模
+enemy_database 种类: 2163 ；可移动且有生命的: 2111 ；图鉴条目: 1765 ；图鉴里 hideInHandbook=False: 1710
+每种敌人的等级档数(level 0..n): {1: 1923, 2: 217, 3: 23}
+
+## E2 按 levelType 的属性中位数（level 0，可移动单位）
+NORMAL {'levelType': 'NORMAL', 'n': 968, 'maxHp_P50': 4625.0, 'atk_P50': 320.0, 'def_P50': 120.0, 'magicResistance_P50': 10.0, 'moveSpeed_P50': 0.9, 'baseAttackTime_P50': 2.0, 'massLevel_P50': 1.0, 'hpRecoveryPerSec_P50': 0.0, 'maxHp_P10': 1000, 'maxHp_P90': 12000, 'def_P90': 450, 'lifePointReduce_P50': 1.0, 'fly_share': 0.108, 'ranged_share': 0.295, 'has_skill_share': 0.233, 'has_talent_share': 0.561, 'stunImmune_share': 0.075, 'silenceImmune_share': 0.214, 'sleepImmune_share': 0.071, 'frozenImmune_share': 0.072, 'levitateImmune_share': 0.068}
+ELITE {'levelType': 'ELITE', 'n': 841, 'maxHp_P50': 15000, 'atk_P50': 700, 'def_P50': 500, 'magicResistance_P50': 25.0, 'moveSpeed_P50': 0.7, 'baseAttackTime_P50': 3.2, 'massLevel_P50': 3, 'hpRecoveryPerSec_P50': 0.0, 'maxHp_P10': 7000, 'maxHp_P90': 40000, 'def_P90': 1200, 'lifePointReduce_P50': 1, 'fly_share': 0.063, 'ranged_share': 0.295, 'has_skill_share': 0.378, 'has_talent_share': 0.746, 'stunImmune_share': 0.065, 'silenceImmune_share': 0.337, 'sleepImmune_share': 0.062, 'frozenImmune_share': 0.056, 'levitateImmune_share': 0.081}
+BOSS {'levelType': 'BOSS', 'n': 302, 'maxHp_P50': 65000.0, 'atk_P50': 800.0, 'def_P50': 700.0, 'magicResistance_P50': 50.0, 'moveSpeed_P50': 0.5, 'baseAttackTime_P50': 4.0, 'massLevel_P50': 6.0, 'hpRecoveryPerSec_P50': 0.0, 'maxHp_P10': 25000, 'maxHp_P90': 350000, 'def_P90': 2000, 'lifePointReduce_P50': 2.0, 'fly_share': 0.053, 'ranged_share': 0.437, 'has_skill_share': 0.877, 'has_talent_share': 0.917, 'stunImmune_share': 0.487, 'silenceImmune_share': 0.768, 'sleepImmune_share': 0.52, 'frozenImmune_share': 0.47, 'levitateImmune_share': 0.536}
+applyWay 分布: {'MELEE': 991, 'NONE': 345, 'RANGED': 666, 'ALL': 109}
+massLevel 分布（重量，影响推拉）: {-2: 4, 0: 374, 1: 456, 2: 293, 3: 335, 4: 273, 5: 173, 6: 89, 7: 32, 8: 16, 9: 4, 10: 60, 13: 2}
+
+## E3 图鉴能力文本分类（关键词归类，一条能力可归多类；「法术攻击」另按图鉴 damageType 补；按图鉴 enemyLevel 统计敌人数）
+{'category': '多形态/阶段', 'NORMAL': 6, 'NORMAL_share': 0.008, 'ELITE': 7, 'ELITE_share': 0.01, 'BOSS': 82, 'BOSS_share': 0.347}
+{'category': '重生/复活', 'NORMAL': 13, 'NORMAL_share': 0.017, 'ELITE': 25, 'ELITE_share': 0.035, 'BOSS': 24, 'BOSS_share': 0.102}
+{'category': '飞行/悬浮', 'NORMAL': 79, 'NORMAL_share': 0.105, 'ELITE': 51, 'ELITE_share': 0.071, 'BOSS': 29, 'BOSS_share': 0.123}
+{'category': '阻挡规则', 'NORMAL': 91, 'NORMAL_share': 0.121, 'ELITE': 157, 'ELITE_share': 0.217, 'BOSS': 64, 'BOSS_share': 0.271}
+{'category': '隐匿/隐形', 'NORMAL': 42, 'NORMAL_share': 0.056, 'ELITE': 34, 'ELITE_share': 0.047, 'BOSS': 11, 'BOSS_share': 0.047}
+{'category': '召唤/生成/从场中出现', 'NORMAL': 63, 'NORMAL_share': 0.084, 'ELITE': 56, 'ELITE_share': 0.078, 'BOSS': 75, 'BOSS_share': 0.318}
+{'category': '死亡触发', 'NORMAL': 60, 'NORMAL_share': 0.08, 'ELITE': 62, 'ELITE_share': 0.086, 'BOSS': 32, 'BOSS_share': 0.136}
+{'category': '范围/多目标/远距', 'NORMAL': 154, 'NORMAL_share': 0.205, 'ELITE': 269, 'ELITE_share': 0.373, 'BOSS': 167, 'BOSS_share': 0.708}
+{'category': '控制我方（晕眩/冻结/沉默/束缚等）', 'NORMAL': 37, 'NORMAL_share': 0.049, 'ELITE': 61, 'ELITE_share': 0.084, 'BOSS': 82, 'BOSS_share': 0.347}
+{'category': '削弱我方属性', 'NORMAL': 13, 'NORMAL_share': 0.017, 'ELITE': 31, 'ELITE_share': 0.043, 'BOSS': 31, 'BOSS_share': 0.131}
+{'category': '元素损伤', 'NORMAL': 41, 'NORMAL_share': 0.055, 'ELITE': 72, 'ELITE_share': 0.1, 'BOSS': 32, 'BOSS_share': 0.136}
+{'category': '自身强化（狂暴/条件提升）', 'NORMAL': 124, 'NORMAL_share': 0.165, 'ELITE': 169, 'ELITE_share': 0.234, 'BOSS': 119, 'BOSS_share': 0.504}
+{'category': '减伤/护盾/无敌/抵抗', 'NORMAL': 73, 'NORMAL_share': 0.097, 'ELITE': 104, 'ELITE_share': 0.144, 'BOSS': 100, 'BOSS_share': 0.424}
+{'category': '支援友军（治疗/光环）', 'NORMAL': 15, 'NORMAL_share': 0.02, 'ELITE': 18, 'ELITE_share': 0.025, 'BOSS': 36, 'BOSS_share': 0.153}
+{'category': '移动规则（加速/冲刺/闪现/传送）', 'NORMAL': 52, 'NORMAL_share': 0.069, 'ELITE': 65, 'ELITE_share': 0.09, 'BOSS': 56, 'BOSS_share': 0.237}
+{'category': '仇恨/优先目标', 'NORMAL': 39, 'NORMAL_share': 0.052, 'ELITE': 37, 'ELITE_share': 0.051, 'BOSS': 16, 'BOSS_share': 0.068}
+{'category': '生命自然回复/流失', 'NORMAL': 22, 'NORMAL_share': 0.029, 'ELITE': 30, 'ELITE_share': 0.042, 'BOSS': 10, 'BOSS_share': 0.042}
+{'category': '不扣生命/不计歼灭', 'NORMAL': 28, 'NORMAL_share': 0.037, 'ELITE': 1, 'ELITE_share': 0.001, 'BOSS': 1, 'BOSS_share': 0.004}
+{'category': '法术攻击', 'NORMAL': 168, 'NORMAL_share': 0.223, 'ELITE': 230, 'ELITE_share': 0.319, 'BOSS': 131, 'BOSS_share': 0.555}
+{'category': '（无能力描述）', 'NORMAL': 107, 'NORMAL_share': 0.142, 'ELITE': 27, 'ELITE_share': 0.037, 'BOSS': 6, 'BOSS_share': 0.025}
+图鉴（未隐藏）各级别数: {'NORMAL': 752, 'ELITE': 722, 'BOSS': 236}
+未归类能力文本 Top15: [('初始为禁锢状态，禁锢状态下攻击速度降低', 8), ('无法移动', 7), ('密探', 7), ('平时不攻击，受到攻击时反击', 7), ('友好单位', 6), ('与我方处于同一直线上时进行直击：向目标方', 6), ('可以获取装备，同一时间仅可持有一件装备', 6), ('弱点：法术，受到一定对应伤害后倒地一段时', 6), ('使自身容易受到敌人的攻击', 5), ('弹开', 5), ('弱点：物理，受到一定对应伤害后倒地一段时', 5), ('可使用远程武器攻击与', 4), ('无法被攻击、消失时不会扣除目标生命', 4), ('不易被攻击', 4), ('出发一段时间后会自动撤退', 4)]
+每种敌人的能力条数中位数（不含形态标题）: {'NORMAL': 1.0, 'ELITE': 2.0, 'BOSS': 4.0}
+
+## E3b 首领的「阈值触发」写法（图鉴文本，未隐藏的 BOSS）
+  生命降到一定比例时变化（一半/降至/损失一定比例）: 52/236 (22%)
+  死亡/归零后重生或换阶段: 41/236 (17%)
+  带形态/阶段标题（TITLE）: 85/236
+  免疫类描述（免疫）: 19/236 (8%)
+  召唤/生成: 70/236 (30%)
+
+## E4 同族强化型：基础型 vs _2/_3（level 0 属性比的中位数）
+有 _2 强化型的族数: 681 ；有 _3 的: 36
+  _2/基础 maxHp 比中位数 = 1.29；比值为 1 的占 51/681
+  _2/基础 atk 比中位数 = 1.21；比值为 1 的占 82/681
+  _2/基础 def 比中位数 = 1.17；比值为 1 的占 215/681
+  _2/基础 moveSpeed 比中位数 = 1.0；比值为 1 的占 656/681
+  法抗差值中位数 = 0.0
+  levelType 变化 (基础→_2): {('NORMAL', 'NORMAL'): 351, ('ELITE', 'ELITE'): 307, ('BOSS', 'BOSS'): 19, ('BOSS', 'NORMAL'): 2, ('NORMAL', 'ELITE'): 1, ('BOSS', 'ELITE'): 1}
+  _2 名字里的常见字样: [('组长', 58), ('队长', 22), ('·α', 16), ('精英', 13), ('头目', 7), ('老手', 3), ('大师', 3), ('·β', 2)]
+  例 源石虫 → 源石虫·α {'maxHp': 1.909, 'atk': 1.423, 'def': None} 法抗+ 0.0
+  例 源石虫 → 源石虫·β {'maxHp': 2.818, 'atk': 1.846, 'def': None} 法抗+ 0.0
+  例 重装防御者 → 重装防御组长 {'maxHp': 1.667, 'atk': 1.0, 'def': 1.25} 法抗+ 0.0
+  例 重装防御者 → 重装五十夫长 {'maxHp': 6.667, 'atk': 1.667, 'def': 1.5} 法抗+ 0.0
+  例 弩手 → 弩手组长 {'maxHp': 1.357, 'atk': 1.292, 'def': 1.5} 法抗+ 0.0
+
+## E5 同一敌人的 level 1 vs level 0（关卡里 enemyDbRefs.level 用来做难度档）
+  level1/level0 maxHp: n=240 中位数=1.4 P10=1.0 P90=3.2
+  level1/level0 atk: n=230 中位数=1.25 P10=1.0 P90=2.16
+  level1/level0 def: n=202 中位数=1.0 P10=1.0 P90=1.5
+
+## E6 已拉取主线关卡中的敌人出场（按关卡顺序）
+主线 0~8 章（已拉取）出场的敌人种数: 123
+  main_0: 新敌人 8 种（NORMAL 8 / ELITE 0 / BOSS 0），新敌人生命中位数 1350.0，防御中位数 50.0
+  main_1: 新敌人 7 种（NORMAL 5 / ELITE 0 / BOSS 2），新敌人生命中位数 2000，防御中位数 85
+  main_2: 新敌人 15 种（NORMAL 11 / ELITE 3 / BOSS 1），新敌人生命中位数 2650，防御中位数 120
+  main_3: 新敌人 13 种（NORMAL 8 / ELITE 4 / BOSS 1），新敌人生命中位数 4000，防御中位数 100
+  main_4: 新敌人 9 种（NORMAL 4 / ELITE 4 / BOSS 1），新敌人生命中位数 6000，防御中位数 230
+  main_5: 新敌人 18 种（NORMAL 12 / ELITE 4 / BOSS 2），新敌人生命中位数 5500.0，防御中位数 150.0
+  main_6: 新敌人 16 种（NORMAL 7 / ELITE 7 / BOSS 2），新敌人生命中位数 9000.0，防御中位数 200.0
+  main_7: 新敌人 19 种（NORMAL 7 / ELITE 11 / BOSS 1），新敌人生命中位数 7000，防御中位数 400
+  main_8: 新敌人 18 种（NORMAL 7 / ELITE 6 / BOSS 5），新敌人生命中位数 12500.0，防御中位数 475.0
+出场关卡数最多的 10 种: [('士兵', 37), ('拾荒者', 29), ('妖怪', 24), ('猎狗pro', 23), ('暴徒', 22), ('萨卡兹大剑手', 19), ('持盾刀兵', 18), ('伐木机', 17), ('狂暴的猎狗pro', 17), ('源石虫·β', 17)]
+-> stats/enemy_main_usage.csv
+
+## E7 主线首领关：首领在整关里的分量（0~8 章已拉取，普通难度）
+     1-8 首领 弑君者 ×1：首领血量占全关 10%，单个首领血量 = 本关普通敌人中位血量 ×5.7
+    1-11 首领 W ×1：首领血量占全关 12%，单个首领血量 = 本关普通敌人中位血量 ×5.9
+    1-12 首领 W ×1：首领血量占全关 15%，单个首领血量 = 本关普通敌人中位血量 ×5.9
+    2-10 首领 碎骨 ×1：首领血量占全关 7%，单个首领血量 = 本关普通敌人中位血量 ×4.2
+     3-3 首领 弑君者 ×1：首领血量占全关 7%，单个首领血量 = 本关普通敌人中位血量 ×5.3
+     3-4 首领 萨卡兹百夫长 ×1：首领血量占全关 7%，单个首领血量 = 本关普通敌人中位血量 ×9.7
+     3-8 首领 碎骨 ×1：首领血量占全关 14%，单个首领血量 = 本关普通敌人中位血量 ×13.6
+     4-4 首领 弑君者 ×1：首领血量占全关 9%，单个首领血量 = 本关普通敌人中位血量 ×10.5
+    4-10 首领 霜星 ×1：首领血量占全关 14%，单个首领血量 = 本关普通敌人中位血量 ×9.1
+    5-10 首领 梅菲斯特|浮士德 ×2：首领血量占全关 19%，单个首领血量 = 本关普通敌人中位血量 ×14.8
+     6-7 首领 浮士德 ×1：首领血量占全关 13%，单个首领血量 = 本关普通敌人中位血量 ×14.8
+    6-16 首领 霜星，“冬痕” ×1：首领血量占全关 9%，单个首领血量 = 本关普通敌人中位血量 ×8.8
+    6-17 首领 霜星S ×1：首领血量占全关 100%，单个首领血量 = 本关普通敌人中位血量 ×None
+    7-18 首领 爱国者 ×1：首领血量占全关 20%，单个首领血量 = 本关普通敌人中位血量 ×13.6
+    R8-3 首领 斗士塔露拉 ×1：首领血量占全关 5%，单个首领血量 = 本关普通敌人中位血量 ×4.3
+    R8-5 首领 斗士塔露拉 ×1：首领血量占全关 4%，单个首领血量 = 本关普通敌人中位血量 ×4.5
+    R8-6 首领 斗士塔露拉 ×1：首领血量占全关 5%，单个首领血量 = 本关普通敌人中位血量 ×4.3
+    R8-8 首领 斗士塔露拉 ×1：首领血量占全关 9%，单个首领血量 = 本关普通敌人中位血量 ×3.8
+   R8-11 首领 “皇帝的利刃”|斗士塔露拉 ×3：首领血量占全关 31%，单个首领血量 = 本关普通敌人中位血量 ×15.2
+    M8-8 首领 梅菲斯特，“歌者” ×1：首领血量占全关 10%，单个首领血量 = 本关普通敌人中位血量 ×24.0
+   JT8-2 首领 塔露拉 ×1：首领血量占全关 21%，单个首领血量 = 本关普通敌人中位血量 ×15.2
+   JT8-3 首领 “不死的黑蛇” ×1：首领血量占全关 20%，单个首领血量 = 本关普通敌人中位血量 ×14.3
+首领血量占全关比例中位数: 0.11 ；首领/普通敌人血量倍数中位数: 9.1

@@ -1,0 +1,28 @@
+
+## V1 地图方向：routes 坐标的 row 与 mapData.map 数组行号的关系
+关卡文件 189 个；WALK 路线起点是否落在 tile_start 上: {'都对不上': 305, '翻转后对上': 2912, '直接对上|翻转后对上': 1671, '直接对上': 5}
+结论：只有把行号翻转（map[H-1-row]）才系统性对上 → routes/坐标的 row 0 在画面最下方，map 数组第 0 行在画面最上方。
+
+## V2 spType = 8 的技能
+可获得干员技能（1 级）spType×skillType: {('INCREASE_WITH_TIME', 'AUTO'): 137, ('INCREASE_WITH_TIME', 'MANUAL'): 569, ('INCREASE_WHEN_ATTACK', 'AUTO'): 74, ('INCREASE_WHEN_ATTACK', 'MANUAL'): 43, ('INCREASE_WHEN_TAKEN_DAMAGE', 'MANUAL'): 11, ('8', 'PASSIVE'): 49, ('INCREASE_WHEN_TAKEN_DAMAGE', 'AUTO'): 6}
+skill_table 全部 spType=8 的技能等级（含敌人/召唤物技能）spCost: {'spCost=0': 1740, 'spCost>0': 21}
+
+## V3 再部署 200 秒 vs 1★
+respawnTime=200 或 1★ 的角色: {('TIER_1', 200, '可获得'): 12}
+
+## V4 突袭 rune cbuff_cost_recovery 的 scale 与关卡说明
+  3-4 scale=1.5 突袭说明: 附加条件： 部署费用的自然回复速度降低三分之一
+  3-2 scale=1.5 突袭说明: 附加条件： 部署费用的自然回复速度降低三分之一
+  0-1 scale=99999.0 突袭说明: 附加条件： 部署费用不自然回复
+  0-6 scale=2.0 突袭说明: 附加条件： 部署费用的自然回复速度降至一半
+  1-7 scale=2.0 突袭说明: 附加条件： 部署费用的自然回复速度减半
+结论：scale 乘在回费间隔上（2.0=减半，1.5=降低三分之一，99999=不回费）。
+
+## V5 敌人「占用阻挡数」
+图鉴能力文本: {'不可被阻挡': 77, '只能被阻挡数≥3': 28, '只能被阻挡数≥2': 10, '图鉴写明占用阻挡数变化': 12, '只能被阻挡数≥4': 6}
+enemy_database level0 attributes.blockCnt 有定义的取值: {0: 4, 1: 1}
+talentBlackboard 里含 block_volume / block_cnt 的键: {'block_cnt': 28, 'block_volume': 12, 'tile_block_cnt': 4, 'normal_block_cnt': 4, 'max_damage_block_cnt': 1}
+结论：数据里没有按体型自动占多个阻挡位的通用字段；占用/阻挡规则都写在个别敌人的天赋里。
+
+## V6 波次控制字段（主线 obt/main）
+{('maxTimeWaitingForNextWave', -1.0): 177, ('postDelay', 0.0): 177}
