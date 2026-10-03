@@ -22,13 +22,14 @@
 | `enm_shade_phantom` | 遗忘之影（遗忘之影） |  | 70 | 1.4 | 0 | 6 | 1 | 2 | 0.7 | 0 | ch4_01 | placeholder |
 | `enm_shade_heap` | 堆积体（堆积体） |  | 800 | 0.5 | 8 | 40 | 5 | 12 | 2.5 | 25 | ch3_01 | placeholder |
 | `enm_shade_rift` | 结界之渣（结界之渣） |  | 500 | 0.8 | 15 | 30 | 3 | 8 | 2.0 | 20 | ch5_01 | placeholder |
-| `boss_cirno` | 第一章 Boss（琪露诺（决斗）） | boss_ch1 | 3000 | 0.4 | 5 | 100 | 10 | 0 | 0 | 50 | ch1_04 | partial |
-| `boss_ch2_sakuya_shade` | 第二章 Boss（女仆的残影） |  | 3000 | 0.4 | 5 | 100 | 10 | 0 | 0 | 50 | ch2_04 | partial |
-| `boss_ch3_mokou_shade` | 第三章 Boss（火鸟的残影） |  | 3000 | 0.4 | 5 | 100 | 10 | 0 | 0 | 50 | ch3_04 | partial |
-| `boss_ch4_sanae_shade` | 第四章 Boss（早苗的残影，暂名） |  | 3000 | 0.4 | 5 | 100 | 10 | 0 | 0 | 50 | ch4_04 | partial |
-| `boss_ch5_gatekeeper` | 第五章 Boss（结界裂缝的守门残影） |  | 3000 | 0.4 | 5 | 100 | 10 | 0 | 0 | 50 | ch5_04 | partial |
-| `boss_wasure` | 忘（最终 Boss）（忘） | boss.wasure | 4000 | 0.35 | 10 | 200 | 20 | 0 | 0 | 80 | final_01 | proposal |
+| `boss_cirno` | 第一章 Boss（琪露诺（决斗）） | boss_ch1 | 3000 | 0.4 | 5 | 100 | 2 | 0 | 0 | 50 | ch1_04 | partial |
+| `boss_ch2_sakuya_shade` | 第二章 Boss（女仆的残影） |  | 3000 | 0.4 | 5 | 100 | 2 | 0 | 0 | 50 | ch2_04 | partial |
+| `boss_ch3_mokou_shade` | 第三章 Boss（火鸟的残影） |  | 3000 | 0.4 | 5 | 100 | 2 | 0 | 0 | 50 | ch3_04 | partial |
+| `boss_ch4_sanae_shade` | 第四章 Boss（早苗的残影，暂名） |  | 3000 | 0.4 | 5 | 100 | 2 | 0 | 0 | 50 | ch4_04 | partial |
+| `boss_ch5_gatekeeper` | 第五章 Boss（结界裂缝的守门残影） |  | 3000 | 0.4 | 5 | 100 | 2 | 0 | 0 | 50 | ch5_04 | partial |
+| `boss_wasure` | 忘（最终 Boss）（忘） | boss.wasure | 4000 | 0.35 | 10 | 200 | 2 | 0 | 0 | 80 | final_01 | proposal |
 
+- 所有 Boss（含终章「忘」）漏过扣 2 命（Q4）。章 Boss 旧的 10、终章旧的 20 已被 Q4 取代。
 - 五个章 Boss 的血量仍是 3000，终章「忘」仍是 4000。这是旧锁，`balance_hold` =「待 P10」，不要改成 350–600。
 - 重甲残影护甲仍是 25，首次出现仍是 ch2_02。`balance_hold` =「待 P11」，不要推到第五章，也不要降低。
 - Boss 两阶段、我方冻结对 Boss 减半是「待 P4」，只写在 `battle_rules.csv` 的空参数 `boss_phase_count`、`boss_freeze_on_boss_mult`，没有写进这张敌人表。

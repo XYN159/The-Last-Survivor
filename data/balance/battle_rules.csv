@@ -54,7 +54,7 @@ caster_switch_clears_charge,1,flag,abolished,废止（Q5：共用符卡条废止
 barrier_vulnerability_add,0.2,ratio,proposal,灵梦结界里的敌人受到伤害 +20%（易伤桶）
 burn_tick_sec,0.5,sec,proposal,灼烧每 0.5 秒一跳，持续 3 秒，不叠加（PR #4）
 boss_enter_waves_from_end,10,wave,proposal,除 ch1_04 外，章节 Boss 仍按「总波数 − 10」入场。ch1_04 不套这条偏移，D-01 直接写成第 11 波
-boss_on_reach_guard,leak_then_loop,rule,proposal,Boss 走到守护点：扣它的漏过伤害（琪露诺 10）后回到起点再走（PR #4 loop_to_spawn）；最后一波刷完后要打倒 Boss 才算打完。待拍板
+boss_on_reach_guard,leak_then_loop,rule,proposal,Boss 走到守护点：扣它的漏过伤害（Q4：所有 Boss 扣 2 命；旧的章 Boss 10 和终章 20 已被 Q4 取代）后回到起点再走（PR #4 loop_to_spawn）；最后一波刷完后要打倒 Boss 才算打完。折返本身待 P4
 boss_phase_hp_ratios,0.66|0.33,ratio,proposal,Boss 在 66%、33% 血量换阶段（PR #4 bosses.json），换阶段时无敌 1.5 秒且停步
 boss_phase_invuln_sec,1.5,sec,proposal,同上（PR #4）
 ter_ice_speed_mult,1.5,ratio,confirmed,冰面 ter_ice：敌人（含 Boss）移速 ×1.5（PR #4 terrain.json；PR #5 最新分支也写 ×1.5）。ch1_04 冰面只在 Boss 第 3 阶段「钻石风暴」出现，铺在守护点前 10 格，直到她被击败
