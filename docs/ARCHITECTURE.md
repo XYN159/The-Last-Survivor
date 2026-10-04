@@ -97,13 +97,15 @@ Godot 工程根目录就是仓库根目录，入口文件是 `project.godot`。
 | `levels/prototype_01.json` | 旧的两路试验关。「开始」不再进这里，只留给测试 |
 | `level_difficulty.json` | 每关的开局灵力、每波加的灵力和血量倍率。`prologue_01` 这一行是照抄 #8 的临时行 |
 
-「开始」进的关卡是 `CombatCatalog.DEFAULT_LEVEL_ID`，现在是 `prologue_01`，地图、路线和波次读 `data/levels/prologue_01.json`。这份文件原样复制自关卡 PR #5，归关卡策划，程序不改它的内容。
+「开始」进的关卡是 `CombatCatalog.DEFAULT_LEVEL_ID`，现在是 `prologue_01`，地图和路线读 `data/levels/prologue_01.json`。这份文件复制自关卡 PR #5，归关卡策划；按制作人决定改过开局灵力、生命、三个格子的朝向，并加了 `timeline`（按绝对秒数出怪）。有 `timeline` 的关卡不读旧的 `waves`，也没有叫波按钮。
+
+第一关的战斗规则数字在 `data/balance/stage1_rules.json`（来源见 `docs/production/PRODUCER_DECISIONS.md`）：伤害保底、灵力回复和上限、部署费、同名上限、撤退返还和再放加价、再放冷却、漏怪扣命、各关生命，以及灵梦结界的大小。`CombatCatalog.tuning()` 把它们和上面的表合在一起交给 `BattleSim`，脚本里不再写这些数。
 
 `CombatCatalog` 负责读这些文件。`USE_OFFICIAL_TABLES` 现在是 `false`。把它改成 `true` 之前，#4（`rules.json`、`characters.json`、`enemies.json`、`feel.json`）、#5（`data/levels`）和 #8（`stats.json`、`level_difficulty.json`）都要先合并。只合了其中一份就打开，会缺文件。开关打开后，缺文件或缺关键字段会 `push_error`，不再悄悄用默认值。关键字段是攻击、费用、射程、间隔、血量、移速、护甲、漏怪伤害、血量倍率。
 
 玩家能看见的字在 `locale/game_zh.csv`，并登记在 `project.godot` 的 `locale/translations`。角色、敌人、关卡、HUD、按钮和结算都用文本 key。日志和 `push_warning` 不走这张表。
 
-一局怎么打在 `BattleSim` 里，不在场景脚本里。画面每帧问它要快照。无头试跑是 `scripts/battle/simulate_level.gd`。
+一局怎么打在 `BattleSim` 里，不在场景脚本里。画面每帧问它要快照。灵力和撤退冷却在 `BattleEconomy`，时间轴出怪在 `BattleTimeline`，朝向和结界格子在 `BattleFacing`，读关卡地图的小工具在 `BattleLevelReader`。无头试跑是 `scripts/battle/simulate_level.gd`。
 
 ## 动效
 
