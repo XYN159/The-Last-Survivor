@@ -12,6 +12,14 @@ const _RANGE_TEXTURE := preload("res://assets/art/prologue_01/petal_ward.png")
 const _SHOT_TEXTURE := preload("res://assets/art/prologue_01/spirit_shot.png")
 const _HIT_TEXTURE := preload("res://assets/art/prologue_01/hit_burst.png")
 const _ENEMY_TEXTURE := preload("res://assets/art/prologue_01/shade_enemy.png")
+const _SCREEN_VECTORS := {
+	"up": Vector2.UP,
+	"down": Vector2.DOWN,
+	"left": Vector2.LEFT,
+	"right": Vector2.RIGHT,
+}
+const _FACING_COLOR := Color("#FFD23F")
+const _BARRIER_COLOR := Color(1.0, 0.42, 0.5)
 
 var _columns: int = 7
 var _rows: int = 12
@@ -90,6 +98,37 @@ func guard_point() -> Vector2:
 	return points[points.size() - 1]
 
 
+## 屏幕上的上下左右 → 地图表里的朝向（BattleFacing）。棋盘是横着画的，
+## 地图的第 0 行在屏幕右边，所以两套方向不一样，按 logical_point 现算。
+func grid_facing(screen_dir: String) -> String:
+	var want: Vector2 = _SCREEN_VECTORS.get(screen_dir, Vector2.ZERO)
+	var best := ""
+	var best_dot := 0.5
+	for facing in BattleFacing.ALL:
+		var dot := _facing_screen_vector(facing).dot(want)
+		if dot > best_dot:
+			best = facing
+			best_dot = dot
+	return best
+
+
+## 地图表里的朝向 → 屏幕上的上下左右，给单位面板写「朝下」之类的字。
+func screen_facing(facing: String) -> String:
+	var ahead := _facing_screen_vector(facing)
+	for word_v in _SCREEN_VECTORS.keys():
+		if (_SCREEN_VECTORS[word_v] as Vector2).dot(ahead) > 0.5:
+			return str(word_v)
+	return ""
+
+
+func _facing_screen_vector(facing: String) -> Vector2:
+	var step := Vector2(BattleFacing.vector(facing))
+	if step == Vector2.ZERO:
+		return Vector2.ZERO
+	var middle := Vector2(float(_columns) * 0.5, float(_rows) * 0.5)
+	return (logical_point(middle + step) - logical_point(middle)).normalized()
+
+
 func push_events(events: Array) -> void:
 	for event_v in events:
 		if typeof(event_v) != TYPE_DICTIONARY:
@@ -166,12 +205,17 @@ func _draw_stage_markers() -> void:
 				)
 
 
+## 只打结界的角色一直画出结界格，选中时更亮；其他角色选中时画圆形射程。
 func _draw_range() -> void:
 	for unit_v in _state.get("units", []):
 		if typeof(unit_v) != TYPE_DICTIONARY:
 			continue
 		var unit: Dictionary = unit_v
-		if int(unit.get("id", -1)) != _selected_id:
+		var selected := int(unit.get("id", -1)) == _selected_id
+		if bool(unit.get("uses_barrier", false)):
+			_draw_barrier(unit.get("barrier_cells", []), 0.42 if selected else 0.2)
+			continue
+		if not selected:
 			continue
 		var center := cell_center(int(unit.col), int(unit.row))
 		var radius := float(unit.get("range", 1.0)) * 110.0
@@ -183,8 +227,40 @@ func _draw_range() -> void:
 		)
 
 
+func _draw_barrier(cells: Array, alpha: float) -> void:
+	var fill := Color(_BARRIER_COLOR, alpha)
+	var edge := Color(_BARRIER_COLOR, minf(alpha * 2.0, 1.0))
+	for cell_v in cells:
+		if typeof(cell_v) != TYPE_ARRAY or (cell_v as Array).size() < 2:
+			continue
+		var col := float(cell_v[0])
+		var row := float(cell_v[1])
+		var corners := PackedVector2Array(
+			[
+				logical_point(Vector2(col, row)),
+				logical_point(Vector2(col + 1.0, row)),
+				logical_point(Vector2(col + 1.0, row + 1.0)),
+				logical_point(Vector2(col, row + 1.0)),
+			]
+		)
+		draw_colored_polygon(corners, fill)
+		var outline := corners.duplicate()
+		outline.append(corners[0])
+		draw_polyline(outline, edge, 3.0)
+
+
+## 朝向用一条金色短线加箭头画在角色身上，指向她面朝的那一格。
+func _draw_facing(center: Vector2, facing: String) -> void:
+	var ahead := _facing_screen_vector(facing)
+	if ahead == Vector2.ZERO:
+		return
+	var tip := center + ahead * 78.0
+	draw_line(center + ahead * 34.0, tip, _FACING_COLOR, 7.0)
+	draw_line(tip, tip - ahead.rotated(0.6) * 22.0, _FACING_COLOR, 7.0)
+	draw_line(tip, tip - ahead.rotated(-0.6) * 22.0, _FACING_COLOR, 7.0)
+
+
 func _draw_units() -> void:
-	var font := get_theme_default_font()
 	for unit_v in _state.get("units", []):
 		if typeof(unit_v) != TYPE_DICTIONARY:
 			continue
@@ -200,17 +276,7 @@ func _draw_units() -> void:
 		if _motion != null:
 			stamp = float(_motion.call("unit_scale", int(unit.get("id", -1))))
 		draw_texture_rect(_REIMU_TEXTURE, unit_rect(center, stamp), false)
-		if font == null:
-			continue
-		draw_string(
-			font,
-			center + Vector2(-12, 58),
-			str(int(unit.get("level", 1))),
-			HORIZONTAL_ALIGNMENT_LEFT,
-			-1,
-			24,
-			Color("#FFF0DC"),
-		)
+		_draw_facing(center, str(unit.get("facing", "")))
 
 
 ## 灵梦小人的绘制范围。stamp 是盖章时的放大倍数，以小人中心为准缩放。

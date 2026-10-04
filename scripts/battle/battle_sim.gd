@@ -2,11 +2,15 @@ class_name BattleSim
 extends RefCounted
 
 ## 一局塔防的规则。不画画面。每调用一次 tick，逻辑时间前进 1/60 秒。
-## 放置、升级、出售和叫波在点击时立刻结算。移动、攻击和胜负只在 tick 里发生。
+## 放置、撤退和叫波在点击时立刻结算。移动、攻击、回灵和胜负只在 tick 里发生。
+## 调参读 data/balance/stage1_rules.json（经 CombatCatalog.tuning）：
+## 灵力每秒回一点、有上限；同名同时只能放一个；放置必须带朝向；不做局内升级；
+## 撤退返还本次费用的一半，再放加价、并要等一段时间；普通和 Boss 漏过扣的命不同。
+## 关卡有 timeline 时按绝对秒数出怪（BattleTimeline），开局就开始计时，没有布阵和叫波。
+## 全部出完、场上清空且生命还在就胜利。没有 timeline 的关卡照旧走下面的波次：
 ## 每一波都读 delay_sec。第 1 波写成 0，布阵结束就出怪，代码不再单独豁免。
 ## 出怪窗口用这一波的 duration_sec，从这一波开始时算。窗口结束再空一档，不等清场。
 ## 空档优先用下一波的 delay_sec；没有就用上一波的 next_wave_delay_sec，再没有用规则里的 4 秒。
-## 刷怪窗口里先不叫波。以后如果做，不能把这一波还没出的怪丢掉。
 ## 关卡写了 deploy_wait_for_player 时，布阵倒计时停住，放下第一个角色才开始走。
 
 const PHASE_DEPLOY := "deploy"
@@ -29,14 +33,15 @@ var _hits: Array = []
 var _events: Array = []
 var _unknown_attacks: Dictionary = {}
 var _dt: float = 1.0 / 60.0
-var _armor_floor: float = 0.2
-var _min_damage: int = 1
-var _spirit: int = 0
-var _spirit_per_wave: int = 0
+var _armor_floor: float = 0.0
+var _min_damage: int = 0
+var _economy := BattleEconomy.new()
 var _early_call_rate: float = 2.0
 var _early_start_rate: float = 1.0
-var _max_copies: int = 3
-var _max_level: int = 3
+var _max_copies: int = 1
+var _ordinary_leak: int = 1
+var _boss_leak: int = 1
+var _timeline: BattleTimeline = null
 var _spawn_state: float = 0.3
 var _knockback_cooldown: float = 0.25
 var _guard_hp: int = 20
@@ -50,7 +55,6 @@ var _phase_duration: float = 10.0
 var _window_left: float = 0.0
 var _wave_index: int = -1
 var _id_serial: int = 1
-var _pending_wave_bonus: bool = false
 var _deploy_waiting: bool = false
 
 
@@ -69,6 +73,7 @@ func tick() -> Array:
 		return []
 	_events = []
 	_hits = []
+	_economy.advance(_dt)
 	_advance_clock(_dt)
 	_advance_spawns(_dt)
 	_tick_status(_dt)
@@ -79,24 +84,16 @@ func tick() -> Array:
 	_apply_leaks()
 	_erase_dead()
 	_apply_outcome()
-	_apply_wave_bonus()
 	_clear_born()
 	return _events
 
 
-func place(character_id: String, col: int, row: int) -> bool:
-	if _terminal() or not _character_allowed(character_id):
-		return false
-	if _cell_mark(col, row) != "." or _unit_on(col, row) != null:
-		return false
-	if _copy_count(character_id) >= _copy_limit(character_id):
+## 朝向必须显式给出（BattleFacing.ALL 之一），没有朝向就放不下。
+func place(character_id: String, col: int, row: int, facing: String) -> bool:
+	if not BattleFacing.is_valid(facing) or not can_place(character_id, col, row):
 		return false
 	var data := _catalog.character(character_id)
-	if data.is_empty():
-		return false
 	var cost := _next_cost(character_id)
-	if _spirit < cost:
-		return false
 	var stats: Dictionary = data.get("stats", {})
 	var unit := BattleUnit.new()
 	unit.instance_id = _next_id()
@@ -104,46 +101,54 @@ func place(character_id: String, col: int, row: int) -> bool:
 	unit.display_name = str(data.get("display_name", character_id))
 	unit.col = col
 	unit.row = row
-	unit.level = 1
+	unit.facing = facing
 	unit.spent = cost
 	unit.base_attack = float(stats.get("base_attack", 0))
 	unit.level_attack_mult = stats.get("level_attack_mult", [1.0])
 	unit.crit_chance = float(stats.get("crit_chance", 0))
 	unit.crit_mult = float(stats.get("crit_mult", 1))
-	unit.refund_ratio = float(stats.get("sell_refund_ratio", 0.7))
-	unit.upgrade_costs = stats.get("upgrade_costs", [])
 	_set_base_attack(unit, data)
+	_set_barrier(unit)
 	unit.cooldown = float(unit.attack.get("initial_delay_sec", 0.3))
 	_units.append(unit)
-	_spirit -= cost
+	_economy.spend(cost)
 	_deploy_waiting = false
 	return true
 
 
-func upgrade(unit_id: int) -> bool:
+## 不看朝向的放置检查。界面在让玩家选朝向之前先问一次，放不下就不弹方向按钮。
+func can_place(character_id: String, col: int, row: int) -> bool:
+	if _terminal() or not _character_allowed(character_id):
+		return false
+	if _cell_mark(col, row) != "." or _unit_on(col, row) != null:
+		return false
+	if _copy_count(character_id) >= _copy_limit(character_id):
+		return false
+	if _economy.respawn_wait(character_id) > 0.0:
+		return false
+	if _catalog.character(character_id).is_empty():
+		return false
+	return _economy.spirit >= _next_cost(character_id)
+
+
+## 第一版战斗不做局内升级（制作人决定 P3），永远失败。
+func upgrade(_unit_id: int) -> bool:
+	return false
+
+
+## 撤退：返还本次部署费用的一半（向下取整），记一次撤退，并开始再部署等待。
+func retreat(unit_id: int) -> bool:
 	var unit := _find_unit(unit_id)
 	if unit == null or _terminal():
 		return false
-	var cost := _upgrade_cost(unit)
-	if cost < 0 or _spirit < cost:
-		return false
-	_spirit -= cost
-	unit.spent += cost
-	unit.level += 1
-	_rebuild_attack(unit)
-	return true
-
-
-func sell(unit_id: int) -> bool:
-	var unit := _find_unit(unit_id)
-	if unit == null or _terminal():
-		return false
-	_spirit += _sell_value(unit)
+	_economy.record_retreat(unit.character_id, unit.spent)
 	_units.erase(unit)
 	return true
 
 
 func call_next_wave() -> bool:
+	if _timeline != null:
+		return false
 	if _phase == PHASE_DEPLOY:
 		return _start_early(0, _early_start_rate)
 	if _phase == PHASE_INTERMISSION:
@@ -153,13 +158,17 @@ func call_next_wave() -> bool:
 
 func view_state() -> Dictionary:
 	return {
-		"spirit": _spirit,
+		"spirit": _economy.spirit,
+		"max_spirit": _economy.max_spirit,
 		"guard_hp": _guard_hp,
 		"guard_max_hp": _guard_max_hp,
 		"phase": _phase,
 		"phase_time_left": maxf(_phase_time, 0.0),
 		"phase_duration": _phase_duration,
 		"deploy_waiting": _deploy_waiting,
+		"timeline": _timeline != null,
+		"spawned": 0 if _timeline == null else _timeline.spawned(),
+		"spawn_total": 0 if _timeline == null else _timeline.total(),
 		"wave_index": _wave_index,
 		"wave_count": _waves.size(),
 		"outcome": _outcome(),
@@ -180,12 +189,12 @@ func _configure(catalog: CombatCatalog) -> void:
 	_dt = 1.0 / float(tune.logic_hz)
 	_armor_floor = float(tune.armor_floor_ratio)
 	_min_damage = int(tune.min_damage)
-	_spirit = int(tune.starting_spirit)
-	_spirit_per_wave = int(tune.spirit_per_wave)
+	_economy = BattleEconomy.from_tuning(tune)
 	_early_call_rate = float(tune.early_call_reward_per_sec)
 	_early_start_rate = float(tune.early_start_reward_per_sec)
 	_max_copies = int(tune.max_copies)
-	_max_level = int(tune.max_level)
+	_ordinary_leak = int(tune.ordinary_leak)
+	_boss_leak = int(tune.boss_leak)
 	_spawn_state = float(tune.spawn_state_sec)
 	_knockback_cooldown = float(tune.knockback_cooldown_sec)
 	_guard_max_hp = int(tune.guard_max_hp)
@@ -197,12 +206,33 @@ func _configure(catalog: CombatCatalog) -> void:
 	_phase_duration = _phase_time
 	_deploy_waiting = bool(tune.deploy_wait_for_player)
 	_wave_index = -1
-	_waves = _level.get("waves", [])
-	_read_paths()
+	_paths = BattleLevelReader.paths(_level)
 	_rng.seed = 1
+	_timeline = BattleTimeline.from_level(_level)
+	if _timeline == null:
+		_waves = _level.get("waves", [])
+		return
+	_waves = []
+	_phase = PHASE_SPAWNING
+	_phase_time = _timeline.time_to_next()
+	_phase_duration = _timeline.gap_to_next()
+	_deploy_waiting = false
+
+
+func _advance_timeline(dt: float) -> void:
+	for entry in _timeline.advance(dt):
+		_spawn_enemy(str(entry.enemy_id), str(entry.path_id), bool(entry.boss))
+	_phase_time = _timeline.time_to_next()
+	_phase_duration = _timeline.gap_to_next()
+	if _timeline.finished():
+		_phase = PHASE_FINAL
 
 
 func _advance_clock(dt: float) -> void:
+	if _timeline != null:
+		if _phase == PHASE_SPAWNING:
+			_advance_timeline(dt)
+		return
 	if _phase == PHASE_SPAWNING:
 		_window_left = maxf(0.0, _window_left - dt)
 		_phase_time = _window_left
@@ -221,7 +251,7 @@ func _advance_clock(dt: float) -> void:
 
 
 func _advance_spawns(dt: float) -> void:
-	if _phase != PHASE_SPAWNING:
+	if _timeline != null or _phase != PHASE_SPAWNING:
 		return
 	for job_v in _jobs:
 		_spawn_job(job_v, dt)
@@ -234,7 +264,7 @@ func _spawn_job(job_v: Variant, dt: float) -> void:
 		return
 	var job: Dictionary = job_v
 	while int(job.left) > 0 and float(job.wait) <= 0.0:
-		_spawn_enemy(str(job.enemy_id), str(job.path_id))
+		_spawn_enemy(str(job.enemy_id), str(job.path_id), bool(job.boss))
 		job.left = int(job.left) - 1
 		job.wait = float(job.wait) + float(job.interval)
 	if int(job.left) > 0:
@@ -297,7 +327,14 @@ func _step_shot(shot: BattleShot, dt: float) -> bool:
 	var reach := shot.hit_radius + target.hit_radius
 	if pos.distance_to(_enemy_xy(target)) > reach:
 		return true
-	_queue_hit(target, shot.attack_power, shot.knockback, shot.heavy)
+	var hit := {
+		"power": shot.attack_power,
+		"knockback": shot.knockback,
+		"heavy": shot.heavy,
+		"uses_barrier": shot.uses_barrier,
+		"barrier": shot.barrier,
+	}
+	_queue_hit(target, hit)
 	return false
 
 
@@ -309,7 +346,10 @@ func _resolve_hits() -> void:
 		var enemy: BattleEnemy = hit.enemy
 		if enemy.dead:
 			continue
-		var damage := DamageMath.resolve(float(hit.power), enemy.armor, _armor_floor, _min_damage)
+		var outside := bool(hit.uses_barrier) and not _in_barrier(hit.barrier, enemy)
+		var damage := 0
+		if not outside:
+			damage = DamageMath.resolve(float(hit.power), enemy.armor, _armor_floor, _min_damage)
 		var pos := _enemy_xy(enemy)
 		enemy.hp -= float(damage)
 		(
@@ -321,16 +361,18 @@ func _resolve_hits() -> void:
 					"y": pos.y,
 					"amount": damage,
 					"heavy": bool(hit.heavy),
+					"outside_barrier": outside,
 					"id": enemy.instance_id,
 				}
 			)
 		)
 		if enemy.hp > 0.0:
-			_apply_knockback(enemy, float(hit.knockback))
+			if not outside:
+				_apply_knockback(enemy, float(hit.knockback))
 			continue
 		enemy.hp = 0.0
 		enemy.dead = true
-		_spirit += enemy.spirit_drop
+		_economy.gain(enemy.spirit_drop)
 		(
 			_events
 			. append(
@@ -375,16 +417,6 @@ func _apply_outcome() -> void:
 	_events.append({"type": "victory"})
 
 
-func _apply_wave_bonus() -> void:
-	if not _pending_wave_bonus:
-		return
-	_pending_wave_bonus = false
-	if _guard_hp <= 0 or _spirit_per_wave <= 0:
-		return
-	_spirit += _spirit_per_wave
-	_events.append({"type": "spirit", "amount": _spirit_per_wave})
-
-
 func _clear_born() -> void:
 	for enemy in _enemies:
 		enemy.born = false
@@ -407,8 +439,8 @@ func _begin_wave(index: int) -> void:
 	_wave_index = index
 	_phase = PHASE_SPAWNING
 	_jobs.clear()
-	var wave := _wave_dict(index)
-	_window_left = _wave_duration(wave)
+	var wave := BattleLevelReader.wave_at(_waves, index)
+	_window_left = BattleLevelReader.wave_duration(wave, _spawn_window_sec)
 	_phase_time = _window_left
 	_phase_duration = _window_left
 	for group_v in wave.get("spawns", []):
@@ -416,7 +448,6 @@ func _begin_wave(index: int) -> void:
 
 
 func _close_spawn_window() -> void:
-	_pending_wave_bonus = true
 	_jobs.clear()
 	if _wave_index >= _waves.size() - 1:
 		_phase = PHASE_FINAL
@@ -443,6 +474,7 @@ func _add_job(group_v: Variant) -> void:
 				"left": CombatCatalog.read_int(group.get("count", 0), 0),
 				"interval": maxf(float(group.get("interval_sec", 1.0)), 0.01),
 				"wait": maxf(float(group.get("delay_sec", 0.0)), 0.0),
+				"boss": bool(group.get("boss", false)),
 			}
 		)
 	)
@@ -451,8 +483,7 @@ func _add_job(group_v: Variant) -> void:
 func _start_early(index: int, rate: float) -> bool:
 	if index < 0 or index >= _waves.size():
 		return false
-	var reward := floori(maxf(_phase_time, 0.0) * rate)
-	_spirit += reward
+	_economy.gain(floori(maxf(_phase_time, 0.0) * rate))
 	if _phase == PHASE_DEPLOY:
 		_release_wave(index)
 	else:
@@ -497,6 +528,8 @@ func _fire_homing(unit: BattleUnit, primary: BattleEnemy) -> void:
 		shot.attack_power = float(rolled.power)
 		shot.knockback = float(rolled.knockback)
 		shot.heavy = bool(rolled.heavy)
+		shot.uses_barrier = unit.uses_barrier
+		shot.barrier = unit.barrier
 		_shots.append(shot)
 
 
@@ -506,7 +539,9 @@ func _fire_line(unit: BattleUnit, primary: BattleEnemy) -> void:
 	var reach := float(unit.attack.get("range_cells", 0.0))
 	for enemy in _line_targets(unit, primary, origin, direction, reach):
 		var rolled := _roll_shot(unit)
-		_queue_hit(enemy, float(rolled.power), float(rolled.knockback), bool(rolled.heavy))
+		rolled["uses_barrier"] = unit.uses_barrier
+		rolled["barrier"] = unit.barrier
+		_queue_hit(enemy, rolled)
 	var tip := origin + direction * reach
 	(
 		_events
@@ -590,6 +625,8 @@ func _retarget(shot: BattleShot) -> BattleEnemy:
 	for enemy in _enemies:
 		if not _targetable(enemy):
 			continue
+		if shot.uses_barrier and not _in_barrier(shot.barrier, enemy):
+			continue
 		var dist := origin.distance_to(_enemy_xy(enemy))
 		if dist > shot.retarget_radius:
 			continue
@@ -601,8 +638,14 @@ func _retarget(shot: BattleShot) -> BattleEnemy:
 	return best
 
 
-func _queue_hit(enemy: BattleEnemy, power: float, knockback: float, heavy: bool) -> void:
-	_hits.append({"enemy": enemy, "power": power, "knockback": knockback, "heavy": heavy})
+## hit 里带 power、knockback、heavy；发射者只打结界时再带 uses_barrier 和 barrier。
+func _queue_hit(enemy: BattleEnemy, hit: Dictionary) -> void:
+	var queued := hit.duplicate()
+	queued["enemy"] = enemy
+	if not queued.has("uses_barrier"):
+		queued["uses_barrier"] = false
+		queued["barrier"] = {}
+	_hits.append(queued)
 
 
 func _apply_knockback(enemy: BattleEnemy, amount: float) -> void:
@@ -627,7 +670,7 @@ func _steer(shot: BattleShot, aim: Vector2, dt: float) -> void:
 	shot.direction = shot.direction.rotated(delta).normalized()
 
 
-func _spawn_enemy(enemy_id: String, path_id: String) -> void:
+func _spawn_enemy(enemy_id: String, path_id: String, boss: bool) -> void:
 	var data := _catalog.enemy(enemy_id)
 	if data.is_empty() or not _paths.has(path_id):
 		push_warning("刷怪失败：%s / %s" % [enemy_id, path_id])
@@ -645,43 +688,13 @@ func _spawn_enemy(enemy_id: String, path_id: String) -> void:
 	enemy.armor = float(stats.get("armor", 0))
 	enemy.speed = float(stats.get("move_speed_cells_per_sec", 1))
 	enemy.spirit_drop = CombatCatalog.read_int(stats.get("spirit_drop", 0), 0)
-	enemy.leak_damage = maxi(CombatCatalog.read_int(stats.get("leak_damage", 1), 1), 0)
+	enemy.boss = boss or bool(data.get("is_boss", false)) or enemy_id.begins_with("boss_")
+	enemy.leak_damage = _boss_leak if enemy.boss else _ordinary_leak
 	enemy.hit_radius = float(data.get("hit_radius_cells", 0.3))
 	enemy.knockback_resist = float(data.get("knockback_resist", 0.0))
 	enemy.spawn_left = _spawn_state
 	enemy.born = true
 	_enemies.append(enemy)
-
-
-func _read_paths() -> void:
-	_paths = {}
-	var map: Dictionary = _level.get("map", {})
-	for path_v in map.get("paths", []):
-		if typeof(path_v) != TYPE_DICTIONARY:
-			continue
-		var path: Dictionary = path_v
-		var centers: Array = []
-		for point_v in path.get("cells", []):
-			if typeof(point_v) != TYPE_ARRAY or (point_v as Array).size() < 2:
-				continue
-			var point: Array = point_v
-			centers.append(Vector2(float(point[0]) + 0.5, float(point[1]) + 0.5))
-		var path_id := str(path.get("path_id", ""))
-		if path_id != "" and centers.size() >= 2:
-			_paths[path_id] = centers
-
-
-func _rebuild_attack(unit: BattleUnit) -> void:
-	var data := _catalog.character(unit.character_id)
-	_set_base_attack(unit, data)
-	for level_v in data.get("levels", []):
-		if typeof(level_v) != TYPE_DICTIONARY:
-			continue
-		var level_def: Dictionary = level_v
-		if CombatCatalog.read_int(level_def.get("level", 1), 1) > unit.level:
-			continue
-		for mod_v in level_def.get("behavior_mods", []):
-			_apply_mod(unit, mod_v)
 
 
 func _set_base_attack(unit: BattleUnit, data: Dictionary) -> void:
@@ -692,16 +705,28 @@ func _set_base_attack(unit: BattleUnit, data: Dictionary) -> void:
 	unit.attack = (attack_v as Dictionary).duplicate(true)
 
 
-func _apply_mod(unit: BattleUnit, mod_v: Variant) -> void:
-	if typeof(mod_v) != TYPE_DICTIONARY:
+## 结界只留地面格（路线、入口、守护点），草地和障碍不算。
+func _set_barrier(unit: BattleUnit) -> void:
+	var size := _catalog.barrier(unit.character_id)
+	unit.uses_barrier = not size.is_empty()
+	unit.barrier = {}
+	if not unit.uses_barrier:
 		return
-	var mod: Dictionary = mod_v
-	if str(mod.get("op", "")) != "set":
-		return
-	var path := str(mod.get("path", ""))
-	if not path.begins_with("attack."):
-		return
-	unit.attack[path.substr(7)] = mod.value
+	var area := BattleFacing.area(
+		unit.col, unit.row, unit.facing, int(size.forward), int(size.side)
+	)
+	for cell in area:
+		if _is_ground(cell.x, cell.y):
+			unit.barrier[cell] = true
+
+
+func _is_ground(col: int, row: int) -> bool:
+	return ["P", "S", "G"].has(_cell_mark(col, row))
+
+
+func _in_barrier(barrier: Dictionary, enemy: BattleEnemy) -> bool:
+	var pos := _enemy_xy(enemy)
+	return barrier.has(Vector2i(floori(pos.x), floori(pos.y)))
 
 
 func _enemy_xy(enemy: BattleEnemy) -> Vector2:
@@ -730,6 +755,8 @@ func _aim_direction(origin: Vector2, aim: Vector2) -> Vector2:
 
 
 func _in_range(unit: BattleUnit, enemy: BattleEnemy) -> bool:
+	if unit.uses_barrier:
+		return _in_barrier(unit.barrier, enemy)
 	var reach := float(unit.attack.get("range_cells", 0.0))
 	return _unit_center(unit).distance_to(_enemy_xy(enemy)) <= reach
 
@@ -746,11 +773,7 @@ func _live_target(target_id: int) -> BattleEnemy:
 
 
 func _next_cost(character_id: String) -> int:
-	var stats: Dictionary = _catalog.character(character_id).get("stats", {})
-	var cost := CombatCatalog.read_int(stats.get("cost", 0), 0)
-	var ratio := CombatCatalog.read_float(stats.get("copy_cost_increase_ratio", 0.0), 0.0)
-	var placed := _copy_count(character_id)
-	return roundi(float(cost) * (1.0 + ratio * float(placed)))
+	return _economy.deploy_cost(character_id, _catalog.deploy_cost(character_id))
 
 
 func _copy_limit(character_id: String) -> int:
@@ -758,19 +781,6 @@ func _copy_limit(character_id: String) -> int:
 	if stats.has("max_copies"):
 		return maxi(CombatCatalog.read_int(stats.get("max_copies"), _max_copies), 0)
 	return _max_copies
-
-
-func _upgrade_cost(unit: BattleUnit) -> int:
-	if unit.level >= _max_level:
-		return -1
-	var index := unit.level - 1
-	if index < 0 or index >= unit.upgrade_costs.size():
-		return -1
-	return CombatCatalog.read_int(unit.upgrade_costs[index], 0)
-
-
-func _sell_value(unit: BattleUnit) -> int:
-	return int(floor(float(unit.spent) * unit.refund_ratio + 0.000001))
 
 
 func _copy_count(character_id: String) -> int:
@@ -782,14 +792,7 @@ func _copy_count(character_id: String) -> int:
 
 
 func _cell_mark(col: int, row: int) -> String:
-	var map: Dictionary = _level.get("map", {})
-	var cells: Array = map.get("cells", [])
-	if row < 0 or row >= cells.size():
-		return ""
-	var line := str(cells[row])
-	if col < 0 or col >= line.length():
-		return ""
-	return line.substr(col, 1)
+	return BattleLevelReader.cell_mark(_level, col, row)
 
 
 func _character_allowed(character_id: String) -> bool:
@@ -800,37 +803,13 @@ func _character_allowed(character_id: String) -> bool:
 	return false
 
 
-func _wave_dict(index: int) -> Dictionary:
-	if index < 0 or index >= _waves.size():
-		return {}
-	var wave_v: Variant = _waves[index]
-	if typeof(wave_v) != TYPE_DICTIONARY:
-		return {}
-	return wave_v
-
-
-func _wave_duration(wave: Dictionary) -> float:
-	if wave.has("duration_sec"):
-		return maxf(CombatCatalog.read_float(wave.get("duration_sec"), 0.0), 0.0)
-	return _spawn_window_sec
-
-
 func _lead_in(index: int) -> float:
-	if index < 0 or index >= _waves.size():
-		return _intermission_sec
-	var wave := _wave_dict(index)
-	if wave.has("delay_sec"):
-		return maxf(CombatCatalog.read_float(wave.get("delay_sec"), 0.0), 0.0)
-	if index > 0:
-		var previous := _wave_dict(index - 1)
-		if previous.has("next_wave_delay_sec"):
-			return maxf(CombatCatalog.read_float(previous.get("next_wave_delay_sec"), 0.0), 0.0)
-	if index == 0:
-		return 0.0
-	return _intermission_sec
+	return BattleLevelReader.lead_in(_waves, index, _intermission_sec)
 
 
 func _call_allowed() -> bool:
+	if _timeline != null:
+		return false
 	if _phase == PHASE_DEPLOY:
 		return true
 	if _phase != PHASE_INTERMISSION:
@@ -901,7 +880,10 @@ func _roster() -> Array:
 			continue
 		var cost := _next_cost(id)
 		var copies := _copy_count(id)
-		var affordable := copies < _copy_limit(id) and _spirit >= cost and not _terminal()
+		var wait := _economy.respawn_wait(id)
+		var affordable := (
+			copies < _copy_limit(id) and _economy.spirit >= cost and wait <= 0.0 and not _terminal()
+		)
 		(
 			result
 			. append(
@@ -910,6 +892,8 @@ func _roster() -> Array:
 					"display_name": str(data.get("display_name", id)),
 					"cost": cost,
 					"copies": copies,
+					"respawn_left": wait,
+					"retreats": _economy.retreats(id),
 					"affordable": affordable,
 				}
 			)
@@ -920,7 +904,10 @@ func _roster() -> Array:
 func _unit_snapshots() -> Array:
 	var result: Array = []
 	for unit in _units:
-		var cost := _upgrade_cost(unit)
+		var barrier_cells: Array = []
+		for cell_v in unit.barrier.keys():
+			var cell: Vector2i = cell_v
+			barrier_cells.append([cell.x, cell.y])
 		(
 			result
 			. append(
@@ -930,11 +917,12 @@ func _unit_snapshots() -> Array:
 					"display_name": unit.display_name,
 					"col": unit.col,
 					"row": unit.row,
+					"facing": unit.facing,
 					"level": unit.level,
 					"range": float(unit.attack.get("range_cells", 1.0)),
-					"upgrade_cost": cost,
-					"sell_refund": _sell_value(unit),
-					"can_upgrade": cost >= 0 and _spirit >= cost,
+					"uses_barrier": unit.uses_barrier,
+					"barrier_cells": barrier_cells,
+					"retreat_refund": _economy.refund(unit.spent),
 				}
 			)
 		)

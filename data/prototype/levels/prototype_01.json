@@ -173,8 +173,8 @@
   "deploy_wait_for_player": false,
   "intermission_sec": 4,
   "suggested_opening": [
-    {"character_id": "chr_reimu", "col": 2, "row": 4},
-    {"character_id": "chr_marisa", "col": 4, "row": 4}
+    {"character_id": "chr_reimu", "col": 2, "row": 4, "facing": "left"},
+    {"character_id": "chr_marisa", "col": 4, "row": 4, "facing": "right"}
   ],
   "placeholders": {
     "_placeholder": true,

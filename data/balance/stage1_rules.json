@@ -13,6 +13,12 @@
   "boss_leak": 2,
   "boss_enter_ratio": 0.3,
   "slow_cap": 0.7,
+  "barrier": {
+    "chr_reimu": {
+      "forward_cells": 2,
+      "side_cells": 1
+    }
+  },
   "deploy_cost": {
     "chr_reimu": 16,
     "chr_marisa": 24,

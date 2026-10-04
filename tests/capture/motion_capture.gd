@@ -48,16 +48,21 @@ func _capture_win() -> void:
 	screen.call("advance", 0.2)
 	await _save("01-entry")
 	screen.call("finish_entry")
+	_wait_for_spirit(board, "chr_reimu", 2, 4)
 	board.call("_on_cell_pressed", 2, 4)
 	_step_board(board, 0.06)
 	await _save("02-select")
 	board.call("_on_character_pressed", "chr_reimu")
+	_step_board(board, 0.06)
+	await _save("02b-facing")
+	board.call("_on_facing_pressed", "down")
 	_step_board(board, 0.36)
 	await _save("03-place")
-	board.call("_on_cell_pressed", 2, 1)
-	board.call("_on_character_pressed", "chr_reimu")
+	board.call("_on_cell_pressed", 2, 4)
+	_step_board(board, 0.06)
+	await _save("03b-retreat")
+	board.call("_on_close_unit_pressed")
 	_step_board(board, 1.0)
-	board.call("_on_call_pressed")
 	_tick_until(board, "death", 0.3)
 	await _save("04-hit")
 	_tick_to_outcome(board)
@@ -72,7 +77,6 @@ func _capture_win() -> void:
 func _capture_loss() -> void:
 	var board := _open_battle()
 	board.get_node("%ScreenMotion").call("finish_entry")
-	board.call("_on_call_pressed")
 	_tick_until(board, "leak", 0.12)
 	await _save("07-leak")
 	_tick_to_outcome(board)
@@ -96,6 +100,16 @@ func _step_board(board: Node, seconds: float) -> void:
 	for _step in steps:
 		board.call("_advance_board_fx", STEP)
 		board.get_node("%ScreenMotion").call("advance", STEP)
+	board.call("_refresh")
+
+
+## 开局灵力不够放灵梦，先跑规则等灵力回上来。
+func _wait_for_spirit(board: Node, character_id: String, col: int, row: int) -> void:
+	var sim: BattleSim = board.get("_sim")
+	var guard := 0
+	while not sim.can_place(character_id, col, row) and guard < 6000:
+		board.call("_note_events", sim.tick())
+		guard += 1
 	board.call("_refresh")
 
 

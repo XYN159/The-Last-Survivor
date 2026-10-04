@@ -30,8 +30,8 @@
     "enm_shade_basic"
   ],
   "params": {
-    "starting_spirit_power": 150,
-    "lives": 20,
+    "starting_spirit_power": 10,
+    "lives": 10,
     "available_character_ids": [
       "chr_reimu"
     ]
@@ -141,6 +141,7 @@
         "id": "slot.early_left",
         "col": 2,
         "row": 1,
+        "facing": "right",
         "label": "靠入口",
         "why": "能更早开火。雾还没出现，但射程如果只有两三格，就打不到后半段直路。适合先看清攻击范围，不适合当唯一的输出点。"
       },
@@ -148,6 +149,7 @@
         "id": "slot.mid_left",
         "col": 2,
         "row": 4,
+        "facing": "right",
         "label": "直路中段左",
         "why": "贴着整条直路的中段。灵梦放这里，上下都能打到，是这一关推荐的第一格。"
       },
@@ -155,11 +157,58 @@
         "id": "slot.mid_right",
         "col": 4,
         "row": 4,
+        "facing": "left",
         "label": "直路中段右",
         "why": "和左边那格一样贴着直路，左右没有优劣。教玩家：预定槽位往往是成对的，不是只有唯一答案。"
       }
     ]
   },
+  "timeline": [
+    {
+      "at_sec": 8,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    },
+    {
+      "at_sec": 14,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    },
+    {
+      "at_sec": 20,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    },
+    {
+      "at_sec": 28,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    },
+    {
+      "at_sec": 36,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    },
+    {
+      "at_sec": 46,
+      "enemy_id": "enm_shade_basic",
+      "path_id": "path.main",
+      "entrance_id": "entrance.north"
+    }
+  ],
+  "suggested_opening": [
+    {
+      "character_id": "chr_reimu",
+      "col": 2,
+      "row": 4,
+      "facing": "right"
+    }
+  ],
   "waves": [
     {
       "id": "w01",
@@ -228,14 +277,14 @@
       "数值策划",
       "战斗策划"
     ],
-    "note": "开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
+    "note": "2026-10-04 起按 docs/production/PRODUCER_DECISIONS.md：开局灵力 10、每秒 +1、上限 99，生命 10，不再按波次加灵力。按 timeline 的绝对秒数出 6 只小残影，waves 只留作旧记录，模拟器不再读取。suggested_opening 只给无头试跑和截图用。以下是旧说明：开局灵力 150、每活过一波加 20、生命 20。系数、每波预算、全关合计和首通剩余生命以 PR #8 的 data/balance/level_difficulty.json 为准，字段是 threat_budget_coef、wave_threat_budgets、threat_budget_total、target_lives_first_clear。本 PR 不附带这份文件，要在 #8 之后合并。敌人的生命和移速不写在关卡里。地图字符、地形 id 和首领格子集合跟战斗策划的读图约定对齐。"
   },
   "spell_energy_start": 0,
   "spell_charge_mult": 2.0,
   "deploy_time_sec": 10,
   "deploy_wait_for_player": true,
   "intermission_sec": 4,
-  "combat_timing_note": "序章的布阵倒计时停在 10 秒，玩家放下第一个角色后才开始倒数。倒计时结束或点「开始」后，第一只立即出场。充能倍率沿用战斗规则，不在关卡里另写数字。",
+  "combat_timing_note": "有 timeline 时，进战斗就开始计时，没有布阵倒计时和「出击」按钮，第一只在第 8 秒出场。deploy_time_sec、deploy_wait_for_player、intermission_sec 只在没有 timeline 时生效。充能倍率沿用战斗规则，不在关卡里另写数字。",
   "unlock_character_ids": [
     "chr_marisa"
   ]
