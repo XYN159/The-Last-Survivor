@@ -33,7 +33,16 @@ func _initialize() -> void:
 func _run() -> void:
 	_frame0 = Engine.get_frames_drawn()
 	_note("片段 %s" % _segment)
-	_note("视口 %s，渲染 %s" % [str(root.size), RenderingServer.get_current_rendering_method()])
+	_note(
+		(
+			"视口 %s，窗口 %s，渲染 %s"
+			% [
+				str(root.size),
+				str(DisplayServer.window_get_size()),
+				RenderingServer.get_current_rendering_method(),
+			]
+		)
+	)
 	match _segment:
 		"test":
 			await _run_test()
@@ -205,34 +214,62 @@ func _run_r6(speed: int) -> void:
 	board.set_process(false)
 	_farm(board, GOAL_BRAWL)
 	_roll(board)
-	_mark("混战开始。%s" % _summary(board))
+	_mark("第 3 波开始前。三位都在，最后一次升级还差灵力。%s" % _summary(board))
 	if speed == 2:
 		await _tap_speed(board, 2)
 	else:
 		_mark("保持 ×1")
-	await _wait(1.0)
-	var state := _state(board)
-	if str(state.phase) == BattleSim.PHASE_INTERMISSION and int(state.wave_index) >= 1:
-		_mark("提前开始第 3 波。波与波之间界面没有叫波按钮，这一下走战斗规则里的叫波")
+	await _wait(0.6)
+	if str(_state(board).phase) == BattleSim.PHASE_INTERMISSION:
+		_mark("开始第 3 波。间歇界面没有叫波按钮，这一下走战斗规则里的叫波")
 		_sim(board).call_next_wave()
-	var frames := 0
+	var upgraded := _max_level(_state(board)) >= 3
 	var half := false
-	while frames < FPS * 24:
+	var volleys := 0
+	var previous := _cooldown(board, CELL_FIRST)
+	var guard := 0
+	while guard < FPS * 24:
 		await process_frame
-		frames += 1
-		state = _state(board)
+		guard += 1
+		if not upgraded and _ready_for_lv3(_state(board)):
+			upgraded = await _upgrade_during_brawl(board)
+			previous = _cooldown(board, CELL_FIRST)
+		var current := _cooldown(board, CELL_FIRST)
+		if upgraded and previous >= 0.0 and current > previous + 0.4:
+			volleys += 1
+			_mark("混战里第 %d 轮三张符札" % volleys)
+		previous = current
+		var state := _state(board)
 		var spawning := str(state.phase) == BattleSim.PHASE_SPAWNING
 		if spawning and int(state.wave_index) >= 2 and _wave_half(state) and not half:
 			half = true
 			_mark("第 3 波过半")
-		if half and frames >= FPS * 8:
+		if half and volleys >= 2:
 			break
 		if str(state.outcome) != "":
 			_mark("混战在录完前分出了胜负")
 			break
 	if not half:
-		_mark("这段里第 3 波还没过半，画面停在：%s" % _summary(board))
+		_mark("这段里第 3 波还没过半。%s" % _summary(board))
+	if volleys < 1:
+		_mark("混战里没数到三张符札。%s" % _summary(board))
 	await _wait(1.0)
+
+
+func _ready_for_lv3(state: Dictionary) -> bool:
+	var unit := _unit_at(state, CELL_FIRST)
+	if unit.is_empty():
+		return false
+	return int(unit.get("level", 1)) == 2 and bool(unit.get("can_upgrade", false))
+
+
+func _upgrade_during_brawl(board: Node) -> bool:
+	await _tap_unit(board, CELL_FIRST)
+	await _wait(0.2)
+	var upgraded: bool = await _tap_upgrade(board, "混战中灵力够了，把第一位点成 Lv3")
+	await _wait(0.15)
+	await _tap_close(board)
+	return upgraded
 
 
 func _run_r7() -> void:
@@ -361,10 +398,9 @@ func _goal_met(board: Node, goal: String) -> bool:
 		met = units == 2 and spirit >= _reimu_cost(state)
 	elif goal == GOAL_UPGRADE and units >= 2 and spirit >= _upgrade_total(board, CELL_FIRST):
 		met = _nearest_distance(state, _closest_cell(state)) <= 2.2
-	elif goal == GOAL_BRAWL and units >= 3 and _max_level(state) >= 3:
-		var before_wave_three := phase == BattleSim.PHASE_INTERMISSION and wave >= 1
-		var wave_three := wave >= 2 and phase != BattleSim.PHASE_DEPLOY
-		met = before_wave_three or wave_three
+	elif goal == GOAL_BRAWL and units >= 3:
+		# 第三位要花掉 100，剩下的灵力不够在第 3 波开头升到 Lv3。先停在这一波前面。
+		met = phase == BattleSim.PHASE_INTERMISSION and wave == 1
 	elif goal == GOAL_ENDING:
 		met = phase == BattleSim.PHASE_FINAL and living > 0
 	return met

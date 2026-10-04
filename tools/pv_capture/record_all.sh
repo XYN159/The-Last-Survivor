@@ -9,6 +9,7 @@ GODOT="${GODOT_BIN:-${HOME}/.local/share/godot-ci/bin/godot}"
 ARTIFACT_DIR="${PV_ARTIFACT_DIR:-/opt/cursor/artifacts/pv}"
 WORK_DIR="${PV_WORK_DIR:-/tmp/pv_capture}"
 DRIVER="${PV_RENDER_DRIVER:-opengl3}"
+OVERRIDE="${ROOT}/override.cfg"
 
 export LIBGL_ALWAYS_SOFTWARE=1
 export GALLIUM_DRIVER=llvmpipe
@@ -20,9 +21,29 @@ fi
 
 mkdir -p "${ARTIFACT_DIR}"
 
+write_display_override() {
+	local width="$1"
+	local height="$2"
+	# project.godot 把窗口盖成 1280×720。--resolution 盖不住它，电影就录成 720p。
+	# 这里只在录制当次写 override.cfg，退出时删掉，不提交。
+	cat > "${OVERRIDE}" << EOF
+; 录制临时文件。tools/pv_capture/record_all.sh 退出时会删掉。
+[display]
+
+window/size/window_width_override=${width}
+window/size/window_height_override=${height}
+EOF
+}
+
+remove_display_override() {
+	rm -f "${OVERRIDE}"
+}
+
 encode_frames() {
 	local name="$1"
 	local dir="$2"
+	local width="$3"
+	local height="$4"
 	local mp4="${ARTIFACT_DIR}/${name}.mp4"
 	mapfile -t frames < <(find "${dir}" -name 'frame*.png' | sort)
 	if [[ ${#frames[@]} -eq 0 ]]; then
@@ -40,6 +61,12 @@ encode_frames() {
 		-movflags +faststart "${mp4}"
 	ffprobe -v error -show_entries format=duration:stream=width,height,avg_frame_rate,codec_name \
 		-of default=nw=1 "${mp4}"
+	local actual
+	actual="$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "${mp4}")"
+	if [[ "${actual}" != "${width}x${height}" ]]; then
+		echo "分辨率不对：期望 ${width}x${height}，实际 ${actual}" >&2
+		return 1
+	fi
 }
 
 record_segment() {
@@ -51,6 +78,7 @@ record_segment() {
 	mkdir -p "${dir}"
 	local timeline="${ARTIFACT_DIR}/${name}_timeline.txt"
 	echo "录制 ${name} ${width}x${height} driver=${DRIVER}"
+	write_display_override "${width}" "${height}"
 	PV_SEGMENT="${name}" PV_TIMELINE="${timeline}" \
 		xvfb-run -a -s "-screen 0 ${width}x${height}x24" \
 		"${GODOT}" --path "${ROOT}" \
@@ -61,7 +89,7 @@ record_segment() {
 		--fixed-fps 60 \
 		--write-movie "${dir}/frame.png" \
 		-s res://tools/pv_capture/pv_demo.gd
-	encode_frames "${name}" "${dir}"
+	encode_frames "${name}" "${dir}" "${width}" "${height}"
 	rm -rf "${dir}"
 }
 
@@ -76,6 +104,7 @@ usage() {
 	echo "用法：tools/pv_capture/record_all.sh [probe|test|all|R1|R2|R3|R4a|R4b|R5|R6x1|R6x2|R7|R8|R9place|R9upgrade]" >&2
 }
 
+trap remove_display_override EXIT
 cd "${ROOT}"
 
 target="${1:-all}"
