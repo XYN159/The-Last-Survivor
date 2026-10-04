@@ -1,12 +1,16 @@
 extends Control
 
 ## 塔防对局的画面。规则在 BattleSim，这里只负责按钮、棋盘和结算。
+## 放人分三步：先点格子，再点头像，再点「上」「下」「左」「右」。方向没选完，格子上没有角色。
+## 方向按钮按屏幕方向；交给模拟器之前由 BoardView 换成地图表里的朝向。
 
 const FLOW_SCENE := "res://scenes/main/original_flow.tscn"
 const _HINT_DEFAULT := "ui.battle.hint_default"
 const _HINT_PICK_CELL := "ui.battle.hint_pick_cell"
 const _HINT_PICK_CHARACTER := "ui.battle.hint_pick_character"
+const _HINT_PICK_FACING := "ui.battle.hint_pick_facing"
 const _HINT_PLACE_FAILED := "ui.battle.hint_place_failed"
+const _OPENING_WAIT_TICKS := 6000
 const _CARD_FRAME := preload("res://assets/art/prologue_01/card_frame.png")
 const _REIMU_TOKEN := preload("res://assets/art/prologue_01/reimu_token.png")
 const BoardMotion := preload("res://scripts/battle/board_motion.gd")
@@ -25,6 +29,8 @@ var _accumulator: float = 0.0
 var _selected_col: int = -1
 var _selected_row: int = -1
 var _selected_unit: int = -1
+## 已经点了头像、还在等方向的角色。空字符串表示没有。
+var _pending_character: String = ""
 var _finished: bool = false
 var _capturing: bool = false
 var _buttons: Dictionary = {}
@@ -55,6 +61,13 @@ var _starting_spirit: int = 0
 @onready var _upgrade_button: Button = %UpgradeButton
 @onready var _sell_button: Button = %SellButton
 @onready var _close_unit_button: Button = %CloseUnitButton
+@onready var _facing_panel: Control = %FacingPanel
+@onready var _facing_title: Label = %FacingTitle
+@onready var _facing_up_button: Button = %FacingUpButton
+@onready var _facing_down_button: Button = %FacingDownButton
+@onready var _facing_left_button: Button = %FacingLeftButton
+@onready var _facing_right_button: Button = %FacingRightButton
+@onready var _facing_cancel_button: Button = %FacingCancelButton
 @onready var _result_panel: Control = %ResultPanel
 @onready var _result_title: Label = %ResultTitle
 @onready var _result_body: Label = %ResultBody
@@ -82,13 +95,20 @@ func _ready() -> void:
 	_build_roster()
 	_call_button.pressed.connect(_on_call_pressed)
 	_speed_button.pressed.connect(_on_speed_pressed)
-	_upgrade_button.pressed.connect(_on_upgrade_pressed)
-	_sell_button.pressed.connect(_on_sell_pressed)
+	_sell_button.pressed.connect(_on_retreat_pressed)
 	_close_unit_button.pressed.connect(_on_close_unit_pressed)
+	_facing_up_button.pressed.connect(_on_facing_pressed.bind("up"))
+	_facing_down_button.pressed.connect(_on_facing_pressed.bind("down"))
+	_facing_left_button.pressed.connect(_on_facing_pressed.bind("left"))
+	_facing_right_button.pressed.connect(_on_facing_pressed.bind("right"))
+	_facing_cancel_button.pressed.connect(_on_facing_cancel_pressed)
 	_retry_button.pressed.connect(_on_retry_pressed)
 	_menu_button.pressed.connect(_on_menu_pressed)
 	_board.connect("cell_pressed", _on_cell_pressed)
+	# 第一版战斗不做局内升级，升级按钮一直藏着。
+	_upgrade_button.visible = false
 	_unit_panel.visible = false
+	_facing_panel.visible = false
 	_result_panel.visible = false
 	_apply_static_labels()
 	_hint_label.text = tr(_HINT_DEFAULT)
@@ -196,8 +216,10 @@ func _refresh() -> void:
 	_wave_label.text = _wave_text(state).replace("\n", "  ")
 	_refresh_bars(state)
 	_speed_label.text = tr("ui.battle.speed") % _speed
-	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。
-	_call_button.visible = str(state.phase) == BattleSim.PHASE_DEPLOY
+	# 叫波还没拍板（D-18），这个按钮只在布阵时当「开始」用。按时间轴出怪的关卡没有这个按钮。
+	_call_button.visible = (
+		str(state.phase) == BattleSim.PHASE_DEPLOY and not bool(state.get("timeline", false))
+	)
 	_call_button.disabled = not bool(state.call_allowed)
 	_call_button.text = tr("ui.battle.start") % int(state.call_reward)
 	_refresh_roster(state)
@@ -237,7 +259,13 @@ func _refresh_roster(state: Dictionary) -> void:
 		button.text = "%s\n%d" % [str(entry.display_name), int(entry.cost)]
 		var label: Label = _roster_labels.get(character_id)
 		if label != null:
-			label.text = "%s  ◆%d" % [str(entry.display_name), int(entry.cost)]
+			var wait := float(entry.get("respawn_left", 0.0))
+			if wait > 0.0:
+				label.text = tr("ui.battle.roster_wait") % [str(entry.display_name), ceili(wait)]
+			else:
+				label.text = (
+					tr("ui.battle.roster_cost") % [str(entry.display_name), int(entry.cost)]
+				)
 		button.disabled = not bool(entry.affordable)
 		button.modulate = Color(0.55, 0.55, 0.62, 0.72) if button.disabled else Color.WHITE
 
@@ -247,15 +275,10 @@ func _fill_unit_panel(state: Dictionary) -> void:
 	if unit.is_empty():
 		_unit_panel.visible = false
 		return
-	_unit_title.text = tr("ui.battle.unit_level") % [str(unit.display_name), int(unit.level)]
-	var cost := int(unit.upgrade_cost)
-	if cost < 0:
-		_upgrade_button.text = tr("ui.battle.upgrade_max")
-		_upgrade_button.disabled = true
-	else:
-		_upgrade_button.text = tr("ui.battle.upgrade") % cost
-		_upgrade_button.disabled = not bool(unit.can_upgrade)
-	_sell_button.text = tr("ui.battle.sell") % int(unit.sell_refund)
+	var screen_word := str(_board.call("screen_facing", str(unit.get("facing", ""))))
+	var facing_text := tr("ui.battle.facing_" + screen_word) if screen_word != "" else ""
+	_unit_title.text = tr("ui.battle.unit_facing") % [str(unit.display_name), facing_text]
+	_sell_button.text = tr("ui.battle.retreat") % int(unit.retreat_refund)
 
 
 func _wave_text(state: Dictionary) -> String:
@@ -264,10 +287,10 @@ func _wave_text(state: Dictionary) -> String:
 	var index := int(state.wave_index) + 1
 	if phase == BattleSim.PHASE_DEPLOY:
 		return tr("ui.battle.deploy") % ceili(float(state.phase_time_left))
-	if phase == BattleSim.PHASE_VICTORY:
-		return tr("ui.battle.victory")
-	if phase == BattleSim.PHASE_DEFEAT:
-		return tr("ui.battle.defeat")
+	if phase == BattleSim.PHASE_VICTORY or phase == BattleSim.PHASE_DEFEAT:
+		return tr("ui.battle.victory" if phase == BattleSim.PHASE_VICTORY else "ui.battle.defeat")
+	if bool(state.get("timeline", false)):
+		return _timeline_text(state)
 	if phase == BattleSim.PHASE_FINAL:
 		return tr("ui.battle.wave_final") % [index, total]
 	if phase == BattleSim.PHASE_INTERMISSION:
@@ -276,28 +299,70 @@ func _wave_text(state: Dictionary) -> String:
 	return tr("ui.battle.wave") % [index, total]
 
 
+## 按时间轴出怪的关卡：显示出了几只，以及下一只还有几秒。
+func _timeline_text(state: Dictionary) -> String:
+	var spawned := int(state.spawned)
+	var spawn_total := int(state.spawn_total)
+	if str(state.phase) == BattleSim.PHASE_FINAL:
+		return tr("ui.battle.timeline_final") % [spawned, spawn_total]
+	var next_in := ceili(float(state.phase_time_left))
+	return tr("ui.battle.timeline") % [spawned, spawn_total, next_in]
+
+
+## 第二步：点头像。这里还不放人，只记下角色并弹出方向按钮。
 func _on_character_pressed(character_id: String) -> void:
 	if _finished:
 		return
 	_selected_unit = -1
 	_unit_panel.visible = false
+	_close_facing_panel()
 	if not _has_selected_cell():
 		_hint_label.text = tr(_HINT_PICK_CELL)
 		_refresh()
 		return
-	if _sim.place(character_id, _selected_col, _selected_row):
+	if not _sim.can_place(character_id, _selected_col, _selected_row):
+		_hint_label.text = tr(_HINT_PLACE_FAILED)
+		_refresh()
+		return
+	_pending_character = character_id
+	_facing_panel.visible = true
+	_hint_label.text = tr(_HINT_PICK_FACING)
+	_refresh()
+
+
+## 第三步：点方向。screen_dir 是屏幕上的上下左右，换成地图朝向后才真正放下。
+func _on_facing_pressed(screen_dir: String) -> void:
+	if _finished or _pending_character == "" or not _has_selected_cell():
+		_close_facing_panel()
+		return
+	var facing := str(_board.call("grid_facing", screen_dir))
+	if _sim.place(_pending_character, _selected_col, _selected_row, facing):
 		var unit := _unit_at(_sim.view_state(), _selected_col, _selected_row)
 		_board_motion.play_place(_selected_col, _selected_row, int(unit.get("id", -1)))
 		_clear_selected_cell()
 		_hint_label.text = tr(_HINT_DEFAULT)
 	else:
 		_hint_label.text = tr(_HINT_PLACE_FAILED)
+	_close_facing_panel()
 	_refresh()
+
+
+func _on_facing_cancel_pressed() -> void:
+	_close_facing_panel()
+	_clear_selected_cell()
+	_hint_label.text = tr(_HINT_DEFAULT)
+	_refresh()
+
+
+func _close_facing_panel() -> void:
+	_pending_character = ""
+	_facing_panel.visible = false
 
 
 func _on_cell_pressed(col: int, row: int) -> void:
 	if _finished:
 		return
+	_close_facing_panel()
 	var state := _sim.view_state()
 	var unit := _unit_at(state, col, row)
 	if not unit.is_empty():
@@ -339,17 +404,10 @@ func _on_speed_pressed() -> void:
 	_refresh()
 
 
-func _on_upgrade_pressed() -> void:
+func _on_retreat_pressed() -> void:
 	if _finished:
 		return
-	_sim.upgrade(_selected_unit)
-	_refresh()
-
-
-func _on_sell_pressed() -> void:
-	if _finished:
-		return
-	if _sim.sell(_selected_unit):
+	if _sim.retreat(_selected_unit):
 		_selected_unit = -1
 		_unit_panel.visible = false
 	_refresh()
@@ -374,6 +432,7 @@ func _on_menu_pressed() -> void:
 func _show_result(state: Dictionary) -> void:
 	_finished = true
 	_unit_panel.visible = false
+	_close_facing_panel()
 	_result_panel.visible = true
 	var won := str(state.outcome) == BattleSim.PHASE_VICTORY
 	var title_key := "ui.battle.result_win" if won else "ui.battle.result_lose"
@@ -428,6 +487,12 @@ func _apply_speed_rules() -> void:
 
 func _apply_static_labels() -> void:
 	_close_unit_button.text = tr("ui.battle.close")
+	_facing_title.text = tr("ui.battle.facing_title")
+	_facing_up_button.text = tr("ui.battle.facing_up")
+	_facing_down_button.text = tr("ui.battle.facing_down")
+	_facing_left_button.text = tr("ui.battle.facing_left")
+	_facing_right_button.text = tr("ui.battle.facing_right")
+	_facing_cancel_button.text = tr("ui.battle.cancel")
 	_retry_button.text = tr("ui.battle.retry")
 	_menu_button.text = tr("ui.battle.continue")
 
@@ -499,17 +564,18 @@ func _capture_sequence() -> void:
 	get_tree().quit()
 
 
+## 截图用：灵力不够就先 tick 等回灵，再按开局摆法带朝向放下。
 func _place_opening() -> void:
 	for opening_v in _catalog.scripted_opening():
 		var opening: Dictionary = opening_v
-		(
-			_sim
-			. place(
-				str(opening.get("character_id", "")),
-				int(opening.get("col", -1)),
-				int(opening.get("row", -1)),
-			)
-		)
+		var character_id := str(opening.get("character_id", ""))
+		var col := int(opening.get("col", -1))
+		var row := int(opening.get("row", -1))
+		var waited := 0
+		while not _sim.can_place(character_id, col, row) and waited < _OPENING_WAIT_TICKS:
+			_note_events(_sim.tick())
+			waited += 1
+		_sim.place(character_id, col, row, str(opening.get("facing", "")))
 
 
 func _save_capture(shot_name: String) -> void:

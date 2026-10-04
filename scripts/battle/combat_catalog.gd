@@ -3,7 +3,8 @@ extends RefCounted
 
 ## 战斗表和关卡的读取。
 ## 关卡文件固定读 data/levels/<关卡 id>.json。「开始」进的是 DEFAULT_LEVEL_ID。
-## data/levels/prologue_01.json 原样复制自 #5（关卡策划），本仓库这边不改它的内容。
+## data/levels/prologue_01.json 来自 #5（关卡策划）。按制作人决定改过开局灵力、生命，
+## 并加了 timeline（按绝对秒数出怪）；旧的 waves 留在文件里，有 timeline 时不读。
 ## 战斗表和难度表分两套。USE_OFFICIAL_TABLES 保持 false，
 ## 直到下面三份都合并进 main 再打开：
 ## #4 的 rules.json、characters.json、enemies.json、feel.json，
@@ -15,11 +16,30 @@ extends RefCounted
 ## 射程和间隔先认 stats 里嵌套的 attack.range_cells、attack.interval_sec，
 ## 再认扁平的 range_cells、attack_interval_sec，最后才用 characters.json。
 ## 同名上限先认每个角色自己的 max_copies，没有再用规则里的全局值。
+## 第一关的调参（保底、灵力、同名上限、撤退、再部署、漏怪、部署费用、结界）
+## 只读 data/balance/stage1_rules.json，见 docs/production/PRODUCER_DECISIONS.md。
+## 关卡 params 里写了开局灵力和生命时以关卡为准，没写再用这份表。
 
 const USE_OFFICIAL_TABLES := false
 const DEFAULT_LEVEL_ID := "prologue_01"
 const LEVELS_DIR := "res://data/levels"
 const PROTOTYPE_LEVEL_PATH := "res://data/prototype/levels/prototype_01.json"
+const STAGE1_RULES_PATH := "res://data/balance/stage1_rules.json"
+const _STAGE1_KEYS: Array[String] = [
+	"armor_floor_ratio",
+	"min_damage",
+	"initial_cost",
+	"cost_regen_per_sec",
+	"max_cost",
+	"max_copies_per_character",
+	"retreat_refund_ratio",
+	"redeploy_cost_step",
+	"redeploy_cost_stacks_max",
+	"respawn_sec",
+	"ordinary_leak",
+	"boss_leak",
+	"deploy_cost",
+]
 
 const _PROTOTYPE_ROOTS := {
 	"combat_dir": "res://data/prototype/combat",
@@ -37,6 +57,7 @@ const _FALLBACK_NAMES := {
 }
 
 var _rules: Dictionary = {}
+var _stage1: Dictionary = {}
 var _stats: Dictionary = {}
 var _feel: Dictionary = {}
 var _level: Dictionary = {}
@@ -66,13 +87,17 @@ static func load_level(path: String) -> CombatCatalog:
 		_read_json(combat_dir.path_join("feel.json"), official),
 		_read_json(path, true),
 		_read_json(str(roots.difficulty_path), official),
+		read_stage1_rules(),
 	)
+	for gap in catalog.stage1_gaps():
+		push_error(gap)
 	if official:
 		for gap in catalog.official_gaps():
 			push_error(gap)
 	return catalog
 
 
+## stage1 留空时读 data/balance/stage1_rules.json，测试想改某个数就传一份改过的副本。
 static func from_dictionaries(
 	rules: Dictionary,
 	stats: Dictionary,
@@ -81,15 +106,21 @@ static func from_dictionaries(
 	feel: Dictionary,
 	level: Dictionary,
 	difficulty: Dictionary,
+	stage1: Dictionary = {},
 ) -> CombatCatalog:
 	var catalog := CombatCatalog.new()
 	catalog._rules = rules
+	catalog._stage1 = stage1 if not stage1.is_empty() else read_stage1_rules()
 	catalog._stats = stats
 	catalog._feel = feel
 	catalog._level = level
 	catalog._difficulty = difficulty
 	catalog._index(characters, enemies)
 	return catalog
+
+
+static func read_stage1_rules() -> Dictionary:
+	return _read_json(STAGE1_RULES_PATH, true)
 
 
 static func read_int(value: Variant, fallback: int) -> int:
@@ -117,7 +148,8 @@ static func read_float(value: Variant, fallback: float) -> float:
 
 
 ## 无头试跑和截图用的开局摆法。关卡有 suggested_opening 就照它；
-## 没有就按 map.slots 的顺序，每格放可放置名单里的第一个角色。不是给玩家的推荐。
+## 没有就按 map.slots 的顺序，每格放可放置名单里的第一个角色，朝向用槽位的 facing。
+## 不是给玩家的推荐。
 func scripted_opening() -> Array:
 	var scripted: Array = []
 	for opening_v in _level.get("suggested_opening", []):
@@ -142,6 +174,7 @@ func scripted_opening() -> Array:
 					"character_id": str(allowed[0]),
 					"col": read_int(slot.get("col", -1), -1),
 					"row": read_int(slot.get("row", -1), -1),
+					"facing": str(slot.get("facing", "")),
 				}
 			)
 		)
@@ -167,29 +200,16 @@ func board() -> Dictionary:
 
 func tuning() -> Dictionary:
 	var tick: Dictionary = _rules.get("tick", {})
-	var placement: Dictionary = _rules.get("placement", {})
-	var levels: Dictionary = _rules.get("character_levels", {})
 	var spawn: Dictionary = _rules.get("enemy_spawn", {})
 	var knockback: Dictionary = _rules.get("knockback", {})
 	var economy: Dictionary = _stats.get("economy", {})
 	var flow: Dictionary = _rules.get("battle_flow", {})
 	var wave_rules: Dictionary = _dictionary_copy(_stats.get("waves", {}))
 	var params: Dictionary = _level.get("params", {})
-	var guard: Dictionary = _stats.get("guard", {})
-	var starting := read_int(
-		(
-			params
-			. get(
-				"starting_spirit_power",
-				_difficulty_row.get("reward_spirit_start", economy.get("starting_spirit", 150)),
-			)
-		),
-		150,
-	)
-	var per_wave := read_int(
-		_difficulty_row.get("reward_spirit_per_wave", params.get("reward_spirit_per_wave", 0)),
-		0,
-	)
+	var lives_table := _dictionary_copy(_stage1.get("lives", {}))
+	var max_spirit := maxi(read_int(_stage1.get("max_cost"), 0), 0)
+	var starting := read_int(params.get("starting_spirit_power", _stage1.get("initial_cost")), 0)
+	var lives := read_int(params.get("lives", lives_table.get(str(_level.get("id", "")))), 1)
 	var window := read_float(
 		wave_rules.get("spawn_window_sec", flow.get("wave_target_sec", 20)),
 		20.0,
@@ -197,17 +217,24 @@ func tuning() -> Dictionary:
 	return {
 		"logic_hz": maxi(read_int(tick.get("logic_hz", 60), 60), 1),
 		"max_ticks_per_frame": maxi(read_int(tick.get("max_ticks_per_frame", 4), 4), 1),
-		"armor_floor_ratio": float(_stats.get("armor_floor_ratio", 0.2)),
-		"min_damage": maxi(read_int(_stats.get("min_damage", 1), 1), 0),
-		"starting_spirit": maxi(starting, 0),
-		"spirit_per_wave": maxi(per_wave, 0),
+		"armor_floor_ratio": maxf(read_float(_stage1.get("armor_floor_ratio"), 0.0), 0.0),
+		"min_damage": maxi(read_int(_stage1.get("min_damage"), 0), 0),
+		"starting_spirit": clampi(starting, 0, max_spirit),
+		"spirit_regen_per_sec": maxf(read_float(_stage1.get("cost_regen_per_sec"), 0.0), 0.0),
+		"max_spirit": max_spirit,
 		"early_call_reward_per_sec": float(economy.get("early_call_reward_per_sec", 2)),
 		"early_start_reward_per_sec": float(economy.get("early_start_reward_per_sec", 1)),
-		"max_copies": maxi(read_int(placement.get("max_copies_per_character", 3), 3), 1),
-		"max_level": maxi(read_int(levels.get("max_level", 3), 3), 1),
+		"max_copies": maxi(read_int(_stage1.get("max_copies_per_character"), 1), 1),
+		"retreat_refund_ratio":
+		clampf(read_float(_stage1.get("retreat_refund_ratio"), 0.0), 0.0, 1.0),
+		"redeploy_cost_step": maxf(read_float(_stage1.get("redeploy_cost_step"), 0.0), 0.0),
+		"redeploy_cost_stacks_max": maxi(read_int(_stage1.get("redeploy_cost_stacks_max"), 0), 0),
+		"respawn_sec": maxf(read_float(_stage1.get("respawn_sec"), 0.0), 0.0),
+		"ordinary_leak": maxi(read_int(_stage1.get("ordinary_leak"), 1), 0),
+		"boss_leak": maxi(read_int(_stage1.get("boss_leak"), 1), 0),
 		"spawn_state_sec": maxf(float(spawn.get("spawn_state_sec", 0.3)), 0.0),
 		"knockback_cooldown_sec": maxf(float(knockback.get("per_enemy_cooldown_sec", 0.25)), 0.0),
-		"guard_max_hp": maxi(read_int(params.get("lives", guard.get("max_hp", 20)), 20), 1),
+		"guard_max_hp": maxi(lives, 1),
 		"deploy_time_sec":
 		maxf(read_float(_level.get("deploy_time_sec", flow.get("deploy_time_sec", 10)), 10.0), 0.0),
 		"deploy_wait_for_player": bool(_level.get("deploy_wait_for_player", false)),
@@ -237,6 +264,35 @@ func enemy(enemy_id: String) -> Dictionary:
 	if typeof(found) != TYPE_DICTIONARY:
 		return {}
 	return found
+
+
+## 部署基础费用。先认 stage1_rules.json 的 deploy_cost，表里没有的角色才用战斗数值表的 cost。
+func deploy_cost(character_id: String) -> int:
+	var table := _dictionary_copy(_stage1.get("deploy_cost", {}))
+	if table.has(character_id):
+		return maxi(read_int(table[character_id], 0), 0)
+	var stats := _dictionary_copy(character(character_id).get("stats", {}))
+	return maxi(read_int(stats.get("cost", 0), 0), 0)
+
+
+## 只在结界里攻击的角色返回结界大小：朝向前方 forward 格、左右各 side 格。其他角色返回空字典。
+func barrier(character_id: String) -> Dictionary:
+	var table := _dictionary_copy(_stage1.get("barrier", {}))
+	var entry := _dictionary_copy(table.get(character_id, {}))
+	if entry.is_empty():
+		return {}
+	return {
+		"forward": maxi(read_int(entry.get("forward_cells"), 0), 0),
+		"side": maxi(read_int(entry.get("side_cells"), 0), 0),
+	}
+
+
+func stage1_gaps() -> PackedStringArray:
+	var gaps := PackedStringArray()
+	for key in _STAGE1_KEYS:
+		if not _stage1.has(key):
+			gaps.append("第一关规则表缺少 %s" % key)
+	return gaps
 
 
 func enemy_hp_multiplier(enemy_id: String = "") -> float:

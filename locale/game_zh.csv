@@ -17,14 +17,24 @@ ui.battle.wave_final,第 %d/%d 波\n最后一波
 ui.battle.wave_next,第 %d/%d 波\n下一波 %d 秒
 ui.battle.wave,第 %d/%d 波
 ui.battle.start,出击 +%d
-ui.battle.hint_default,先点亮色格子，再点下面的角色。中段两格最合适。
+ui.battle.timeline,残影 %d/%d  下一只 %d 秒
+ui.battle.timeline_final,残影 %d/%d  清场
+ui.battle.hint_default,先点亮色格子，再点下面的角色，最后选朝向。中段两格最合适。
 ui.battle.hint_pick_cell,先点亮色格子。
 ui.battle.hint_pick_character,再点下面的角色，放到这一格。
-ui.battle.hint_place_failed,放不下。要亮色格子，并且灵力够。
-ui.battle.unit_level,%s  %d 级
-ui.battle.upgrade_max,已满级
+ui.battle.hint_pick_facing,再点「上」「下」「左」「右」，选她面朝哪边。结界在她面前。
+ui.battle.hint_place_failed,放不下。要亮色格子、灵力够；同名只能放一个，撤退后要等一会儿。
+ui.battle.roster_cost,%s  ◆%d
+ui.battle.roster_wait,%s  %d 秒
+ui.battle.facing_title,选朝向
+ui.battle.facing_up,上
+ui.battle.facing_down,下
+ui.battle.facing_left,左
+ui.battle.facing_right,右
+ui.battle.cancel,取消
+ui.battle.unit_facing,%s  朝%s
 ui.battle.upgrade,升级 %d
-ui.battle.sell,出售 +%d
+ui.battle.retreat,撤退 +%d
 ui.battle.close,关闭
 ui.battle.result_win,守住了
 ui.battle.result_lose,失守了

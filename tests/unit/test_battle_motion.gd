@@ -58,9 +58,11 @@ func test_motion_layers_never_take_clicks() -> void:
 func test_cells_can_be_picked_while_the_entry_plays() -> void:
 	var board := _open_battle()
 	assert_true(_screen(board).call("is_entry_playing"))
+	var sim: BattleSim = board.get("_sim")
+	_fund(sim)
 	board.call("_on_cell_pressed", 2, 4)
 	board.call("_on_character_pressed", "chr_reimu")
-	var sim: BattleSim = board.get("_sim")
+	board.call("_on_facing_pressed", "down")
 	assert_eq(sim.view_state().units.size(), 1)
 
 
@@ -126,6 +128,9 @@ func test_call_button_shrinks_then_rebounds() -> void:
 	var board := _open_battle()
 	var button := board.get_node("%CallButton") as Button
 	var frame := board.get_node("%CallFrame") as Control
+	# 序章按时间轴出怪，这个按钮平时隐藏且禁用；这里只验证按下手感。
+	button.visible = true
+	button.disabled = false
 	_assert_press_rebound(button, frame)
 
 
@@ -251,10 +256,18 @@ func _step(node: Node, seconds: float) -> void:
 		node.call("advance", STEP)
 
 
+## 开局灵力 10、灵梦 16，先让模拟器回 6 秒灵力，再走「格子 → 头像 → 方向」。
+func _fund(sim: BattleSim) -> void:
+	for _tick in 6 * 60:
+		sim.tick()
+
+
 func _place(board: Node, col: int, row: int) -> int:
+	var sim: BattleSim = board.get("_sim")
+	_fund(sim)
 	board.call("_on_cell_pressed", col, row)
 	board.call("_on_character_pressed", "chr_reimu")
-	var sim: BattleSim = board.get("_sim")
+	board.call("_on_facing_pressed", "down" if col < 3 else "up")
 	for unit_v in sim.view_state().units:
 		if int(unit_v.col) == col and int(unit_v.row) == row:
 			return int(unit_v.id)

@@ -553,7 +553,7 @@ theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
 theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 28
-text = "ui.battle.unit_level"
+text = "ui.battle.unit_facing"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -564,6 +564,7 @@ alignment = 1
 
 [node name="UpgradeButton" type="Button" parent="UnitPanel/UnitColumn/UnitButtons"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -615,7 +616,7 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
-text = "ui.battle.sell"
+text = "ui.battle.retreat"
 
 [node name="SellButtonPlate" type="TextureRect" parent="UnitPanel/UnitColumn/UnitButtons/SellButton"]
 show_behind_parent = true
@@ -663,6 +664,260 @@ mouse_filter = 2
 texture = ExtResource("14_button_plate")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="FacingPanel" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 720.0
+offset_top = 862.0
+offset_right = 1580.0
+offset_bottom = 1074.0
+theme = SubResource("Theme_kai")
+
+[node name="FacingPaper" type="ColorRect" parent="FacingPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0470588, 0.0627451, 0.0980392, 0.92)
+
+[node name="FacingFrame" type="NinePatchRect" parent="FacingPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_hud")
+patch_margin_left = 48
+patch_margin_top = 36
+patch_margin_right = 48
+patch_margin_bottom = 36
+
+[node name="FacingTitle" type="Label" parent="FacingPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 36.0
+offset_top = 20.0
+offset_right = 330.0
+offset_bottom = 192.0
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+text = "ui.battle.facing_title"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FacingGrid" type="GridContainer" parent="FacingPanel"]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 6.0
+offset_right = 830.0
+offset_bottom = 206.0
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 6
+columns = 3
+
+[node name="FacingGapTopLeft" type="Control" parent="FacingPanel/FacingGrid"]
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FacingUpButton" type="Button" parent="FacingPanel/FacingGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+text = "ui.battle.facing_up"
+
+[node name="FacingUpButtonPlate" type="TextureRect" parent="FacingPanel/FacingGrid/FacingUpButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FacingGapTopRight" type="Control" parent="FacingPanel/FacingGrid"]
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FacingLeftButton" type="Button" parent="FacingPanel/FacingGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+text = "ui.battle.facing_left"
+
+[node name="FacingLeftButtonPlate" type="TextureRect" parent="FacingPanel/FacingGrid/FacingLeftButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FacingCancelButton" type="Button" parent="FacingPanel/FacingGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+text = "ui.battle.cancel"
+
+[node name="FacingCancelButtonPlate" type="TextureRect" parent="FacingPanel/FacingGrid/FacingCancelButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FacingRightButton" type="Button" parent="FacingPanel/FacingGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+text = "ui.battle.facing_right"
+
+[node name="FacingRightButtonPlate" type="TextureRect" parent="FacingPanel/FacingGrid/FacingRightButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FacingGapBottomLeft" type="Control" parent="FacingPanel/FacingGrid"]
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FacingDownButton" type="Button" parent="FacingPanel/FacingGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.8862745, 0.6392157, 1)
+theme_override_colors/font_focus_color = Color(0.9568627, 0.9019608, 0.7764706, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.1411765, 0.0705882, 0.0941176, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_clear")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_clear")
+text = "ui.battle.facing_down"
+
+[node name="FacingDownButtonPlate" type="TextureRect" parent="FacingPanel/FacingGrid/FacingDownButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("14_button_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FacingGapBottomRight" type="Control" parent="FacingPanel/FacingGrid"]
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="EntryVeil" type="ColorRect" parent="."]
 unique_name_in_owner = true
